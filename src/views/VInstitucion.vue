@@ -9,7 +9,7 @@
 import Institucion from '@/components/Institucion.vue'
 // Solo llamo al componente, pero es personalizable aquí
 export default {
-  name: 'Institucion',
+  name: 'VInstitucion',//Aquí va el nombre de View
   components: {
     Institucion
   }
