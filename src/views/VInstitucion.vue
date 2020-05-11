@@ -1,0 +1,17 @@
+<template>
+  <div class="Institucion">
+    <Institucion msg="Welcome to Institucion"/>
+  </div>
+</template>
+
+<script>
+// @ is an alias to /src
+import Institucion from '@/components/Institucion.vue'
+// Solo llamo al componente, pero es personalizable aquí
+export default {
+  name: 'VInstitucion',
+  components: {
+    Institucion
+  }
+}
+</script>
