@@ -1,6 +1,6 @@
 <template>
-  <div class="Institucion">
-    <Institucion msg="Welcome to Institucion"/>
+  <div class="vinstitucion">
+    <Institucion/>
   </div>
 </template>
 

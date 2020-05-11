@@ -1,11 +1,12 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" style="background:#009688">
+  <b-navbar toggleable="lg" type="dark" style="background:#009688;position: fixed;width:100%;z-index: 9999;">
       <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" v-on:click="closeNav()">&times;</a>
-                  <a href="/home">About</a>
-                  <a href="#">Services</a>
-                  <a href="#">Clients</a>
-                  <a href="#">Contact</a>
+                  <a href="/institucion" style="text-align: left;"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/bank.png" height="25px">Institucion</a>
+                  <a href="#" style="text-align: left;"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/vacaciones.png" height="25px">Facultad</a>
+                  <a href="#" style="text-align: left;">Programa</a>
+                  <a href="#" style="text-align: left;">Coordinador</a>
+                  <a href="#" style="text-align: left;">Unidades de Apoyo</a>
       </div>
       <span style="font-size:30px;cursor:pointer;color: #FFFFFF" v-on:click="openNav()">
         &#9776;
@@ -50,7 +51,7 @@ export default {
 
   methods:{
     openNav() {
-        document.getElementById("mySidenav").style.width = "205px";
+        document.getElementById("mySidenav").style.width = "214px";
     },
     closeNav() {
         document.getElementById("mySidenav").style.width = "0";
@@ -60,42 +61,42 @@ export default {
 </script>
 
 <style>
-        .sidenav {
-        height: 100%;
-        width: 0;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        background-color: #009688;
-        overflow-x: hidden;
-        transition: 0.5s;
-        padding-top: 60px;
-        }
+  .sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 8.1%;
+  left: 0;
+  background-color: #009688;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+  }
 
-        .sidenav a {
-        padding: 8px 8px 8px 32px;
-        text-decoration: none;
-        font-size: 25px;
-        color: #FFFFFF;
-        display: block;
-        transition: 0.3s;
-        }
+  .sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #FFFFFF;
+  display: block;
+  transition: 0.3s;
+  }
 
-        .sidenav a:hover {
-        color: #f1f1f1;
-        }
+  .sidenav a:hover {
+  color: #f1f1f1;
+  }
 
-        .sidenav .closebtn {
-        position: absolute;
-        top: 0;
-        right: 25px;
-        font-size: 36px;
-        margin-left: 50px;
-        }
+  .sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+  }
 
-        @media screen and (max-height: 450px) {
-        .sidenav {padding-top: 15px;}
-        .sidenav a {font-size: 18px;}
-        }
-    </style>
+  @media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+  }
+</style>
