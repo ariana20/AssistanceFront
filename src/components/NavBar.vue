@@ -36,10 +36,10 @@
             <b-nav-item-dropdown right>
                 <!-- Using 'button-content' slot -->
                 <template v-slot:button-content>
-                <em>User</em>
+                <em >{{user.nombre}}</em>
                 </template>
                 <b-dropdown-item href="#">Profile</b-dropdown-item>
-                <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+                <b-dropdown-item v-on:click="logout()">Sign Out</b-dropdown-item>
             </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -47,15 +47,49 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-
+  data(){
+    return{
+      user:{
+        id_usuario:null,
+        estado: null,
+        fecha_creacion: null,
+        fecha_actualizacion: null,
+        usuario_creacion: null,
+        usuario_actualizacion: null,
+        correo: null,
+        telefono: null,
+        imagen: null,
+        nombre: null,
+        ap_paterno: null,
+        ap_materno: null,
+        sexo: null,
+        ultimo_logueo_fallido: null,
+        bloqueado: null,
+        intentos_fallidos: 0,
+        notas: null
+      }
+    }
+  },
+  mounted(){
+    axios.post('http://127.0.0.1:8000/api/vueuser', null).then(response=>{  
+        if(response.data.id_usuario===null) this.user={id_usuario:null,nombre:'User'};   
+        else this.user = response.data;         
+      }).catch( e=>console.log(e));
+  },
   methods:{
     openNav() {
         document.getElementById("mySidenav").style.width = "214px";
     },
     closeNav() {
         document.getElementById("mySidenav").style.width = "0";
-    }
+    },
+    logout(){
+      axios.post('http://127.0.0.1:8000/api/vuelogout', null).then(response=>{  
+          alert(response);
+      }).catch( e=>console.log(e));
+    },
   }
 }
 </script>

@@ -1,6 +1,13 @@
 <template>
   <div id="app">
     <NavBar/>
+    <!-- <SidebarAdministrador
+		:nav-links="navLinks"
+    :image-path="require('./assets/assistance-logo.png')"
+    background="#009892"
+    link-color="#eee"
+    hoverBackground="#ccc"
+    /> -->
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
@@ -12,18 +19,64 @@
 
 <script>
 import NavBar from '@/components/NavBar.vue'
+//import SidebarAdministrador from '@/components/SideNavBar'
 
 export default {
   name: 'App',
   components: {
-    NavBar
-  }
+    NavBar,
+    //SidebarAdministrador
+  },
+  data: () => ({
+    navLinks: [
+      {
+        text: 'Institucion',
+		path: '/institucion',
+		icon: 'ion-ios-business'
+      },
+      {
+        text: 'Facultad',
+		path: '/about',
+		icon: 'ion-ios-school'
+      },
+      {
+        text: 'Programa',
+		path: '/',
+		icon: 'ion-ios-home'
+      },
+      {
+        text: 'Coordinador',
+		path: '/',
+		icon: 'ion-ios-person'
+      },
+      {
+        text: 'Unidades de Apoyo',
+		path: '/',
+		icon: 'ion-ios-people'
+      }
+    ]
+  }),
 }
 </script>
 
-<style>
+<style  lang="scss">
+@import 'https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css';
+@font-face {
+  font-family: "Brandon Bold";
+  src: url('./assets/fonts/BrandonText-Regular.otf');
+}
+figure {
+	margin-block-start: 0;
+	margin-block-end: 0;
+	margin-inline-start: 10px;
+	margin-inline-end: 0;
+}
+body {
+  margin: 0;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Brandon Bold",Helvetica,Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -41,5 +94,12 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+a {
+    font-weight: bold;
+    color: #2c3e50;
+    &.router-link-exact-active {
+      color: #42b983;
+    }
 }
 </style>

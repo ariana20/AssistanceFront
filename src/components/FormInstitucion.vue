@@ -44,6 +44,15 @@ export default {
       logo:null,
     }
   },
+  mounted(){
+    Axios
+      .get('http://127.0.0.1:8000/api/institucion')
+        .then( response=>{
+          this.nombre = response.data.nombre;
+          this.direccion = response.data.direccion;
+          this.telefono = response.data.telefono;
+        });
+  },
   methods:{
     guardarInstitucion() {
       const params = {
@@ -63,3 +72,9 @@ export default {
   }
 }
 </script>
+<style>
+  body{
+    background-image: null;
+    background-color: #B2EBF2;
+  }
+</style>
