@@ -3,7 +3,7 @@
       <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" v-on:click="closeNav()">&times;</a>
                   <a href="/institucion" style="text-align: left;"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/bank.png" height="25px">Institucion</a>
-                  <a href="#" style="text-align: left;"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/vacaciones.png" height="25px">Facultad</a>
+                  <a href="/facultad" style="text-align: left;"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/vacaciones.png" height="25px">Facultad</a>
                   <a href="#" style="text-align: left;">Programa</a>
                   <a href="#" style="text-align: left;">Coordinador</a>
                   <a href="#" style="text-align: left;">Unidades de Apoyo</a>
