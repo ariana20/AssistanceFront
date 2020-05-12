@@ -1,6 +1,6 @@
 <template>
-  <div class="Institucion">
-    <Institucion msg="Welcome to Institucion"/>
+  <div class="vinstitucion">
+    <Institucion/>
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 import Institucion from '@/components/Institucion.vue'
 // Solo llamo al componente, pero es personalizable aquí
 export default {
-  name: 'VInstitucion',//Aquí va el nombre de View
+  name: 'VInstitucion',
   components: {
     Institucion
   }

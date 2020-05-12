@@ -1,16 +1,18 @@
 <template>
-<!-- JOHANA HIZO UN COMEN DESDE VSC -->
-  <div class="Institucion">
-    <h1>{{ msg }}</h1> <!-- Aquí es el template -->
-    <title></title>
+  <div class="institucion">
+    <CabezeraTitulo msg="Configuracion de la Institucion"/>
+    <FormInstitucion/>
   </div>
 </template>
 
 <script>
+import CabezeraTitulo from '@/components/CabezeraTitulo.vue'
+import FormInstitucion from '@/components/FormInstitucion.vue'
 export default {
   name: 'Institucion',
-  props: {
-    msg: String
+  components: {
+    CabezeraTitulo,
+    FormInstitucion
   }
 }
 </script>
