@@ -7,6 +7,7 @@
                   <a href="#" style="text-align: left;">Programa</a>
                   <a href="#" style="text-align: left;">Coordinador</a>
                   <a href="#" style="text-align: left;">Unidades de Apoyo</a>
+                  <a href="/tiposdeTutoria" style="text-align: left;">Tipos de Tutoria</a>
       </div>
       <span style="font-size:30px;cursor:pointer;color: #FFFFFF" v-on:click="openNav()">
         &#9776;
