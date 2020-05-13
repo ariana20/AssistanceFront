@@ -69,7 +69,7 @@ export default {
         planificado:"",
         tutorasignado:"",
         tutorfijo:"",
-        activo:null,
+        activo:true,
         tutoresrelacionados:[],
       },
       condicionespar1:['Individual','Grupal'],  
@@ -81,11 +81,15 @@ export default {
   },
   mounted(){
     //Aquí lleno mis datos con la api
-    Axios
-      .get('http://127.0.0.1:8000/api/tipotutoria')
+    Axios.create({withCredentials: true })
+      .get('http://127.0.0.1:8000/api/TipoTutoria/mostrar')
         .then( response=>{
+
           this.nombre = response.data.nombre;
           this.descripcion = response.data.descripcion;
+          //this.activo="act";
+          var control = document.getElementById("checkbox");
+          control.checked=true;
           var aux=response.data.obligatorio;
           if (aux=="1" ){
             this.obligatorio='Obligatorio';
@@ -159,7 +163,7 @@ export default {
         tutorfijo:cond3,
         activo:"act",        
       };
-      Axios //Agregar credenciales
+      Axios.create({withCredentials: true })
         .post('http://127.0.0.1:8000/api/TipoTutoria/insertar',params)
           .then( response=>{
             console.log(response)
