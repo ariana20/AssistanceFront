@@ -69,7 +69,7 @@ export default {
         planificado:"",
         tutorasignado:"",
         tutorfijo:"",
-        activo:true,
+        estado:null,
         tutoresrelacionados:[],
       },
       condicionespar1:['Individual','Grupal'],  
@@ -158,10 +158,10 @@ export default {
         descripcion: this.descripcion,
         obligatorio:cond2,  
         individual:cond1, 
-        planificado:cond5,
+        planificado:cond5, // Ejm: cond5="1"
         tutor_asignado:cond4,
-        tutorfijo:cond3,
-        activo:"act",        
+        tutor_fijo:cond3,
+        estado:"act",        
       };
       Axios.create({withCredentials: true })
         .post('http://127.0.0.1:8000/api/TipoTutoria/insertar',params)
