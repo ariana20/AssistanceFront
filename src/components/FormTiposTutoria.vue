@@ -82,25 +82,85 @@ export default {
   mounted(){
     //Aquí lleno mis datos con la api
     Axios
-      .get('http://127.0.0.1:8000/api/institucion')
+      .get('http://127.0.0.1:8000/api/tipotutoria')
         .then( response=>{
           this.nombre = response.data.nombre;
           this.descripcion = response.data.descripcion;
           var aux=response.data.obligatorio;
           if (aux=="1" ){
-            this.obligatorio=aux;
+            this.obligatorio='Obligatorio';
+          }else{
+            this.obligatorio='Opcional';
           }
+          aux=response.data.individual;
+          if (aux=="1" ){
+            this.individual='Individual';
+          }else{
+            this.individual='Grupal';
+          }
+          aux=response.data.planificado;
+          if (aux=="1" ){
+            this.planificado='Planificado';
+          }else{
+            this.planificado='No planificado';
+          }
+          aux=response.data.tutorasignado;
+          if (aux=="1" ){
+            this.tutorasignado='Con tutor asignado';
+          }else{
+            this.tutorasignado='Con tutor solicitado';
+          }
+          aux=response.data.tutorfijo;
+          if (aux=="1" ){
+            this.tutorfijo='Con tutor fijo';
+          }else{
+            this.tutorfijo='Con tutor variable';
+          }
+          //checkbox activo
+          //tutores
         });
   },
   methods:{
     guardarTipoTutoria() {
+      var cond1,cond2, cond3,cond4,cond5;
+      if (this.tutorfijo=='Con tutor fijo' ){
+        cond3="1";
+      }else{
+        cond3='0';
+      }
+
+      if (this.individual=='Individual' ){
+        cond1="1";
+      }else{
+        cond1='0';
+      }
+      if (this.obligatorio=='Obligatorio' ){
+        cond2="1";
+      }else{
+        cond2='0';
+      }
+      if (this.tutorasignado=='Con tutor asignado' ){
+        cond4="1";
+      }else{
+        cond4='0';
+      }
+      if (this.planificado=='Planificado' ){
+        cond5="1";
+      }else{
+        cond5='0';
+      }
       const params = {
         nombre: this.nombre,
         descripcion: this.descripcion,
-        
+        obligatorio:cond2,  
+        individual:cond1, 
+        planificado:cond5,
+        tutor_asignado:cond4,
+        tutorfijo:cond3,
+        activo:"act",        
       };
       Axios //Agregar credenciales
-        .post('http://127.0.0.1:8000/api/institucion',params)
+        .post('http://127.0.0.1:8000/api/TipoTutoria/insertar',params)
           .then( response=>{
             console.log(response)
           });
