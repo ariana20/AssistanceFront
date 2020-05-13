@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar/>
+    <NavBar />
     <!-- <SidebarAdministrador
 		:nav-links="navLinks"
     :image-path="require('./assets/assistance-logo.png')"
@@ -8,12 +8,7 @@
     link-color="#eee"
     hoverBackground="#ccc"
     /> -->
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/institucion">Institucion</router-link>
-    </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -27,7 +22,9 @@ export default {
     NavBar,
     //SidebarAdministrador
   },
-  data: () => ({
+  data() {
+    return{
+    usuario: this.$store.state.user,
     navLinks: [
       {
         text: 'Institucion',
@@ -54,8 +51,9 @@ export default {
 		path: '/',
 		icon: 'ion-ios-people'
       }
-    ]
-  }),
+    ],
+    }
+  },
 }
 </script>
 

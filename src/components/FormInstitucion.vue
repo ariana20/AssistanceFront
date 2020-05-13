@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import Axios from 'axios'
+import axios from 'axios'
 export default {
   data(){
     return{
@@ -45,7 +45,7 @@ export default {
     }
   },
   mounted(){
-    Axios
+    axios.create({withCredentials: true })
       .get('http://127.0.0.1:8000/api/institucion')
         .then( response=>{
           this.nombre = response.data.nombre;
@@ -63,8 +63,8 @@ export default {
         logo: this.logo,
       };
 
-      Axios
-        .post('http://127.0.0.1:8000/api/institucion',params)
+      axios.create({withCredentials: true })
+        .post('http://localhost:8000/api/institucion',params)
           .then( response=>{
             console.log(response)
           });

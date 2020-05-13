@@ -13,14 +13,14 @@
                 </p>
             </div>
             <div class="col-md-6" v-if="loginfalse = true">
-                <form @submit="checkForm" id="createAdministrator">
+                <form v-on:submit.prevent="checkForm" id="createAdministrator">
                   <div class="form-group">
                     <label for="email">Email address:</label>
-                    <input v-model="email" type="email" class="form-control" id="email" placeholder="Enter Email" name="email">
+                    <input v-model="state.email" type="email" class="form-control" id="email" placeholder="Enter Email" name="email">
                   </div>
                   <div class="form-group">
                     <label for="pwd">Password:</label>
-                    <input v-model="password" type="password" class="form-control" id="password" placeholder="********" name="password">
+                    <input v-model="state.password" type="password" class="form-control" id="password" placeholder="********" name="password">
                   </div>
                   <button type="submit" class="btn btn-default">Submit</button>
                 </form>
@@ -30,45 +30,49 @@
 </template>
 <script>
 import axios from 'axios'
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        },
-         data() {
-            return {
-                errors: [],
-                state: {
-                    email: '',
-                    password: ''
-                }
+  export default {
+      mounted() {
+          console.log('Component mounted.')
+      },
+        data() {
+          return {
+            errors: [],
+            state: {
+                email: '',
+                password: ''
             }
-        },
-        methods:{
-        checkForm: function (e) {
-           
-          this.errors = [];
-          if (!this.email) {
-            this.errors.push('Email required.');
           }
-          if (!this.password) {
-            this.errors.push('Password required.');
-          }
-        else
-        {
-            const params ={
-                correo: this.email,
-                password: this.password,
-            }
-        
-        
-            axios.post('http://127.0.0.1:8000/api/vuelogin', params).then(response=>{  
-                        alert(response.data.status);     
-                        if(response.data.status==='success') window.location.href = '/institucion';                  
-                    }).catch( e=>console.log(e));
+      },
+      methods:{
+      checkForm: function (e) {
+          
+        this.errors = [];
+        if (!this.state.email) {
+          this.errors.push('Email required.');
         }
-        
-          e.preventDefault();
+        if (!this.state.password) {
+          this.errors.push('Password required.');
         }
+      else
+      {
+        const params ={
+          correo: this.state.email,
+          password: this.state.password,
+        }
+        const axiosInstance = axios.create({ baseURL: "http://localhost:8000",withCredentials: true });
+        axiosInstance.post('http://localhost:8000/api/vuelogin', params)
+          .then(response=>{  
+            alert(response.data.status); 
+            if(response.data.status==='success') {
+              this.$store.state.usuario = response.data.user;
+              console.log(this.$store);
+              this.$router.push('/');  
+            }                
+          }).catch( e=>console.log(e));
+      }
+      
+        e.preventDefault();
       }
     }
+  }
 </script>

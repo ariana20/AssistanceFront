@@ -1,25 +1,22 @@
 <template>
   <b-navbar toggleable="lg" type="dark" style="background:#009688;position: fixed;width:100%;z-index: 9999;">
-      <div id="mySidenav" class="sidenav">
+      <div id="mySidenav" class="sidenav" style="text-align:left">
         <a href="javascript:void(0)" class="closebtn" v-on:click="closeNav()">&times;</a>
-                  <a href="/institucion" style="text-align: left;"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/bank.png" height="25px">Institucion</a>
-                  <a href="#" style="text-align: left;"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/vacaciones.png" height="25px">Facultad</a>
-                  <a href="#" style="text-align: left;">Programa</a>
-                  <a href="#" style="text-align: left;">Coordinador</a>
-                  <a href="#" style="text-align: left;">Unidades de Apoyo</a>
+        <router-link to="/institucion"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/bank.png" height="25px">Institucion</router-link>
+        <router-link to="/"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/vacaciones.png" height="25px">Facultad</router-link>
+        <router-link to="/">Programa</router-link>
+        <router-link to="/">Coordinador</router-link>
+        <router-link to="/">Unidades de Apoyo</router-link>
       </div>
       <span style="font-size:30px;cursor:pointer;color: #FFFFFF" v-on:click="openNav()">
         &#9776;
       </span>
-      <b-navbar-brand href="/">SoftVizcochitos</b-navbar-brand>
+      <b-navbar-brand><router-link to="/">SoftVizcochitos</router-link></b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <b-nav-item href="#">Link</b-nav-item>
-          <b-nav-item href="#" disabled>Disabled</b-nav-item>
-        </b-navbar-nav>
+        
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
@@ -30,13 +27,13 @@
                 <b-dropdown-item href="#">RU</b-dropdown-item>
                 <b-dropdown-item href="#">FA</b-dropdown-item>
             </b-nav-item-dropdown>
-            <li class="nav-item">
-                <a class="nav-link" href="/login" style="color: #FFFFFF">Ingresar</a>
-            </li>
-            <b-nav-item-dropdown right>
+            <b-nav-item v-if="this.$store.state.usuario===null">
+              <router-link to="/login">Ingresar</router-link>
+            </b-nav-item>
+            <b-nav-item-dropdown right v-if="this.$store.state.usuario!==null">
                 <!-- Using 'button-content' slot -->
                 <template v-slot:button-content>
-                <em >{{user.nombre}}</em>
+                <em >{{$store.state.usuario.nombre}}</em>
                 </template>
                 <b-dropdown-item href="#">Profile</b-dropdown-item>
                 <b-dropdown-item v-on:click="logout()">Sign Out</b-dropdown-item>
@@ -49,34 +46,8 @@
 <script>
 import axios from 'axios'
 export default {
-  data(){
-    return{
-      user:{
-        id_usuario:null,
-        estado: null,
-        fecha_creacion: null,
-        fecha_actualizacion: null,
-        usuario_creacion: null,
-        usuario_actualizacion: null,
-        correo: null,
-        telefono: null,
-        imagen: null,
-        nombre: null,
-        ap_paterno: null,
-        ap_materno: null,
-        sexo: null,
-        ultimo_logueo_fallido: null,
-        bloqueado: null,
-        intentos_fallidos: 0,
-        notas: null
-      }
-    }
-  },
   mounted(){
-    axios.post('http://127.0.0.1:8000/api/vueuser', null).then(response=>{  
-        if(response.data.id_usuario===null) this.user={id_usuario:null,nombre:'User'};   
-        else this.user = response.data;         
-      }).catch( e=>console.log(e));
+    this.user = null
   },
   methods:{
     openNav() {
@@ -86,9 +57,10 @@ export default {
         document.getElementById("mySidenav").style.width = "0";
     },
     logout(){
-      axios.post('http://127.0.0.1:8000/api/vuelogout', null).then(response=>{  
-          alert(response);
+      axios.create({withCredentials: true }).post('http://localhost:8000/api/vuelogout', null).then(response=>{  
+          alert(response.data.status);
       }).catch( e=>console.log(e));
+      this.$emit("mandarUsuario",null);
     },
   }
 }
