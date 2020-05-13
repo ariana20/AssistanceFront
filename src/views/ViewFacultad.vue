@@ -1,17 +1,17 @@
 <template>
-  <div class="vinstitucion">
-    <Institucion/>
+  <div class="viewfacultad">
+    <Facultad/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Institucion from '@/components/Institucion.vue'
+import Facultad from '@/components/Facultad.vue'
 // Solo llamo al componente, pero es personalizable aquí
 export default {
-  name: 'VInstitucion',
+  name: 'ViewFacultad',
   components: {
-    Institucion
+    Facultad
   }
 }
 </script>

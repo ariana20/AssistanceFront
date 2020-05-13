@@ -1,6 +1,7 @@
 <template>
+  <div class="LoginForm">
     <div class="container">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" >
             <div class="page-header">
               <h2>Vue Laravel Auth Login</h2>
             </div>
@@ -27,6 +28,7 @@
             </div>
         </div>
     </div>
+  </div>
 </template>
 <script>
 import axios from 'axios'

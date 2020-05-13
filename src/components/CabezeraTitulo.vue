@@ -1,7 +1,7 @@
 <template>
   <div class="CabezeraTitulo">
     <div class="container">
-        <img src="../assets/coffee.jpg" height="200px" width="1325px" >
+        <img src="../assets/coffee.jpg" height="300px" width="100%" >
         <div class="centered">
             <table>
             <tbody>

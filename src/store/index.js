@@ -3,10 +3,14 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const state = {
-  usuario:null
-}
-
 export default new Vuex.Store({
-  state
+  state: {
+    usuario:null
+  },
+  mutations: {
+  },
+  actions: {
+  },
+  modules: {
+  }
 })

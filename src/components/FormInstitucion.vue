@@ -46,7 +46,7 @@ export default {
   },
   mounted(){
     axios.create({withCredentials: true })
-      .get('http://127.0.0.1:8000/api/institucion')
+      .get('/api/institucion')
         .then( response=>{
           this.nombre = response.data.nombre;
           this.direccion = response.data.direccion;
