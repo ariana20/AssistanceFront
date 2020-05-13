@@ -68,7 +68,7 @@ export default {
   z-index: 1;
   top: 8.1%;
   left: 0;
-  background-color: #009688;
+  background-color: #009892;
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px;

@@ -1,6 +1,6 @@
 <template>
   <div class="facultad">
-    <CabezeraTitulo msg="Configuracion de la Facultad"/>
+    <CabezeraTitulo msg="Configuración de la Facultad"/>
     <FormFacultad/>
   </div>
 </template>
