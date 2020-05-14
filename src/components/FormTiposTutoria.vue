@@ -82,7 +82,7 @@ export default {
   mounted(){
     //Aquí lleno mis datos con la api
     Axios.create({withCredentials: true })
-      .post('http://18.232.253.212/Back-end-Software/public/api/TipoTutoria/mostrar/')
+      .post('/TipoTutoria/mostrar/')
         .then( response=>{
 
           this.nombre = response.data.nombre;

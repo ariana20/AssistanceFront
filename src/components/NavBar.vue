@@ -58,7 +58,7 @@ export default {
         document.getElementById("mySidenav").style.width = "0";
     },
     logout(){
-      axios.create({withCredentials: true }).post('http://localhost:8000/api/vuelogout', null).then(response=>{  
+      axios.create({withCredentials: true }).post('/vuelogout', null).then(response=>{  
           alert(response.data.status);
           if(response.data.status=='success') this.$store.state.usuario=null;
       }).catch( e=>console.log(e));

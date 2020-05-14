@@ -61,8 +61,8 @@ import axios from 'axios'
           correo: this.state.email,
           password: this.state.password,
         }
-        const axiosInstance = axios.create({ baseURL: "http://localhost:8000",withCredentials: true });
-        axiosInstance.post('http://localhost:8000/api/vuelogin', params)
+        const axiosInstance = axios.create({ withCredentials: true });
+        axiosInstance.post('/vuelogin', params)
           .then(response=>{  
             alert(response.data.status); 
             if(response.data.status==='success') {
