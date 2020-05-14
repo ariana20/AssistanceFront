@@ -17,9 +17,11 @@
 <script>
 import NavBar from '@/components/NavBar.vue'
 import SidebarAdministrador from '@/components/SideNavBar'
-
 export default {
   name: 'App',
+  mounted(){
+    
+  },
   components: {
     NavBar,
     SidebarAdministrador

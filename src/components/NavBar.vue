@@ -9,9 +9,6 @@
         <router-link to="/">Unidades de Apoyo</router-link>
         <router-link to="/tiposdeTutoria" style="text-align: left;">Tipos de Tutoria</router-link>
       </div>
-      <span v-if="this.$store.state.usuario!==null" style="font-size:30px;cursor:pointer;color: #FFFFFF" v-on:click="openNav()">
-        &#9776;
-      </span>
       <!--<b-navbar-brand><router-link to="/">SoftVizcochitos</router-link></b-navbar-brand>-->
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -28,13 +25,13 @@
                 <b-dropdown-item href="#">RU</b-dropdown-item>
                 <b-dropdown-item href="#">FA</b-dropdown-item>
             </b-nav-item-dropdown>
-            <b-nav-item v-if="this.$store.state.usuario===null">
+            <b-nav-item v-if="this.nombre===null">
               <router-link to="/login"><a style="color:#000;font-weight:normal;">Ingresar</a></router-link>
             </b-nav-item>
-            <b-nav-item-dropdown right v-if="this.$store.state.usuario!==null">
+            <b-nav-item-dropdown right v-if="this.nombre!==null">
                 <!-- Using 'button-content' slot -->
                 <template v-slot:button-content>
-                <em style="color:#000;font-weight:normal;" >{{$store.state.usuario.nombre}}</em>
+                <em style="color:#000000;font-weight:normal;" >{{nombre}}</em>
                 </template>
                 <b-dropdown-item href="#">Profile</b-dropdown-item>
                 <b-dropdown-item v-on:click="logout()">Sign Out</b-dropdown-item>
@@ -47,8 +44,17 @@
 <script>
 import axios from 'axios'
 export default {
+  data(){
+    return{
+      nombre:null
+    }
+  },
   mounted(){
-    this.user = null
+    axios.post('/vueuser').then( response=>{
+      this.$store.state.usuario = response.data.user;
+      console.log(this.$store.state.usuario)
+      this.nombre = this.$store.state.usuario.nombre
+    })
   },
   methods:{
     openNav() {

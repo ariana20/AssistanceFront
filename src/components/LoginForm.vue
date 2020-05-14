@@ -32,9 +32,10 @@
 </template>
 <script>
 import axios from 'axios'
+
   export default {
       mounted() {
-          console.log('Component mounted.')
+        if(this.$store.state.usuario!==null) this.$router.push('/');
       },
         data() {
           return {
@@ -57,20 +58,24 @@ import axios from 'axios'
         }
       else
       {
-        const params ={
-          correo: this.state.email,
-          password: this.state.password,
+        if(this.$store.state.usuario!==null) {
+          this.$router.push('/');
         }
-        const axiosInstance = axios.create({ withCredentials: true });
-        axiosInstance.post('/vuelogin', params)
-          .then(response=>{  
-            alert(response.data.status); 
-            if(response.data.status==='success') {
-              this.$store.state.usuario = response.data.user;
-              console.log(this.$store);
-              this.$router.push('/');  
-            }                
-          }).catch( e=>console.log(e));
+        else{
+          const params ={
+            correo: this.state.email,
+            password: this.state.password,
+          }
+          
+          axios.post('/vuelogin', params,)
+            .then(response=>{  
+              alert(response.data.status); 
+              if(response.data.status==='success') {
+                this.$store.state.usuario = response.data.user;
+                this.$router.push('/');  
+              }                
+            }).catch( e=>console.log(e));
+        }
       }
       
         e.preventDefault();

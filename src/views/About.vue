@@ -3,7 +3,7 @@
     <h1>This is an about page</h1>
     <table>
       <tbody>
-        <tr v-for="user in users" :key="user.id">
+        <tr v-for="user in users" :key="user.id_usuario">
           <td>{{user}}</td>
         </tr>
       </tbody>
@@ -27,9 +27,9 @@ export default {
   methods: {
     getUser(){
       axios
-        .post('/user')
+        .post('/usuarios/listarTodo')
           .then( response=>{
-            this.users = response.data.data
+            this.users = response.data
           })
           .catch( e=>console.log(e))
     }
