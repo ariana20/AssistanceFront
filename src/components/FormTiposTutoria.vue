@@ -82,7 +82,7 @@ export default {
   mounted(){
     //Aquí lleno mis datos con la api
     Axios.create({withCredentials: true })
-      .get('http://127.0.0.1:8000/api/TipoTutoria/mostrar')
+      .post('http://18.232.253.212/Back-end-Software/public/api/TipoTutoria/mostrar/')
         .then( response=>{
 
           this.nombre = response.data.nombre;
@@ -132,7 +132,6 @@ export default {
       }else{
         cond3='0';
       }
-
       if (this.individual=='Individual' ){
         cond1="1";
       }else{
@@ -161,10 +160,23 @@ export default {
         planificado:cond5, // Ejm: cond5="1"
         tutor_asignado:cond4,
         tutor_fijo:cond3,
-        estado:"act",        
+        estado:"act",   
+        // nombre: this.nombre,
+        // descripcion: this.descripcion,
+        // obligatorio:"1",  
+        // individual:"1", 
+        // planificado:"1", // Ejm: cond5="1"
+        // tutor_asignado:"1",
+        // tutor_fijo:"1",
+        // estado:'act',  
+        // usuario_creacion:1,
+        // id_programa:5,
+        // usuario_actualizacion:1,
+
+          
       };
       Axios.create({withCredentials: true })
-        .post('http://127.0.0.1:8000/api/TipoTutoria/insertar',params)
+        .post('http://18.232.253.212/Back-end-Software/public/api/TipoTutoria/insertar',params)
           .then( response=>{
             console.log(response)
           });
