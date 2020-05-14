@@ -14,8 +14,8 @@
       <div class="gridcontent" style="border:none;"></div>
       <div class="gridcontent" style="border:none;"></div>
       <div class="gridcontent" style="border:none;width:25%;padding-top:15px;">
-          <a href="#"  class="btn btn-lg btn-google btn-block acustom">
-              <strong>Ingresar</strong>
+          <a class="btn btn-lg btn-google btn-block acustom">
+              <router-link to="/login">Ingresar</router-link>
           </a>
       </div>
     </div>
@@ -40,7 +40,7 @@ export default {
         background-color: transparent;
         background-size: cover;
         background-repeat: no-repeat;
-        background-color: #B2EBF2;
+        background-color: #FFFFFF;
         }
         .gridwrapper {
         overflow: auto;
@@ -124,4 +124,4 @@ export default {
         background-color: #0097A7;
         margin-left: 2rem;
         }
-    </style>
+</style>

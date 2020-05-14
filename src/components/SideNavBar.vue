@@ -1,5 +1,5 @@
 <template>
-	<nav style="background: '#FFFFFF';position: fixed;z-index: 9999;height:100%">
+	<nav style="background: '#FFFFFF';height:600px">
 		<ul :style="{ background: background|| '#333'}" ref="nav">
 			<figure class="image-logo" @click="toggleNav">
 				<img :src="imagePath" height="60px" width="60px" />				

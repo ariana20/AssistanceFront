@@ -1,9 +1,9 @@
 <template>
-  <div class="LoginForm">
-    <div class="container">
+  <div class="LoginForm" >
+    <div class="container" >
         <div class="row justify-content-center" >
             <div class="page-header">
-              <h2>Vue Laravel Auth Login</h2>
+              <h2>Vizcochitos Login</h2>
             </div>
             <div class="col-md-12 text-center">
                 <p v-if="errors.length">

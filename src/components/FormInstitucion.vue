@@ -37,6 +37,7 @@ import axios from 'axios'
 export default {
   data(){
     return{
+      id:null,
       nombre:null,
       siglas:null,
       direccion:null,
@@ -46,11 +47,13 @@ export default {
   },
   mounted(){
     axios.create({withCredentials: true })
-      .get('/api/institucion')
+      .post('/institucion/listarTodo')
         .then( response=>{
-          this.nombre = response.data.nombre;
-          this.direccion = response.data.direccion;
-          this.telefono = response.data.telefono;
+          this.id = response.data[3].id_institucion;
+          this.nombre = response.data[3].nombre;
+          this.direccion = response.data[3].direccion;
+          this.telefono = response.data[3].telefono;
+          this.siglas = response.data[3].siglas;
         });
   },
   methods:{
@@ -64,7 +67,7 @@ export default {
       };
 
       axios.create({withCredentials: true })
-        .post('http://localhost:8000/api/institucion',params)
+        .post('/institucion/modificar/'+this.id,params)
           .then( response=>{
             console.log(response)
           });
@@ -72,7 +75,8 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
+
   body{
     background-image: null;
     background-color: #B2EBF2;

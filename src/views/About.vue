@@ -27,7 +27,7 @@ export default {
   methods: {
     getUser(){
       axios
-        .get('http://127.0.0.1:8000/api/user')
+        .post('http://127.0.0.1:8000/api/user')
           .then( response=>{
             this.users = response.data.data
           })

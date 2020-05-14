@@ -1,9 +1,9 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" style="background:#009688;position: fixed;width:100%;z-index: 9999;">
-      <div id="mySidenav" class="sidenav" style="text-align:left">
+  <b-navbar toggleable="lg" type="dark" style="background:#009688;position: fixed;width:100%;z-index: 9999;margin-top:0">
+      <div id="mySidenav" class="sidenav" style="text-align:right">
         <a href="javascript:void(0)" class="closebtn" v-on:click="closeNav()">&times;</a>
-        <router-link to="/institucion"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/bank.png" height="25px">Institucion</router-link>
-        <router-link to="/facultad"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/vacaciones.png" height="25px">Facultad</router-link>
+        <router-link to="/institucion">Institucion<img style="margin-right: 15px;" alt="Vue logo" src="../assets/bank.png" height="25px"></router-link>
+        <router-link to="/facultad">Facultad<img style="margin-right: 15px;" alt="Vue logo" src="../assets/vacaciones.png" height="25px"></router-link>
         <router-link to="/">Programa</router-link>
         <router-link to="/">Coordinador</router-link>
         <router-link to="/">Unidades de Apoyo</router-link>
@@ -28,7 +28,7 @@
                 <b-dropdown-item href="#">FA</b-dropdown-item>
             </b-nav-item-dropdown>
             <b-nav-item v-if="this.$store.state.usuario===null">
-              <router-link to="/login">Ingresar</router-link>
+              <router-link to="/login"><a>Ingresar</a></router-link>
             </b-nav-item>
             <b-nav-item-dropdown right v-if="this.$store.state.usuario!==null">
                 <!-- Using 'button-content' slot -->
@@ -101,7 +101,6 @@ export default {
   font-size: 36px;
   margin-left: 50px;
   }
-
   @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}

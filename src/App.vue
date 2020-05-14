@@ -8,7 +8,8 @@
     link-color="#eee"
     hoverBackground="#ccc"
     /> -->
-    <router-view />
+    <div style="height:80px"></div>
+    <router-view/>
   </div>
 </template>
 
