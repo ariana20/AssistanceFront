@@ -157,22 +157,11 @@ export default {
         descripcion: this.descripcion,
         obligatorio:cond2,  
         individual:cond1, 
-        planificado:cond5, // Ejm: cond5="1"
+        planificado:cond5, 
         tutor_asignado:cond4,
         tutor_fijo:cond3,
         estado:"act",   
-        // nombre: this.nombre,
-        // descripcion: this.descripcion,
-        // obligatorio:"1",  
-        // individual:"1", 
-        // planificado:"1", // Ejm: cond5="1"
-        // tutor_asignado:"1",
-        // tutor_fijo:"1",
-        // estado:'act',  
-        // usuario_creacion:1,
-        // id_programa:5,
-        // usuario_actualizacion:1,
-
+        id_programa:5,
           
       };
       Axios.create({withCredentials: true })
