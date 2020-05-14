@@ -9,7 +9,7 @@
         <router-link to="/">Unidades de Apoyo</router-link>
         <router-link to="/tiposdeTutoria" style="text-align: left;">Tipos de Tutoria</router-link>
       </div>
-      <span style="font-size:30px;cursor:pointer;color: #FFFFFF" v-on:click="openNav()">
+      <span v-if="this.$store.state.usuario!==null" style="font-size:30px;cursor:pointer;color: #FFFFFF" v-on:click="openNav()">
         &#9776;
       </span>
       <b-navbar-brand><router-link to="/">SoftVizcochitos</router-link></b-navbar-brand>
@@ -60,7 +60,11 @@ export default {
     logout(){
       axios.create({withCredentials: true }).post('/vuelogout', null).then(response=>{  
           alert(response.data.status);
-          if(response.data.status=='success') this.$store.state.usuario=null;
+          if(response.data.status=='success') {
+            this.$store.state.usuario=null;
+            this.closeNav();
+            this.$router.push('/login');
+          }
       }).catch( e=>console.log(e));
       
     },
