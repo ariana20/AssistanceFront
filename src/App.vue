@@ -1,7 +1,7 @@
 <template>
 <!-- Para la barra principal parece -->
   <div id="app">
-    <NavBar />
+    <NavBar style="z-index:9000" />
     <SidebarAdministrador
 		:nav-links="navLinks"
     :image-path="require('./assets/assistance-logo.png')"

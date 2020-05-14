@@ -55,6 +55,7 @@ nav {
 		margin-block-end: 0;
 		padding-inline-start: 0;
 		box-shadow: 2px 2px 2px #CCC;
+		z-index:9998;
 		
 		&.active{
 			left: -190px;
