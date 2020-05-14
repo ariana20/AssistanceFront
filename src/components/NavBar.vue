@@ -7,6 +7,7 @@
         <router-link to="/">Programa</router-link>
         <router-link to="/">Coordinador</router-link>
         <router-link to="/">Unidades de Apoyo</router-link>
+        <router-link to="/tiposdeTutoria" style="text-align: left;">Tipos de Tutoria</router-link>
       </div>
       <span style="font-size:30px;cursor:pointer;color: #FFFFFF" v-on:click="openNav()">
         &#9776;

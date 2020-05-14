@@ -1,4 +1,5 @@
 <template>
+<!-- JOHANA HIZO UN COMEN DESDE VSC -->
   <div class="hello">
     <h1>{{ msg }}</h1>
     <div class="gridwrapper" style="height:650px;">

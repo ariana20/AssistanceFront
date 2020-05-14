@@ -1,4 +1,5 @@
 <template>
+<!-- Para la barra principal parece -->
   <div id="app">
     <NavBar />
     <!-- <SidebarAdministrador
