@@ -1,25 +1,20 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" style="background:#009688;position: fixed;width:100%;z-index: 9999;">
-      <div id="mySidenav" class="sidenav">
+  <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.1) 0px -3px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
+      <div id="mySidenav" class="sidenav" style="text-align:right">
         <a href="javascript:void(0)" class="closebtn" v-on:click="closeNav()">&times;</a>
-                  <a href="/institucion" style="text-align: left;"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/bank.png" height="25px">Institucion</a>
-                  <a href="/facultad" style="text-align: left;"><img style="margin-right: 15px;" alt="Vue logo" src="../assets/vacaciones.png" height="25px">Facultad</a>
-                  <a href="#" style="text-align: left;">Programa</a>
-                  <a href="#" style="text-align: left;">Coordinador</a>
-                  <a href="#" style="text-align: left;">Unidades de Apoyo</a>
+        <router-link to="/institucion">Institucion<img style="margin-right: 15px;" alt="Vue logo" src="../assets/bank.png" height="25px"></router-link>
+        <router-link to="/facultad">Facultad<img style="margin-right: 15px;" alt="Vue logo" src="../assets/vacaciones.png" height="25px"></router-link>
+        <router-link to="/">Programa</router-link>
+        <router-link to="/">Coordinador</router-link>
+        <router-link to="/">Unidades de Apoyo</router-link>
+        <router-link to="/tiposdeTutoria" style="text-align: left;">Tipos de Tutoria</router-link>
       </div>
-      <span style="font-size:30px;cursor:pointer;color: #FFFFFF" v-on:click="openNav()">
-        &#9776;
-      </span>
-      <b-navbar-brand href="/">SoftVizcochitos</b-navbar-brand>
+      <!--<b-navbar-brand><router-link to="/">SoftVizcochitos</router-link></b-navbar-brand>-->
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <b-nav-item href="#">Link</b-nav-item>
-          <b-nav-item href="#" disabled>Disabled</b-nav-item>
-        </b-navbar-nav>
+        
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
@@ -30,16 +25,16 @@
                 <b-dropdown-item href="#">RU</b-dropdown-item>
                 <b-dropdown-item href="#">FA</b-dropdown-item>
             </b-nav-item-dropdown>
-            <li class="nav-item">
-                <a class="nav-link" href="/login" style="color: #FFFFFF">Ingresar</a>
-            </li>
-            <b-nav-item-dropdown right>
+            <b-nav-item v-if="this.nombre===null">
+              <router-link to="/login"><a style="color:#000;font-weight:normal;">Ingresar</a></router-link>
+            </b-nav-item>
+            <b-nav-item-dropdown right v-if="this.nombre!==null">
                 <!-- Using 'button-content' slot -->
                 <template v-slot:button-content>
-                <em>User</em>
+                <em style="color:#000000;font-weight:normal;" >{{nombre}}</em>
                 </template>
                 <b-dropdown-item href="#">Profile</b-dropdown-item>
-                <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+                <b-dropdown-item v-on:click="logout()">Sign Out</b-dropdown-item>
             </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -47,15 +42,38 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-
+  data(){
+    return{
+      nombre:null
+    }
+  },
+  mounted(){
+    axios.post('/vueuser').then( response=>{
+      this.$store.state.usuario = response.data.user;
+      console.log(this.$store.state.usuario)
+      this.nombre = this.$store.state.usuario.nombre
+    })
+  },
   methods:{
     openNav() {
         document.getElementById("mySidenav").style.width = "214px";
     },
     closeNav() {
         document.getElementById("mySidenav").style.width = "0";
-    }
+    },
+    logout(){
+      axios.create({withCredentials: true }).post('/vuelogout', null).then(response=>{  
+          alert(response.data.status);
+          if(response.data.status=='success') {
+            this.$store.state.usuario=null;
+            this.closeNav();
+            this.$router.push('/login');
+          }
+      }).catch( e=>console.log(e));
+      
+    },
   }
 }
 </script>
@@ -94,7 +112,6 @@ export default {
   font-size: 36px;
   margin-left: 50px;
   }
-
   @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}

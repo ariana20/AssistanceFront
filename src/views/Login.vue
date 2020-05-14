@@ -1,7 +1,6 @@
 <template>
-  <div class="Login">
-    <LoginForm message="Welcome to SoftVizcochitos App"/>
-    
+  <div class="Login" >
+    <LoginForm />
   </div>
 </template>
 
@@ -14,5 +13,7 @@ export default {
   components: {
     LoginForm
   },
+  methods:{
+  }
 }
 </script>

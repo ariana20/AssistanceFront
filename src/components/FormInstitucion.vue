@@ -33,16 +33,28 @@
 </template>
 
 <script>
-import Axios from 'axios'
+import axios from 'axios'
 export default {
   data(){
     return{
+      id:null,
       nombre:null,
       siglas:null,
       direccion:null,
       telefono:null,
       logo:null,
     }
+  },
+  mounted(){
+    axios.create({withCredentials: true })
+      .post('/institucion/listarTodo')
+        .then( response=>{
+          this.id = response.data[3].id_institucion;
+          this.nombre = response.data[3].nombre;
+          this.direccion = response.data[3].direccion;
+          this.telefono = response.data[3].telefono;
+          this.siglas = response.data[3].siglas;
+        });
   },
   methods:{
     guardarInstitucion() {
@@ -54,8 +66,8 @@ export default {
         logo: this.logo,
       };
 
-      Axios
-        .post('http://127.0.0.1:8000/api/institucion',params)
+      axios.create({withCredentials: true })
+        .post('/institucion/modificar/'+this.id,params)
           .then( response=>{
             console.log(response)
           });
@@ -63,3 +75,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+
+  body{
+    background-image: null;
+    background-color: #B2EBF2;
+  }
+</style>
