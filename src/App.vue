@@ -52,6 +52,11 @@ export default {
         text: 'Unidades de Apoyo',
 		path: '/',
 		icon: 'ion-ios-people'
+      },
+      {
+        text: 'Tipos de Tutoria',
+		path: '/tiposdeTutoria',
+		icon: 'ion-ios-book'
       }
     ],
     }
