@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" style="background:#009688;position: fixed;width:100%;z-index: 9999;margin-top:0">
+  <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.1) 0px -3px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
       <div id="mySidenav" class="sidenav" style="text-align:right">
         <a href="javascript:void(0)" class="closebtn" v-on:click="closeNav()">&times;</a>
         <router-link to="/institucion">Institucion<img style="margin-right: 15px;" alt="Vue logo" src="../assets/bank.png" height="25px"></router-link>
@@ -12,7 +12,7 @@
       <span v-if="this.$store.state.usuario!==null" style="font-size:30px;cursor:pointer;color: #FFFFFF" v-on:click="openNav()">
         &#9776;
       </span>
-      <b-navbar-brand><router-link to="/">SoftVizcochitos</router-link></b-navbar-brand>
+      <!--<b-navbar-brand><router-link to="/">SoftVizcochitos</router-link></b-navbar-brand>-->
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -29,12 +29,12 @@
                 <b-dropdown-item href="#">FA</b-dropdown-item>
             </b-nav-item-dropdown>
             <b-nav-item v-if="this.$store.state.usuario===null">
-              <router-link to="/login"><a>Ingresar</a></router-link>
+              <router-link to="/login"><a style="color:#000;font-weight:normal;">Ingresar</a></router-link>
             </b-nav-item>
             <b-nav-item-dropdown right v-if="this.$store.state.usuario!==null">
                 <!-- Using 'button-content' slot -->
                 <template v-slot:button-content>
-                <em >{{$store.state.usuario.nombre}}</em>
+                <em style="color:#000;font-weight:normal;" >{{$store.state.usuario.nombre}}</em>
                 </template>
                 <b-dropdown-item href="#">Profile</b-dropdown-item>
                 <b-dropdown-item v-on:click="logout()">Sign Out</b-dropdown-item>

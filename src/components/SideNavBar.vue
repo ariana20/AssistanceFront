@@ -1,8 +1,9 @@
 <template>
-	<nav style="background: '#FFFFFF';height:600px">
+	<nav style="background: '#FFFFFF'">
 		<ul :style="{ background: background|| '#333'}" ref="nav">
 			<figure class="image-logo" @click="toggleNav">
-				<img :src="imagePath" height="60px" width="60px" />				
+				<img :src="imagePath" height="60px" width="60px" />		
+				<nobr>ssitance</nobr>				
 			</figure>
 			<li
 				v-for="(link,index) in navLinks"	
@@ -40,30 +41,37 @@ nav {
 	width: 100%;
 	padding-left: 10px;
 	box-shadow: 2px 2px 2px #CCC;
+	z-index: 1000;
 	ul {
-		position: absolute;
+		position: fixed;
 		flex-direction: column;
 		display: flex;
 		height: 100%;
 		transition: 300ms ease all;
 		top: 60px;
 		width: 251px;
-		left:-190px;
+		left:0px;
 		margin-block-start: 0;
 		margin-block-end: 0;
 		padding-inline-start: 0;
 		box-shadow: 2px 2px 2px #CCC;
 		
 		&.active{
-			left: 0px;
+			left: -190px;
 		}
 		figure {
 			position: fixed;
 			z-index: 1;
 			top: 3px;
-			left: -7px;
+			left: 10px;
 			cursor: pointer;
 			margin-right: 10px;
+
+			nobr {
+				color: #000;
+				font-size: 20px;
+				//margin-left:10px;
+			}
 		}
 		a{
 			text-decoration: none;

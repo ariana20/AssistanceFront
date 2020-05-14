@@ -2,13 +2,13 @@
 <!-- Para la barra principal parece -->
   <div id="app">
     <NavBar />
-    <!-- <SidebarAdministrador
+    <SidebarAdministrador
 		:nav-links="navLinks"
     :image-path="require('./assets/assistance-logo.png')"
     background="#009892"
     link-color="#eee"
     hoverBackground="#ccc"
-    /> -->
+    />
     <div style="height:80px"></div>
     <router-view/>
   </div>
@@ -16,13 +16,13 @@
 
 <script>
 import NavBar from '@/components/NavBar.vue'
-//import SidebarAdministrador from '@/components/SideNavBar'
+import SidebarAdministrador from '@/components/SideNavBar'
 
 export default {
   name: 'App',
   components: {
     NavBar,
-    //SidebarAdministrador
+    SidebarAdministrador
   },
   data() {
     return{
