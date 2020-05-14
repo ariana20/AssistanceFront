@@ -47,7 +47,7 @@ export default {
   methods:{
     
     listarFacultades() {
-      this.axios.post('/facultad/listarTodo')
+      this.axios.post('/facultad/listarTodo') //crear credenciales
         .then(res =>{
           console.log(res.data);
           this.facultades=res.data;
