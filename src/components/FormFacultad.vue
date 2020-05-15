@@ -1,6 +1,6 @@
 <template>
   <div class="FormFacultad">
-    <div class="container" style="left:0%;text-align: left">
+    <div class="container">
       <table>
       <tbody>
         <td style="width:662px">
@@ -9,26 +9,33 @@
         </td>
       </tbody>
       </table>
-    </div>
+    
 
-      <table class="table">
+      <table class="table" style="text-align: left">
         <thead>
           <tr>
-            <th scope="col">Id</th>
+            <th scope="col">N°</th>
             <th scope="col">Nombre</th>
+            <th scope="col">Coordinador</th>
             <th scope="col">Correo</th>
-            <th scope="col">Estado</th>
+            <th scope="col">N° Programas</th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in facultades" :key="index">
-            <th scope="row">{{item.id_facultad}}</th>
+            <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>
+            <td>FaltaNombreCoordinador</td>
             <td>{{item.correo}}</td>
-            <td>{{item.estado}}</td>
+            <td>FaltaNumProg</td>
+            <td>
+              <button>{{index}}</button>
+            </td>
           </tr>
         </tbody>
       </table>
+    </div>
   </div>
 </template>
 
