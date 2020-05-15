@@ -2,8 +2,8 @@
   <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.1) 0px -3px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
       <div id="mySidenav" class="sidenav" style="text-align:right">
         <a href="javascript:void(0)" class="closebtn" v-on:click="closeNav()">&times;</a>
-        <router-link to="/institucion">Institucion<img style="margin-right: 15px;" alt="Vue logo" src="../assets/bank.png" height="25px"></router-link>
-        <router-link to="/facultad">Facultad<img style="margin-right: 15px;" alt="Vue logo" src="../assets/vacaciones.png" height="25px"></router-link>
+        <router-link to="/institucion">Institucion</router-link>
+        <router-link to="/facultad">Facultad</router-link>
         <router-link to="/">Programa</router-link>
         <router-link to="/">Coordinador</router-link>
         <router-link to="/">Unidades de Apoyo</router-link>

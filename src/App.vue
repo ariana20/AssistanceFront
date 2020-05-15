@@ -37,7 +37,7 @@ export default {
       },
       {
         text: 'Facultad',
-		path: '/about',
+		path: '/facultad',
 		icon: 'ion-ios-school'
       },
       {
