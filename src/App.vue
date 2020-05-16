@@ -45,7 +45,7 @@ export default {
       },
       {
         text: 'Programa',
-		path: '/',
+		path: '/programa',
 		icon: 'ion-ios-home'
       },
       {
