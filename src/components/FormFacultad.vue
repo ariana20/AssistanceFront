@@ -1,15 +1,17 @@
 <template>
   <div class="FormFacultad">
     <div class="container">
-      <table>
-      <tbody>
-        <td style="width:662px">
-          <tr style="text-align:left"></tr>
-          <tr style="text-align:left"><td>Nombre</td>   <td> <input type="text" v-model="nombre"></td></tr>
-        </td>
-      </tbody>
-      </table>
-    
+
+
+      <div class="form-group row">
+        <label for="inputNombre" class="col-sm-1 col-form-label">Buscar</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="inputNombre">
+        </div>
+        <button type="button" class="btn btn-outline-secondary"><b-icon icon="search"></b-icon></button>
+        <button type="button" class="btn btn-outline-secondary">Añadir</button>
+      </div>
+
 
       <table class="table" style="text-align: left">
         <thead>
@@ -30,7 +32,8 @@
             <td>{{item.correo}}</td>
             <td>FaltaNumProg</td>
             <td>
-              <button>{{index}}</button>
+              <button class="btn link"><b-icon icon="pencil"></b-icon></button>
+              <button class="btn link"><b-icon icon="dash-circle-fill"></b-icon></button>
             </td>
           </tr>
         </tbody>
