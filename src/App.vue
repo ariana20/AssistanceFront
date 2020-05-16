@@ -1,15 +1,15 @@
 <template>
 <!-- Para la barra principal parece -->
   <div id="app">
-    <HomeNavBar style="z-index:9000" v-if="this.$route.path === '/'" />
-    <NavBar style="z-index:9000" v-if="this.$route.path in $router.options.routes && this.$route.path !== '/'" /> 
+    <HomeNavBar style="z-index:9000" v-if="this.$route.path === '/'"/>
+    <NavBar style="z-index:9000" v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'"/> 
     <SidebarAdministrador
 		:nav-links="navLinks"
     :image-path="require('./assets/assistance-logo.png')"
     background="#009892"
     link-color="#eee"
     hoverBackground="#ccc"
-    v-if="this.$route.path in $router.options.routes && this.$route.path !== '/'"  />
+    v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'"  />
     <div style="height:80px"></div>
     <router-view/>
   </div>
@@ -25,7 +25,15 @@ Vue.use(MultiSelectPlugin);
 export default {
   name: 'App',
   mounted(){
-    
+    let result = this.$router.options.routes.map(a => a.path);  
+    for(var i=0; i < result.length; i++){
+      if( result[i] == this.$route.path){
+          this.valor=true;
+      }
+    }
+    if(this.valor==false){
+      this.$router.push('/404')
+    }
   },
   components: {
     HomeNavBar,
@@ -34,6 +42,7 @@ export default {
   },
   data() {
     return{
+    valor:false,
     usuario: this.$store.state.user,
     navLinks: [
       {

@@ -156,5 +156,5 @@ export default Vue.extend( {
     background-image: null;
     background-color: #FFFFFF;
   }
-  @import url(https://cdn.syncfusion.com/ej2/material.css)
+  @import '../assets/styles/material.css';
 </style>

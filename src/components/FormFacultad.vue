@@ -39,11 +39,6 @@
         </tbody>
       </table>
     </div>
-<<<<<<< HEAD
-
-      
-=======
->>>>>>> origin/Johana
   </div>
 </template>
 
