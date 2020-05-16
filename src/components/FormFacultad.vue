@@ -1,6 +1,6 @@
 <template>
   <div class="FormFacultad">
-    <div class="container" style="left:0%;text-align: left">
+    <div class="container" style="left:60px;text-align: left">
       <table>
       <tbody>
         <td style="width:662px">
@@ -9,8 +9,6 @@
         </td>
       </tbody>
       </table>
-    </div>
-
       <table class="table">
         <thead>
           <tr>
@@ -29,6 +27,9 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+      
   </div>
 </template>
 
