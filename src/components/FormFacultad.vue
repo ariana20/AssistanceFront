@@ -36,11 +36,6 @@
         </tbody>
       </table>
     </div>
-<<<<<<< HEAD
-
-      
-=======
->>>>>>> origin/Ariana
   </div>
 </template>
 

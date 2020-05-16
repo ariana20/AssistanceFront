@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@syncfusion/ej2-vue-dropdowns": "^18.1.52",
     "@types/tough-cookie": "^4.0.0",
     "axios": "^0.19.2",
     "axios-cookiejar-support": "^1.0.0",

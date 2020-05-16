@@ -19,6 +19,9 @@
 import HomeNavBar from '@/components/HomeNavBar.vue'
 import NavBar from '@/components/NavBar.vue'
 import SidebarAdministrador from '@/components/SideNavBar'
+import Vue from 'vue'
+import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
+Vue.use(MultiSelectPlugin);
 export default {
   name: 'App',
   mounted(){
@@ -62,7 +65,12 @@ export default {
         text: 'Tipos de Tutoria',
 		path: '/tiposdeTutoria',
 		icon: 'ion-ios-book'
-      }
+      },
+       {
+        text: 'Gestionar Usuario',
+		path: '/Usuario',
+		icon: 'ion-ios-book'
+      },
     ],
     }
   }
