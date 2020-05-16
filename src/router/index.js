@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../views/ViewHome.vue'
 
 Vue.use(VueRouter)
 
@@ -35,6 +35,14 @@ Vue.use(VueRouter)
   component: () => import(/* webpackChunkName: "about" */ '../views/ViewFacultad.vue')
   },
   {
+  path: '/programa',
+  name: 'Programa',
+  // route level code-splitting
+  // this generates a separate chunk (about.[hash].js) for this route
+  // which is lazy-loaded when the route is visited.
+  component: () => import(/* webpackChunkName: "about" */ '../views/ViewPrograma.vue')
+  },
+  {
     path: '/login',
     name: 'Login',
     // route level code-splitting
@@ -49,6 +57,14 @@ Vue.use(VueRouter)
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "ViewTiposTutorias" */ '../views/ViewTiposTutoria.vue')
+  }, 
+  {
+    path: '/404',
+    name: 'Error 404',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "View404" */ '../views/View404.vue')
   }
 ]
 

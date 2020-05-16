@@ -1,18 +1,18 @@
 <template>
-  <div class="home">
-    <HelloWorld msg="Welcome to SoftVizcochitos App"/>
+  <div class="404">
+    <Form404 />
     
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Form404 from '@/components/Form404.vue'
 // Solo llamo al componente
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    Form404
   },
 }
 </script>

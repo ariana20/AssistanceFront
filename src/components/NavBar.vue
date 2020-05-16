@@ -1,16 +1,5 @@
 <template>
   <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.1) 0px -3px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
-      <div id="mySidenav" class="sidenav" style="text-align:right">
-        <a href="javascript:void(0)" class="closebtn" v-on:click="closeNav()">&times;</a>
-        <router-link to="/institucion">Institucion<img style="margin-right: 15px;" alt="Vue logo" src="../assets/bank.png" height="25px"></router-link>
-        <router-link to="/facultad">Facultad<img style="margin-right: 15px;" alt="Vue logo" src="../assets/vacaciones.png" height="25px"></router-link>
-        <router-link to="/">Programa</router-link>
-        <router-link to="/">Coordinador</router-link>
-        <router-link to="/">Unidades de Apoyo</router-link>
-        <router-link to="/tiposdeTutoria" style="text-align: left;">Tipos de Tutoria</router-link>
-      </div>
-      <!--<b-navbar-brand><router-link to="/">SoftVizcochitos</router-link></b-navbar-brand>-->
-
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
@@ -25,13 +14,13 @@
                 <b-dropdown-item href="#">RU</b-dropdown-item>
                 <b-dropdown-item href="#">FA</b-dropdown-item>
             </b-nav-item-dropdown>
-            <b-nav-item v-if="this.nombre===null">
-              <router-link to="/login"><a style="color:#000;font-weight:normal;">Ingresar</a></router-link>
+            <b-nav-item href="/login" v-if="this.$store.state.usuario === null || this.$store.state.usuario === undefined">
+              <a style="color:#000;font-weight:normal;">Ingresar</a>
             </b-nav-item>
-            <b-nav-item-dropdown right v-if="this.nombre!==null">
+            <b-nav-item-dropdown right v-if="this.$store.state.usuario !== null && this.$store.state.usuario !== undefined">
                 <!-- Using 'button-content' slot -->
                 <template v-slot:button-content>
-                <em style="color:#000000;font-weight:normal;" >{{nombre}}</em>
+                <em style="color:#000000;font-weight:normal;" >{{$store.state.usuario.nombre}}</em>
                 </template>
                 <b-dropdown-item href="#">Profile</b-dropdown-item>
                 <b-dropdown-item v-on:click="logout()">Sign Out</b-dropdown-item>
@@ -52,7 +41,7 @@ export default {
   mounted(){
     axios.post('/vueuser').then( response=>{
       this.$store.state.usuario = response.data.user;
-      console.log(this.$store.state.usuario)
+      if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined)
       this.nombre = this.$store.state.usuario.nombre
     })
   },
@@ -68,6 +57,7 @@ export default {
           alert(response.data.status);
           if(response.data.status=='success') {
             this.$store.state.usuario=null;
+            this.nombre = null;
             this.closeNav();
             this.$router.push('/login');
           }

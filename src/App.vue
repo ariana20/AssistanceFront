@@ -1,20 +1,22 @@
 <template>
 <!-- Para la barra principal parece -->
   <div id="app">
-    <NavBar style="z-index:9000" />
+    <HomeNavBar style="z-index:9000" v-if="this.$route.path === '/'" />
+    <NavBar style="z-index:9000" v-if="this.$route.path !== '/404' && this.$route.path !== '/'" />
     <SidebarAdministrador
 		:nav-links="navLinks"
     :image-path="require('./assets/assistance-logo.png')"
     background="#009892"
     link-color="#eee"
     hoverBackground="#ccc"
-    />
+    v-if="this.$route.path !== '/404' && this.$route.path !== '/'"  />
     <div style="height:80px"></div>
     <router-view/>
   </div>
 </template>
 
 <script>
+import HomeNavBar from '@/components/HomeNavBar.vue'
 import NavBar from '@/components/NavBar.vue'
 import SidebarAdministrador from '@/components/SideNavBar'
 export default {
@@ -23,6 +25,7 @@ export default {
     
   },
   components: {
+    HomeNavBar,
     NavBar,
     SidebarAdministrador
   },
@@ -37,12 +40,12 @@ export default {
       },
       {
         text: 'Facultad',
-		path: '/about',
+		path: '/facultad',
 		icon: 'ion-ios-school'
       },
       {
         text: 'Programa',
-		path: '/',
+		path: '/programa',
 		icon: 'ion-ios-home'
       },
       {
@@ -62,7 +65,7 @@ export default {
       }
     ],
     }
-  },
+  }
 }
 </script>
 

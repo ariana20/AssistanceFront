@@ -35,7 +35,7 @@ import axios from 'axios'
 
   export default {
       mounted() {
-        if(this.$store.state.usuario!==null) this.$router.push('/');
+        if(this.$store.state.usuario!==null) this.$router.push('/institucion');
       },
         data() {
           return {
@@ -58,8 +58,8 @@ import axios from 'axios'
         }
       else
       {
-        if(this.$store.state.usuario!==null) {
-          this.$router.push('/');
+        if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined) {
+          this.$router.push('/institucion');
         }
         else{
           const params ={
@@ -72,7 +72,7 @@ import axios from 'axios'
               alert(response.data.status); 
               if(response.data.status==='success') {
                 this.$store.state.usuario = response.data.user;
-                this.$router.push('/');  
+                this.$router.push('/institucion'); 
               }                
             }).catch( e=>console.log(e));
         }
