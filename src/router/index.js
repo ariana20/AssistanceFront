@@ -58,8 +58,7 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "ViewTiposTutorias" */ '../views/ViewTiposTutoria.vue')
   }, 
-  {
-    path: '/404',
+  { path: "*",
     name: 'Error 404',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

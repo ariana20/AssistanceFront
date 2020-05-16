@@ -2,14 +2,14 @@
 <!-- Para la barra principal parece -->
   <div id="app">
     <HomeNavBar style="z-index:9000" v-if="this.$route.path === '/'" />
-    <NavBar style="z-index:9000" v-if="this.$route.path !== '/404' && this.$route.path !== '/'" />
+    <NavBar style="z-index:9000" v-if="this.$route.path in $router.options.routes && this.$route.path !== '/'" /> 
     <SidebarAdministrador
 		:nav-links="navLinks"
     :image-path="require('./assets/assistance-logo.png')"
     background="#009892"
     link-color="#eee"
     hoverBackground="#ccc"
-    v-if="this.$route.path !== '/404' && this.$route.path !== '/'"  />
+    v-if="this.$route.path in $router.options.routes && this.$route.path !== '/'"  />
     <div style="height:80px"></div>
     <router-view/>
   </div>

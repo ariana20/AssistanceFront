@@ -1,5 +1,5 @@
 <template>
-  <div class="FormFacultad">
+  <div name="FormFacultad">
     <div class="container">
       <table>
       <tbody>
@@ -9,9 +9,7 @@
         </td>
       </tbody>
       </table>
-    
-
-      <table class="table" style="text-align: left">
+      <table class="table">
         <thead>
           <tr>
             <th scope="col">N°</th>
@@ -36,11 +34,8 @@
         </tbody>
       </table>
     </div>
-<<<<<<< HEAD
 
       
-=======
->>>>>>> origin/Ariana
   </div>
 </template>
 

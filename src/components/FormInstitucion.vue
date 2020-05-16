@@ -18,7 +18,7 @@
           <tr style="border-color: red"><img style="border: 2px solid black;margin-left:100px" alt="Vue logo" v-bind:src="logo" ></tr>
           <tr style="height:40px"></tr>
           <tr >
-            <td><button type="button" class="btn btn-info" style="margin-left:135px">Cargar</button></td>
+            <td><button v-on:click="tipo()" type="button" class="btn btn-info" style="margin-left:135px">Cargar</button></td>
             <td><button type="button" class="btn btn-secondary" style="margin-left:-120px">Eliminar</button></td>
           </tr>
         </td>
@@ -78,6 +78,16 @@ export default {
           .then( response=>{
             console.log(response)
           });
+    },
+    tipo(){
+      const parame = {
+        id_usuario: this.$store.state.usuario.id_usuario
+      }
+      console.log(this.$store.state.usuario.id_usuario)
+      axios.post('/usuarios/tipoUsuario',parame)
+      .then(response=>{  
+        console.log(response.data);            
+      }).catch( e=>console.log(e));
     },
   }
 }
