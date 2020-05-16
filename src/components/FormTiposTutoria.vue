@@ -84,42 +84,27 @@ export default {
     Axios.create({withCredentials: true })
       .post('/TipoTutoria/mostrar/')
         .then( response=>{
-
+          this.id= response.data.id_tipo_tutoria;
           this.nombre = response.data.nombre;
           this.descripcion = response.data.descripcion;
           //this.activo="act";
           var control = document.getElementById("checkbox");
           control.checked=true;
           var aux=response.data.obligatorio;
-          if (aux=="1" ){
-            this.obligatorio='Obligatorio';
-          }else{
-            this.obligatorio='Opcional';
-          }
+          if (aux=="1" ){            this.obligatorio='Obligatorio';
+          }else{            this.obligatorio='Opcional';          }
           aux=response.data.individual;
-          if (aux=="1" ){
-            this.individual='Individual';
-          }else{
-            this.individual='Grupal';
-          }
+          if (aux=="1" ){            this.individual='Individual';
+          }else{            this.individual='Grupal';          }
           aux=response.data.planificado;
-          if (aux=="1" ){
-            this.planificado='Planificado';
-          }else{
-            this.planificado='No planificado';
-          }
+          if (aux=="1" ){            this.planificado='Planificado';
+          }else{            this.planificado='No planificado';          }
           aux=response.data.tutorasignado;
-          if (aux=="1" ){
-            this.tutorasignado='Con tutor asignado';
-          }else{
-            this.tutorasignado='Con tutor solicitado';
-          }
+          if (aux=="1" ){            this.tutorasignado='Con tutor asignado';
+          }else{            this.tutorasignado='Con tutor solicitado';          }
           aux=response.data.tutorfijo;
-          if (aux=="1" ){
-            this.tutorfijo='Con tutor fijo';
-          }else{
-            this.tutorfijo='Con tutor variable';
-          }
+          if (aux=="1" ){            this.tutorfijo='Con tutor fijo';
+          }else{            this.tutorfijo='Con tutor variable';          }
           //checkbox activo
           //tutores
         });
@@ -127,31 +112,16 @@ export default {
   methods:{
     guardarTipoTutoria() {
       var cond1,cond2, cond3,cond4,cond5;
-      if (this.tutorfijo=='Con tutor fijo' ){
-        cond3="1";
-      }else{
-        cond3='0';
-      }
-      if (this.individual=='Individual' ){
-        cond1="1";
-      }else{
-        cond1='0';
-      }
-      if (this.obligatorio=='Obligatorio' ){
-        cond2="1";
-      }else{
-        cond2='0';
-      }
-      if (this.tutorasignado=='Con tutor asignado' ){
-        cond4="1";
-      }else{
-        cond4='0';
-      }
-      if (this.planificado=='Planificado' ){
-        cond5="1";
-      }else{
-        cond5='0';
-      }
+      if (this.tutorfijo=='Con tutor fijo' ){          cond3="1";      }
+      else{        cond3='0';      }
+      if (this.individual=='Individual' ){             cond1="1";
+      }else{        cond1='0';      }
+      if (this.obligatorio=='Obligatorio' ){           cond2="1";
+      }else{        cond2='0';      }
+      if (this.tutorasignado=='Con tutor asignado' ){  cond4="1";      
+      }else{        cond4='0';      }
+      if (this.planificado=='Planificado' ){           cond5="1";
+      }else{        cond5='0';      }
       const params = {
         nombre: this.nombre,
         descripcion: this.descripcion,
