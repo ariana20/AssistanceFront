@@ -2,6 +2,12 @@
   <div class="FormFacultad">
     <div class="container">
 
+      <div class="float-right">
+        
+        <router-link to="/FormInstitucion">
+          <button type="button"  class="btn btn-outline-secondary">Añadir</button>
+        </router-link>
+      </div><br>
 
       <div class="form-group row">
         <label for="inputNombre" class="col-sm-1 col-form-label">Buscar</label>
@@ -9,10 +15,9 @@
           <input type="text" class="form-control" id="inputNombre">
         </div>
         <button type="button" class="btn btn-outline-secondary"><b-icon icon="search"></b-icon></button>
-        <button type="button" class="btn btn-outline-secondary">Añadir</button>
       </div>
 
-
+            
       <table class="table" style="text-align: left">
         <thead>
           <tr>
@@ -66,6 +71,7 @@ export default {
           console.log(e.response);
         })
     },
+    
   }
 }
 </script>
