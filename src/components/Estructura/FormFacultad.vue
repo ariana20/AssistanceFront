@@ -4,7 +4,7 @@
 
       <div class="float-right">
         
-        <router-link to="/FormInstitucion">
+        <router-link to="/crearFacultad">
           <button type="button"  class="btn btn-outline-secondary">Añadir</button>
         </router-link>
       </div><br>
@@ -12,7 +12,7 @@
       <div class="form-group row">
         <label for="inputNombre" class="col-sm-1 col-form-label">Buscar</label>
         <div class="col-sm-8">
-          <input type="text" class="form-control" id="inputNombre">
+          <input type="text" class="form-control" v-model="nombre">
         </div>
         <button type="button" class="btn btn-outline-secondary"><b-icon icon="search"></b-icon></button>
       </div>
