@@ -16,22 +16,18 @@
           </textarea> 
           <!-- Textarea tiene que tener un número menos de largo -->
           </tr>
-          <tr style="text-align:left"><td>Condiciones</td>    
-              <div>
-                <b-form-select id="condi" v-model="tipotutoria.condiciones" :options="condiciones" multiple :select-size="4"  style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" ></b-form-select>
-                
-              </div>
-          </tr>
+          
           <tr>
-          <div class="mt-3">Condiciones elegidas
+          <!-- <div class="mt-3">Condiciones elegidas
                    <div v-for="cond in tipotutoria.condiciones" v-bind:key="cond.id">- {{cond}}</div>
-         </div>
+         </div> -->
           </tr>
-         <tr style="text-align:left"><td>Condiciones</td> 
-          <div id='container' >
+         <tr style="text-align:left"><td>Condiciones  </td> 
+          <div >
             <br>
-            <ejs-multiselect id='multiselect' :dataSource='condiciones' :fields='camposcondi' >
+            <ejs-multiselect style='margin-left:100px' id='multiselect' :dataSource='condiciones' :fields='camposcondi' v-model="tipotutoria.condiciones" >
             </ejs-multiselect>
+            
               
           </div>
         </tr>
