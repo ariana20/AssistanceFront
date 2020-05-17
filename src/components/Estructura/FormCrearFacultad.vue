@@ -6,8 +6,8 @@
             <b-col sm="3">
             <label for="input-none">Nombre de la Facultad:</label>
             </b-col>
-            <b-col sm="8">
-            <b-form-input id="nombre" :state="null"></b-form-input>
+            <b-col sm="9">
+            <b-form-input id="nombre" v-model="facultad.nombre"></b-form-input>
             </b-col>
 
         </b-row>
@@ -15,8 +15,8 @@
             <b-col sm="3">
             <label for="input-none">Correo Electrónico:</label>
             </b-col>
-            <b-col sm="8">
-            <b-form-input id="correo" :state="null"></b-form-input>
+            <b-col sm="9">
+            <b-form-input id="correo" v-model="facultad.correo"></b-form-input>
             </b-col>
         </b-row>
         <b-row class="my-1">
@@ -24,7 +24,7 @@
             <label for="input-none">Coordinador de Facultad:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinador" :state="null" disabled></b-form-input>
+            <b-form-input id="idCoordinador" v-model="idCoordFacultad" disabled></b-form-input>
             </b-col>
 
             <b-col>
@@ -49,7 +49,7 @@
             <h4 class="font-weight-bold">Programas de la Facultad:</h4>
             
 
-            <b-col sm="11" style="text-align: right">
+            <b-col sm="12" style="text-align: right">
             <button type="button" class="btn btn-info" style="margin-left:50px">Añadir Programa</button>
             </b-col>
         </b-row>
@@ -57,8 +57,8 @@
             <b-col sm="3">
             <label for="input-none">Nombre del Programa:</label>
             </b-col>
-            <b-col sm="8">
-            <b-form-input id="nombre" :state="null"></b-form-input>
+            <b-col sm="9">
+            <b-form-input id="nombre" v-model="nombrePrograma"></b-form-input>
             </b-col>
 
         </b-row>
@@ -66,8 +66,8 @@
             <b-col sm="3">
             <label for="input-none">Correo Electrónico:</label>
             </b-col>
-            <b-col sm="8">
-            <b-form-input id="correo" :state="null"></b-form-input>
+            <b-col sm="9">
+            <b-form-input id="correo" v-model="correoPrograma"></b-form-input>
             </b-col>
         </b-row>
         <b-row class="my-1">
@@ -75,7 +75,7 @@
             <label for="input-none">Coordinador de Programa:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinador" :state="null" disabled></b-form-input>
+            <b-form-input id="idCoordinador" v-model="idCoordPrograma" disabled></b-form-input>
             </b-col>
 
             <b-col sm="1">
@@ -115,8 +115,29 @@
 export default {
   data(){
     return{
-      nombre:null,
-      facultades:[]
+      facultad:{
+          id_facultad:null,
+          id_institucion:1,
+          nombre:null,
+          descripcion:null,
+          correo:null,
+          id_coordinador:null,
+          nombre_coordinador:null,
+          programas:[],
+      },
+      coordinador:{
+          id_coordinador:null,
+          nombre_coordinador:null,
+      },
+      programa:{
+          id_programa:null,
+          id_facultad:null,
+          nombre:null,
+          descripcion:null,
+          correo:null,
+          id_coordinador:null,
+          nombre_coordinador:null,
+      },
     }
   },
   created(){

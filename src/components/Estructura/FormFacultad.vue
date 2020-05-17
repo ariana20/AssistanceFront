@@ -25,18 +25,18 @@
             <th scope="col">Nombre</th>
             <th scope="col">Coordinador</th>
             <th scope="col">Correo</th>
-            <th scope="col">N° Programas</th>
-            <th scope="col"></th>
+            <th scope="col" style="text-align: center">N° Programas</th>
+            <th scope="col" style="text-align: center">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in facultades" :key="index">
+          <tr v-for="(item,index) in facultades" :key="index">
             <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>
             <td>FaltaNombreCoordinador</td>
             <td>{{item.correo}}</td>
-            <td>FaltaNumProg</td>
-            <td>
+            <td style="text-align: center">{{cantidades[index][0].count}}</td>
+            <td style="text-align: center">
               <button class="btn link"><b-icon icon="pencil"></b-icon></button>
               <button class="btn link"><b-icon icon="dash-circle-fill"></b-icon></button>
             </td>
@@ -53,7 +53,8 @@ export default {
   data(){
     return{
       nombre:null,
-      facultades:[]
+      facultades:[],
+      cantidades:[]
     }
   },
   created(){
@@ -62,10 +63,12 @@ export default {
   methods:{
     
     listarFacultades() {
-      this.axios.create({withCredentials: true }).post('/facultad/listarTodo')
+      this.axios.create({withCredentials: true })
+      .post('/facultad/listarFacultadesConCant')
         .then(res =>{
           console.log(res.data);
-          this.facultades=res.data;
+          this.facultades=res.data[0];
+          this.cantidades=res.data[1];
         })
         .catch(e => {
           console.log(e.response);
