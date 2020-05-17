@@ -11,7 +11,9 @@
     hoverBackground="#ccc"
     v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'"  />
     <div style="height:80px"></div>
-    <router-view/>
+    <div id="container" class="wrapper">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -128,5 +130,15 @@ a {
     &.router-link-exact-active {
       color: #42b983;
     }
+}
+
+#container {
+  margin-left: 250px;
+
+}
+@media screen and (max-width: 759px){
+  #container{
+    margin-left:60px;
+  }
 }
 </style>

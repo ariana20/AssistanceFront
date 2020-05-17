@@ -1,9 +1,9 @@
 <template>
-  <div class="viewinstitucion">
-    <Institucion/>
-  </div>
-  
-  
+      <div class="viewinstitucion">
+        
+          <Institucion/>
+        
+    </div> 
 </template>
 
 <script>
