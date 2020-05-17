@@ -20,15 +20,24 @@
           <!-- <tr style="text-align:left"><div style="margin-top:20px"/></tr> -->
           <tr style="text-align:left"><td>Correo</td>   <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="correo"></td></tr>
         <!-- Combos box -->
+         <!-- <tr><td>Otro Tipos de usuarios</td>  </tr> -->
+        <tr style="text-align:left" v-for="(item, index) in tiposusuarios" :key="index">
+          <td>Otro Tipos de usuarios</td>                      
+            <td>{{item.nombre}}</td>            
+         </tr>
+        
         <tr style="text-align:left"><td>Tipos de usuarios</td>   
           <select style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" v-model="tiposusuarios">
-            <option v-for="(options,index) in tiposusuarios" v-bind:key="index">
+            <option v-for="options in tiposusuarios" v-bind:key="options.id_tipo_usuario">
              {{ options.nombre }}
+             <!-- {{ options }} -->
              </option>
           </select>
-        </tr>
 
-        </td>       
+        </tr>
+      
+        
+        </td>      
        
       </tbody>
       </table>
@@ -58,12 +67,13 @@ export default {
       ap_materno:"",
       correo:"",
       telefono:"",
-      tiposusuarios:[]
+      tiposusuarios:null
+      // tiposusuarios:['Algo','Otro']
     }
   },
   created(){
-    if(this.$store.state.tiposusuarios === null) this.listarTUsuarios();
-    else this.tiposusuarios = this.$store.state.tiposusuarios;
+    // this.tiposusuarios=['Algo','Otro'];
+    this.listarTUsuarios();
   },
   mounted(){
     // Axios.create({withCredentials: true })
@@ -98,8 +108,9 @@ export default {
     listarTUsuarios() {
       Axios.create({withCredentials: true }).post('/tipoUsuarios/listarTodo')
         .then(res =>{
-          this.$store.state.tiposusuarios = res.data;
           this.tiposusuarios=res.data;
+          console.log(res.data);
+          
         })
         .catch(e => {
           console.log(e.response);
