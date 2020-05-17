@@ -6,44 +6,31 @@
         <td style="width:1662px">
           <tr style="text-align:left"></tr>
           <tr style="text-align:left" ><td>Codigo</td>  <td > <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="codigo"></td></tr>
-          <!-- <tr style="text-align:left"><div style="margin-top:20px"/></tr> -->
           <tr style="text-align:left"><td>Nombre</td>   <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="nombre"></td></tr>
-          <!-- <tr style="text-align:left"><div style="margin-top:20px"/></tr> -->
           <tr style="text-align:left"><td>Apellido Paterno</td>   <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="ap_paterno"></td></tr>
-          <!-- <tr style="text-align:left"><div style="margin-top:20px"/></tr> -->
           <tr style="text-align:left"><td>Apellido Materno</td>   <td> <input   style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="ap_materno"></td></tr>
           
-          <!-- <tr style="text-align:left"><div style="margin-top:20px"/></tr> -->
           <tr style="text-align:left"><td>Telefono</td>   
           <td> <input  type="number"
           style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" v-model="telefono"></td></tr>
-          <!-- <tr style="text-align:left"><div style="margin-top:20px"/></tr> -->
           <tr style="text-align:left"><td>Correo</td>   <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="correo"></td></tr>
-        <!-- Combos box -->
-         <!-- <tr><td>Otro Tipos de usuarios</td>  </tr> -->
-        <tr style="text-align:left" v-for="(item, index) in tiposusuarios" :key="index">
-          <td>Otro Tipos de usuarios</td>                      
-            <td>{{item.nombre}}</td>            
-         </tr>
-        
+        <!-- Combos box -->        
         <tr style="text-align:left"><td>Tipos de usuarios</td>   
           <select style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" v-model="tiposusuarios">
-            <option v-for="options in tiposusuarios" v-bind:key="options.id_tipo_usuario">
+            <option v-for="options in arrayTU" v-bind:key="options.id_tipo_usuario">
              {{ options.nombre }}
-             <!-- {{ options }} -->
              </option>
           </select>
-
-        </tr>
-      
-        
+        </tr>   
         </td>      
        
       </tbody>
       </table>
     </div>
     <br>
-      
+       <br>
+        <br>
+         <br>
        <td><button  type="button" style="margin-left:400px" class="btn btn-info" 
             v-on:click="guardarUsuario()">Guardar</button>
        <td><button type="button" class="btn btn-secondary" style="margin-left:20px">Eliminar</button></td>
@@ -67,12 +54,14 @@ export default {
       ap_materno:"",
       correo:"",
       telefono:"",
-      tiposusuarios:null
-      // tiposusuarios:['Algo','Otro']
+      arrayTU:[]
+
+      
+     
     }
   },
   created(){
-    // this.tiposusuarios=['Algo','Otro'];
+
     this.listarTUsuarios();
   },
   mounted(){
@@ -90,13 +79,14 @@ export default {
   methods:{
     guardarUsuario() {
       const params = {
-      // codigo:this.codigo,
+      //yo creo que primero analizo los ids
       nombre:this.nombre,
       ap_paterno:this.ap_paterno,
       ap_materno:this.ap_materno,
       correo:this.correo,
       telefono:this.telefono,
-      password:"123456"
+      password:"123456",
+      // id_tipo_usuario:this.arrayTU.id_tipo_usuario,
       };
 
       Axios.create({withCredentials: true })
@@ -108,7 +98,10 @@ export default {
     listarTUsuarios() {
       Axios.create({withCredentials: true }).post('/tipoUsuarios/listarTodo')
         .then(res =>{
-          this.tiposusuarios=res.data;
+          // Ordenadito
+          let par=res.data;
+          this.arrayTU=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+
           console.log(res.data);
           
         })

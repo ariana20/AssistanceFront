@@ -1,22 +1,26 @@
+<!-- <template>
+  <div class="viewusuario">
+    <Usuario/>
+  </div> 
+</template> -->
+
 <template>
   <div class="Usuario">
-    <CabezeraTitulo msg="Configuración de la Usuario"/>
-    <FormUsuario/>
+    <CabezeraTitulo msg="Listado de usuarios en mi programa"/>
+    <FormListarUsuario/>
   </div>
 </template>
-
 <script>
 import CabezeraTitulo from '@/components/CabezeraTitulo.vue'
-import FormUsuario    from '@/components/FormUsuario.vue'
+import FormListarUsuario    from '@/components/FormListarUsuario.vue'
 export default {
-  name: 'Usuario',
+  name: 'ViewListarUsuarios',
   components: {
     CabezeraTitulo,
-    FormUsuario,
+    FormListarUsuario,
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {

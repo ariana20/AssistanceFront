@@ -1,17 +1,40 @@
-<template>
+<!-- <template>
   <div class="viewusuario">
     <Usuario/>
+  </div> 
+</template> -->
+
+<template>
+  <div class="Usuario">
+    <CabezeraTitulo msg="Configuración de la Usuario"/>
+    <FormUsuario/>
   </div>
 </template>
-
 <script>
-// @ is an alias to /src
-import Usuario from '@/components/Usuario.vue'
-// Solo llamo al componente, pero es personalizable aquí
+import CabezeraTitulo from '@/components/CabezeraTitulo.vue'
+import FormUsuario    from '@/components/FormUsuario.vue'
 export default {
   name: 'ViewUsuario',
   components: {
-    Usuario
+    CabezeraTitulo,
+    FormUsuario,
   }
 }
 </script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+h3 {
+  margin: 40px 0 0;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
+</style>

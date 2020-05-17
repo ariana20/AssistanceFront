@@ -33,7 +33,6 @@
         </tr>
           <tr> <br> 
           </tr>
-          <!-- <div  v-for="cond in tutoria.planificado" v-bind:key="cond.id">{{cond}} </div> -->
           <input type="checkbox"   id="checkbox" v-model="estado" true-value="ina" false-value ="act">
           <label for="checkbox"> Activo</label>
         </td>        
@@ -41,9 +40,10 @@
       
       </table>
     </div>
-      <br>
-      <button type="button" class="btn btn-secondary">Eliminar</button>
-      <button type="button" style="margin-left:210px" class="btn btn-info" v-on:click="guardarTipoTutoria()">Guardar</button>
+      
+      <button type="button" style="margin-left:70px" class="btn btn-info" v-on:click="guardarTipoTutoria()">Guardar</button>
+      <button type="button" style="margin-left:50px"  class="btn btn-secondary" v-on:click="eliminarTtutoria()">Eliminar</button>
+      
   </div>
 
 </template>
@@ -54,8 +54,10 @@ import Axios from 'axios'
 import Vue from 'vue'
 import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(MultiSelectPlugin);
+import Swal from 'sweetalert2'
 
 export default Vue.extend( {
+
   data(){
     return{
       tipotutoria: { 
@@ -95,8 +97,8 @@ export default Vue.extend( {
           this.descripcion = response.data.descripcion;
           this.estado=response.data.estado;
           var aux=response.data.obligatorio;
-          if (aux=="1" ){            this.obligatorio='Obligatorio';
-          }else if (aux=="0" ){            this.obligatorio='Opcional';          }
+          if (aux=="1" ){            this.condiciones[0]='Obligatorio';
+          }else if (aux=="0" ){            this.condiciones[0]='Opcional';          }
           aux=response.data.individual;
           if (aux=="1" ){            this.individual='Individual';
           }else if (aux=="0" ){            this.individual='Grupal';          }
@@ -109,23 +111,64 @@ export default Vue.extend( {
           aux=response.data.tutorfijo;
           if (aux=="1" ){            this.tutorfijo='Con tutor fijo';
           }else if (aux=="0" ){            this.tutorfijo='Con tutor variable';          }
+          
+          
+
           //checkbox activo
           //tutores
         });
   },
   methods:{
+    
     guardarTipoTutoria() {
+
       var cond1,cond2, cond3,cond4,cond5;
-      if (this.tutorfijo=='Con tutor fijo' ){          cond3="1";      }
-      else{        cond3='0';      }
-      if (this.individual=='Individual' ){             cond1="1";
-      }else{        cond1='0';      }
-      if (this.obligatorio=='Obligatorio' ){           cond2="1";
-      }else{        cond2='0';      }
-      if (this.tutorasignado=='Con tutor asignado' ){  cond4="1";      
-      }else{        cond4='0';      }
-      if (this.planificado=='Planificado' ){           cond5="1";
-      }else{        cond5='0';      }
+      var entro1=false,entro2=false,entro3=false,entro4=false,entro5=false;
+      var aviso="";
+      
+      //manejo de condiciones
+      ////manejo de condiciones
+      var verifLongi=this.condiciones.length;
+      if(verifLongi==4 && this.nombre!=null &&  this.descripcion!= null ){
+
+        for (let i = 0; i <4; i++) {            
+                if (this.condiciones[i]=='Con tutor fijo' && entro3==false ){          cond3="1";  entro3=true  ;  }
+                else if (this.condiciones[i]=='Con tutor variable' && entro3==false ){        cond3='0';   entro3=true;   }
+                else if (entro3==true){                 aviso=aviso+"No puede ingresar la condición Tutor fijo y variable a la vez/n";
+                }
+                if (this.condiciones[i]=='Individual'  && entro1==false){             cond1="1";entro1=true;
+                }else if (this.condiciones[i]=='Grupal' && entro1==false ){        cond1='0';   entro1=true;   }
+                else if(entro1==true){      aviso=aviso+"No puede ingresar la condición Individual y Grupal a la vez/n";    
+                }
+                if (this.condiciones[i]=='Obligatorio'&& entro2==false ){           cond2="1";entro2=true;
+                }else if (this.condiciones[i]=='Opcional' && entro2==false ){        cond2='0';  entro2=true;    }
+                else if (entro2==true) { aviso=aviso+"No puede ingresar la condición Opcional y Obligatoria a la vez/n";
+                }
+                if (this.condiciones[i]=='Con tutor asignado' && entro4==false ){  cond4="1";      entro4=true;
+                }else if (this.condiciones[i]=='Con tutor solicitado' && entro4==false ){        cond4='0'; entro4=true;     }
+                else if( entro4==false ){ aviso=aviso+"No puede ingresar la condición Tutor solicitado y asignado a la vez/n";
+                }
+                if (this.condiciones[i]=='Planificado'&& entro5==false  ){           cond5="1";entro5=true;
+                }else if (this.condiciones[i]=='No Planificado'&& entro5==false  ){        cond5='0';  entro5=true;    }
+                else if(entro5==false ) { aviso=aviso+"No puede ingresar la Planificado y no planificado a la vez/n";
+                }
+           }
+          if(aviso!=""){ //Cuando hay 4 pero 
+              Swal.fire({
+              text:"Verifique la agrupación de condiciones.\n"+aviso,
+              })
+          }
+      
+      }
+      else{
+          
+          //no cumplió algo
+          if(verifLongi>4 || verifLongi<4)
+              Swal.fire({
+              text:"Debe colocar solo 4 condiciones.\n",
+              })
+        
+      }
       const params = {
         nombre: this.nombre,
         descripcion: this.descripcion,
@@ -138,12 +181,47 @@ export default Vue.extend( {
         id_programa:5,
           
       };
+      
       Axios.create({withCredentials: true })
         .post('http://18.232.253.212/Back-end-Software/public/api/TipoTutoria/insertar',params)
           .then( response=>{
             console.log(response)
           });
+
     },
+    eliminarTtutoria(){
+      Swal.fire({
+            text:'¿Desea eliminar?',
+            icon:'warning',
+            confirmButtonText: 'Eliminar',
+             confirmButtonColor:'#0097A7',
+            cancelButtonText: 'Cancelar',
+            cancelButtonColor:'C4C4C4',
+            showCancelButton: true,
+            showConfirmButton: true,
+            //html:' <div >Hello</div>',
+
+        }).then((result) => {
+            if (result.value) {
+              Swal.fire({
+                icon:'Deleted!',
+                text:'El usuario ha sido eliminado',
+                confirmButtonText:'Confirmo' ,
+                confirmButtonColor:'#0097A7'
+                }
+              )
+              //aqui iriía el eliminar
+            } else if (
+              /* Read more about handling dismissals below */
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+              Swal.fire({
+                text:'Se ha cancelado la eliminación',
+                confirmButtonColor:'#0097A7',}
+              )
+            }
+          })
+   } // eliminart
   }
 })
 </script>
