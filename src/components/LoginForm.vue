@@ -47,39 +47,53 @@ import axios from 'axios'
           }
       },
       methods:{
-      checkForm: function (e) {
-          
-        this.errors = [];
-        if (!this.state.email) {
-          this.errors.push('Email required.');
-        }
-        if (!this.state.password) {
-          this.errors.push('Password required.');
-        }
-      else
-      {
-        if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined) {
-          this.$router.push('/institucion');
-        }
-        else{
-          const params ={
-            correo: this.state.email,
-            password: this.state.password,
+        checkForm: function (e) {
+            
+          this.errors = [];
+          if (!this.state.email) {
+            this.errors.push('Email required.');
           }
-          
-          axios.post('/vuelogin', params,)
-            .then(response=>{  
-              alert(response.data.status); 
-              if(response.data.status==='success') {
-                this.$store.state.usuario = response.data.user;
-                this.$router.push('/institucion'); 
-              }                
-            }).catch( e=>console.log(e));
+          if (!this.state.password) {
+            this.errors.push('Password required.');
+          }
+        else
+        {
+          if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined) {
+            this.$router.push('/institucion');
+          }
+          else{
+            const params ={
+              correo: this.state.email,
+              password: this.state.password,
+            }
+            
+            axios.post('/vuelogin', params,)
+              .then(response=>{  
+                alert(response.data.status); 
+                if(response.data.status==='success') {
+                  this.$store.state.usuario = response.data.user;
+                  this.rutas();
+                }                
+              }).catch( e=>console.log(e));
+          }
+        }
+        
+          e.preventDefault();
+        },
+        rutas(){
+          axios.post('/usuarios/permisos')
+              .then(response=>{
+                for(var i=0; i < this.$store.state.navLinks.length; i++){
+                  for(var j=0; j < response.data.length; j++){
+                    if( this.$store.state.navLinks[i].text == response.data[j]){
+                        this.$store.state.rutas.push(this.$store.state.navLinks[i]);
+                    }
+                  }
+                }
+                console.log(this.$store.state.rutas);
+                this.$router.push(this.$store.state.rutas[0].path);            
+              }).catch( e=>console.log(e));
         }
       }
-      
-        e.preventDefault();
-      }
-    }
   }
 </script>

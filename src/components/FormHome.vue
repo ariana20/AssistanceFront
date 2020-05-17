@@ -174,17 +174,6 @@ export default {
         this.$router.push("/login")
       }
   },
-  mounted(){
-      let result = this.$router.options.routes.map(a => a.path);
-      console.log(result);
-      console.log(this.$route.path);
-      console.log(this.$route.path.toString() in this.$router.options.routes)
-      for(var i=0; i < result.length; i++){
-        if( result[i] == this.$route.path){
-            console.log('true');
-        }
-      }
-  },
 }
 </script>
 

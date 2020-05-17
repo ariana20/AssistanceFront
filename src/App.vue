@@ -4,8 +4,8 @@
     <HomeNavBar style="z-index:9000" v-if="this.$route.path === '/'"/>
     <NavBar style="z-index:9000" v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'"/> 
     <SidebarAdministrador
-		:nav-links="navLinks"
-    :image-path="require('./assets/assistance-logo.png')"
+		:nav-links="$store.state.rutas"
+    :image-path="require('./assets/images/assistance-logo.png')"
     background="#009892"
     link-color="#eee"
     hoverBackground="#ccc"
@@ -42,45 +42,8 @@ export default {
   },
   data() {
     return{
-    valor:false,
-    usuario: this.$store.state.user,
-    navLinks: [
-      {
-        text: 'Institucion',
-		path: '/institucion',
-		icon: 'ion-ios-business'
-      },
-      {
-        text: 'Facultad',
-		path: '/facultad',
-		icon: 'ion-ios-school'
-      },
-      {
-        text: 'Programa',
-		path: '/programa',
-		icon: 'ion-ios-home'
-      },
-      {
-        text: 'Coordinador',
-		path: '/',
-		icon: 'ion-ios-person'
-      },
-      {
-        text: 'Unidades de Apoyo',
-		path: '/',
-		icon: 'ion-ios-people'
-      },
-      {
-        text: 'Tipos de Tutoria',
-		path: '/tiposdeTutoria',
-		icon: 'ion-ios-book'
-      },
-       {
-        text: 'Gestionar Usuario',
-		path: '/Usuario',
-		icon: 'ion-ios-book'
-      },
-    ],
+      valor:false,
+      usuario: this.$store.state.user,
     }
   }
 }

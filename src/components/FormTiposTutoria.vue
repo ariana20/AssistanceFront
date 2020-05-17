@@ -30,7 +30,7 @@
          <tr style="text-align:left"><td>Condiciones</td> 
           <div id='container' >
             <br>
-            <ejs-multiselect id='multiselect' :dataSource='condiciones' :fields='camposcondi' >
+            <ejs-multiselect id='multiselect' :dataSource='condiciones' :fields='camposcondi' v-model="tipotutoria.condiciones">
             </ejs-multiselect>
               
           </div>
@@ -62,6 +62,7 @@ Vue.use(MultiSelectPlugin);
 export default Vue.extend( {
   data(){
     return{
+      game:null,
       tipotutoria: { 
         nombre:null,
         descripcion:null,

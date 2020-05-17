@@ -32,6 +32,10 @@ export default {
 			const nav = this.$refs.nav.classList
 			nav.contains('active') ? nav.remove('active') : nav.add('active')
 		}
+	},
+	mounted(){
+		const nav = this.$refs.nav.classList
+		if(!nav.contains('active')) nav.add('active');
 	}
 }
 </script>
