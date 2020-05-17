@@ -21,14 +21,14 @@
           <tr style="text-align:left"><td>Correo</td>   <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="correo"></td></tr>
         <!-- Combos box -->
          <!-- <tr><td>Otro Tipos de usuarios</td>  </tr> -->
-        <tr style="text-align:left" v-for="(item, index) in tiposusuarios" :key="index">
+        <tr style="text-align:left" v-for="(item, index) in array" :key="index">
           <td>Otro Tipos de usuarios</td>                      
             <td>{{item.nombre}}</td>            
          </tr>
         
         <tr style="text-align:left"><td>Tipos de usuarios</td>   
           <select style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" v-model="tiposusuarios">
-            <option v-for="options in tiposusuarios" v-bind:key="options.id_tipo_usuario">
+            <option v-for="options in array" v-bind:key="options.id_tipo_usuario">
              {{ options.nombre }}
              <!-- {{ options }} -->
              </option>
@@ -67,7 +67,8 @@ export default {
       ap_materno:"",
       correo:"",
       telefono:"",
-      tiposusuarios:null
+      tiposusuarios:[],
+      array:[],
       // tiposusuarios:['Algo','Otro']
     }
   },
@@ -108,8 +109,9 @@ export default {
     listarTUsuarios() {
       Axios.create({withCredentials: true }).post('/tipoUsuarios/listarTodo')
         .then(res =>{
-          this.tiposusuarios=res.data;
-          console.log(res.data);
+          let par = res.data;
+          this.array=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+          console.log(par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);}));
           
         })
         .catch(e => {
