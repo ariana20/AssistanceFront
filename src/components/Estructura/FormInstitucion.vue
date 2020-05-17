@@ -12,7 +12,7 @@
         </td>
         <td style="width:662px">
           <tr style="text-align:left"><h3>Logo</h3></tr>
-          <tr style="border-color: red"><img style="border: 2px solid black;margin-left:100px" alt="Vue logo" src="../assets/logo.png" ></tr>
+          <tr style="border-color: red"><img style="border: 2px solid black;margin-left:100px" alt="Vue logo" src="@/assets/logo.png" ></tr>
           <tr style="height:40px"></tr>
           <tr >
             <td><button type="button" class="btn btn-info" style="margin-left:50px">Cargar</button></td>

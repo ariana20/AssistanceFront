@@ -1,17 +1,18 @@
 <template>
   <div class="viewfacultad">
-    <Facultad/>
+    <CabezeraTitulo msg="Facultades"/>
+    <FormFacultad/>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import Facultad from '@/components/Facultad.vue'
-// Solo llamo al componente, pero es personalizable aquí
+import CabezeraTitulo from '@/components/CabezeraTitulo.vue'
+import FormFacultad from '@/components/Estructura/FormFacultad.vue'
 export default {
   name: 'ViewFacultad',
   components: {
-    Facultad
+    CabezeraTitulo,
+    FormFacultad
   }
 }
 </script>

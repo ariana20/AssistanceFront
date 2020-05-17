@@ -1,19 +1,20 @@
 <template>
   <div class="viewinstitucion">
-    <Institucion/>
+    <CabezeraTitulo msg="Configuracion de la Institucion"/>
+    <FormInstitucion/>
   </div>
   
   
 </template>
 
 <script>
-// @ is an alias to /src
-import Institucion from '@/components/Institucion.vue'
-// Solo llamo al componente, pero es personalizable aquí
+import CabezeraTitulo from '@/components/CabezeraTitulo.vue'
+import FormInstitucion from '@/components/Estructura/FormInstitucion.vue'
 export default {
   name: 'ViewInstitucion',
   components: {
-    Institucion
+    CabezeraTitulo,
+    FormInstitucion
   }
 }
 </script>
