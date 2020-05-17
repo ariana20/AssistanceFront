@@ -59,7 +59,7 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewTiposTutorias" */ '../views/ViewTiposTutoria.vue')
   }, 
   {
-    path: '/gestionarusuario',
+    path: '/Usuario',
     name: 'Gestionar Usuario',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

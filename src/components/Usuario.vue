@@ -9,7 +9,7 @@
 import CabezeraTitulo from '@/components/CabezeraTitulo.vue'
 import FormUsuario    from '@/components/FormUsuario.vue'
 export default {
-  name: 'Institucion',
+  name: 'Usuario',
   components: {
     CabezeraTitulo,
     FormUsuario,

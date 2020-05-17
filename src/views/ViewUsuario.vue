@@ -2,8 +2,6 @@
   <div class="viewusuario">
     <Usuario/>
   </div>
-  
-  
 </template>
 
 <script>
