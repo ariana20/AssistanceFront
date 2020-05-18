@@ -71,7 +71,7 @@
             
 
             <b-col sm="12" style="text-align: right">
-            <button type="button" class="btn btn-info" style="margin-left:50px">Añadir Programa</button>
+            <b-button class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="agregarPrograma()">Añadir Programa</b-button>
             </b-col>
         </b-row>
         <b-row class="my-1">
@@ -113,15 +113,17 @@
                 <th scope="col">Id</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Correo</th>
-                <th scope="col">Estado</th>
+                <th scope="col">Coordinador</th>
+                <th scope="col">Acciones</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="(item, index) in programas" :key="index">
-                <th scope="row">{{item.id_programa}}</th>
+                <th scope="row">{{index+1}}</th>
                 <td>{{item.nombre}}</td>
                 <td>{{item.correo}}</td>
-                <td>{{item.estado}}</td>
+                <td></td>
+                <td></td>
             </tr>
             </tbody>
         </table>
@@ -157,7 +159,8 @@ export default {
           id_facultad:null,
           nombre:null,
           descripcion:null,
-          correo:null
+          correo:null,
+          id_coordinador:0
       },
     }
   },
@@ -187,6 +190,14 @@ export default {
           console.log(e.response);
         })
     },
+    agregarPrograma(){
+      console.log(this.programa);
+      var prog= new Object();
+      prog.nombre=this.programa.nombre;
+      prog.correo=this.programa.correo;
+      prog.id_coordinador=this.programa.id_coordinador;
+      this.programas.push(prog);
+    }
   }
 }
 </script>
