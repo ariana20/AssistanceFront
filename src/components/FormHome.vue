@@ -169,6 +169,8 @@
 <script>
 export default {
   name: 'FormHome',
+  components: {
+  },
   methods:{
       redirect(){
         this.$router.push("/login")

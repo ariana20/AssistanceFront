@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     usuario:null,
     programas:null,
+    coordionadores:null,
     rutas:[],
     navLinks: [
       {

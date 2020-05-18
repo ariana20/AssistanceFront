@@ -1,7 +1,6 @@
 <template>
   <div class="home">
     <FormHome/>
-    
   </div>
 </template>
 
@@ -12,7 +11,7 @@ import FormHome from '@/components/FormHome.vue'
 export default {
   name: 'Home',
   components: {
-    FormHome
+    FormHome,
   },
 }
 </script>
