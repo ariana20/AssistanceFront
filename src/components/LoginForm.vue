@@ -20,7 +20,7 @@
         
         <div class="user_options-forms" id="user_options-forms">
           <div class="user_forms-login">
-            <h2 class="forms_title">Login</h2>
+            <h2 class="forms_title">Ingresar</h2>
             <form v-on:submit.prevent="checkForm" class="forms_form">
               <fieldset class="forms_fieldset">
                 <div class="forms_field">
@@ -31,7 +31,7 @@
                 </div>
               </fieldset>
               <div class="forms_buttons">
-                <button type="button" class="forms_buttons-forgot">Forgot password?</button>
+                <button type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</button>
                 <input type="submit" value="Ingresar" class="forms_buttons-action">
               </div>
               
@@ -39,7 +39,7 @@
             </form>
           </div>
           <div class="user_forms-signup">
-            <h2 class="forms_title">Sign Up</h2>
+            <h2 class="forms_title">Usuario Nuevo</h2>
             <form class="forms_form">
               <fieldset class="forms_fieldset">
                 <div class="forms_field">
