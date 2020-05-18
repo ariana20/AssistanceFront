@@ -110,9 +110,7 @@ export default {
       Axios.create({withCredentials: true }).post('/tipoUsuarios/listarTodo')
         .then(res =>{
           let par = res.data;
-          this.array=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-          console.log(par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);}));
-          
+          this.array=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});          
         })
         .catch(e => {
           console.log(e.response);

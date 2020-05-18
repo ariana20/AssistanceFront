@@ -13,7 +13,7 @@
         </td>
         <td style="width:662px">
           <tr style="text-align:left"><h3>Logo</h3></tr>
-          <tr style="border-color: red"><img style="border: 2px solid black;margin-left:100px" alt="Vue logo" src="@/assets/logo.png" ></tr>
+          <tr style="border-color: red"><img style="border: 2px solid black;margin-left:100px" alt="Vue logo" src="@/assets/images/logo.png" ></tr>
           <tr style="height:40px"></tr>
           <tr >
             <td><button v-on:click="tipo()" type="button" class="btn btn-info" style="margin-left:135px">Cargar</button></td>
@@ -52,15 +52,11 @@ export default {
           this.direccion = response.data[0].direccion;
           this.telefono = response.data[0].telefono;
           this.siglas = response.data[0].siglas;
-<<<<<<< HEAD:src/components/FormInstitucion.vue
           this.logo = response.data[0].logo;
-        });
-=======
         })
         .catch(e => {
           console.log(e.response);
-        })
->>>>>>> origin/Ariana:src/components/Estructura/FormInstitucion.vue
+        });
   },
   methods:{
     guardarInstitucion() {
