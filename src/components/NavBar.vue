@@ -41,20 +41,22 @@ export default {
   mounted(){
     axios.post('/vueuser').then( response=>{
       this.$store.state.usuario = response.data.user;
-      if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined)
-      this.nombre = this.$store.state.usuario.nombre
-      if(this.$store.state.usuario!=null){
-      axios.post('/usuarios/permisos')
-        .then(response=>{
-          for(var i=0; i < this.$store.state.navLinks.length; i++){
-            for(var j=0; j < response.data.length; j++){
-              if( this.$store.state.navLinks[i].text == response.data[j]){
-                  this.$store.state.rutas.push(this.$store.state.navLinks[i]);
+        if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
+        this.nombre = this.$store.state.usuario.nombre
+        axios.post('/usuarios/permisos')
+          .then(response=>{
+            for(var i=0; i < this.$store.state.navLinks.length; i++){
+              for(var j=0; j < response.data.length; j++){
+                if( this.$store.state.navLinks[i].text == response.data[j]){
+                    this.$store.state.rutas.push(this.$store.state.navLinks[i]);
+                }
               }
-            }
-          }          
-        }).catch( e=>console.log(e));
-    }
+            }          
+          }).catch( e=>console.log(e));
+        }
+        else{
+          if (this.$route.path !== '/login') this.$router.push('login')
+        }
     })
     
   },
@@ -71,8 +73,7 @@ export default {
           if(response.data.status=='success') {
             this.$store.state.usuario=null;
             this.nombre = null;
-            this.closeNav();
-            this.$router.push('/login');
+            if (this.$route.path !== '/login') this.$router.go('login');
           }
       }).catch( e=>console.log(e));
       

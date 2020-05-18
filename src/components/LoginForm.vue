@@ -40,16 +40,16 @@
           </div>
           <div class="user_forms-signup">
             <h2 class="forms_title">Usuario Nuevo</h2>
-            <form class="forms_form">
+            <form v-on:submit.prevent="checkFormReg" class="forms_form">
               <fieldset class="forms_fieldset">
                 <div class="forms_field">
-                  <input type="text" placeholder="Nombre Completo" class="forms_field-input" required />
+                  <input v-model="reg.nombre" type="text" placeholder="Nombre Completo" class="forms_field-input" required />
                 </div>
                 <div class="forms_field">
-                  <input type="email" placeholder="Correo" class="forms_field-input" required />
+                  <input v-model="reg.email" type="email" placeholder="Correo" class="forms_field-input" required />
                 </div>
                 <div class="forms_field">
-                  <input type="password" placeholder="Contraseña" class="forms_field-input" required />
+                  <input v-model="reg.password" type="password" placeholder="Contraseña" class="forms_field-input" required />
                 </div>
               </fieldset>
               <div class="forms_buttons">
@@ -71,7 +71,7 @@ import axios from 'axios'
 
   export default {
       mounted() {
-        if(this.$store.state.usuario!==null) this.$router.push('/institucion');
+        if(this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path);
       },
         data() {
           return {
@@ -80,24 +80,20 @@ import axios from 'axios'
                 email: '',
                 password: ''
             },
+            reg:{
+              nombre:'',
+              email:'',
+              password:''
+            },
             authRes: "none",
             profileRes: "none",
           }
       },
       methods:{
-        checkForm: function (e) {
-            
-          this.errors = [];
-          if (!this.state.email) {
-            this.errors.push('Email required.');
-          }
-          if (!this.state.password) {
-            this.errors.push('Password required.');
-          }
-        else
-        {
+        checkForm() {
           if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined) {
-            this.$router.push('/institucion');
+            if(this.$store.state.rutas[0].path) this.$router.push(this.$store.state.rutas[0].path);
+            else this.$router.push('/userNuevo');
           }
           else{
             const params ={
@@ -114,9 +110,27 @@ import axios from 'axios'
                 }                
               }).catch( e=>console.log(e));
           }
-        }
-        
-          e.preventDefault();
+        },
+        checkFormReg(){
+          if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined) {
+            if(this.$store.state.rutas[0].path) this.$router.push(this.$store.state.rutas[0].path);
+          }
+          else{
+            const params ={
+              nombre: this.reg.nombre,
+              correo: this.reg.email,
+              password: this.reg.password,
+            }
+            console.log(params)
+            axios.post('/vueregister', params,)
+              .then(response=>{  
+                alert(response.data.status); 
+                if(response.data.status==='success') {
+                  this.$store.state.usuario = response.data.user;
+                  this.$router.push('/userNuevo')
+                }                
+              }).catch( e=>console.log(e));
+          }
         },
         rutas(){
           axios.post('/usuarios/permisos')
@@ -129,7 +143,8 @@ import axios from 'axios'
                   }
                 }
                 console.log(this.$store.state.rutas);
-                this.$router.push(this.$store.state.rutas[0].path);          
+                if(this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path);  
+                else this.$router.push('/userNuevo');        
               }).catch( e=>console.log(e));
         },
         authenticate(network) {
@@ -191,11 +206,6 @@ import axios from 'axios'
     color: white;
     background-color: #DD4B39;
     height: 45px;
-  }
-  .btn-login {
-    color: white;
-    background-color: #009688;
-    margin-top: 40px;
   }
 </style>
 

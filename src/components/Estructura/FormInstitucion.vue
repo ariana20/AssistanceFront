@@ -1,6 +1,6 @@
 <template>
   <div class="FormInstitucion">
-    <div class="container" style="text-align: left;left:-100px">
+    <div class="container" style="text-align: left;left:-100px;margin-top:30px">
       <table>
       <tbody>
         <td style="width:662px">
@@ -13,11 +13,15 @@
         </td>
         <td style="width:662px">
           <tr style="text-align:left"><h3>Logo</h3></tr>
-          <tr style="border-color: red"><img style="border: 2px solid black;margin-left:100px" alt="Vue logo" src="@/assets/images/logo.png" ></tr>
-          <tr style="height:40px"></tr>
+          <tr style="border-color: red">
+            <img v-if="this.selectedFile!==null" style="border: 2px solid black;margin-left:100px;heigth:70px;width:200px" alt="Vue logo" :src="selectedFile" id='LogoInst'>
+            <img v-else style="border: 2px solid black;margin-left:100px;heigth:70px;width:200px" alt="Vue logo" v-bind:src="logo" id='LogoInst'>
+          </tr>
+          <tr style="height:40px">
+            <input type="file" v-on:change="onFileSelected" style="margin-top:10px"></tr>
           <tr >
-            <td><button v-on:click="tipo()" type="button" class="btn btn-info" style="margin-left:135px">Cargar</button></td>
-            <td><button type="button" class="btn btn-secondary" style="margin-left:-120px">Eliminar</button></td>
+            <td><button @click="onUpload" type="button" class="btn btn-info" style="margin-left:135px;margin-top:20px">Subir</button></td>
+            <td><button @click="rut" type="button" class="btn btn-secondary" style="margin-left:-120px;margin-top:20px">Eliminar</button></td>
           </tr>
         </td>
       </tbody>
@@ -40,7 +44,8 @@ export default {
       siglas:null,
       direccion:null,
       telefono:null,
-      logo:'/',
+      logo:null,
+      selectedFile:null,
     }
   },
   mounted(){
@@ -59,6 +64,36 @@ export default {
         });
   },
   methods:{
+    onFileSelected(e){
+      let files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+          return;
+      this.createImage(files[0]);
+    },
+    createImage(file) {
+      let reader = new FileReader();
+      let vm = this;
+      reader.onload = (e) => {
+          vm.selectedFile = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+    onUpload(){
+      axios.post('/institucion/subirLogo',{image: this.selectedFile})
+        .then( response=>{
+          console.log(response)
+          let imgIns = response.data.path + '\\' + response.data.name
+          console.log(imgIns)
+          this.logo = imgIns;
+          this.guardarInstitucion();
+        })
+        .catch(e => {
+          console.log(e.response);
+        })
+    },
+    rut(){
+      this.$router.push({name:'Login'})
+    },
     guardarInstitucion() {
       const params = {
         nombre: this.nombre,
@@ -68,11 +103,10 @@ export default {
         logo: this.logo,
       };
 
-      axios.create({withCredentials: true })
-        .post('/institucion/modificar/'+this.id,params)
-          .then( response=>{
-            console.log(response)
-          })
+      axios.post('/institucion/modificar/'+this.id,params)
+        .then( response=>{
+          console.log(response)
+        })
         .catch(e => {
           console.log(e.response);
         })

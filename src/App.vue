@@ -56,7 +56,7 @@ export default {
 @import 'https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css';
 @font-face {
   font-family: "Brandon Bold";
-  src: url('./assets/fonts/BrandonText-Regular.otf');
+  src: '../assets/fonts/BrandonText-Regular.otf';
 }
 figure {
 	margin-block-start: 0;

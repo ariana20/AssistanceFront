@@ -31,7 +31,7 @@ export default new Vuex.Store({
       },
       {
         text: 'Unidades de Apoyo',
-		path: '/',
+		path: '/about',
 		icon: 'ion-ios-people'
       },
       {
