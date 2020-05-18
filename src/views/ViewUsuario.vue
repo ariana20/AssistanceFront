@@ -6,7 +6,7 @@
 
 <template>
   <div class="Usuario">
-    <CabezeraTitulo msg="Configuración de la Usuario"/>
+    <CabezeraTitulo msg="Configuración de un usuario"/>
     <FormUsuario/>
   </div>
 </template>

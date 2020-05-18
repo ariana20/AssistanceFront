@@ -5,7 +5,13 @@
       <tbody>
         <td style="width:662px">
           <tr style="text-align:left"></tr>
-          <tr style="text-align:left"><td>Buscar</td>   <td> <input type="text" v-model="busqnombre"></td></tr>
+          <tr style="text-align:left"><td>Buscar</td>   <td> <input type="text" v-model="busqnombre"></td>
+          <td >  <router-link to="/Usuario">
+                  <button  type="button" style="margin-left:800px" class="btn btn-info">Añadir</button>
+                </router-link>
+          
+          </td>
+          </tr>
         </td>
       </tbody>
       </table>

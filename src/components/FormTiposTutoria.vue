@@ -18,10 +18,7 @@
           </tr>
           
           <tr>
-          <!-- <div class="mt-3">Condiciones elegidas
-                   <div v-for="cond in tipotutoria.condiciones" v-bind:key="cond.id">- {{cond}}</div>
-         </div> -->
-          </tr>
+
          <tr style="text-align:left"><td>Condiciones  </td> 
           <div >
             <br>
@@ -60,6 +57,7 @@ export default Vue.extend( {
 
   data(){
     return{
+      miUsuario:this.$store.state.usuario,
       tipotutoria: { 
         nombre:null,
         descripcion:null,
@@ -166,6 +164,9 @@ export default Vue.extend( {
           if(verifLongi>4 || verifLongi<4)
               Swal.fire({
               text:"Debe colocar solo 4 condiciones.\n",
+              confirmButtonText: 'Corregir',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
               })
         
       }

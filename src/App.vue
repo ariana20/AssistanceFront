@@ -68,8 +68,8 @@ export default {
       },
        {
         text: 'Gestionar Usuario',
-		path: '/Usuario',
-		icon: 'ion-ios-book'
+		path: '/ListaUsuarios',
+		icon: 'ion-ios-person'
       },
     ],
     }

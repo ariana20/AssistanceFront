@@ -1,6 +1,6 @@
 <template>
   <div class="FormUsuario">
-    <div class="container" style="text-align: left;left:left">
+    <div class="container" style="left:10%;text-align: left">
       <table>
       <tbody  align="left">
         <td style="width:1662px">
@@ -10,7 +10,7 @@
           <tr style="text-align:left"><td>Apellido Paterno</td>   <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="ap_paterno"></td></tr>
           <tr style="text-align:left"><td>Apellido Materno</td>   <td> <input   style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="ap_materno"></td></tr>
           
-          <tr style="text-align:left"><td>Telefono</td>   
+          <tr style="text-align:left"><td>Teléfono</td>   
           <td> <input  type="number"
           style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" v-model="telefono"></td></tr>
           <tr style="text-align:left"><td>Correo</td>   <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="correo"></td></tr>
@@ -33,7 +33,9 @@
          <br>
        <td><button  type="button" style="margin-left:400px" class="btn btn-info" 
             v-on:click="guardarUsuario()">Guardar</button>
-       <td><button type="button" class="btn btn-secondary" style="margin-left:20px">Eliminar</button></td>
+       <td><button type="button" class="btn btn-secondary" style="margin-left:20px"
+            v-on:click="cancelarUsuario()" >Cancelar</button>
+        </td>
 
 
   </div>
@@ -41,7 +43,7 @@
 
 <script>
 import Axios from 'axios'
-
+import Swal from 'sweetalert2'
 
 export default {
   data(){
@@ -108,6 +110,24 @@ export default {
         .catch(e => {
           console.log(e.response);
         })
+    },
+    cancelarUsuario(){
+        Swal.fire({
+              text:"¿Está seguro que desea cancelar?",
+              icon:"warning",
+              confirmButtonText: 'Sí',
+              confirmButtonColor:'#0097A7',
+              cancelButtonText: 'No',
+              cancelButtonColor:'C4C4C4',
+              showCancelButton: true,
+              showConfirmButton: true,
+        }).then((result) => {
+            if (result.value) {
+              //lo redirigo
+              location.href="/ListaUsuarios";
+            } 
+          })
+        
     },
     
   }
