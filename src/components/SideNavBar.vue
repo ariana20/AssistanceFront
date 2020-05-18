@@ -39,7 +39,7 @@ export default {
 <style lang="scss" scoped>
 nav {
 	width: 100%;
-	padding-left: 10px;
+	padding-left: 20px;
 	box-shadow: 2px 2px 2px #CCC;
 	z-index: 1000;
 	ul {
