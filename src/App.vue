@@ -12,7 +12,7 @@
     v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'"  />
     <div style="height:80px"></div>
     <div v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'" id="container" class="wrapper">
-      <router-view/>
+      <router-view style="margin-top:-50px"/>
     </div>
     <router-view v-else/>
   </div>

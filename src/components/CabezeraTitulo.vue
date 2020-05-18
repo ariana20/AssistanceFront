@@ -1,6 +1,6 @@
 <template>
   <div class="CabezeraTitulo">
-    <div class="jumbotron" >
+    <div class="jumbotron"  >
         <h1 class="centered">{{msg}}</h1>
         <img src="../assets/images/coffee.jpg" height="300px" width="100%">
         
@@ -42,7 +42,7 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: rgba(255,255,255,0.5);
-    margin-top:-150px;
+    margin-top:-180px;
     height: 100px;
     width: 450px;
     }
