@@ -5,36 +5,28 @@
       <tbody>
         <td style="width:662px">
           <tr style="text-align:left"></tr>
-          <tr style="text-align:left"><td>Nombre</td>  <td > <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="nombre"></td></tr>
-          <tr style="text-align:left"><div style="margin-top:20px"/></tr>
-          <tr style="text-align:left"><td>Siglas</td>   <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="siglas"></td></tr>
-          <tr style="text-align:left"><div style="margin-top:20px"/></tr>
-          <tr style="text-align:left"><td>Direccion</td>   <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="direccion"></td></tr>
-          <tr style="text-align:left"><div style="margin-top:20px"/></tr>
-          <tr style="text-align:left"><td>Telefono</td>   <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="telefono"></td></tr>
+          <tr style="text-align:left"><td>Nombre</td>   <td> <input type="text" v-model="nombre"></td></tr>
+          <tr style="text-align:left"><td>Siglas</td>   <td> <input type="text" v-model="siglas"></td></tr>
+          <tr style="text-align:left"><td>Direccion</td>   <td> <input type="text" v-model="direccion"></td></tr>
+          <tr style="text-align:left"><td>Telefono</td>   <td> <input type="text" v-model="telefono"></td></tr><br>
+          <button type="button" style="margin-left:210px" class="btn btn-info" v-on:click="guardarInstitucion()">Guardar</button>
         </td>
         <td style="width:662px">
           <tr style="text-align:left"><h3>Logo</h3></tr>
-          <tr style="border-color: red"><img style="border: 2px solid black;margin-left:100px" alt="Vue logo" v-bind:src="logo" ></tr>
+          <tr style="border-color: red"><img style="border: 2px solid black;margin-left:100px" alt="Vue logo" src="@/assets/images/logo.png" ></tr>
           <tr style="height:40px"></tr>
           <tr >
-            <td><button type="button" class="btn btn-info" style="margin-left:135px">Cargar</button></td>
+            <td><button v-on:click="tipo()" type="button" class="btn btn-info" style="margin-left:135px">Cargar</button></td>
             <td><button type="button" class="btn btn-secondary" style="margin-left:-120px">Eliminar</button></td>
           </tr>
         </td>
       </tbody>
       </table>
     </div>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <button type="button" style="margin-left:-50px" class="btn btn-info" v-on:click="guardarInstitucion()">Guardar</button>
-      <br>
-      <br>
-      <br>
+
+
+      
+
   </div>
 </template>
 
@@ -61,6 +53,9 @@ export default {
           this.telefono = response.data[0].telefono;
           this.siglas = response.data[0].siglas;
           this.logo = response.data[0].logo;
+        })
+        .catch(e => {
+          console.log(e.response);
         });
   },
   methods:{
@@ -77,7 +72,20 @@ export default {
         .post('/institucion/modificar/'+this.id,params)
           .then( response=>{
             console.log(response)
-          });
+          })
+        .catch(e => {
+          console.log(e.response);
+        })
+    },
+    tipo(){
+      const parame = {
+        id_usuario: this.$store.state.usuario.id_usuario
+      }
+      console.log(this.$store.state.usuario.id_usuario)
+      axios.post('/usuarios/tipoUsuario',parame)
+      .then(response=>{  
+        console.log(response.data);            
+      }).catch( e=>console.log(e));
     },
   }
 }

@@ -1,6 +1,6 @@
 <template>
-  <div class="FormFacultad">
-    <div class="container">
+  <div class="FormPrograma">
+    <div class="container" style="left:60px;text-align: left">
       <table>
       <tbody>
         <td style="width:662px">
@@ -9,55 +9,49 @@
         </td>
       </tbody>
       </table>
-    
-
-      <table class="table" style="text-align: left">
+      <table class="table">
         <thead>
           <tr>
-            <th scope="col">N°</th>
+            <th scope="col">Id</th>
             <th scope="col">Nombre</th>
-            <th scope="col">Coordinador</th>
             <th scope="col">Correo</th>
-            <th scope="col">N° Programas</th>
-            <th scope="col"></th>
+            <th scope="col">Estado</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in facultades" :key="index">
-            <th scope="row">{{index+1}}</th>
+          <tr v-for="(item, index) in programas" :key="index">
+            <th scope="row">{{item.id_programa}}</th>
             <td>{{item.nombre}}</td>
-            <td>FaltaNombreCoordinador</td>
             <td>{{item.correo}}</td>
-            <td>FaltaNumProg</td>
-            <td>
-              <button>{{index}}</button>
-            </td>
+            <td>{{item.estado}}</td>
           </tr>
         </tbody>
       </table>
     </div>
+
+      
   </div>
 </template>
 
 <script>
 
+
 export default {
   data(){
     return{
       nombre:null,
-      facultades:[]
+      programas:[]
     }
   },
   created(){
-    this.listarFacultades();
+    this.listarProgramas();
   },
   methods:{
     
-    listarFacultades() {
-      this.axios.create({withCredentials: true }).post('/facultad/listarTodo')
+    listarProgramas() {
+      this.axios.create({withCredentials: true }).post('/programa/listarTodo')
         .then(res =>{
-          console.log(res.data);
-          this.facultades=res.data;
+          this.programas=res.data;
         })
         .catch(e => {
           console.log(e.response);

@@ -43,7 +43,20 @@ export default {
       this.$store.state.usuario = response.data.user;
       if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined)
       this.nombre = this.$store.state.usuario.nombre
+      if(this.$store.state.usuario!=null){
+      axios.post('/usuarios/permisos')
+        .then(response=>{
+          for(var i=0; i < this.$store.state.navLinks.length; i++){
+            for(var j=0; j < response.data.length; j++){
+              if( this.$store.state.navLinks[i].text == response.data[j]){
+                  this.$store.state.rutas.push(this.$store.state.navLinks[i]);
+              }
+            }
+          }          
+        }).catch( e=>console.log(e));
+    }
     })
+    
   },
   methods:{
     openNav() {

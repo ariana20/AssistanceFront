@@ -1,35 +1,71 @@
 <template>
-  <div class="LoginForm" >
-    <div class="container" >
-        <div class="row justify-content-center" >
-            <div class="page-header">
-              <h2>Vizcochitos Login</h2>
-            </div>
-            <div class="col-md-12 text-center">
-                <p v-if="errors.length">
-                    <b>Please correct the following error(s):</b>
-                    <ul class="list-group">
-                      <li v-for="error in errors" :key="error.id" class="list-group-item list-group-item-danger">{{ error }}</li>
-                    </ul>
-                </p>
-            </div>
-            <div class="col-md-6" v-if="loginfalse = true">
-                <form v-on:submit.prevent="checkForm" id="createAdministrator">
-                  <div class="form-group">
-                    <label for="email">Email address:</label>
-                    <input v-model="state.email" type="email" class="form-control" id="email" placeholder="Enter Email" name="email">
-                  </div>
-                  <div class="form-group">
-                    <label for="pwd">Password:</label>
-                    <input v-model="state.password" type="password" class="form-control" id="password" placeholder="********" name="password">
-                  </div>
-                  <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-            </div>
+  <div class="LoginForm" style="margin-top:-20px" >
+    <section class="user">
+      <div class="user_options-container">
+        <div class="user_options-text">
+          <div class="user_options-unregistered">
+            <h2 class="user_unregistered-title">¿Todavía no está registrado?</h2><br>
+            <p class="user_unregistered-text">El sistema de tutorías está más que feliz de poder aceptar</p>
+            <p class="user_unregistered-text">a todos los estudiantes. Crea tu cuenta para poder acceder</p>
+            <p class="user_unregistered-text" >a todos los servicios ahora mismo.</p>
+            <button v-on:click="signupbtn()" class="user_unregistered-signup" id="signup-button">Registrarse</button>
+          </div>
+
+          <div class="user_options-registered">
+            <h2 class="user_registered-title">¿Ya se encuentra registrado?</h2><br>
+            <p class="user_registered-text">Para poder sacar una cita entre a su cuenta con su correo institucional.</p>
+            <button v-on:click="loginbtn()" class="user_registered-login" id="login-button">Login</button>
+          </div>
         </div>
-    </div>
+        
+        <div class="user_options-forms" id="user_options-forms">
+          <div class="user_forms-login">
+            <h2 class="forms_title">Ingresar</h2>
+            <form v-on:submit.prevent="checkForm" class="forms_form">
+              <fieldset class="forms_fieldset">
+                <div class="forms_field">
+                  <input v-model="state.email" type="email" placeholder="Correo" class="forms_field-input" required autofocus />
+                </div>
+                <div class="forms_field">
+                  <input v-model="state.password" type="password" placeholder="Contraseña" class="forms_field-input" required />
+                </div>
+              </fieldset>
+              <div class="forms_buttons">
+                <button type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</button>
+                <input type="submit" value="Ingresar" class="forms_buttons-action">
+              </div>
+              
+              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:20px">Ingresar con Google</button>
+            </form>
+          </div>
+          <div class="user_forms-signup">
+            <h2 class="forms_title">Usuario Nuevo</h2>
+            <form class="forms_form">
+              <fieldset class="forms_fieldset">
+                <div class="forms_field">
+                  <input type="text" placeholder="Nombre Completo" class="forms_field-input" required />
+                </div>
+                <div class="forms_field">
+                  <input type="email" placeholder="Correo" class="forms_field-input" required />
+                </div>
+                <div class="forms_field">
+                  <input type="password" placeholder="Contraseña" class="forms_field-input" required />
+                </div>
+              </fieldset>
+              <div class="forms_buttons">
+                <input type="submit" value="Registrarse" class="forms_buttons-action" style="width:100%">
+              </div>
+            </form>
+            <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:20px">Registrarse con Google</button>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
+  
 </template>
+
+
 <script>
 import axios from 'axios'
 
@@ -43,43 +79,123 @@ import axios from 'axios'
             state: {
                 email: '',
                 password: ''
-            }
+            },
+            authRes: "none",
+            profileRes: "none",
           }
       },
       methods:{
-      checkForm: function (e) {
-          
-        this.errors = [];
-        if (!this.state.email) {
-          this.errors.push('Email required.');
-        }
-        if (!this.state.password) {
-          this.errors.push('Password required.');
-        }
-      else
-      {
-        if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined) {
-          this.$router.push('/institucion');
-        }
-        else{
-          const params ={
-            correo: this.state.email,
-            password: this.state.password,
+        checkForm: function (e) {
+            
+          this.errors = [];
+          if (!this.state.email) {
+            this.errors.push('Email required.');
           }
-          
-          axios.post('/vuelogin', params,)
-            .then(response=>{  
-              alert(response.data.status); 
-              if(response.data.status==='success') {
-                this.$store.state.usuario = response.data.user;
-                this.$router.push('/institucion'); 
-              }                
-            }).catch( e=>console.log(e));
+          if (!this.state.password) {
+            this.errors.push('Password required.');
+          }
+        else
+        {
+          if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined) {
+            this.$router.push('/institucion');
+          }
+          else{
+            const params ={
+              correo: this.state.email,
+              password: this.state.password,
+            }
+            
+            axios.post('/vuelogin', params,)
+              .then(response=>{  
+                alert(response.data.status); 
+                if(response.data.status==='success') {
+                  this.$store.state.usuario = response.data.user;
+                  this.rutas();
+                }                
+              }).catch( e=>console.log(e));
+          }
         }
+        
+          e.preventDefault();
+        },
+        rutas(){
+          axios.post('/usuarios/permisos')
+              .then(response=>{
+                for(var i=0; i < this.$store.state.navLinks.length; i++){
+                  for(var j=0; j < response.data.length; j++){
+                    if( this.$store.state.navLinks[i].text == response.data[j]){
+                        this.$store.state.rutas.push(this.$store.state.navLinks[i]);
+                    }
+                  }
+                }
+                console.log(this.$store.state.rutas);
+                this.$router.push(this.$store.state.rutas[0].path);          
+              }).catch( e=>console.log(e));
+        },
+        authenticate(network) {
+          const _this = this;
+          const hello = this.hello;
+          hello(network).login().then(() => {
+            const authRes = hello(network).getAuthResponse();
+            /*
+              performs operations using the token from authRes
+            */
+            let output = JSON.stringify(authRes, undefined, 4);
+            _this.authRes = output;
+            hello(network).api('me').then(function (profile) {
+              /*
+                performs operations using the user info from profile
+              */
+              let output = JSON.stringify(profile, undefined, 4);
+              _this.profileRes = output;
+              let parametros = {
+                password: "dummy123",
+                correo: profile.email,
+                imagen: profile.picture,
+                nombre: profile.given_name,
+                ap_paterno: profile.family_name,
+                institucion: profile.hd,
+              }
+              axios.post('/googlelogin', parametros,)
+                .then(response=>{  
+                  alert(response.data.status); 
+                  if(response.data.status=='success') {
+                    _this.$store.state.usuario = response.data.user;
+                    _this.rutas();
+                  }
+                }).catch( e=>console.log(e));
+            });
+          });
+        },
+        signupbtn(){
+          let userForms = document.getElementById('user_options-forms')
+          userForms.classList.remove('bounceRight')
+          userForms.classList.add('bounceLeft')
+        },
+        loginbtn(){
+          let userForms = document.getElementById('user_options-forms')
+          userForms.classList.remove('bounceLeft')
+          userForms.classList.add('bounceRight')
+        },
       }
-      
-        e.preventDefault();
-      }
-    }
   }
 </script>
+
+
+<style lang="sass" scoped>
+  @import '../assets/styles/login.sass'
+</style>
+
+<style scoped>
+  .btn-google {
+    color: white;
+    background-color: #DD4B39;
+    height: 45px;
+  }
+  .btn-login {
+    color: white;
+    background-color: #009688;
+    margin-top: 40px;
+  }
+</style>
+

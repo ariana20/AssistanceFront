@@ -173,7 +173,7 @@ export default {
       redirect(){
         this.$router.push("/login")
       }
-  }
+  },
 }
 </script>
 

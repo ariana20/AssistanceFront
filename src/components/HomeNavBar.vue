@@ -11,7 +11,7 @@
             <b-navbar-nav class="ml-auto">
             
                 <figure class="image-logo" style="margin-top:20px">
-                    <img src="../assets/assistance-logo.png" height="60px" width="60px" />			
+                    <img src="../assets/images/assistance-logo.png" height="60px" width="60px" />			
                 </figure>
             </b-navbar-nav>
         </b-collapse>
