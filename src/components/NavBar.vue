@@ -39,11 +39,15 @@ export default {
     }
   },
   mounted(){
-    axios.post('/vueuser').then( response=>{
+    axios.post('/vueuser',{usuario: this.$store.state.usuario}).then( response=>{
       this.$store.state.usuario = response.data.user;
         if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
         this.nombre = this.$store.state.usuario.nombre
-        axios.post('/usuarios/permisos')
+        console.log(response.data.user)
+        let paramr = {
+          usuario:response.data.user,
+        }
+        axios.post('/usuarios/permisos',paramr)
           .then(response=>{
             for(var i=0; i < this.$store.state.navLinks.length; i++){
               for(var j=0; j < response.data.length; j++){
@@ -51,6 +55,7 @@ export default {
                     this.$store.state.rutas.push(this.$store.state.navLinks[i]);
                 }
               }
+              if(this.$route.path == '/login' && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
             }          
           }).catch( e=>console.log(e));
         }

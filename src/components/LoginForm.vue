@@ -106,7 +106,7 @@ import axios from 'axios'
                 alert(response.data.status); 
                 if(response.data.status==='success') {
                   this.$store.state.usuario = response.data.user;
-                  this.rutas();
+                  this.rutas(response.data.user);
                 }                
               }).catch( e=>console.log(e));
           }
@@ -132,8 +132,11 @@ import axios from 'axios'
               }).catch( e=>console.log(e));
           }
         },
-        rutas(){
-          axios.post('/usuarios/permisos')
+        rutas(item){
+          let paramr = {
+            usuario:item,
+          }
+          axios.post('/usuarios/permisos',paramr)
               .then(response=>{
                 for(var i=0; i < this.$store.state.navLinks.length; i++){
                   for(var j=0; j < response.data.length; j++){
@@ -176,7 +179,7 @@ import axios from 'axios'
                   alert(response.data.status); 
                   if(response.data.status=='success') {
                     _this.$store.state.usuario = response.data.user;
-                    _this.rutas();
+                    _this.rutas(response.data.user);
                   }
                 }).catch( e=>console.log(e));
             });

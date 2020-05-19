@@ -82,7 +82,7 @@ export default {
       axios.post('/institucion/subirLogo',{image: this.selectedFile})
         .then( response=>{
           console.log(response)
-          let imgIns = response.data.path + '\\' + response.data.name
+          let imgIns = response.data.path
           console.log(imgIns)
           this.logo = imgIns;
           this.guardarInstitucion();
