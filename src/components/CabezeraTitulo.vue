@@ -1,8 +1,11 @@
 <template>
-  <div class="CabezeraTitulo">
-    <div class="jumbotron"  >
-        <h1 class="centered">{{msg}}</h1>
+  <div class="CabezeraTitulo jumbotron">
+    <div class="wrap"  >
+        <h1 class="text_over_image">{{msg}}</h1>
         <img src="../assets/images/coffee.jpg" height="300px" width="100%">
+
+
+
         
         <!--<div class="">
             <table>
@@ -36,14 +39,30 @@ export default {
     }
 
     /* Centered text */
-    .centered {
+    /*.caption {
     position: absolute;
-    top: 50%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: rgba(255,255,255,0.5);
-    margin-top:-180px;
     height: 100px;
-    width: 450px;
+    }*/
+    .wrap {
+      height:auto;
+      margin: auto;
+      text-align:center;
+      position:relative;
+    }
+    .text_over_image {
+      position: absolute;
+      margin: auto;
+      top: 0;
+      left:0;
+      right:0;
+      bottom:0;
+      width: 30%;
+      height:90px;
+      padding-top: 20px;
+      background-color: rgba(255,255,255,0.5);
     }
 </style>

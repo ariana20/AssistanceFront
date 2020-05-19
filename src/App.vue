@@ -10,9 +10,9 @@
     link-color="#eee"
     hoverBackground="#ccc"
     v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'"  />
-    <div style="height:80px"></div>
+    <div style="height:60px"></div>
     <div v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'" id="container" class="wrapper">
-      <router-view style="margin-top:-50px"/>
+      <router-view/>
     </div>
     <router-view v-else/>
   </div>
@@ -98,6 +98,7 @@ a {
 
 #container {
   margin-left: 250px;
+  
 
 }
 @media screen and (max-width: 759px){
@@ -105,4 +106,12 @@ a {
     margin-left:60px;
   }
 }
+hr {
+  height:1px !important;
+  border-width:0;
+  color:gray;
+  background-color:gray;
+  border-top: 0.4px solid rgba(0, 0, 0, 0.1) !important;
+}
+
 </style>
