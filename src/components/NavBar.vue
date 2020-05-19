@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.1) 0px -3px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
+  <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>

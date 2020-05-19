@@ -39,11 +39,11 @@ export default {
     .centered {
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 60%;
     transform: translate(-50%, -50%);
     background-color: rgba(255,255,255,0.5);
     margin-top:-180px;
-    height: 100px;
+    height: auto;
     width: 450px;
     }
 </style>

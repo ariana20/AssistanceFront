@@ -1,6 +1,6 @@
 <template>
 	<div name="UsuarioNuevo" style="height:100%">
-		<!-- <div class="wrapper">
+		<div class="wrapper">
 			<div class="container" style="font-size:70px;margin-top:80px;margin-left:600px">
 				<strong>Aún no te encuentras inscrito en un programa</strong>
 			</div>
@@ -17,20 +17,20 @@
 				<li></li>
 				<li></li>
 			</ul>
-		</div> -->
-		<ModalC v-on:childToParent="onChildClick"/>
+		</div>
+		<!-- <ModalC v-on:childToParent="onChildClick"/>
 		<div>
 			<strong>{{coordinadorSeleccionado}}</strong>
-		</div>
+		</div> -->
 	</div>
 </template>
 
 <script>
-import ModalC from '@/components/Modal.vue'
+//import ModalC from '@/components/Modal.vue'
 export default {
   name: 'FormUsuarioNuevo',
   components:{	  
-    ModalC,
+    //ModalC,
   },
   data(){
 	return{

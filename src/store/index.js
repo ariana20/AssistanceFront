@@ -8,6 +8,8 @@ export default new Vuex.Store({
     usuario:null,
     programas:null,
     coordionadores:null,
+    permisos:null,
+    roles:null,
     rutas:[],
     navLinks: [
       {

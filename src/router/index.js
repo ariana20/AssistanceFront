@@ -88,7 +88,16 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewTiposUsuario.vue')
+    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewRoles.vue')
+  },
+  {
+    path: '/permisos/:id?',
+    name: 'Permisos',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewPermisos.vue')
   },
   { path: "/404",
     name: 'Error 404',
