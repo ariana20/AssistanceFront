@@ -47,6 +47,11 @@ export default new Vuex.Store({
 		path: '/Usuario',
 		icon: 'ion-ios-book'
       },
+      {
+       text: 'Tipos de Usuario',
+       path: '/tiposUsuario',
+       icon: 'ion-ios-people'
+     },
     ],
     programasFilter:{
       query: '',

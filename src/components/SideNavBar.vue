@@ -47,7 +47,7 @@ export default {
 nav {
 	width: 100%;
 	padding-left: 10px;
-	box-shadow: 2px 2px 2px #CCC;
+	box-shadow: -5px 0 50px -5px #333;
 	z-index: 1000;
 	ul {
 		position: fixed;
