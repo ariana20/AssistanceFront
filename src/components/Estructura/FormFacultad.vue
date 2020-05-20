@@ -1,5 +1,5 @@
 <template>
-  <div class="FormFacultad">
+  <div name="FormFacultad">
     <div class="container">
 
       <div class="float-right">

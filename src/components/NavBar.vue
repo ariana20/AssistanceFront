@@ -1,16 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.1) 0px -3px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
-      <div id="mySidenav" class="sidenav" style="text-align:right">
-        <a href="javascript:void(0)" class="closebtn" v-on:click="closeNav()">&times;</a>
-        <router-link to="/institucion">Institucion</router-link>
-        <router-link to="/facultad">Facultad</router-link>
-        <router-link to="/">Programa</router-link>
-        <router-link to="/">Coordinador</router-link>
-        <router-link to="/">Unidades de Apoyo</router-link>
-        <router-link to="/tiposdeTutoria" style="text-align: left;">Tipos de Tutoria</router-link>
-      </div>
-      <!--<b-navbar-brand><router-link to="/">SoftVizcochitos</router-link></b-navbar-brand>-->
-
+  <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
@@ -25,13 +14,13 @@
                 <b-dropdown-item href="#">RU</b-dropdown-item>
                 <b-dropdown-item href="#">FA</b-dropdown-item>
             </b-nav-item-dropdown>
-            <b-nav-item v-if="this.nombre===null">
-              <router-link to="/login"><a style="color:#000;font-weight:normal;">Ingresar</a></router-link>
+            <b-nav-item href="/login" v-if="this.$store.state.usuario === null || this.$store.state.usuario === undefined">
+              <a style="color:#000;font-weight:normal;">Ingresar</a>
             </b-nav-item>
-            <b-nav-item-dropdown right v-if="this.nombre!==null">
+            <b-nav-item-dropdown right v-if="this.$store.state.usuario !== null && this.$store.state.usuario !== undefined">
                 <!-- Using 'button-content' slot -->
                 <template v-slot:button-content>
-                <em style="color:#000000;font-weight:normal;" >{{nombre}}</em>
+                <em style="color:#000000;font-weight:normal;" >{{$store.state.usuario.nombre}}</em>
                 </template>
                 <b-dropdown-item href="#">Profile</b-dropdown-item>
                 <b-dropdown-item v-on:click="logout()">Sign Out</b-dropdown-item>
@@ -50,11 +39,31 @@ export default {
     }
   },
   mounted(){
-    axios.post('/vueuser').then( response=>{
+    axios.post('/vueuser',{usuario: this.$store.state.usuario}).then( response=>{
       this.$store.state.usuario = response.data.user;
-      console.log(this.$store.state.usuario)
-      this.nombre = this.$store.state.usuario.nombre
+        if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
+        this.nombre = this.$store.state.usuario.nombre
+        console.log(response.data.user)
+        let paramr = {
+          usuario:response.data.user,
+        }
+        axios.post('/usuarios/permisos',paramr)
+          .then(response=>{
+            for(var i=0; i < this.$store.state.navLinks.length; i++){
+              for(var j=0; j < response.data.length; j++){
+                if( this.$store.state.navLinks[i].text == response.data[j]){
+                    this.$store.state.rutas.push(this.$store.state.navLinks[i]);
+                }
+              }
+              if(this.$route.path == '/login' && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
+            }          
+          }).catch( e=>console.log(e));
+        }
+        else{
+          if (this.$route.path !== '/login') this.$router.push('login')
+        }
     })
+    
   },
   methods:{
     openNav() {
@@ -68,8 +77,8 @@ export default {
           alert(response.data.status);
           if(response.data.status=='success') {
             this.$store.state.usuario=null;
-            this.closeNav();
-            this.$router.push('/login');
+            this.nombre = null;
+            if (this.$route.path !== '/login') this.$router.go('login');
           }
       }).catch( e=>console.log(e));
       

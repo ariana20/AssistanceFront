@@ -1,68 +1,54 @@
 <template>
 <!-- Para la barra principal parece -->
   <div id="app">
-    <NavBar style="z-index:9000" />
+    <HomeNavBar style="z-index:9000" v-if="this.$route.path === '/'"/>
+    <NavBar style="z-index:9000" v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'"/> 
     <SidebarAdministrador
-		:nav-links="navLinks"
-    :image-path="require('./assets/assistance-logo.png')"
+		:nav-links="$store.state.rutas"
+    :image-path="require('./assets/images/assistance-logo.png')"
     background="#009892"
     link-color="#eee"
     hoverBackground="#ccc"
-    />
+    v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'"  />
     <div style="height:80px"></div>
-    <router-view/>
+    <div v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'" id="container" class="wrapper">
+      <router-view style="margin-top:-50px"/>
+    </div>
+    <router-view v-else/>
   </div>
 </template>
 
 <script>
+import HomeNavBar from '@/components/HomeNavBar.vue'
 import NavBar from '@/components/NavBar.vue'
 import SidebarAdministrador from '@/components/SideNavBar'
+import Vue from 'vue'
+import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
+Vue.use(MultiSelectPlugin);
 export default {
   name: 'App',
   mounted(){
-    
+    let result = this.$router.options.routes.map(a => a.path);  
+    for(var i=0; i < result.length; i++){
+      if( result[i] == this.$route.path){
+          this.valor=true;
+      }
+    }
+    if(this.valor==false){
+      this.$router.push('/404')
+    }
   },
   components: {
+    HomeNavBar,
     NavBar,
     SidebarAdministrador
   },
   data() {
     return{
-    usuario: this.$store.state.user,
-    navLinks: [
-      {
-        text: 'Institucion',
-		path: '/institucion',
-		icon: 'ion-ios-business'
-      },
-      {
-        text: 'Facultad',
-		path: '/facultad',
-		icon: 'ion-ios-school'
-      },
-      {
-        text: 'Programa',
-		path: '/programa',
-		icon: 'ion-ios-home'
-      },
-      {
-        text: 'Coordinador',
-		path: '/',
-		icon: 'ion-ios-person'
-      },
-      {
-        text: 'Unidades de Apoyo',
-		path: '/',
-		icon: 'ion-ios-people'
-      },
-      {
-        text: 'Tipos de Tutoria',
-		path: '/tiposdeTutoria',
-		icon: 'ion-ios-book'
-      }
-    ],
+      valor:false,
+      usuario: this.$store.state.user,
     }
-  },
+  }
 }
 </script>
 
@@ -70,7 +56,7 @@ export default {
 @import 'https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css';
 @font-face {
   font-family: "Brandon Bold";
-  src: url('./assets/fonts/BrandonText-Regular.otf');
+  src: '../assets/fonts/BrandonText-Regular.otf';
 }
 figure {
 	margin-block-start: 0;
@@ -108,5 +94,15 @@ a {
     &.router-link-exact-active {
       color: #42b983;
     }
+}
+
+#container {
+  margin-left: 250px;
+
+}
+@media screen and (max-width: 759px){
+  #container{
+    margin-left:60px;
+  }
 }
 </style>

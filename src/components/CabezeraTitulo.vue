@@ -1,8 +1,10 @@
 <template>
   <div class="CabezeraTitulo">
-    <div class="container" style="top:-19px;" >
-        <img src="../assets/coffee.jpg" height="300px" width="1315px">
-        <div class="centered">
+    <div class="jumbotron"  >
+        <h1 class="centered">{{msg}}</h1>
+        <img src="../assets/images/coffee.jpg" height="300px" width="100%">
+        
+        <!--<div class="">
             <table>
             <tbody>
                 <tr style="height:30px"></tr>
@@ -12,7 +14,8 @@
                     <td style="width:50px"></td>
                 </tr>
                 <tr style="height:30px"></tr>
-            </tbody></table></div>
+            </tbody></table>
+        </div>-->
     </div>
   </div>
 </template>
@@ -25,10 +28,11 @@ export default {
 }
 </script>
 <style>
-    .container {
-    position: relative;
-    text-align: center;
-    color: black;
+    .jumbotron {
+      height: 300px;
+      padding: 0em;
+      margin: 0em;
+      font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
     }
 
     /* Centered text */
@@ -38,5 +42,8 @@ export default {
     left: 60%;
     transform: translate(-50%, -50%);
     background-color: rgba(255,255,255,0.5);
+    margin-top:-180px;
+    height: auto;
+    width: 450px;
     }
 </style>

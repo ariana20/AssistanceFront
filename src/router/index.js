@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../views/ViewHome.vue'
 
 Vue.use(VueRouter)
 
@@ -65,7 +65,47 @@ Vue.use(VueRouter)
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "ViewTiposTutorias" */ '../views/ViewTiposTutoria.vue')
-  }
+  }, 
+  {
+    path: '/Usuario',
+    name: 'Gestionar Usuario',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewUsuario.vue')
+  },
+  {
+    path: '/userNuevo',
+    name: 'Usuario Nuevo',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewUsuarioNuevo.vue')
+  },
+  {
+    path: '/tiposUsuario',
+    name: 'Tipos de Usuario',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewRoles.vue')
+  },
+  {
+    path: '/permisos/:id?',
+    name: 'Permisos',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewPermisos.vue')
+  },
+  { path: "/404",
+    name: 'Error 404',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "View404" */ '../views/View404.vue')
+  },
 ]
 
 const router = new VueRouter({

@@ -1,18 +1,18 @@
 <template>
-  <div class="tiposTutorias">
-    <CabezeraTitulo msg="Configuración de Tipos de Tutoría"/>
-    <FormTiposTutoria/>
+  <div class="Programa">
+    <CabezeraTitulo msg="Configuración de los Programas"/>
+    <FormPrograma/>
   </div>
 </template>
 
 <script>
 import CabezeraTitulo from '@/components/CabezeraTitulo.vue'
-import FormTiposTutoria from '@/components/FormTiposTutoria.vue'
+import FormPrograma from '@/components/FormPrograma.vue'
 export default {
-  name: 'TiposTutoria',
+  name: 'Programa',
   components: {
     CabezeraTitulo,
-    FormTiposTutoria
+    FormPrograma
   }
 }
 </script>
@@ -28,7 +28,7 @@ ul {
 }
 li {
   display: inline-block;
-  margin: 0 50px;
+  margin: 0 10px;
 }
 a {
   color: #42b983;
