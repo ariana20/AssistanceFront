@@ -27,6 +27,8 @@
 
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
+
 export default {
   data(){
     return{
@@ -70,9 +72,15 @@ export default {
         document.getElementById("mySidenav").style.width = "0";
     },
     logout(){
-      axios.create({withCredentials: true }).post('/vuelogout', null).then(response=>{  
-          alert(response.data.status);
+      axios.create({withCredentials: true }).post('/vuelogout', null).then(response=>{
           if(response.data.status=='success') {
+            Swal.fire({
+                text:"Cierre de Sesión Exitoso",
+                icon:"success",
+                confirmButtonText: 'OK',
+                confirmButtonColor:'#0097A7',
+                showConfirmButton: true,
+            })
             this.$store.state.usuario=null;
             this.nombre = null;
             if (this.$route.path !== '/login') this.$router.go('login');

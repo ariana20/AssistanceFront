@@ -68,6 +68,7 @@
 
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
   export default {
       mounted() {
@@ -102,12 +103,27 @@ import axios from 'axios'
             }
             
             axios.post('/vuelogin', params,)
-              .then(response=>{  
-                alert(response.data.status); 
+              .then(response=>{
                 if(response.data.status==='success') {
                   this.$store.state.usuario = response.data.user;
+                  Swal.fire({
+                      text:"Ingreso Exitoso",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                  })
                   this.rutas(response.data.user);
-                }                
+                }
+                else{
+                  Swal.fire({
+                      text:"Ingreso Incorrecto",
+                      icon:"error",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                  })
+                }          
               }).catch( e=>console.log(e));
           }
         },
