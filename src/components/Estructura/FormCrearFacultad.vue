@@ -165,25 +165,16 @@ export default {
     }
   },
   created(){
-    this.listarFacultades();
+    
   },
   methods:{
     
-    listarFacultades() {
-      this.axios.create({withCredentials: true }).post('/facultad/listarTodo')
-        .then(res =>{
-          console.log(res.data);
-          this.facultades=res.data;
-        })
-        .catch(e => {
-          console.log(e.response);
-        })
-    },
     guardarFacultad() {
 
       axios.create({withCredentials: true })
         .post('/facultad/insertar',this.facultad)
           .then( response=>{
+            this.facultad.id_facultad=response.data
             console.log(response)
           })
         .catch(e => {

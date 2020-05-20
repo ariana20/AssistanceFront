@@ -33,9 +33,9 @@
           <tr v-for="(item,index) in facultades" :key="index">
             <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>
-            <td>{{coordinadores[index].nombre}}</td>
+            <td>{{coordinadores.nombre}}</td>
             <td>{{item.correo}}</td>
-            <td style="text-align: center">{{cantidades[index][0].count}}</td>
+            <td style="text-align: center">{{item.cantidad-1}}</td>
             <td style="text-align: center">
               <button class="btn link"><b-icon icon="pencil"></b-icon></button>
               <button class="btn link"><b-icon icon="dash-circle-fill"></b-icon></button>
@@ -54,7 +54,6 @@ export default {
     return{
       nombre:null,
       facultades:[],
-      cantidades:[],
       coordinadores:[]
     }
   },
@@ -65,12 +64,20 @@ export default {
     
     listarFacultades() {
       this.axios.create({withCredentials: true })
-      .post('/facultad/listarFacultadesConCantCoordi/')
+      .post('/facultad/listFacuConCant/')
         .then(res =>{
           console.log(res.data);
-          this.facultades=res.data[0];
-          this.cantidades=res.data[1];
-          this.coordinadores=res.data[2];
+          this.facultades=res.data
+
+        })
+        .catch(e => {
+          console.log(e.response);
+        })
+      this.axios.create({withCredentials: true })
+      .post('/facultad/listFacuConCoordi/')
+        .then(res =>{
+          console.log(res.data);
+          this.coordinadores=res.data
 
         })
         .catch(e => {
