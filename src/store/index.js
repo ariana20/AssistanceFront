@@ -29,7 +29,7 @@ export default new Vuex.Store({
       },
       {
         text: 'Coordinador',
-		path: '/',
+		path: '/institucion',
 		icon: 'ion-ios-person'
       },
       {

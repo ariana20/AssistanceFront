@@ -8,20 +8,17 @@
         <td style="width:1062px">
           <tr style="text-align:left"></tr>
           <tr style="text-align:left" ><td>Nombre</td>   
-            <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="nombre"> </td>
+            <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="tipotutoria.nombre"> </td>
           </tr>
        
           <tr style="text-align:left" ><td>Descripcion</td> 
-          <textarea rows =3 cols=49  style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="descripcion">    
+          <textarea rows =3 cols=49  style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="tipotutoria.descripcion">    
           </textarea> 
           <!-- Textarea tiene que tener un número menos de largo -->
           </tr>
           
           <tr>
-          <!-- <div class="mt-3">Condiciones elegidas
-                   <div v-for="cond in tipotutoria.condiciones" v-bind:key="cond.id">- {{cond}}</div>
-         </div> -->
-          </tr>
+
          <tr style="text-align:left"><td>Condiciones  </td> 
           <div >
             <br>
@@ -31,19 +28,26 @@
               
           </div>
         </tr>
-          <tr> <br> 
+        <!-- lista de condiciones -->
+          <tr>
+            <li v-for="item in tipotutoria.condiciones " v-bind:key="item.value" >{{ item }}</li>
           </tr>
-          <!-- <div  v-for="cond in tutoria.planificado" v-bind:key="cond.id">{{cond}} </div> -->
-          <input type="checkbox"   id="checkbox" v-model="estado" true-value="ina" false-value ="act">
+          <tr> <br>
+          <td >
+          </td>
+          </tr>
+          <input type="checkbox"   id="checkeestado">
           <label for="checkbox"> Activo</label>
+          
         </td>        
       </tbody>
       
       </table>
     </div>
-      <br>
-      <button type="button" class="btn btn-secondary">Eliminar</button>
-      <button type="button" style="margin-left:210px" class="btn btn-info" v-on:click="guardarTipoTutoria()">Guardar</button>
+      
+      <button type="button" style="margin-left:70px" class="btn btn-info" v-on:click="guardarTipoTutoria()">Guardar</button>
+      <button type="button" style="margin-left:50px"  class="btn btn-secondary" v-on:click="eliminarTtutoria()">Cancelar</button>
+      
   </div>
 
 </template>
@@ -54,14 +58,16 @@ import Axios from 'axios'
 import Vue from 'vue'
 import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(MultiSelectPlugin);
+import Swal from 'sweetalert2'
 
 export default Vue.extend( {
+
   data(){
     return{
-      game:null,
+      miUsuario:this.$store.state.usuario,
       tipotutoria: { 
-        nombre:null,
-        descripcion:null,
+        nombre:"",
+        descripcion:"",
         obligatorio:"",  
         individual:"", 
         planificado:"",
@@ -71,7 +77,7 @@ export default Vue.extend( {
         tutoresrelacionados:null,
         condiciones:"",
       },
-      campocondi:{value:'value',text:'text',groupBy:'Condic'},      
+      campocondi:{value:'value',text:'text'},      
       condiciones:[
         {value:'Individual',text:'Individual',Condic:'Individual o Grupal'},            
         {value:'Grupal',text:'Grupal',Condic:'Individual o Grupal'},
@@ -96,8 +102,8 @@ export default Vue.extend( {
           this.descripcion = response.data.descripcion;
           this.estado=response.data.estado;
           var aux=response.data.obligatorio;
-          if (aux=="1" ){            this.obligatorio='Obligatorio';
-          }else if (aux=="0" ){            this.obligatorio='Opcional';          }
+          if (aux=="1" ){            this.condiciones[0]='Obligatorio';
+          }else if (aux=="0" ){            this.condiciones[0]='Opcional';          }
           aux=response.data.individual;
           if (aux=="1" ){            this.individual='Individual';
           }else if (aux=="0" ){            this.individual='Grupal';          }
@@ -110,23 +116,82 @@ export default Vue.extend( {
           aux=response.data.tutorfijo;
           if (aux=="1" ){            this.tutorfijo='Con tutor fijo';
           }else if (aux=="0" ){            this.tutorfijo='Con tutor variable';          }
+          
+          
+
           //checkbox activo
           //tutores
+          
         });
   },
   methods:{
+    
     guardarTipoTutoria() {
       var cond1,cond2, cond3,cond4,cond5;
-      if (this.tutorfijo=='Con tutor fijo' ){          cond3="1";      }
-      else{        cond3='0';      }
-      if (this.individual=='Individual' ){             cond1="1";
-      }else{        cond1='0';      }
-      if (this.obligatorio=='Obligatorio' ){           cond2="1";
-      }else{        cond2='0';      }
-      if (this.tutorasignado=='Con tutor asignado' ){  cond4="1";      
-      }else{        cond4='0';      }
-      if (this.planificado=='Planificado' ){           cond5="1";
-      }else{        cond5='0';      }
+      var entro1=false,entro2=false,entro3=false,entro4=false,entro5=false;
+      var aviso="",aviso1=false,aviso2=false,aviso3=false,aviso4=false,aviso5=false;      
+      //manejo del estado
+      // if(document.checkeestado.click()==true){
+      //       this.tipotutoria.estado="act";
+      //     }
+      //     else this.tipotutoria.estado="ina";
+
+      ////manejo de condiciones
+      var verifLongi=this.tipotutoria.condiciones.length;
+      console.log(this.tipotutoria.nombre);
+      if(this.tipotutoria.descripcion =="" || this.tipotutoria.nombre=="" || verifLongi<4){
+         Swal.fire({
+              text:"No ha completado todos los campos",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        })        
+      }
+      
+      else if(verifLongi==5 ){
+
+        for (let i = 0; i <5; i++) {            
+                
+                if (this.tipotutoria.condiciones[i]=='Individual'  && entro1==false){             cond1="1";entro1=true;
+                }else if (this.tipotutoria.condiciones[i]=='Grupal' && entro1==false ){        cond1='0';   entro1=true;   }
+                else if(entro1==true && aviso1==false){      aviso=aviso+" Individual y Grupal a la vez\n,";    aviso1=true;
+                }
+                else if (this.tipotutoria.condiciones[i]=='Obligatorio'&& entro2==false ){           cond2="1";entro2=true;
+                }else if (this.tipotutoria.condiciones[i]=='Opcional' && entro2==false ){        cond2='0';  entro2=true;    }
+                else if (entro2==true && aviso2==false) { aviso=aviso+" Opcional y Obligatoria a la vez\n,";aviso2=true;
+                }
+                else if (this.tipotutoria.condiciones[i]=='Con tutor fijo' && entro3==false ){          cond3="1";  entro3=true  ;  }
+                else if (this.tipotutoria.condiciones[i]=='Con tutor variable' && entro3==false ){        cond3='0';   entro3=true;   }
+                else if (entro3==true && aviso3==false){                 aviso=aviso+" Tutor fijo y variable a la vez\n,"; aviso3=true;
+                }
+                else if (this.tipotutoria.condiciones[i]=='Con tutor asignado' && entro4==false ){  cond4="1";      entro4=true;
+                }else if (this.tipotutoria.condiciones[i]=='Con tutor solicitado' && entro4==false ){        cond4='0'; entro4=true;     }
+                else if( entro4==true && aviso4==false ){ aviso=aviso+" Tutor solicitado y asignado a la vez\n,";aviso4=true;
+                }
+                else if (this.tipotutoria.condiciones[i]=='Planificado'&& entro5==false  ){           cond5="1";entro5=true;
+                }else if (this.tipotutoria.condiciones[i]=='No Planificado'&& entro5==false  ){        cond5='0';  entro5=true;    }
+                else if(entro5==true  && aviso5==false) { aviso=aviso+" Planificado y no planificado a la vez\n,";aviso5=true;
+                }
+           }
+          if(aviso!=""){ //Cuando hay 5 pero agrupó mal
+              Swal.fire({
+              text:"Verifique la agrupación de condiciones. No puede ingresar la condición\n"+aviso+".",
+              })
+          }
+      
+      }
+      else if (verifLongi>5 ){
+              Swal.fire({
+              text:"Debe colocar solo 5 condiciones.\n",
+              icon:'error',
+              confirmButtonText: 'Corregir',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+              })
+        
+      }
+      else {
       const params = {
         nombre: this.nombre,
         descripcion: this.descripcion,
@@ -139,12 +204,47 @@ export default Vue.extend( {
         id_programa:5,
           
       };
+      
       Axios.create({withCredentials: true })
         .post('http://18.232.253.212/Back-end-Software/public/api/TipoTutoria/insertar',params)
           .then( response=>{
             console.log(response)
           });
+      }
     },
+    eliminarTtutoria(){
+      Swal.fire({
+            text:'¿Desea eliminar?',
+            icon:'warning',
+            confirmButtonText: 'Eliminar',
+             confirmButtonColor:'#0097A7',
+            cancelButtonText: 'Cancelar',
+            cancelButtonColor:'C4C4C4',
+            showCancelButton: true,
+            showConfirmButton: true,
+            //html:' <div >Hello</div>',
+
+        }).then((result) => {
+            if (result.value) {
+              Swal.fire({
+                icon:'Deleted!',
+                text:'El usuario ha sido eliminado',
+                confirmButtonText:'Confirmo' ,
+                confirmButtonColor:'#0097A7'
+                }
+              )
+              //aqui iriía el eliminar
+            } else if (
+              /* Read more about handling dismissals below */
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+              Swal.fire({
+                text:'Se ha cancelado la eliminación',
+                confirmButtonColor:'#0097A7',}
+              )
+            }
+          })
+   } // eliminart
   }
 })
 </script>
