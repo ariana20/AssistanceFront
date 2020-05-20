@@ -2,7 +2,7 @@
     <div name="Seleccion" style="margin-top:30px;margin-left:-250px">
         <h1>Elige tu Programa</h1>
         <div id="app" class="container">
-            <card @click="irPrograma(item)" v-for="(item,index) in this.programas" :key="index" data-image="https://image.winudf.com/v2/image1/Y29tLm1vdmluZy53YWxscGFwZXJzLmdyZWVuLmxpdmUud2FsbHBhcGVyX3NjcmVlbl8xMl8xNTU3NzQ3Njg2XzA5MA/screen-12.jpg?fakeurl=1&type=.jpg">
+            <card @click="irPrograma(item)" v-for="(item,index) in this.programas" :key="index" data-image="https://www.colorhexa.com/009892.png">
                 <h1 @click="irPrograma(item)" slot="header">{{item.programa.nombre}}</h1>
                 <p @click="irPrograma(item)" slot="content">Rol: {{item.tipoUsuario.nombre}}</p>
             </card>

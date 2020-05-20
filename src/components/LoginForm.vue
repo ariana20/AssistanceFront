@@ -21,21 +21,21 @@
         <div class="user_options-forms" id="user_options-forms">
           <div class="user_forms-login">
             <h2 class="forms_title">Inicia Sesión</h2>
-            <form v-on:submit.prevent="checkForm" class="forms_form">
+            <form v-on:submit.prevent="checkForm" class="forms_form" style="margin-top:60px">
               <fieldset class="forms_fieldset">
                 <div class="forms_field">
                   <input v-model="state.email" type="email" placeholder="Correo" class="forms_field-input" required autofocus />
                 </div>
-                <div class="forms_field">
+                <div class="forms_field" style="margin-top:50px">
                   <input v-model="state.password" type="password" placeholder="Contraseña" class="forms_field-input" required />
                 </div>
               </fieldset>
-              <div class="forms_buttons">
+              <div class="forms_buttons" style="margin-top:60px">
                 <button type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</button>
                 <input type="submit" value="Ingresar" class="forms_buttons-action">
               </div>
               
-              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:20px">Ingresar con Google</button>
+              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:80px">Ingresar con Google</button>
             </form>
           </div>
           <div class="user_forms-signup">
@@ -43,7 +43,10 @@
             <form v-on:submit.prevent="checkFormReg" class="forms_form">
               <fieldset class="forms_fieldset">
                 <div class="forms_field">
-                  <input v-model="reg.nombre" type="text" placeholder="Nombre Completo" class="forms_field-input" required />
+                  <input v-model="reg.nombre" type="text" placeholder="Nombre" class="forms_field-input" required />
+                </div>
+                <div class="forms_field">
+                  <input v-model="reg.apellidos" type="text" placeholder="Apellidos" class="forms_field-input" required />
                 </div>
                 <div class="forms_field">
                   <input v-model="reg.email" type="email" placeholder="Correo" class="forms_field-input" required />
@@ -51,12 +54,19 @@
                 <div class="forms_field">
                   <input v-model="reg.password" type="password" placeholder="Contraseña" class="forms_field-input" required />
                 </div>
+                <div class="forms_field">
+                  <select style="border-radius: 15px;border: 2px solid #757575;width:100%;padding: 12px 20px;" v-model="programaEl">
+                    <option v-for="options in programasT" v-bind:key="options.id_programa">
+                      {{ options.nombre}}
+                    </option>
+                  </select>
+                </div>
               </fieldset>
               <div class="forms_buttons">
                 <input type="submit" value="Registrarse" class="forms_buttons-action" style="width:100%">
               </div>
             </form>
-            <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:20px">Registrarse con Google</button>
+            <button @click="registrate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:20px">Registrarse con Google</button>
           </div>
         </div>
       </div>
@@ -73,16 +83,24 @@ import Swal from 'sweetalert2'
   export default {
       mounted() {
         if(this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path);
+        axios.post('/programa/listarTodo')
+          .then(response=>{
+            this.programasT = response.data
+          })
       },
         data() {
           return {
+            programasT: null,
+            programaEl:null,
             errors: [],
             state: {
                 email: '',
                 password: ''
             },
             reg:{
+              codigo:'',
               nombre:'',
+              apellidos:'',
               email:'',
               password:''
             },
@@ -133,18 +151,47 @@ import Swal from 'sweetalert2'
           }
           else{
             const params ={
+              codigo: this.reg.codigo,
               nombre: this.reg.nombre,
+              apellidos: this.reg.apellidos,
               correo: this.reg.email,
               password: this.reg.password,
             }
-            axios.post('/vueregister', params,)
-              .then(response=>{  
-                alert(response.data.status); 
-                if(response.data.status==='success') {
-                  this.$store.state.usuario = response.data.user;
-                  this.$router.push('/userNuevo')
-                }                
-              }).catch( e=>console.log(e));
+            if(this.programaEl==null){
+              Swal.fire({
+                text:"Selecciona un Programa",
+                icon:"error",
+                confirmButtonText: 'OK',
+                confirmButtonColor:'#0097A7',
+                showConfirmButton: true,
+              })
+            }
+            else{
+              axios.post('/vueregister', params,)
+                .then(response=>{
+                  if(response.data.status==='success') {
+                    this.$store.state.usuario = response.data.user;
+                    Swal.fire({
+                        text:"Registro Exitoso",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                    this.$router.push('/userNuevo')
+                  }
+                  else{
+                    Swal.fire({
+                        title:"Registro Invalido",
+                        text:"El correo no pertenece a la institución",
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                  }           
+                }).catch( e=>console.log(e));
+            }
           }
         },
         rutas(item){
@@ -186,19 +233,79 @@ import Swal from 'sweetalert2'
                 correo: profile.email,
                 imagen: profile.picture,
                 nombre: profile.given_name,
-                ap_paterno: profile.family_name,
+                apellidos: profile.family_name,
                 institucion: profile.hd,
               }
               axios.post('/googlelogin', parametros,)
-                .then(response=>{  
-                  alert(response.data.status); 
+                .then(response=>{
                   if(response.data.status=='success') {
                     _this.$store.state.usuario = response.data.user;
+                    Swal.fire({
+                      text:"Ingreso Exitoso",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                    })
                     _this.rutas(response.data.user);
                   }
                 }).catch( e=>console.log(e));
             });
           });
+        },
+        registrate(network) {
+          if(this.programaEl==null){
+            Swal.fire({
+              text:"Selecciona un Programa",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+            })
+          }
+          else{
+            const _this = this;
+            const hello = this.hello;
+            hello(network).login().then(() => {
+              const authRes = hello(network).getAuthResponse();
+              /*
+                performs operations using the token from authRes
+              */
+              let output = JSON.stringify(authRes, undefined, 4);
+              _this.authRes = output;
+              hello(network).api('me').then(function (profile) {
+                /*
+                  performs operations using the user info from profile
+                */
+                let output = JSON.stringify(profile, undefined, 4);
+                _this.profileRes = output;
+                let parametros = {
+                  password: "dummy123",
+                  correo: profile.email,
+                  imagen: profile.picture,
+                  nombre: profile.given_name,
+                  apellidos: profile.family_name,
+                  institucion: profile.hd,
+                  programa: this.programaEl
+                }
+                axios.post('/googleregister', parametros,)
+                  .then(response=>{
+                    if(response.data.status=='success') {
+                      _this.$store.state.usuario = response.data.user;
+                      Swal.fire({
+                        text:"Ingreso Exitoso",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                      })
+                      _this.rutas(response.data.user);
+                    }
+                  }).catch( e=>console.log(e));
+              });
+            });
+          }
+          
         },
         signupbtn(){
           let userForms = document.getElementById('user_options-forms')

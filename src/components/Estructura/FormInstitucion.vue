@@ -125,10 +125,10 @@ export default {
       this.$router.push({name:'Login'})
     },
     guardarInstitucion() {
-      let nomVal =this.nombre!='' || this.nombre != null;
-      let siglasVal = this.siglas!='' || this.siglas != null;
-      let dirVal = this.direccion!='' || this.direccion != null;
-      let telVal = this.telefono!='' || this.telefono != null;
+      let nomVal =this.nombre=='' || this.nombre == null;
+      let siglasVal = this.siglas=='' || this.siglas == null;
+      let dirVal = this.direccion=='' || this.direccion == null;
+      let telVal = this.telefono=='' || this.telefono == null;
       if( nomVal && siglasVal && dirVal && telVal){
         Swal.fire({
               text:"No ha completado todos los campos",
