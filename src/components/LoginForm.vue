@@ -20,7 +20,7 @@
         
         <div class="user_options-forms" id="user_options-forms">
           <div class="user_forms-login">
-            <h2 class="forms_title">Ingresar</h2>
+            <h2 class="forms_title">Inicia Sesión</h2>
             <form v-on:submit.prevent="checkForm" class="forms_form">
               <fieldset class="forms_fieldset">
                 <div class="forms_field">

@@ -3,7 +3,7 @@
 		<ul :style="{ background: background|| '#333'}" ref="nav">
 			<figure class="image-logo" @click="toggleNav">
 				<img :src="imagePath" height="60px" width="60px" />		
-				<nobr>ssitance</nobr>				
+				<nobr>ssistance</nobr>				
 			</figure>
 			<li
 				v-for="(link,index) in navLinks"	

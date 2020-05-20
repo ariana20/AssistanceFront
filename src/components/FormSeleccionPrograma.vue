@@ -1,17 +1,10 @@
 <template>
     <div name="Seleccion" style="margin-top: 120px">
+        <h1>Elige tu Programa</h1>
         <div id="app" class="container">
-            <card data-image="https://i.pinimg.com/originals/a8/04/d4/a804d4a2a97e4322d9a3d4bee8599731.jpg">
-                <h1 slot="header">Quimica</h1>
-                <p slot="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-            </card>
-            <card data-image="https://i.pinimg.com/originals/06/55/80/065580938b36e4c049ec033745248216.jpg">
-                <h1 slot="header">Industrial</h1>
-                <p slot="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-            </card>
-            <card data-image="https://image.winudf.com/v2/image1/Y29tLm1vdmluZy53YWxscGFwZXJzLmdyZWVuLmxpdmUud2FsbHBhcGVyX3NjcmVlbl8xMl8xNTU3NzQ3Njg2XzA5MA/screen-12.jpg?fakeurl=1&type=.jpg">
-                <h1 slot="header">Informatica</h1>
-                <p slot="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+            <card v-for="(item,index) in this.programas" :key="index" data-image="https://image.winudf.com/v2/image1/Y29tLm1vdmluZy53YWxscGFwZXJzLmdyZWVuLmxpdmUud2FsbHBhcGVyX3NjcmVlbl8xMl8xNTU3NzQ3Njg2XzA5MA/screen-12.jpg?fakeurl=1&type=.jpg">
+                <h1 slot="header">{{item.programa.nombre}}</h1>
+                <p slot="content">Rol: {{item.tipoUsuario.nombre}}</p>
             </card>
         </div>
     </div>
@@ -25,6 +18,17 @@ export default {
   name: 'FormSeleccionPrograma',
   components: {
     card
+  },
+  data(){
+      return{
+          programas:null,
+      }
+  },
+  mounted(){
+      this.axios.post('/usuarios/permisosProgramas')
+        .then(response=>{
+            this.programas = response.data
+        })
   }
 }
 </script>

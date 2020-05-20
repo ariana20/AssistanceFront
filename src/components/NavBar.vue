@@ -43,7 +43,6 @@ export default {
       this.$store.state.usuario = response.data.user;
         if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
         this.nombre = this.$store.state.usuario.nombre
-        console.log(response.data.user)
         let paramr = {
           usuario:response.data.user,
         }
