@@ -46,8 +46,8 @@ export default {
 <style lang="scss" scoped>
 nav {
 	width: 100%;
-	padding-left: 10px;
-	box-shadow: -5px 0 50px -5px #333;
+	padding-left: 20px;
+	box-shadow: 2px 2px 2px #CCC;
 	z-index: 1000;
 	ul {
 		position: fixed;

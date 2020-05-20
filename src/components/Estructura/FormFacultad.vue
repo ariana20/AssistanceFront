@@ -33,7 +33,7 @@
           <tr v-for="(item,index) in facultades" :key="index">
             <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>
-            <td>FaltaNombreCoordinador</td>
+            <td>{{coordinadores[index].nombre}}</td>
             <td>{{item.correo}}</td>
             <td style="text-align: center">{{cantidades[index][0].count}}</td>
             <td style="text-align: center">
@@ -54,7 +54,8 @@ export default {
     return{
       nombre:null,
       facultades:[],
-      cantidades:[]
+      cantidades:[],
+      coordinadores:[]
     }
   },
   created(){
@@ -64,11 +65,13 @@ export default {
     
     listarFacultades() {
       this.axios.create({withCredentials: true })
-      .post('/facultad/listarFacultadesConCant')
+      .post('/facultad/listarFacultadesConCantCoordi/')
         .then(res =>{
           console.log(res.data);
           this.facultades=res.data[0];
           this.cantidades=res.data[1];
+          this.coordinadores=res.data[2];
+
         })
         .catch(e => {
           console.log(e.response);
