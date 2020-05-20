@@ -21,7 +21,9 @@
             <label>Nombre de la Facultad:</label>
             </b-col>
             <b-col sm="9">
-            <b-form-input id="nombreF" v-model="facultad.nombre"></b-form-input>
+            <b-form-input v-if="idFacultad" id="nombreF" v-model="facultad.nombre"></b-form-input>
+            <b-form-input v-else id="nombreF" v-model="facultad.nombre"></b-form-input>
+
             </b-col>
 
         </b-row>
@@ -133,15 +135,23 @@
 import axios from 'axios'
 import modalJ from '@/components/Modal.vue'
 import modalJ2 from '@/components/Modal.vue'
+import Vue from 'vue'
+import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
+Vue.use(MultiSelectPlugin);
+import Swal from 'sweetalert2'
+
 export default {
+  props: {
+      idFacultad: String,
+  },
   data(){
     return{
       facultad:{
           id_facultad:null,
           id_institucion:1,
-          nombre:null,
+          nombre:"",
           descripcion:null,
-          correo:null,
+          correo:"",
           coordinador:null
       },
       programas:[],
@@ -164,11 +174,23 @@ export default {
     modalJ2
   },
   created(){
+
     
   },
   methods:{
-    
+
     guardarFacultad() {
+
+      if(this.facultad.nombre =="" || this.facultad.correo==""){
+         Swal.fire({
+              text:"No ha completado todos los campos",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        }) 
+
+      }else{
 
       axios.create({withCredentials: true })
         .post('/facultad/insertar',this.facultad)
@@ -192,6 +214,7 @@ export default {
         .catch(e => {
           console.log(e.response);
         })
+      }
 
     },
     agregarPrograma(){
