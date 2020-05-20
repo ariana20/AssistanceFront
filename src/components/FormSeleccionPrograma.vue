@@ -1,10 +1,10 @@
 <template>
-    <div name="Seleccion" style="margin-top: 120px">
+    <div name="Seleccion" style="margin-top:30px;margin-left:-250px">
         <h1>Elige tu Programa</h1>
         <div id="app" class="container">
-            <card v-for="(item,index) in this.programas" :key="index" data-image="https://image.winudf.com/v2/image1/Y29tLm1vdmluZy53YWxscGFwZXJzLmdyZWVuLmxpdmUud2FsbHBhcGVyX3NjcmVlbl8xMl8xNTU3NzQ3Njg2XzA5MA/screen-12.jpg?fakeurl=1&type=.jpg">
-                <h1 slot="header">{{item.programa.nombre}}</h1>
-                <p slot="content">Rol: {{item.tipoUsuario.nombre}}</p>
+            <card @click="irPrograma(item)" v-for="(item,index) in this.programas" :key="index" data-image="https://image.winudf.com/v2/image1/Y29tLm1vdmluZy53YWxscGFwZXJzLmdyZWVuLmxpdmUud2FsbHBhcGVyX3NjcmVlbl8xMl8xNTU3NzQ3Njg2XzA5MA/screen-12.jpg?fakeurl=1&type=.jpg">
+                <h1 @click="irPrograma(item)" slot="header">{{item.programa.nombre}}</h1>
+                <p @click="irPrograma(item)" slot="content">Rol: {{item.tipoUsuario.nombre}}</p>
             </card>
         </div>
     </div>
@@ -13,6 +13,7 @@
 <script>
 // @ is an alias to /src
 import card from '@/components/Card.vue'
+import axios from 'axios'
 // Solo llamo al componente, pero es personalizable aquí
 export default {
   name: 'FormSeleccionPrograma',
@@ -29,6 +30,35 @@ export default {
         .then(response=>{
             this.programas = response.data
         })
+  },
+  methods:{
+      irPrograma(item){
+          axios.post('/vueuser',{usuario: this.$store.state.usuario}).then(response=>{
+              
+            this.$store.state.usuario = response.data.user;
+            if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
+                let paramr = {
+                    usuario:this.$store.state.usuario.nombre,
+                    programa: item.programa.nombre
+                }
+                axios.post('/usuarios/permisos',paramr)
+                .then(response=>{
+                    console.log(response.data)
+                    this.$store.state.rutas = [];
+                    for(var i=0; i < this.$store.state.navLinks.length; i++){
+                        for(var j=0; j < response.data.length; j++){
+                            if( this.$store.state.navLinks[i].text == response.data[j]){
+                                this.$store.state.rutas.push(this.$store.state.navLinks[i]);
+                            }
+                        }
+                    }   
+                    if(this.$route.path == '/seleccion' && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
+                    else this.$router.push('/userNuevo')
+                }).catch( e=>console.log(e));
+            }
+          })
+            
+      }
   }
 }
 </script>

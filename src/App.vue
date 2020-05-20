@@ -9,7 +9,7 @@
     background="#009892"
     link-color="#eee"
     hoverBackground="#ccc"
-    v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'"  />
+    v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404' && this.$route.path !== '/seleccion'"   />
     <div style="height:60px"></div>
     <div v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'" id="container" class="wrapper">
       <router-view/>
@@ -68,8 +68,7 @@ body {
   margin: 0;
 }
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  font-family: "Brandon Bold",Helvetica,Arial,sans-serif;
+  font-family: "Brandon Bold";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

@@ -35,7 +35,7 @@ export default {
       height: 300px;
       padding: 0em;
       margin: 0em;
-      font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
+      font-family: "Brandon Bold";
     }
 
     /* Centered text */
@@ -61,8 +61,8 @@ export default {
       right:0;
       bottom:0;
       width: 30%;
-      height:90px;
+      height:120px;
       padding-top: 20px;
-      background-color: rgba(255,255,255,0.5);
+      background-color: rgba(255,255,255,0.8);
     }
 </style>

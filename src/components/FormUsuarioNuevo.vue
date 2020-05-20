@@ -1,8 +1,8 @@
 <template>
 	<div name="UsuarioNuevo" style="height:100%">
 		<div class="wrapper">
-			<div class="container" style="font-size:70px;margin-top:80px;margin-left:600px">
-				<strong>Aún no te encuentras inscrito en un programa</strong>
+			<div class="container" style="font-size:70px;margin-top:50px;margin-left:600px">
+				<strong>Aún no te encuentras inscrito en un programa o no cuentas con permisos</strong>
 			</div>
 			
 			<ul class="bg-bubbles">

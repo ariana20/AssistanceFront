@@ -146,7 +146,7 @@ import axios from 'axios'
                   }
                 }
                 console.log(this.$store.state.rutas);
-                if(this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path);  
+                if(this.$store.state.rutas[0]) this.$router.push('/seleccion');  
                 else this.$router.push('/userNuevo');        
               }).catch( e=>console.log(e));
         },

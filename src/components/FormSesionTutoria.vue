@@ -144,7 +144,7 @@ export default {
 .font-weight-bolder {
     color: black;
     font-size: 24px;
-    font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
+    font-family: "Brandon Bold";
 }
 .botones {
     margin:auto;
