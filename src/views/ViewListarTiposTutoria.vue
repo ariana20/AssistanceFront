@@ -1,23 +1,17 @@
-<!-- <template>
-  <div class="viewusuario">
-    <Usuario/>
-  </div> 
-</template> -->
-
 <template>
   <div class="Usuario">
-    <CabezeraTitulo msg="Listado de usuarios"/>
-    <FormListarUsuario/>
+    <CabezeraTitulo msg="Listado de tipos de tutoria en mi programa"/>
+    <FormListarTiposTutoria/>
   </div>
 </template>
 <script>
 import CabezeraTitulo from '@/components/CabezeraTitulo.vue'
-import FormListarUsuario    from '@/components/FormListarUsuario.vue'
+import FormListarTiposTutoria  from '@/components/FormListarTiposTutoria.vue'
 export default {
   name: 'ViewListarUsuarios',
   components: {
     CabezeraTitulo,
-    FormListarUsuario,
+    FormListarTiposTutoria,
   }
 }
 </script>
