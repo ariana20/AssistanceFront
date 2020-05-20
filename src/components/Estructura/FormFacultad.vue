@@ -48,7 +48,7 @@
 </template>
 
 <script>
-
+import axios from 'axios'
 export default {
   data(){
     return{
@@ -63,7 +63,7 @@ export default {
   methods:{
     
     listarFacultades() {
-      this.axios.create({withCredentials: true })
+      axios
       .post('/facultad/listFacuConCant/')
         .then(res =>{
           console.log(res.data);
@@ -73,7 +73,7 @@ export default {
         .catch(e => {
           console.log(e.response);
         })
-      this.axios.create({withCredentials: true })
+      axios
       .post('/facultad/listFacuConCoordi/')
         .then(res =>{
           console.log(res.data);

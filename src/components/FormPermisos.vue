@@ -2,20 +2,17 @@
   <div class="FormRoles" style="margin-top:20px">
     <div class="container" style="left:60px;text-align: left">
       <table style="width:100%">
-            <tr style="text-align:left">
-                <td style="min-width:100px">Tipo Usuario:</td>
-                <td> 
-                    <input v-if="idRol" type="text" class="form-control-plaintext" style="margin-left:40px" :value="nombreRol" readonly>
+            <tr style="text-align:left;height:70px">
+                <th style="min-width:190px;font-size:25px">Tipo Usuario:</th>
+                <th> 
+                    <input v-if="idRol" type="text" class="form-control-plaintext" style="margin-left:40px;font-size:25px" :value="nombreRol" readonly>
                     <input v-else type="text" v-model="nombre" style="margin-left:40px">
-                </td>
-                <td> <b-button v-on:click="Guardar()" style="margin-left:600px;background: #0097A7">Guardar</b-button></td>
+                </th>
+                <td> <b-button v-on:click="Guardar()" style="margin-left:500px;background: #0097A7">Guardar</b-button></td>
                 <td> <b-button v-on:click="Regresar()" style="margin-left:20px;background: #CDCDCD">Cancelar</b-button></td>
             </tr>
-            <tr style="text-align:left">
-                <td style="width:100px">Buscar:</td>
-                <td> <input type="text" style="margin-left:40px"></td>
-            </tr>
       </table>
+      <div class="col-md-12" style="border-bottom:3px solid #0097A7; "></div>
       <table class="table" v-for="(item, index) in $store.state.permisos" :key="index">
         <thead>
           <tr>
@@ -24,9 +21,9 @@
         </thead>
         <tbody>
           <tr v-for="(itemA, indexA) in item.permisos" :key="indexA">
-            <td style="width:10px"><input v-on:click="cambio(itemA,$event)" v-if="permisosActuales.includes(itemA)" type="checkbox" class="form-check-input" :id="'exampleCheck'+indexA" checked>
-            <input v-on:click="cambio(itemA,$event)" v-else type="checkbox" class="form-check-input" :id="'exampleCheck'+indexA"></td>
-            <td >{{itemA}}</td>
+            <td style="width:10px"><input v-on:click="cambio(itemA.nombre,$event)" v-if="permisosActuales.includes(itemA.nombre)" type="checkbox" class="form-check-input" :id="'exampleCheck'+indexA" checked>
+            <input v-on:click="cambio(itemA.nombre,$event)" v-else type="checkbox" class="form-check-input" :id="'exampleCheck'+indexA">{{itemA.nombre}}</td>
+            <td>{{itemA.descripcion}}</td>
           </tr>
         </tbody>
       </table>

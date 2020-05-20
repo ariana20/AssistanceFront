@@ -17,8 +17,8 @@
           <tr style="text-align:left"><td>Correo</td>   <td> <input id="corr" style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="correo"></td></tr>
         <!-- Combos box -->        
         <tr style="text-align:left"><td>Tipos de usuarios</td>   
-          <select style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" v-model="arrTU">
-            <option v-for="options in arrTU" v-bind:key="options.id_tipo_usuario">
+          <select style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" v-model="arrTUsuarios">
+            <option v-for="options in arrTUsuarios" v-bind:key="options.id_tipo_usuario">
              {{ options.nombre}}
              </option>
           </select>

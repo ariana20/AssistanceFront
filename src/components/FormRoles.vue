@@ -1,14 +1,12 @@
 <template>
   <div class="FormRoles" style="margin-top:20px">
     <div class="container" style="left:60px;text-align: left">
-      <table>
+      <table style="margin-bottom:20px">
       <tbody>
         <td style="width:662px">
           <tr style="text-align:left"></tr>
           <tr style="text-align:left">
-            <td>Buscar</td>   
-            <td> <input type="text" v-model="nombre" style="margin-left:10px"></td>
-            <td> <b-button v-on:click="nuevo()" style="margin-left:700px;background: #0097A7">Añadir</b-button></td>
+            <td> <b-button v-on:click="nuevo()" style="margin-left:860px;background: #0097A7">Añadir</b-button></td>
           </tr>
         </td>
       </tbody>
@@ -17,15 +15,14 @@
         <thead>
           <tr>
             <th scope="col">Nombre</th>
-            <th scope="col">Permisos</th>
-            <th scope="col">Eliminar</th>
+            <th scope="col" style="text-align: center">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in $store.state.roles" :key="index">
             <td>{{item.nombre}}</td>
-            <td><b-button v-on:click="Editar(item.id_tipo_usuario)" style="background: #0097A7">Lapiz</b-button></td>
-            <td><b-button v-on:click="Eliminar(item.id_tipo_usuario)">Eliminar</b-button></td>
+            <td  style="text-align: center"><button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil"/></button>
+            <button v-on:click="Eliminar(item.id_tipo_usuario)" class="btn link"><b-icon icon="dash-circle-fill"/></button></td>
           </tr>
         </tbody>
       </table>
