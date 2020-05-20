@@ -38,12 +38,14 @@
             <label>Coordinador de Facultad:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinadorF" disabled v-if="coordinadorSeleccionado!=null" v-model="coordinadorSeleccionado.nombre" >{{coordinadorSeleccionado.nombre}}</b-form-input>
+            <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombre" ></b-form-input>
+            <b-form-input id="idCoordinadorF" readonly v-else></b-form-input>
             </b-col>
 
             <b-col sm="1">
             <b-col sm="1">
-            <modalJ2 v-on:childToParent="onChildClick"/>
+            <modalJ2 v-on:childToParent="onChildClick" tipo="Facultad"/>
+              <strong>{{tipoCoord}}</strong>
             
             </b-col>
             </b-col>
@@ -87,12 +89,13 @@
             <label>Coordinador de Programa:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinador" disabled v-if="coordinadorSeleccionado!=null" v-model="coordinadorSeleccionado.nombre" >{{coordinadorSeleccionado.nombre+" "+coordinadorSeleccionado.ap_paterno}}</b-form-input>
+            <b-form-input id="idCoordinador" readonly v-if="programa.coordinador!=null" v-model="programa.coordinador.nombre" ></b-form-input>
+            <b-form-input id="idCoordinador" readonly v-else></b-form-input>
             </b-col>
 
             <b-col sm="1">
-            <modalJ v-on:childToParent="onChildClick"/>
-            
+            <modalJ v-on:childToParent="onChildClick" tipo="Programa"/>
+            <strong>{{tipoCoord}}</strong>
             </b-col>
         </b-row>
         <br>
@@ -138,24 +141,21 @@ export default {
           id_institucion:1,
           nombre:null,
           descripcion:null,
-          correo:null
+          correo:null,
+          coordinador:null
       },
       programas:[],
-      idCoordPrograma: null,
-      idCoordFacultad: null,
       
-      coordinador:{
-          id_coordinador:null,
-          nombre_coordinador:null,
-      },
       programa:{
           id_programa:null,
           id_facultad:null,
           nombre:null,
           descripcion:null,
-          correo:null
+          correo:null,
+          coordinador:null
       },
       coordinadorSeleccionado:null,
+      tipoCoord:"",
 
     }
   },
@@ -202,10 +202,23 @@ export default {
       this.programas.push(prog);
       console.log(this.programas);
     },
-    onChildClick (value) {
-      this.coordinadorSeleccionado = value
+    onChildClick (value, tipo) {
+      this.coordinadorSeleccionado = value;
+      this.tipoCoord=tipo;
+      console.log(tipo);
+      if(tipo[0]=='P'){
+        console.log("Programa");
+        this.programa.coordinador=value;
+        console.log(this.programa);
+      }else if(tipo[0]=='F'){
+        console.log("Facultad");
+        this.facultad.coordinador=value;
+        console.log(this.facultad);
+      }
       
-    }
+      
+    },
+
 
   }
 }

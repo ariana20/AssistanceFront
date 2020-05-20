@@ -37,7 +37,7 @@
             <td>{{item.correo}}</td>
             <td style="text-align: center">{{item.cantidad-1}}</td>
             <td style="text-align: center">
-              <button class="btn link"><b-icon icon="pencil"></b-icon></button>
+              <button class="btn link" v-on:click="Editar(item.id_facultad)"><b-icon icon="pencil"></b-icon></button>
               <button class="btn link"><b-icon icon="dash-circle-fill"></b-icon></button>
             </td>
           </tr>
@@ -83,6 +83,12 @@ export default {
         .catch(e => {
           console.log(e.response);
         })
+    },
+    Editar(id){
+      this.$router.push('/crearFacultad/'+id);
+    },
+    nuevo(){
+      this.$router.push('/crearFacultad');
     },
     
   }

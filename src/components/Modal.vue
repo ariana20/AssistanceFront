@@ -5,6 +5,7 @@
             <div class="dialog">
                 <a href="#close" title="Close" class="close">X</a>
                 <h2>Coordinadores</h2>
+                <h1 class="centered">{{tipo}}</h1>
                 <table class="table">
                     <thead>
                     <tr>
@@ -17,7 +18,7 @@
                     <tbody href="#close">
                     <tr  v-for="(item, index) in coordinadores" :key="index" v-on:click="mandar(item)">
                         <th scope="row"><a href="#close">{{item.id_usuario}}</a></th>
-                        <td><a href="#close">{{item.nombre}}</a></td>
+                        <td><a href="#close">{{item.nombre+" "+item.apellidos}}</a></td>
                         <td><a href="#close">{{item.correo}}</a></td>
                         <td><a href="#close">{{item.estado}}</a></td>
                     </tr>
@@ -35,6 +36,10 @@ export default {
       coordinadores:[]
     }
   },
+  props: {
+    tipo: String
+  },
+
   mounted(){
     this.listarCoordinadores();
   },
@@ -50,7 +55,7 @@ export default {
         })
     },
     mandar(coordinador){
-      this.$emit('childToParent', coordinador)
+      this.$emit('childToParent', coordinador, this.tipo)
     },
   },
 }

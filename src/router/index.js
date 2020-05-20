@@ -35,7 +35,7 @@ Vue.use(VueRouter)
   component: () => import(/* webpackChunkName: "about" */ '../views/ViewFacultad.vue')
   },
   {
-    path: '/crearFacultad',
+    path: '/crearFacultad/:id?',
     name: 'CrearFacultad',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
