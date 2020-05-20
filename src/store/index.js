@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     usuario:null,
     programas:null,
+    facultades:null,
     coordionadores:null,
     permisos:null,
     roles:null,

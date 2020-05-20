@@ -177,6 +177,7 @@ export default {
 
     
   },
+
   methods:{
 
     guardarFacultad() {
@@ -230,11 +231,11 @@ export default {
       this.tipoCoord=tipo;
       console.log(tipo);
       if(tipo[0]=='P'){
-        console.log("Programa");
+        console.log("ProgramaABC");
         this.programa.coordinador=value;
         console.log(this.programa);
       }else if(tipo[0]=='F'){
-        console.log("Facultad");
+        console.log("FacultadABC");
         this.facultad.coordinador=value;
         console.log(this.facultad);
       }

@@ -68,6 +68,8 @@ export default {
         .then(res =>{
           console.log(res.data);
           this.facultades=res.data
+          this.$store.state.facultades = res.data;
+
 
         })
         .catch(e => {
