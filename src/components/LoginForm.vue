@@ -121,7 +121,6 @@ import axios from 'axios'
               correo: this.reg.email,
               password: this.reg.password,
             }
-            console.log(params)
             axios.post('/vueregister', params,)
               .then(response=>{  
                 alert(response.data.status); 

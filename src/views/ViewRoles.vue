@@ -1,6 +1,6 @@
 <template>
   <div class="viewRoles">
-    <CabezeraTitulo msg="Roles y Permisos"/>
+    <CabezeraTitulo msg="Tipos de Usuario y Permisos"/>
     <FormRoles />
   </div>
 </template>

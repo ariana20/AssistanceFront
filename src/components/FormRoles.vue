@@ -22,7 +22,7 @@
           <tr v-for="(item, index) in $store.state.roles" :key="index">
             <td>{{item.nombre}}</td>
             <td  style="text-align: center"><button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil"/></button>
-            <button v-on:click="Eliminar(item.id_tipo_usuario)" class="btn link"><b-icon icon="dash-circle-fill"/></button></td>
+            <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill"/></button></td>
           </tr>
         </tbody>
       </table>
@@ -34,6 +34,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Swal from 'sweetalert2'
 
 export default {
   data(){
@@ -73,17 +74,36 @@ export default {
     nuevo(){
       this.$router.push('/permisos');
     },
-    Eliminar(id){
-      this.axios.post('/tipoUsuarios/eliminar/'+id)
-        .then(response=>{
-          console.log(response)
-          let index = this.$store.state.roles.indexOf(
-            function(element){
-              return element.id_tipo_usuario === id;
+    Eliminar(item){
+      Swal.fire({
+          title: '¿Dese eliminar '+item.nombre+'?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#0097A7',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirmar'
+        }).then((result) => {
+          if (result.value) {
+            this.axios.post('/tipoUsuarios/eliminar/'+item.id_tipo_usuario)
+              .then(response=>{
+                console.log(response)
+                let index = this.$store.state.roles.indexOf(
+                  function(element){
+                    return element.id_tipo_usuario === item.id_tipo_usuario;
+                  })
+                this.$store.state.roles.splice(index, 1);
+              })
+              .catch(e=>console.log(e));
+            Swal.fire({
+              text:"Eliminación Exitosa",
+              icon:"success",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
             })
-          this.$store.state.roles.splice(index, 1);
+          }
         })
-        .catch(e=>console.log(e));
+      
     }
   }
 }

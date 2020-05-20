@@ -4,7 +4,7 @@
 
             
       <b-collapse id="nav-collapse" is-nav>
-              <button v-if="this.$route.path != '/seleccion'" v-on:click="goToSeleccion()" style="margin-left:250px;width:150px;background-color:#7EC2C9;" class="btn" type="button">Cambiar Programa</button>
+              <button v-if="this.$route.path != '/seleccion' && this.$route.path != '/login'" v-on:click="goToSeleccion()" style="margin-left:250px;width:150px;background-color:#7EC2C9;" class="btn" type="button">Cambiar Programa</button>
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
@@ -36,10 +36,13 @@ export default {
   mounted(){
     axios.post('/vueuser',{usuario: this.$store.state.usuario}).then( response=>{
       this.$store.state.usuario = response.data.user;
-        if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
+        if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined && this.$route.path=='/seleccion'){
         this.nombre = this.$store.state.usuario.nombre
+        let prog;
+        if(this.$store.state.programa) prog = this.$store.state.programa.nombre;
         let paramr = {
           usuario:response.data.user,
+          programa: prog
         }
         axios.post('/usuarios/permisos',paramr)
           .then(response=>{

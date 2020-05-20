@@ -36,6 +36,7 @@
 
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
 export default {
   data(){
     return{
@@ -79,47 +80,96 @@ export default {
       reader.readAsDataURL(file);
     },
     onUpload(){
-      axios.post('/institucion/subirLogo',{image: this.selectedFile})
-        .then( response=>{
-          console.log(response)
-          let imgIns = response.data.path
-          console.log(imgIns)
-          this.logo = imgIns;
-          this.guardarInstitucion();
+      if(this.selectedFile == null){
+        Swal.fire({
+          text:"No ha seleccionado una imagen",
+          icon:"error",
+          confirmButtonText: 'OK',
+          confirmButtonColor:'#0097A7',
+          showConfirmButton: true,
+        }) 
+      }
+      else{
+        Swal.fire({
+          title: '¿Dese modificar su Logo?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#0097A7',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirmar'
+        }).then((result) => {
+          if (result.value) {
+            axios.post('/institucion/subirLogo',{image: this.selectedFile})
+              .then( response=>{
+                console.log(response)
+                let imgIns = response.data.path
+                console.log(imgIns)
+                this.logo = imgIns;
+                Swal.fire({
+                  text:"Subida Exitosa",
+                  icon:"success",
+                  confirmButtonText: 'OK',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+                })
+              })
+              .catch(e => {
+                console.log(e.response);
+              })
+          }
         })
-        .catch(e => {
-          console.log(e.response);
-        })
+      }
+      
     },
     rut(){
       this.$router.push({name:'Login'})
     },
     guardarInstitucion() {
-      const params = {
-        nombre: this.nombre,
-        siglas: this.siglas,
-        direccion: this.direccion,
-        telefono: this.telefono,
-        logo: this.logo,
-      };
+      let nomVal =this.nombre!='' || this.nombre != null;
+      let siglasVal = this.siglas!='' || this.siglas != null;
+      let dirVal = this.direccion!='' || this.direccion != null;
+      let telVal = this.telefono!='' || this.telefono != null;
+      if( nomVal && siglasVal && dirVal && telVal){
+        Swal.fire({
+              text:"No ha completado todos los campos",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        })        
+      }else{
+        Swal.fire({
+          title: '¿Dese modificar su Institución?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#0097A7',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirmar'
+        }).then((result) => {
+          if (result.value) {
+            const params = {
+              nombre: this.nombre,
+              siglas: this.siglas,
+              direccion: this.direccion,
+              telefono: this.telefono,
+              logo: this.logo,
+            };
 
-      axios.post('/institucion/modificar/'+this.id,params)
-        .then( response=>{
-          console.log(response)
+            axios.post('/institucion/modificar/'+this.id,params)
+              .then( response=>{
+                console.log(response)
+                Swal.fire(
+                  'Modificacion Exitosa!',
+                  'Tus institución ha sido actualizada.',
+                  'success'
+                )
+              })
+              .catch(e => {
+                console.log(e.response);
+              })
+          }
         })
-        .catch(e => {
-          console.log(e.response);
-        })
-    },
-    tipo(){
-      const parame = {
-        id_usuario: this.$store.state.usuario.id_usuario
       }
-      console.log(this.$store.state.usuario.id_usuario)
-      axios.post('/usuarios/tipoUsuario',parame)
-      .then(response=>{  
-        console.log(response.data);            
-      }).catch( e=>console.log(e));
     },
   }
 }

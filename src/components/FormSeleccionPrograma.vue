@@ -43,7 +43,6 @@ export default {
                 }
                 axios.post('/usuarios/permisos',paramr)
                 .then(response=>{
-                    console.log(response.data)
                     this.$store.state.rutas = [];
                     for(var i=0; i < this.$store.state.navLinks.length; i++){
                         for(var j=0; j < response.data.length; j++){
@@ -51,7 +50,8 @@ export default {
                                 this.$store.state.rutas.push(this.$store.state.navLinks[i]);
                             }
                         }
-                    }   
+                    }
+                    this.$store.state.programaActual = item.programa;
                     if(this.$route.path == '/seleccion' && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
                     else this.$router.push('/userNuevo')
                 }).catch( e=>console.log(e));

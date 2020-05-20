@@ -36,6 +36,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import Swal from 'sweetalert2'
+
 export default {
   props: {
       idRol: String,
@@ -67,6 +69,7 @@ export default {
   methods:{
     
     listarPermisosActuales() {
+        console.log('Fui a llamar mis permisos')
         axios.post('tipoUsuarios/listarPermisos/'+this.idRol)
             .then(response=>{
                 this.nombreRol = response.data.nombre;
@@ -86,13 +89,60 @@ export default {
     },
 
     Guardar(){
-        if(this.idRol=== null || this.idRol === undefined) this.nombreRol = this.nombre;
-        axios.post('tipoUsuarios/modPermisos',{nombre: this.nombreRol, cambios: this.cambios})
-            .then(response=>{
-                alert(response.data)
-            })
-            .catch(e=>console.log(e));
-        this.$router.push('/tiposUsuario');
+      let nomVal =this.nombreRol=='' || this.nombreRol == null;
+      let cambiosVal = this.cambios.length==0 || this.cambios == null;
+      console.log(nomVal)
+      console.log(cambiosVal)
+      if(nomVal && (this.nombre=="" || this.nombre==null)){
+        Swal.fire({
+          text:"No ha completado el nombre",
+          icon:"error",
+          confirmButtonText: 'OK',
+          confirmButtonColor:'#0097A7',
+          showConfirmButton: true,
+        })   
+      }
+      else{
+        if(cambiosVal){
+          Swal.fire({
+            text:"No ha realizado cambios",
+            icon:"error",
+            confirmButtonText: 'OK',
+            confirmButtonColor:'#0097A7',
+            showConfirmButton: true,
+          }) 
+        }    
+        else{
+          if(this.nombreRol!=null) this.nombre = this.nombreRol;
+          Swal.fire({
+            title: '¿Dese guardar esta configuración de '+this.nombre+'?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0097A7',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirmar'
+          }).then((result) => {
+            if (result.value) {
+              if(this.idRol=== null || this.idRol === undefined) this.nombreRol = this.nombre;
+              axios.post('tipoUsuarios/modPermisos',{nombre: this.nombreRol, cambios: this.cambios})
+                  .then(response=>{
+                      alert(response.data)
+                  })
+                  .catch(e=>console.log(e));
+              Swal.fire({
+                  text:"Guardado Exitosa",
+                  icon:"success",
+                  confirmButtonText: 'OK',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+              })
+              this.$router.push('/tiposUsuario');
+            }
+          })
+        } 
+      }
+      
+        
     },
     cambio(value,event) {
         console.log(event.target.checked);
