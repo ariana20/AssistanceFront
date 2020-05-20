@@ -1,6 +1,10 @@
 <template>
   <div class="FormListarUsuario">
     <div class="container">
+       <div style="text-align:right" >
+                <router-link to="/Usuario/0"> 
+                  <button  type="button" class="btn btn-info">Añadir</button>
+                </router-link></div>      
       <table>
       <tbody>
         <td style="width:662px">
@@ -8,23 +12,21 @@
           <!-- <tr style="text-align:left"><td>Buscar</td>   <td> <input type="text" v-model="busqnombre"></td> -->
           
           <!-- <td >  -->
-            <tr style="text-align:left" >
-                <router-link to="/Usuario">
-                  <button  type="button" class="btn btn-info">Añadir</button>
-                </router-link></tr>
+           
           
           <!-- </td> -->
           <!-- </tr> -->
         </td>
       </tbody>
       </table>
-      <table class="table" style="text-align: left">
+      <table class="table" >
         <thead>
           <tr>
             <th scope="col">N°</th>
             <th scope="col">Nombre</th>
-            <th scope="col">Codigo</th>
-            <th scope="col">Tipo de Usuario </th>
+            <th scope="col">Coreo</th>
+            <th scope="col">Tipo de Usuario</th>
+            <th scope="col">Modif/Elim</th>
           </tr>
         </thead>
         <tbody>
@@ -32,8 +34,17 @@
             <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>
             <td>{{item.correo}}</td>   
-            <td v-for="e in TodosarrayTU" :key="e.id">
-                    <span v-if="e.id_tipo_usuario == item.pivot.id_tipo_usuario">{{e.nombre}}</span>
+            <div  v-for="e in TodosarrayTU" :key="e.id">
+              <td style="width:645px" v-if="e.id_tipo_usuario == item.pivot.id_tipo_usuario">
+                    <span >{{e.nombre}}</span>
+              </td>
+            </div>
+            <td style="text-align: center">
+               <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
+              <button class="btn link"><b-icon icon="pencil"></b-icon></button>
+              </router-link>              
+              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
+              
             </td>
           </tr>
         </tbody>
@@ -44,6 +55,7 @@
 
 <script>
 import Axios from 'axios'
+import Swal from 'sweetalert2'
 export default {
   data(){
     return{
@@ -53,12 +65,16 @@ export default {
       cantU:null,
       TodosarrayTU:[],
       tipoXUsuario:[],
+      miUsuario:this.$store.state.usuario, //Para sacar el id del programa
       
     }
   },
   created(){
+  console.log(this.miUsuario); //no funciona hasta que tenga el login
+    
     this.listarTUsuarios();
     this.listarUsuarios();
+
     
   },
   methods:{
@@ -70,7 +86,7 @@ export default {
         .then(res =>{
           // Ordenadito
           let par=res.data;
-          this.TodosarrayTU=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+          this.TodosarrayTU=par;
           console.log(res.data);
           
         })
@@ -79,19 +95,68 @@ export default {
         })
     },
     listarUsuarios() {
+      //Proximameeente
+      //var mi_id_prog=this.miUsuario.id_usuario; //con pivot?
+      //post('/programa/usuarioPrograma/'+mi_id_prog)
       Axios.create({withCredentials: true }).post('/programa/usuarioPrograma/4') //Por ahora dsp será x program
         .then(res =>{
-          console.log(res.data);
-          
+          console.log(res.data);          
           this.usuarios=res.data;
-          console.log(this.usuarios[1].pivot.id_tipo_usuario);
-          console.log(this.TodosarrayTU[this.usuarios[1].pivot.id_tipo_usuario].nombre);
-          
+                   
         })
         .catch(e => {
           console.log(e.response);
         })
     },
+    eliminarUsuario(id){
+      Swal.fire({
+            text:'¿Desea eliminar?',
+            icon:'warning',
+            confirmButtonText: 'Eliminar',
+             confirmButtonColor:'#0097A7',
+            cancelButtonText: 'Cancelar',
+            cancelButtonColor:'C4C4C4',
+            showCancelButton: true,
+            showConfirmButton: true,
+            //html:' <div >Hello</div>',
+
+        }).then((result) => {
+            if (result.value) {
+              Swal.fire({
+                icon:'success',
+                text:'El usuario ha sido eliminado',
+                confirmButtonText:'Confirmo' ,
+                confirmButtonColor:'#0097A7'
+                }
+              )
+              //aqui iriía el eliminar
+              //ESte eliminar no debería estar.Debería ser un eliminar del programa
+              Axios.create({withCredentials: true }).post('/usuarios/eliUsuarioPrograma/'+id)
+              .then(res =>{
+              // Ordenadito
+                    console.log(res);
+                     let index = this.$store.state.usuarios.indexOf( //
+                    function(element){
+                      return element.id_tipo_tutoria === id; //
+                    })
+                  this.$store.state.usuarios.splice(index, 1); //
+          
+                })
+                .catch(e => {
+                  console.log(e.response);
+                })
+
+            } else if (
+              /* Read more about handling dismissals below */
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+              Swal.fire({
+                text:'Se ha cancelado la eliminación',
+                confirmButtonColor:'#0097A7',}
+              )
+            }
+          })
+   } // eliminart
    
   }
 }

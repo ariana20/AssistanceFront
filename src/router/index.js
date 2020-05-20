@@ -59,7 +59,7 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
   }, 
   {
-    path: '/tiposdeTutoria',
+    path: '/tiposdeTutoria/:id',
     name: 'TiposTutoria',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -67,8 +67,8 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewTiposTutorias" */ '../views/ViewTiposTutoria.vue')
   }, 
   {
-    path: '/Usuario',
-    name: 'Gestionar Usuario',
+    path: '/Usuario/:id',
+    name: 'GestionarUsuario',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -87,7 +87,15 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewListarUsuarios.vue')
+    component: () => import(/* webpackChunkName: "ViewListarUsuarios" */ '../views/ViewListarUsuarios.vue')
+  },
+  {
+    path: '/ListaTiposTutorias',
+    name: 'ListaTiposTutorias',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewListarTiposTutoria" */ '../views/ViewListarTiposTutoria.vue')
   },
 ]
 
