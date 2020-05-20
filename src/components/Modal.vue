@@ -1,10 +1,11 @@
 <template>
     <div name="Modal">
-        <a class="button" href="#openModal">Abrir Modal</a>
+        <a class="button" href="#openModal"><b-icon icon="search"></b-icon></a>
         <div id="openModal" class="modalbg">
             <div class="dialog">
                 <a href="#close" title="Close" class="close">X</a>
                 <h2>Coordinadores</h2>
+                <h1 class="centered">{{tipo}}</h1>
                 <table class="table">
                     <thead>
                     <tr>
@@ -17,7 +18,7 @@
                     <tbody href="#close">
                     <tr  v-for="(item, index) in coordinadores" :key="index" v-on:click="mandar(item)">
                         <th scope="row"><a href="#close">{{item.id_usuario}}</a></th>
-                        <td><a href="#close">{{item.nombre}}</a></td>
+                        <td><a href="#close">{{item.nombre+" "+item.apellidos}}</a></td>
                         <td><a href="#close">{{item.correo}}</a></td>
                         <td><a href="#close">{{item.estado}}</a></td>
                     </tr>
@@ -35,12 +36,16 @@ export default {
       coordinadores:[]
     }
   },
+  props: {
+    tipo: String
+  },
+
   mounted(){
     this.listarCoordinadores();
   },
   methods:{
     listarCoordinadores() {
-      this.axios.post('/facultad/coordinadores/')
+      this.axios.post('/facultad/coordinadoresPyF/')
         .then(res =>{
           this.$store.state.coordinadores = res.data
           this.coordinadores=res.data;
@@ -50,7 +55,7 @@ export default {
         })
     },
     mandar(coordinador){
-      this.$emit('childToParent', coordinador)
+      this.$emit('childToParent', coordinador, this.tipo)
     },
   },
 }

@@ -1,10 +1,12 @@
 <template>
   <div class="FormCrearFacultad">
-    
+
     <div class="container" style="text-align: left">
+      
         <b-container fluid>
         <b-row class="my-1"  style="text-align: right">
             <b-col sm="12">
+            
             <button type="button" class="btn btn-info" style="margin-left:30px" v-on:click="guardarFacultad()">Guardar</button>
             
             <router-link to="/facultad">
@@ -16,45 +18,38 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Nombre de la Facultad:</label>
+            <label>Nombre de la Facultad:</label>
             </b-col>
             <b-col sm="9">
-            <b-form-input id="nombre" v-model="facultad.nombre"></b-form-input>
+            <b-form-input v-if="idFacultad" id="nombreF" v-model="facultad.nombre"></b-form-input>
+            <b-form-input v-else id="nombreF" v-model="facultad.nombre"></b-form-input>
+
             </b-col>
 
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Correo Electrónico:</label>
+            <label>Correo Electrónico:</label>
             </b-col>
             <b-col sm="9">
-            <b-form-input id="correo" v-model="facultad.correo"></b-form-input>
+            <b-form-input id="correoF" v-model="facultad.correo"></b-form-input>
             </b-col>
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Coordinador de Facultad:</label>
+            <label>Coordinador de Facultad:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinador" v-model="idCoordFacultad" disabled></b-form-input>
+            <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombre" ></b-form-input>
+            <b-form-input id="idCoordinadorF" readonly v-else></b-form-input>
             </b-col>
 
-            <b-col>
-            <!-- button type="button" class="btn btn-outline-secondary"><b-icon icon="search"></b-icon></button-->
-            <a href="#ventana1" class="btn btn-outline-secondary" data-toggle="modal"><b-icon icon="search"></b-icon></a>
-            <div class="modal fade" id="ventana1">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h2 class="modal-tittle">Encabezado</h2>
-
-                  </div>
-
-                </div>
-              </div>
-            </div>
-              
-
+            <b-col sm="1">
+            <b-col sm="1">
+            <modalJ2 v-on:childToParent="onChildClick" tipo="Facultad"/>
+              <strong>{{tipoCoord}}</strong>
+            
+            </b-col>
             </b-col>
         </b-row>
         <b-row></b-row>
@@ -76,7 +71,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Nombre del Programa:</label>
+            <label>Nombre del Programa:</label>
             </b-col>
             <b-col sm="9">
             <b-form-input id="nombre" v-model="programa.nombre"></b-form-input>
@@ -85,7 +80,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Correo Electrónico:</label>
+            <label>Correo Electrónico:</label>
             </b-col>
             <b-col sm="9">
             <b-form-input id="correo" v-model="programa.correo"></b-form-input>
@@ -93,19 +88,22 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Coordinador de Programa:</label>
+            <label>Coordinador de Programa:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinador" v-model="idCoordPrograma" disabled></b-form-input>
+            <b-form-input id="idCoordinador" readonly v-if="programa.coordinador!=null" v-model="programa.coordinador.nombre" ></b-form-input>
+            <b-form-input id="idCoordinador" readonly v-else></b-form-input>
             </b-col>
 
             <b-col sm="1">
-            <button type="button" class="btn btn-outline-secondary"><b-icon icon="search"></b-icon></button>
+            <modalJ v-on:childToParent="onChildClick" tipo="Programa"/>
+            <strong>{{tipoCoord}}</strong>
             </b-col>
         </b-row>
         <br>
 
 
+        
         </b-container>
         <table class="table">
             <thead>
@@ -127,68 +125,125 @@
             </tr>
             </tbody>
         </table>
-
+        
     </div>
-
+    
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import modalJ from '@/components/Modal.vue'
+import modalJ2 from '@/components/Modal.vue'
+import Vue from 'vue'
+import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
+Vue.use(MultiSelectPlugin);
+import Swal from 'sweetalert2'
 
 export default {
+  props: {
+      idFacultad: String,
+  },
   data(){
     return{
       facultad:{
           id_facultad:null,
           id_institucion:1,
-          nombre:null,
+          nombre:"",
           descripcion:null,
-          correo:null
+          correo:"",
+          coordinador:null
       },
       programas:[],
-      idCoordPrograma: null,
-      idCoordFacultad: null,
       
-      coordinador:{
-          id_coordinador:null,
-          nombre_coordinador:null,
-      },
       programa:{
           id_programa:null,
           id_facultad:null,
           nombre:null,
           descripcion:null,
           correo:null,
-          id_coordinador:0
+          coordinador:null
       },
+      coordinadorSeleccionado:null,
+      tipoCoord:"",
+
     }
   },
+  components:{
+    modalJ,
+    modalJ2
+  },
   created(){
+
     
   },
+
   methods:{
-    
+
     guardarFacultad() {
+
+      if(this.facultad.nombre =="" || this.facultad.correo==""){
+         Swal.fire({
+              text:"No ha completado todos los campos",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        }) 
+
+      }else{
 
       axios.create({withCredentials: true })
         .post('/facultad/insertar',this.facultad)
           .then( response=>{
-            this.facultad.id_facultad=response.data
+            this.facultad.id_facultad=response.data.id_facultad;
             console.log(response)
+
+            for(var i=0; i<this.programas.length; i++){
+              this.programas[i].id_facultad=this.facultad.id_facultad;
+            }
+            axios.create({withCredentials: true })
+              .post('/programa/insertarVariosPro',this.programas)
+                .then( response=>{
+                  console.log(response)
+                })
+              .catch(e => {
+                console.log(e.response);
+              })
+
           })
         .catch(e => {
           console.log(e.response);
         })
+      }
+
     },
     agregarPrograma(){
       console.log(this.programa);
       var prog= new Object();
       prog.nombre=this.programa.nombre;
       prog.correo=this.programa.correo;
-      prog.id_coordinador=this.programa.id_coordinador;
       this.programas.push(prog);
-    }
+      console.log(this.programas);
+    },
+    onChildClick (value, tipo) {
+      this.coordinadorSeleccionado = value;
+      this.tipoCoord=tipo;
+      console.log(tipo);
+      if(tipo[0]=='P'){
+        console.log("ProgramaABC");
+        this.programa.coordinador=value;
+        console.log(this.programa);
+      }else if(tipo[0]=='F'){
+        console.log("FacultadABC");
+        this.facultad.coordinador=value;
+        console.log(this.facultad);
+      }
+      
+      
+    },
+
+
   }
 }
 </script>
