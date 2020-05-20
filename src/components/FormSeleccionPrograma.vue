@@ -26,7 +26,7 @@ export default {
       }
   },
   mounted(){
-      this.axios.post('/usuarios/permisosProgramas')
+      this.axios.post('/usuarios/permisosProgramas',{usuario: this.$store.state.usuario})
         .then(response=>{
             this.programas = response.data
         })
@@ -38,7 +38,7 @@ export default {
             this.$store.state.usuario = response.data.user;
             if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
                 let paramr = {
-                    usuario:this.$store.state.usuario.nombre,
+                    usuario:this.$store.state.usuario,
                     programa: item.programa.nombre
                 }
                 axios.post('/usuarios/permisos',paramr)
