@@ -1,6 +1,6 @@
 <template>
     <div name="Modal">
-        <a class="button" href="#openModal">Abrir Modal</a>
+        <a class="button" href="#openModal"><b-icon icon="search"></b-icon></a>
         <div id="openModal" class="modalbg">
             <div class="dialog">
                 <a href="#close" title="Close" class="close">X</a>
@@ -40,7 +40,7 @@ export default {
   },
   methods:{
     listarCoordinadores() {
-      this.axios.post('/facultad/coordinadores/')
+      this.axios.post('/facultad/coordinadoresPyF/')
         .then(res =>{
           this.$store.state.coordinadores = res.data
           this.coordinadores=res.data;

@@ -1,10 +1,12 @@
 <template>
   <div class="FormCrearFacultad">
-    
+
     <div class="container" style="text-align: left">
+      
         <b-container fluid>
         <b-row class="my-1"  style="text-align: right">
             <b-col sm="12">
+            
             <button type="button" class="btn btn-info" style="margin-left:30px" v-on:click="guardarFacultad()">Guardar</button>
             
             <router-link to="/facultad">
@@ -16,45 +18,34 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Nombre de la Facultad:</label>
+            <label>Nombre de la Facultad:</label>
             </b-col>
             <b-col sm="9">
-            <b-form-input id="nombre" v-model="facultad.nombre"></b-form-input>
+            <b-form-input id="nombreF" v-model="facultad.nombre"></b-form-input>
             </b-col>
 
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Correo Electrónico:</label>
+            <label>Correo Electrónico:</label>
             </b-col>
             <b-col sm="9">
-            <b-form-input id="correo" v-model="facultad.correo"></b-form-input>
+            <b-form-input id="correoF" v-model="facultad.correo"></b-form-input>
             </b-col>
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Coordinador de Facultad:</label>
+            <label>Coordinador de Facultad:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinador" v-model="idCoordFacultad" disabled></b-form-input>
+            <b-form-input id="idCoordinadorF" disabled v-if="coordinadorSeleccionado!=null" v-model="coordinadorSeleccionado.nombre" >{{coordinadorSeleccionado.nombre}}</b-form-input>
             </b-col>
 
-            <b-col>
-            <!-- button type="button" class="btn btn-outline-secondary"><b-icon icon="search"></b-icon></button-->
-            <a href="#ventana1" class="btn btn-outline-secondary" data-toggle="modal"><b-icon icon="search"></b-icon></a>
-            <div class="modal fade" id="ventana1">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h2 class="modal-tittle">Encabezado</h2>
-
-                  </div>
-
-                </div>
-              </div>
-            </div>
-              
-
+            <b-col sm="1">
+            <b-col sm="1">
+            <modalJ2 v-on:childToParent="onChildClick"/>
+            
+            </b-col>
             </b-col>
         </b-row>
         <b-row></b-row>
@@ -76,7 +67,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Nombre del Programa:</label>
+            <label>Nombre del Programa:</label>
             </b-col>
             <b-col sm="9">
             <b-form-input id="nombre" v-model="programa.nombre"></b-form-input>
@@ -85,7 +76,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Correo Electrónico:</label>
+            <label>Correo Electrónico:</label>
             </b-col>
             <b-col sm="9">
             <b-form-input id="correo" v-model="programa.correo"></b-form-input>
@@ -93,19 +84,21 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label for="input-none">Coordinador de Programa:</label>
+            <label>Coordinador de Programa:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinador" v-model="idCoordPrograma" disabled></b-form-input>
+            <b-form-input id="idCoordinador" disabled v-if="coordinadorSeleccionado!=null" v-model="coordinadorSeleccionado.nombre" >{{coordinadorSeleccionado.nombre+" "+coordinadorSeleccionado.ap_paterno}}</b-form-input>
             </b-col>
 
             <b-col sm="1">
-            <button type="button" class="btn btn-outline-secondary"><b-icon icon="search"></b-icon></button>
+            <modalJ v-on:childToParent="onChildClick"/>
+            
             </b-col>
         </b-row>
         <br>
 
 
+        
         </b-container>
         <table class="table">
             <thead>
@@ -127,15 +120,16 @@
             </tr>
             </tbody>
         </table>
-
+        
     </div>
-
+    
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-
+import modalJ from '@/components/Modal.vue'
+import modalJ2 from '@/components/Modal.vue'
 export default {
   data(){
     return{
@@ -159,10 +153,15 @@ export default {
           id_facultad:null,
           nombre:null,
           descripcion:null,
-          correo:null,
-          id_coordinador:0
+          correo:null
       },
+      coordinadorSeleccionado:null,
+
     }
+  },
+  components:{
+    modalJ,
+    modalJ2
   },
   created(){
     
@@ -174,21 +173,40 @@ export default {
       axios.create({withCredentials: true })
         .post('/facultad/insertar',this.facultad)
           .then( response=>{
-            this.facultad.id_facultad=response.data
+            this.facultad.id_facultad=response.data.id_facultad;
             console.log(response)
+
+            for(var i=0; i<this.programas.length; i++){
+              this.programas[i].id_facultad=this.facultad.id_facultad;
+            }
+            axios.create({withCredentials: true })
+              .post('/programa/insertarVariosPro',this.programas)
+                .then( response=>{
+                  console.log(response)
+                })
+              .catch(e => {
+                console.log(e.response);
+              })
+
           })
         .catch(e => {
           console.log(e.response);
         })
+
     },
     agregarPrograma(){
       console.log(this.programa);
       var prog= new Object();
       prog.nombre=this.programa.nombre;
       prog.correo=this.programa.correo;
-      prog.id_coordinador=this.programa.id_coordinador;
       this.programas.push(prog);
+      console.log(this.programas);
+    },
+    onChildClick (value) {
+      this.coordinadorSeleccionado = value
+      
     }
+
   }
 }
 </script>

@@ -32,8 +32,8 @@
         <tbody>
           <tr v-for="(item,index) in facultades" :key="index">
             <th scope="row">{{index+1}}</th>
-            <td>{{item.nombre}}</td>
-            <td>{{coordinadores.nombre}}</td>
+            <td v-if="item!=undefined">{{item.nombre}}</td>
+            <td v-if="coordinadores[index]!=undefined">{{coordinadores[index].nombre}}</td>
             <td>{{item.correo}}</td>
             <td style="text-align: center">{{item.cantidad-1}}</td>
             <td style="text-align: center">
