@@ -54,6 +54,11 @@ export default new Vuex.Store({
        path: '/tiposUsuario',
        icon: 'ion-ios-people'
      },
+     {
+      text: 'Sesión de Tutoría',
+      path: '/sesiontutoria',
+      icon: 'ion-ios-school'
+    },
     ],
     programasFilter:{
       query: '',

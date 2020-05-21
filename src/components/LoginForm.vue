@@ -156,6 +156,7 @@ import Swal from 'sweetalert2'
               apellidos: this.reg.apellidos,
               correo: this.reg.email,
               password: this.reg.password,
+              programa: this.programaEl,
             }
             if(this.programaEl==null){
               Swal.fire({
