@@ -1,6 +1,8 @@
 <template>
   <div class="viewCrearFacultad">
-    <CabezeraTitulo msg="Configuración de una Facultad"/>
+    <CabezeraTitulo 
+    msg="Configuración de una Facultad"
+    :image-path="require('.././assets/images/gray-laptop.jpg')"/>
     <FormCrearFacultad/>
   </div>
 </template>

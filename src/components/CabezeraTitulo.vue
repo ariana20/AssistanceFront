@@ -1,8 +1,8 @@
 <template>
   <div class="CabezeraTitulo jumbotron">
-    <div class="wrap"  >
+    <div class="wrap"  style="height:300px;"> 
         <h1 class="text_over_image">{{msg}}</h1>
-        <img src="../assets/images/coffee.jpg" height="300px" width="100%">
+        <img :src="imagePath"  style="max-height:100%;width:100%">
 
 
 
@@ -26,7 +26,8 @@
 export default {
   name: 'CabezeraTitulo',
   props: {
-    msg: String
+    msg: String,
+    imagePath: String,
   },
 }
 </script>

@@ -1,6 +1,7 @@
 <template>
   <div class="viewsesiontutoria">
-    <CabezeraTitulo msg="Sesión de Tutoría"/>
+    <CabezeraTitulo msg="Sesión de Tutoría"
+    :image-path="require('.././assets/images/coffe-cream.jpg')"/>
     <FormSesionTutoria/>
   </div>
   

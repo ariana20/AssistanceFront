@@ -1,410 +1,277 @@
 <template>
-    <div name="FormTiposUsuario" style="margin-top:20px;height:100%">
-        <div style="margin-top:50px">
-            Holss
+	<div class="formUsuario container" style="margin-top:2em;">
+    <div class="row">
+      <div class="col-md-4 col-sm-4" style="text-align: left">
+        <div class="title-field">Codigo</div>
+        <div class="title-field">Nombre</div>
+        <div class="title-field">Apellidos</div>
+        <div class="title-field">Teléfono</div>
+        <div class="title-field">Correo</div>
+        <div class="title-field">Tipos de usuarios</div>
+        <div class="title-field"><input type="checkbox" class="form-check-input" height="20px" v-on:change="cambio($event)" checked>
+          <span style="display:inline-block;margin-left:40px;">ACTIVO</span>
         </div>
-        <div id="app" @mousemove="onDrag($event)" @mouseup="onDragStop()">
-            <main>
-                <div
-                    v-for="(pane, paneIdx) in filledPanes"
-                    :key="paneIdx"
-                    :ref="`pane-${paneIdx}`"
-                    class="pane"
-                    >
-                <div class="pane-header">{{ pane.name }}</div>
-                <div
-                    v-for="(card, cardIdx) in pane.cards"
-                    :key="cardIdx"
-                    :class="{ 'pane-card': true, 'dragging': draggedCardIdx === card.index }"
-                    :ref="`card-${card.index}`"
-                    @mousedown="onDragStart($event, card.index)"
-                    >
-                    {{ card.name }}
-                </div>
-                </div>
-            </main>
-            <div
-                id="ghost-card"
-                ref="ghostCard"
-                :style="`
-                        width: ${ghostCardStyle.width}px;
-                        left: ${ghostCardStyle.pos.x}px; top: ${ghostCardStyle.pos.y - 10}px;
-                        transform: ${ghostCardStyle.transform};
-                        transform-origin: ${ghostCardStyle.transformOrigin};
-                        `"
-                :class="{ 'pane-card': true, 'active': draggedCardIdx !== -1, leaving: ghostCardStyle.leaving, animate: settings.animate }"
-                >
-                {{ draggedCard.name }}
-            </div>
-            <div class="settings" :class="{expanded: settingsExpanded}" @click="expandSettings">
-                <h2>Settings <button v-show="settingsExpanded" @click.stop="wrapSettings">Close</button></h2>
-                <h3>Animation</h3>
-                <label>
-
-                Trello style (not smooth)
-                <input v-model="settings.trelloStyle" type="checkbox">
-                </label>
-                <label>
-                Animate on end
-                <input v-model="settings.animateEnd" type="checkbox">
-                </label>
-                <h3>Transform</h3>
-                <label>
-                Origin
-                <select v-model="settings.transformOriginMode">
-                    <option value="mouse">Mouse position</option>
-                    <option value="center">Center</option>
-                </select>
-                </label>
-                <label>
-                Scale
-                <input v-model="settings.scale" type="number">
-                </label>
-                <h3>Rotation</h3>
-                <label>
-                Offset Min
-                <input v-model="settings.rotationOffset.min" type="number" :disabled="!settings.smooth">
-                </label>
-                <label>
-                Offset Max
-                <input v-model="settings.rotationOffset.max" type="number" :disabled="!settings.smooth">
-                </label>
-                <label>
-                Mitigation
-                <input v-model="settings.rotationMitigation" type="number" :disabled="!settings.smooth">
-                </label>
-                <h3>Debug</h3>
-                <label>
-                <input v-model="settings.debug.dataInspector" type="checkbox">
-                Data inspector
-                </label>
-            </div>
-            <div class="data-inspector" v-if="settings.debug.dataInspector">
-                <p>Mouse X: {{ mousePos.x }}</p>
-                <p>Mouse Y: {{ mousePos.y }}</p>
-                <p>Dragged card index: {{ draggedCardIdx }}</p>
-                <p>Pane overlapped index: {{ paneOverlappedIdx }}</p>
-                <p>Ghost card X: {{ ghostCardStyle.pos.x }}</p>
-                <p>Ghost card Y: {{ ghostCardStyle.pos.y }}</p>
-                <p>Mouse distance from middle: {{ ghostCardStyle.percentDistanceMiddle * 100 }}%</p>
-                <p>Ghost card rotation: {{ Math.round(ghostCardStyle.rotation * 100) / 100 }}</p>
-                <p>Motion velocity: {{ ghostCardStyle.velocity }}</p>
-            </div>
-        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <input id="codigo" class="row form-control" type="text" v-model="codigo">
+        <input id="nombre" class="row form-control" type="text" v-model="nombre">
+        <input id="apellidos" class="row form-control" type="text" v-model="apellidos">
+        <input id="telefono" class="row form-control" type="number" v-model="telefono">
+        <input id="correo" class="row form-control" type="text" v-model="correo">
+        <select v-model="arrTUsuarios" class="row form-control">
+          <option v-for="options in arrTUsuarios" v-bind:key="options.id_tipo_usuario">
+            {{ options.nombre}}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-4 col-sm-12" style="text-align:rigth">
+      <div>FOTO</div>
+      <span @mouseover="hover = true"
+           @mouseleave="hover = false">gaaa
+           <img v-if="hover" class="foto-side item" src='http://es.web.img3.acsta.net/c_215_290/pictures/18/01/18/16/02/1109391.jpg' 
+           heigth="200px" width="200px" style="border-radius:4em"/>
+      </span>
     </div>
+    </div>
+    <button class="btn btn-info" @click="guardarUsuario()">Guardar</button>
+			<button class="btn btn-secondary" @click="cancelarUsuario()">Cancelar</button> 
+	</div>
 </template>
 
 <script>
-    const SETTINGS = {
-        trelloStyle: false,
-        animateEnd: true,
-        transformOriginMode: 'mouse', // or 'center'
-        scale: 1.1,
-        rotationOffset: {
-            min: 1.2,
-            max: 2
-        },
-        rotationMitigation: 0.2,
-        debug: {
-            dataInspector: false
-        }
-    }
-    import axios from 'axios'
+import Axios from 'axios'
+import Swal from 'sweetalert2'
+
 export default {
-    data(){
-        return{
-            mousePos: {
-            x: -1000,
-            y: -1000
-            },
-            lastMousePos: { x: 0, y: 0 },
-            draggedCardIdx: -1,
-            paneOverlappedIdx: -1,
-            ghostCardStyle: {
-                leaving: false,
-                pos: {
-                x: 0,
-                y: 0
-                },
-                width: 0,
-                cursorDistance: {
-                x: 0,
-                y: 0
-                },
-                percentDistanceMiddle: 0,
-                transform: '',
-                transformOrigin: '',
-                velocity: 0,
-                rotation: 0
-            },
-            cards: [],
-            panes: [
-                {
-                    name: 'Permisos'
-                },
-            ],
-            settings: SETTINGS,
-            settingsExpanded: false
-        }
-    },
-    mounted(){
-        axios.post('/tipoUsuarios/listarTodo')
-            .then(response=>{
-                for (let index = 0; index < response.data.length; index++) {
-                    this.panes.push({name:response.data[index].nombre});
-                    axios.post('/tipoUsuarios/listarPermisos/'+response.data[index].id_tipo_usuario)
-                        .then(responsed=>{
-                            for (let indexC = 0; indexC < responsed.data.length; indexC++) {
-                                this.cards.push({
-                                    name:responsed.data[indexC].nombre,
-                                    paneIndex:index+1
-                                });
-                            }
-                        })
-                        .catch(e=>console.log(e));
-                }
-            })
-            .catch(e=>console.log(e));
-        
-        axios.post('/permisos/listarTodo')
-            .then(response=>{
-                this.$store.state.permisos = response.data
-                for (let index = 0; index < response.data.length; index++) {
-                    this.cards.push({
-                        name:response.data[index].nombre,
-                        paneIndex:0
-                    });
-                }
-            })
-            .catch(e=>console.log(e));
-        
-        
-        
-    },
-    computed: {
-        filledPanes() {
-        let filledPanes = this.panes.map(item => ({ name: item.name }));
-
-        for (let i = 0; i < this.cards.length; i++) {
-            let pane = filledPanes[this.cards[i].paneIndex];
-
-            if (!pane.cards) pane.cards = [];
-            pane.cards.push({ ...this.cards[i], index: i });
-        }
-        let perms= [];
-        for (let index = 0; index < this.cards.length; index++) {
-            if(this.cards[index].paneIndex === 0) perms.push(this.cards[index].name);
-        }
-        let pane0 = filledPanes[0];
-        if(this.$store.state.permisos!==null && pane0.cards){
-            for (let index = 0; index < this.$store.state.permisos.length; index++) {
-                if(!perms.includes(this.$store.state.permisos[index].nombre)){
-                    pane0.cards.push({
-                        name:this.$store.state.permisos[index].nombre,
-                        paneIndex:0,
-                    })
-                }
-            }
-        }
-
-        return filledPanes;
-        },
-        draggedCard() {
-        return this.cards[this.draggedCardIdx] || { name: '' };
-        }
-    },
-    methods: {
-        onDragStart(e, index) {
-            let cardEl = this.$refs[`card-${index}`][0];
-            let cardRect = cardEl.getBoundingClientRect();
+  name: 'formUsuario',
+  data(){
+ 
+    return{
+      hover:false,
+      id_usuario:null,
+      codigo:"",
+      nombre:"",
+      // ap_paterno:"",
+      // ap_materno:"",
+      apellidos:"",
+      correo:"",
+      telefono:"",
+      arrTUsuarios:null, //aqui estoy guardando los tipos de usuarios
+      arrTU:null, 
+      estado:"",
+      id_usuario_entrante:parseInt((this.$route.path).substring(9,11),10),
+     
+    }
+  },
+  created(){
+    
+    this.listarTUsuarios();
+  
+  },
+  mounted(){
+    if(this.id_usuario_entrante!=0){
+      console.log('Id usuario entrante: ');
+      
+      console.log(this.id_usuario_entrante);
+     Axios.create({withCredentials: true })
+       .post('/usuarios/listar/'+this.id_usuario_entrante).then( response =>{
+          this.codigo=response.data.codigo;
+           this.nombre= response.data.nombre;
+          //  this.ap_paterno=response.data.ap_paterno;
+          //  this.ap_materno=response.data.ap_materno;
+           this.apellidos=response.data.apellidos;
+           this.correo=response.data.correo;
+           this.telefono=response.data.telefono;
+         });
+    }
+  },
+  methods:{
+    guardarUsuario() {
+      //console.log(this.codigo.trim().replace(/\s+/g, ' ')); //verificacion q borra todos los espacios
+      //var   expresion=/\w+@\w+\.+[a-z]/;
+      var   expresion2=/\w+@\w+\.+edu.pe/;
+      // if(this.telefono =="" || this.nombre=="" ||this.ap_paterno=="" || this.ap_materno=="" || this.codigo=="" || this.correo=="" ){
+      if(this.telefono =="" || this.nombre=="" ||this.apellidos=="" || this.codigo=="" || this.correo=="" ){
+      
+      //Cuando está vacio todo
+          Swal.fire({
+              text:"No ha completado todos los campos",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        })        
+      }
+      else if( !expresion2.test(this.correo)){ //Verificación de correo
+          Swal.fire({
             
-            document.documentElement.style.cursor = 'grabbing';
-
-            let paddingLeft = parseFloat(getComputedStyle(cardEl).paddingLeft);
-            let paddingRight = parseFloat(getComputedStyle(cardEl).paddingRight);
-
-            this.mousePos.x = e.pageX;
-            this.mousePos.y = e.pageY;
-
-            this.draggedCardIdx = index;
-
-            this.ghostCardStyle.width =
-                cardEl.clientWidth - paddingLeft - paddingRight;
-            this.ghostCardStyle.cursorDistance.x = e.pageX - cardRect.x;
-            this.ghostCardStyle.cursorDistance.y = e.pageY - cardRect.y;
-
-            this.setGhostCardStyle(e);
-            this.updateUI();
-
-            if (this.settings.transformOriginMode === 'center')
-                this.ghostCardStyle.transformOrigin = 'center';
-            else
-                this.ghostCardStyle.transformOrigin = `${this.ghostCardStyle.cursorDistance.x}px ${this.ghostCardStyle.cursorDistance.y}px`;
-            this.ghostCardStyle.percentDistanceMiddle =
-                this.ghostCardStyle.cursorDistance.x - cardEl.clientWidth / 2;
-            this.ghostCardStyle.percentDistanceMiddle = Math.abs(
-                this.ghostCardStyle.percentDistanceMiddle
-            );
-            this.ghostCardStyle.percentDistanceMiddle /= cardEl.clientWidth / 2;
-            this.ghostCardStyle.percentDistanceMiddle =
-                Math.round(this.ghostCardStyle.percentDistanceMiddle * 100) / 100;
-        },
-
-        onDrag(e) {
-            e = e || window.event;
-            if (this.draggedCardIdx === -1)
-                return;
-            this.mousePos.x = e.pageX;
-            this.mousePos.y = e.pageY;
-        },
-
-        updateUI() {
-            let dragX = this.mousePos.x,
-                dragY = this.mousePos.y;
-
-            if (this.draggedCardIdx === -1 || this.ghostCardStyle.leaving) return;
-
-            if (!dragX && !dragY) {
-                this.lastMousePos.x = 0;
-                this.lastMousePos.y = 0;
-                return requestAnimationFrame(this.updateUI);
-            }
-            this.findTransformValues();
-            this.setGhostCardStyle(true);
-
-            let isOverlapping;
-
-            for (let i = 0, paneEl = null; (paneEl = this.$refs[`pane-${i}`]); i++) {
-                paneEl = paneEl[0] ? paneEl[0] : paneEl;
-
-                isOverlapping = this.checkOverlap(
-                { x: dragX, y: dragY },
-                paneEl.getBoundingClientRect()
-                );
-
-                if (isOverlapping && this.paneOverlappedIdx === i)
-                return requestAnimationFrame(this.updateUI);
-                else if (isOverlapping) {
-                this.paneOverlappedIdx = i;
-                break;
-                }
-            }
-
-            if (!isOverlapping) {
-                return requestAnimationFrame(this.updateUI);
-            }
-            this.putCardInPane();
-            return requestAnimationFrame(this.updateUI);
-        },
-
-        onDragStop() {
-            if (this.draggedCardIdx === -1)
-                return;
-                    document.documentElement.style.cursor = 'default';
-            let cardEl = this.$refs[`card-${this.draggedCardIdx}`] && this.$refs[`card-${this.draggedCardIdx}`][0]
-            let cardRect = cardEl.getBoundingClientRect();
-
-            if (!this.settings.animateEnd) {
-                return this.resetValues()
-            }
-            setTimeout(() => {
-                this.resetValues();
-            }, 100);
-            this.ghostCardStyle.leaving = true;
-            let xOffset = cardRect.x - this.ghostCardStyle.pos.x
-            let yOffset = cardRect.y - this.ghostCardStyle.pos.y
-            this.ghostCardStyle.transform = `scale(1) translate(${xOffset}px, ${yOffset}px)`
-        },
-
-        resetValues() {
-            this.draggedCardIdx = -1;
-            this.paneOverlappedIdx = -1;
-            this.lastMousePos.x = 0;
-            this.lastMousePos.y = 0;
-            this.ghostCardStyle.x = -1000;
-            this.ghostCardStyle.y = -1000;
-            this.ghostCardStyle.width = 0;
-            this.ghostCardStyle.cursorDistance.x = 0;
-            this.ghostCardStyle.cursorDistance.y = 0;
-            this.ghostCardStyle.transform = '';
-            this.ghostCardStyle.leaving = false;
-            this.ghostCardStyle.percentDistanceMiddle = 0;
-        },
-
-        checkOverlap(drag, rect) {
-            if (drag.x < rect.x || drag.x > rect.x + rect.width) return false;
-            if (drag.y < rect.y || drag.y > rect.y + rect.height) return false;
-            return true;
-        },
-
-        putCardInPane() {
-            this.cards[this.draggedCardIdx].paneIndex = this.paneOverlappedIdx;
-            //this.cards.push(aux);
-        },
-
-        setGhostCardStyle(isDragstart) {
-            let dragX = this.mousePos.x,
-                dragY = this.mousePos.y;
-            let transform = [];
-
-            if (isDragstart)
-                transform.push(`scale(${this.settings.scale})`);
-
-            transform.push(`rotate(${this.ghostCardStyle.rotation}deg)`);
-            this.ghostCardStyle.transform = transform.join(' ');
-            this.ghostCardStyle.pos.x = dragX - this.ghostCardStyle.cursorDistance.x;
-            this.ghostCardStyle.pos.y = dragY ;//- this.ghostCardStyle.cursorDistance.y;
-        },
-
-        findTransformValues() {
-
-            if (this.settings.trelloStyle) {
-                this.ghostCardStyle.rotation = '4';
-                this.lastMousePos.x = this.mousePos.x;
-                this.lastMousePos.y = this.mousePos.y;
-                return;
-            }
-
-
-            let velocity = this.mousePos.x - this.lastMousePos.x;
-            let rotation = this.ghostCardStyle.rotation || 0;
-
-            let rotationMin = this.settings.rotationOffset.min;
-            let rotationMax = this.settings.rotationOffset.max;
-            let rotationOffset =
-                (rotationMax - rotationMin) *
-                (1 - this.ghostCardStyle.percentDistanceMiddle);
-            let rotationMitigation = this.settings.rotationMitigation
-
-            rotation =
-                rotation * (1 - rotationMitigation) +
-                this.sigmoid(velocity) * (rotationMin + rotationOffset);
-            if (Math.abs(rotation) < 0.01) rotation = 0;
-
-            this.ghostCardStyle.velocity = velocity;
-            this.ghostCardStyle.rotation = rotation
-            this.lastMousePos.x = this.mousePos.x;
-            this.lastMousePos.y = this.mousePos.y;
-        },
-
-        sigmoid(x) {
-            return x / (1 + Math.abs(x));
-        },
-
-        expandSettings() {
-            if (this.settingsExpanded) return;
-            this.settingsExpanded = true;
-        },
-
-        wrapSettings() {
-            this.settingsExpanded = false;
-        }
+              text:"No ha escrito una dirección de correo válida. Todos los correos deben contener @pucp.edu.pe",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        }) 
+       
+      }
+      else if(this.telefono<10000000){ //Esto será válido?
+     
+          Swal.fire({
+              text:"No ha colocado un número de teléfono válido. Mínimo 7 dígitos",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+          })   
+      }
+      
+      else{//está bien y envío
+      const params = {
+      //yo creo que primero analizo los ids
+            codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+            nombre:this.nombre.trim().replace(/\s+/g, ' '),
+            // ap_paterno:this.ap_paterno.trim().replace(/\s+/g, ' '),
+            // ap_materno:this.ap_materno.trim().replace(/\s+/g, ' '),
+            apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+            correo:this.correo.trim(),
+            telefono:this.telefono,
+            password:"1234",
+            estado:this.estado,
+            //
+      // id_tipo_usuario:this.arrayTU[id_tipo_usuario],      
+            };
+      const params2 = {
+      
+            codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+            nombre:this.nombre.trim().replace(/\s+/g, ' '),
+            // ap_paterno:this.ap_paterno.trim().replace(/\s+/g, ' '),
+            // ap_materno:this.ap_materno.trim().replace(/\s+/g, ' '),
+            apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+            estado:this.estado,
+            telefono:this.telefono,
+            
+      // id_tipo_usuario:this.arrayTU.id_tipo_usuario,      
+            };
+             
+          
+          if(this.id_usuario_entrante==0){
+            Axios.create({withCredentials: true })
+            .post('/usuarios/insertar',params)
+            .then( response=>{
+            console.log(response)
+            });
+            Swal.fire({
+              text:"Se guardaron los datos con éxito",
+              icon:"success",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+              }) 
+          } 
+          else if (this.id_usuario_entrante!=0){
+            Axios.create({withCredentials: true })
+            .post('/usuarios/modificar/'+this.id_usuario_entrante,params2)
+            .then( response=>{
+              console.log(response)
+            })  .catch(e => {
+                 console.log(e.response);
+              });
+            Swal.fire({
+              text:"Se modificaron los datos con éxito",
+              icon:"success",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+              }) 
+          }
+          
+      }
+      
+      
     },
+
+    listarTUsuarios() {
+      //taambién debería ser por programa
+      Axios.create({withCredentials: true }).post('/tipoUsuarios/listarTodo')
+        .then(res =>{
+          // Ordenadito
+          let par=res.data;
+          this.arrTUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+          console.log(this.arrTUsuarios);        
+          
+        })
+        .catch(e => {
+          console.log(e.response);
+        })
+    },
+    cancelarUsuario(){
+        Swal.fire({
+              text:"¿Está seguro que desea cancelar?",
+              icon:"warning",
+              confirmButtonText: 'Sí',
+              confirmButtonColor:'#0097A7',
+              cancelButtonText: 'No',
+              cancelButtonColor:'C4C4C4',
+              showCancelButton: true,
+              showConfirmButton: true,
+        }).then((result) => {
+            if (result.value) {
+              //lo redirigo
+              location.href="/ListaUsuarios";
+            } 
+          })
+        
+    },
+    cambio(event){
+      console.log(event.target.checked);
+      if (event.target.checked) this.estado = "act";
+            else this.estado = "ina";
+
+    },
+    
+    
+
+    
+  }
+
 }
+
+
 </script>
 
+<style scoped>
+.item {
+  background: blue;
+}
+.active {
+  background: green;
+}
+.item:hover {
+  z-index: 10000;
+}
+.formUsuario { 
+  font-size: 20px;
+}
+.form-control {
+    border-radius: 1rem;  
+    border: 2px solid #757575;
+    text-align-last: right;
+    margin-bottom:1.3em;
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
-    @import '../assets/styles/roles.scss';
+}
+.col-md-4{ 
+  overflow:hidden; 
+}
+.title-field {
+  padding: 6px 12px;
+  margin: 0px 15px;
+  display:flex;
+  margin-bottom:1em;
+}
+.btn {
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    margin: 5px;
+    font-size: 20px;
+}
 </style>
