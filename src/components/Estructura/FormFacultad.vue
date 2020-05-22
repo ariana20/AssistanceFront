@@ -64,7 +64,7 @@ export default {
     
     listarFacultades() {
       axios
-      .post('/facultad/listFacuConCant/')
+      .post('/facultad/listFacuConCant')
         .then(res =>{
           console.log(res.data);
           this.facultades=res.data
@@ -76,7 +76,7 @@ export default {
           console.log(e.response);
         })
       axios
-      .post('/facultad/listFacuConCoordi/')
+      .post('/facultad/listFacuConCoordi')
         .then(res =>{
           console.log(res.data);
           this.coordinadores=res.data

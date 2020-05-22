@@ -108,7 +108,13 @@ import Swal from 'sweetalert2'
             profileRes: "none",
           }
       },
-      methods:{
+      methods:{  
+        openStorage () {
+          return JSON.parse(localStorage.getItem('usuarioActual'))
+        },
+        saveStorage (item) {
+          localStorage.setItem('usuarioActual', JSON.stringify(item))
+        },
         checkForm() {
           if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined) {
             if(this.$store.state.rutas[0].path) this.$router.push(this.$store.state.rutas[0].path);
@@ -124,6 +130,10 @@ import Swal from 'sweetalert2'
               .then(response=>{
                 if(response.data.status==='success') {
                   this.$store.state.usuario = response.data.user;
+                  let stored = this.openStorage() // extract stored form
+                  if (!stored) stored = {} 
+                  stored = response.data.user; // store new value
+                  this.saveStorage(stored)
                   Swal.fire({
                       text:"Ingreso Exitoso",
                       icon:"success",
@@ -131,7 +141,7 @@ import Swal from 'sweetalert2'
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                   })
-                  this.rutas(response.data.user);
+                  this.$router.push('/seleccion')
                 }
                 else{
                   Swal.fire({
@@ -172,6 +182,10 @@ import Swal from 'sweetalert2'
                 .then(response=>{
                   if(response.data.status==='success') {
                     this.$store.state.usuario = response.data.user;
+                    let stored = this.openStorage() // extract stored form
+                    if (!stored) stored = {} 
+                    stored = response.data.user; // store new value
+                    this.saveStorage(stored)
                     Swal.fire({
                         text:"Registro Exitoso",
                         icon:"success",
@@ -208,7 +222,6 @@ import Swal from 'sweetalert2'
                     }
                   }
                 }
-                console.log(this.$store.state.rutas);
                 if(this.$store.state.rutas[0]) this.$router.push('/seleccion');  
                 else this.$router.push('/userNuevo');        
               }).catch( e=>console.log(e));
@@ -241,6 +254,10 @@ import Swal from 'sweetalert2'
                 .then(response=>{
                   if(response.data.status=='success') {
                     _this.$store.state.usuario = response.data.user;
+                    let stored = _this.openStorage() // extract stored form
+                    if (!stored) stored = {};
+                    stored = response.data.user; // store new value
+                    _this.saveStorage(stored)
                     Swal.fire({
                       text:"Ingreso Exitoso",
                       icon:"success",
@@ -248,7 +265,16 @@ import Swal from 'sweetalert2'
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                     })
-                    _this.rutas(response.data.user);
+                    _this.$router.push('/seleccion')
+                  }
+                  else{
+                    Swal.fire({
+                      text:"Ingreso Incorrecto",
+                      icon:"error",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                    })
                   }
                 }).catch( e=>console.log(e));
             });
@@ -293,14 +319,18 @@ import Swal from 'sweetalert2'
                   .then(response=>{
                     if(response.data.status=='success') {
                       _this.$store.state.usuario = response.data.user;
+                      let stored = _this.openStorage() // extract stored form
+                      if (!stored) stored = {} 
+                      stored = response.data.user; // store new value
+                      _this.saveStorage(stored)
                       Swal.fire({
-                        text:"Ingreso Exitoso",
+                        text:"Registro Exitoso",
                         icon:"success",
                         confirmButtonText: 'OK',
                         confirmButtonColor:'#0097A7',
                         showConfirmButton: true,
                       })
-                      _this.rutas(response.data.user);
+                      this.$router.push('/userNuevo')
                     }
                   }).catch( e=>console.log(e));
               });

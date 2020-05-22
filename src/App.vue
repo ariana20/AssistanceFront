@@ -37,6 +37,20 @@ export default {
     if(this.valor==false){
       this.$router.push('/404')
     }
+    const stored = this.openStorage('usuarioActual')
+    if (stored) {
+      this.$store.state.usuario = {
+        ...this.$store.state.usuario,
+        ...stored
+      }
+    }
+    const prog = this.openStorage('programaSel')
+    if (prog) {
+      this.$store.state.programaActual = {
+        ...this.$store.state.programaActual,
+        ...prog
+      }
+    }
   },
   components: {
     HomeNavBar,
@@ -48,6 +62,11 @@ export default {
       valor:false,
       usuario: this.$store.state.user,
     }
+  },
+  methods:{    
+    openStorage (nombre) {
+      return JSON.parse(localStorage.getItem(nombre))
+    },  
   }
 }
 </script>
@@ -56,7 +75,7 @@ export default {
 @import 'https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css';
 @font-face {
   font-family: "Brandon Bold";
-  src: '../assets/fonts/BrandonText-Regular.otf';
+  src: url('./assets/fonts/BrandonText-Regular.otf');
 }
 figure {
 	margin-block-start: 0;

@@ -50,7 +50,7 @@ export default {
     }
   },
   mounted(){
-    axios.create({withCredentials: true })
+    axios
       .post('/institucion/listarTodo')
         .then( response=>{
           this.id = response.data[0].id_institucion;

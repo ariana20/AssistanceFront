@@ -232,7 +232,7 @@ export default {
         }).then((result) => {
             if (result.value) {
               //lo redirigo
-              location.href="/ListaUsuarios";
+              this.$router.push('/ListaUsuarios');
             } 
           })
         

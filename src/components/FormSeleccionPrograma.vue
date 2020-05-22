@@ -26,39 +26,51 @@ export default {
       }
   },
   mounted(){
-      this.axios.post('/usuarios/permisosProgramas',{usuario: this.$store.state.usuario})
-        .then(response=>{
-            this.programas = response.data
-        })
+      if(this.$store.state.usuario){
+        this.axios.post('/usuarios/permisosProgramas',{usuario: this.$store.state.usuario})
+            .then(response=>{
+                this.programas = response.data
+            })
+      }
   },
   methods:{
-      irPrograma(item){
-          axios.post('/vueuser',{usuario: this.$store.state.usuario}).then(response=>{
-              
-            this.$store.state.usuario = response.data.user;
-            if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
-                let paramr = {
-                    usuario:this.$store.state.usuario,
-                    programa: item.programa.nombre
-                }
-                axios.post('/usuarios/permisos',paramr)
-                .then(response=>{
-                    this.$store.state.rutas = [];
-                    for(var i=0; i < this.$store.state.navLinks.length; i++){
-                        for(var j=0; j < response.data.length; j++){
-                            if( this.$store.state.navLinks[i].text == response.data[j]){
-                                this.$store.state.rutas.push(this.$store.state.navLinks[i]);
-                            }
+    openStorage () {
+        return JSON.parse(localStorage.getItem('programaSel'))
+    },
+    saveStorage (item) {
+        localStorage.setItem('programaSel', JSON.stringify(item))
+    },
+    irPrograma(item){
+        axios.post('/vueuser',{usuario: this.$store.state.usuario}).then(response=>{
+            
+        this.$store.state.usuario = response.data.user;
+        if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
+            let paramr = {
+                usuario:this.$store.state.usuario,
+                programa: item.programa.nombre
+            }
+            axios.post('/usuarios/permisos',paramr)
+            .then(response=>{
+                this.$store.state.rutas = [];
+                for(var i=0; i < this.$store.state.navLinks.length; i++){
+                    for(var j=0; j < response.data.length; j++){
+                        if( this.$store.state.navLinks[i].text == response.data[j]){
+                            this.$store.state.rutas.push(this.$store.state.navLinks[i]);
                         }
                     }
-                    this.$store.state.programaActual = item.programa;
-                    if(this.$route.path == '/seleccion' && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
-                    else this.$router.push('/userNuevo')
-                }).catch( e=>console.log(e));
-            }
-          })
-            
-      }
+                }
+                this.$store.state.programaActual = item.programa;
+                let stored = this.openStorage() // extract stored form
+                if (!stored) stored = {} 
+                stored = item.programa; // store new value
+                this.saveStorage(stored)
+                if(this.$route.path == '/seleccion' && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
+                else this.$router.push('/userNuevo')
+            }).catch( e=>console.log(e));
+        }
+        })
+        
+    }
   }
 }
 </script>

@@ -49,7 +49,7 @@ export default {
   methods:{
     
     listarProgramas() {
-      this.axios.create({withCredentials: true }).post('/programa/listarTodo')
+      this.axios.post('/programa/listarTodo')
         .then(res =>{
           this.programas=res.data;
         })

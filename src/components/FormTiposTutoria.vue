@@ -264,7 +264,7 @@ export default Vue.extend( {
         }).then((result) => {
             if (result.value) {
               //lo redirigo
-              location.href="/ListaTiposTutorias";
+              this.$router.push('/ListaTiposTutorias');
             } 
           })
     }

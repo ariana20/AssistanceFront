@@ -82,7 +82,7 @@ export default {
     //1 es el id tipo usuario de admin
     //2 es el id de usuairo admin
      listarTUsuarios() {
-      Axios.create({withCredentials: true }).post('/tipoUsuarios/listarTodo')
+      Axios.post('/tipoUsuarios/listarTodo')
         .then(res =>{
           // Ordenadito
           let par=res.data;
@@ -98,7 +98,7 @@ export default {
       //Proximameeente
       //var mi_id_prog=this.miUsuario.id_usuario; //con pivot?
       //post('/programa/usuarioPrograma/'+mi_id_prog)
-      Axios.create({withCredentials: true }).post('/programa/usuarioPrograma/4') //Por ahora dsp será x program
+      Axios.post('/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa) //Por ahora dsp será x program
         .then(res =>{
           console.log(res.data);          
           this.usuarios=res.data;

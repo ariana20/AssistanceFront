@@ -4,9 +4,9 @@
 
             
       <b-collapse id="nav-collapse" is-nav>
-              <button v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.rutas.length!=0"
+              <button v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.programaActual!=null"
                v-on:click="goToSeleccion()"
-               style="margin-left:250px;width:150px;background-color:#7EC2C9;" 
+               style="margin-left:250px;width:170px;background-color:#7EC2C9;" 
                class="btn" 
                type="button">
                 Cambiar Programa
@@ -42,32 +42,37 @@ export default {
     }
   },
   mounted(){
-    axios.post('/vueuser',{usuario: this.$store.state.usuario}).then( response=>{
-      this.$store.state.usuario = response.data.user;
-        if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined){
-          this.nombre = this.$store.state.usuario.nombre
-          let prog;
-          if(this.$store.state.programa) prog = this.$store.state.programa.nombre;
-          let paramr = {
-            usuario:response.data.user,
-            programa: prog
-          }
-          axios.post('/usuarios/permisos',paramr)
-            .then(response=>{
-              for(var i=0; i < this.$store.state.navLinks.length; i++){
-                for(var j=0; j < response.data.length; j++){
-                  if( this.$store.state.navLinks[i].text == response.data[j]){
-                      this.$store.state.rutas.push(this.$store.state.navLinks[i]);
-                  }
+    if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined){
+      this.nombre = this.$store.state.usuario.nombre
+      let prog;
+      if(this.$store.state.programaActual){
+        prog = this.$store.state.programaActual.nombre;
+        let paramr = {
+          usuario: this.$store.state.usuario,
+          programa: prog
+        }
+        axios.post('/usuarios/permisos',paramr)
+          .then(response=>{
+            for(var i=0; i < this.$store.state.navLinks.length; i++){
+              for(var j=0; j < response.data.length; j++){
+                if( this.$store.state.navLinks[i].text == response.data[j]){
+                    this.$store.state.rutas.push(this.$store.state.navLinks[i]);
                 }
-                if(this.$route.path == '/login' && this.$route.path == '/seleccion' && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
-              }          
-            }).catch( e=>console.log(e));
-        }
-        else{
-          if (this.$route.path !== '/login' ) this.$router.push('login')
-        }
-    })
+              }
+            } 
+            if((this.$route.path == '/login' || this.$route.path == '/seleccion') && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
+            else{
+              if(this.$route.path !== '/userNuevo' && (this.$store.state.rutas == undefined || this.$store.state.rutas.length==0)) this.$router.push('/userNuevo');
+            }        
+          }).catch( e=>console.log(e));
+      }
+      else{
+        if (this.$route.path !== '/seleccion' ) this.$router.push('/seleccion')
+      }
+    }
+    else{
+      if (this.$route.path !== '/login' ) this.$router.push('login')
+    }
     
   },
   methods:{
@@ -90,6 +95,7 @@ export default {
                 showConfirmButton: true,
             }).then((result)=>{
               console.log(result)
+              localStorage.setItem('usuarioActual', null)
               if (this.$route.path !== '/login') this.$router.go('login');
             }
             )

@@ -41,12 +41,12 @@ export default new Vuex.Store({
       },
       {
         text: 'Tipos de Tutoria',
-		path: '/tiposdeTutoria',
+		path: '/ListaTiposTutorias',
 		icon: 'ion-ios-book'
       },
        {
         text: 'Gestionar Usuario',
-		path: '/Usuario',
+		path: '/ListaUsuarios',
 		icon: 'ion-ios-book'
       },
       {
