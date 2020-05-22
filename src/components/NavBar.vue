@@ -102,6 +102,7 @@ export default {
             }).then((result)=>{
               console.log(result)
               localStorage.setItem('usuarioActual', null)
+              localStorage.setItem('programaSel', null)
               if (this.$route.path !== '/login') this.$router.go('login');
             }
             )
@@ -111,6 +112,7 @@ export default {
       
     },
     goToSeleccion(){
+      localStorage.setItem('programaSel', null)
       this.$router.push('/seleccion')
     }
   }

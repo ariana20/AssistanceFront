@@ -1,6 +1,7 @@
 <template>
   <div class="ViewPermisos">
-    <CabezeraTitulo msg="Permisos de un Rol"/>
+    <CabezeraTitulo msg="Permisos de un Rol"
+    :image-path="require('.././assets/images/profe-alumna.jpg')"/>
     <FormPermisos :idRol="id"/>
   </div>
 </template>

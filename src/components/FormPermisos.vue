@@ -1,32 +1,35 @@
 <template>
   <div class="FormRoles" style="margin-top:20px">
     <div class="container" style="left:60px;text-align: left">
-      <table style="width:100%">
-            <tr style="text-align:left;height:70px">
-                <th style="min-width:190px;font-size:25px">Tipo Usuario:</th>
-                <th> 
-                    <input v-if="idRol" type="text" class="form-control-plaintext" style="margin-left:40px;font-size:25px" :value="nombreRol" readonly>
-                    <input v-else type="text" v-model="nombre" style="margin-left:40px">
-                </th>
-                <td> <b-button v-on:click="Guardar()" style="margin-left:500px;background: #0097A7">Guardar</b-button></td>
-                <td> <b-button v-on:click="Regresar()" style="margin-left:20px;background: #CDCDCD">Cancelar</b-button></td>
-            </tr>
-      </table>
+      <div style="width:100%">
+            <div class="row" style="text-align:left;height:100px;margin-top:40px">
+              <div class="row" style="text-align:left;height:40px;width:100%">
+                <div class="row" style="margin-left:5%;width:50%">
+                  <div class="font-weight-bolder text-left" style="font-size:30px">Tipo Usuario:</div> 
+                  <input v-if="idRol" type="text" class="borde-textbox form-control-plaintext" style="margin-top:5px;margin-left:5%;font-size:25px;height:40px;width:65%" :value="nombreRol" readonly>
+                  <input v-else type="text" class="inp borde-textbox" v-model="nombre" style="margin-left:10%">
+                </div>
+                <div class="row" style="margin-left:25%;width:20%">
+                  <b-button v-on:click="Guardar()" style="background: #0097A7">Guardar</b-button>
+                  <b-button v-on:click="Regresar()" style="margin-left:4%;background: #CDCDCDs">Cancelar</b-button>
+                </div>
+              </div>
+            </div>
+      </div>
       <div class="col-md-12" style="border-bottom:3px solid #0097A7; "></div>
-      <table class="table" v-for="(item, index) in $store.state.permisos" :key="index">
-        <thead>
-          <tr>
-            <th scope="col"><strong>{{item.nombre}}</strong></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(itemA, indexA) in item.permisos" :key="indexA">
-            <td style="width:10px"><input v-on:click="cambio(itemA.nombre,$event)" v-if="permisosActuales.includes(itemA.nombre)" type="checkbox" class="form-check-input" :id="'exampleCheck'+indexA" checked>
-            <input v-on:click="cambio(itemA.nombre,$event)" v-else type="checkbox" class="form-check-input" :id="'exampleCheck'+indexA">{{itemA.nombre}}</td>
-            <td>{{itemA.descripcion}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div v-for="(item, index) in $store.state.permisos" :key="index" style="width:100%;margin-bottom: 35px;">
+        <div class="font-weight-bolder text-left" style="font-size:20px;margin-top:25px;margin-bottom: 25px;">
+          {{item.nombre}}
+        </div>
+        <div class="row text-left" style="margin-left:5%;margin-top:10px;width:100%;text-align:left" v-for="(itemA, indexA) in item.permisos" :key="indexA">
+          <input v-on:click="cambio(itemA.nombre,$event)" v-if="permisosActuales.includes(itemA.nombre)" type="checkbox" class="form-check-input" :id="'exampleCheck'+indexA" checked>
+          <input v-on:click="cambio(itemA.nombre,$event)" v-else type="checkbox" class="form-check-input" :id="'exampleCheck'+indexA">
+          <div class="row font-weight-light" style="margin-left:2%;font-size:20px">
+            {{itemA.nombre}}
+            {{itemA.descripcion}}
+          </div>
+        </div>
+      </div>
     </div>
 
       
@@ -162,3 +165,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .inp{
+    margin-left:50px;
+    width:300px;
+    padding-left: 15px;
+  }
+</style>

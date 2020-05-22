@@ -1,6 +1,7 @@
 <template>
   <div class="tiposTutorias">
-    <CabezeraTitulo msg="Configuración de Tipos de Tutoría"/>
+    <CabezeraTitulo msg="Configuración de Tipos de Tutoría"
+    :image-path="require('.././assets/images/coffe-cream.jpg')"/>
     <FormTiposTutoria/>
   </div>
 </template>

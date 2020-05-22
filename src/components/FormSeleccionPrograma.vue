@@ -4,7 +4,7 @@
         <div id="app" class="container">
             <card @click="irPrograma(item)" v-for="(item,index) in this.programas" :key="index" data-image="https://www.colorhexa.com/009892.png">
                 <h1 @click="irPrograma(item)" slot="header">{{item.programa.nombre}}</h1>
-                <p slot="content">Rol: {{item.tipoUsuario.nombre}}</p>
+                <p @click="irPrograma(item)" slot="content">Rol: {{item.tipoUsuario.nombre}}</p>
             </card>
         </div>
     </div>
@@ -41,9 +41,6 @@ export default {
         localStorage.setItem('programaSel', JSON.stringify(item))
     },
     irPrograma(item){
-        axios.post('/vueuser',{usuario: this.$store.state.usuario}).then(response=>{
-            
-        this.$store.state.usuario = response.data.user;
         if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
             let paramr = {
                 usuario:this.$store.state.usuario,
@@ -68,7 +65,6 @@ export default {
                 else this.$router.push('/userNuevo')
             }).catch( e=>console.log(e));
         }
-        })
         
     }
   }
