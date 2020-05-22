@@ -53,17 +53,23 @@ export default {
         }
         axios.post('/usuarios/permisos',paramr)
           .then(response=>{
+            let acceder = false;
             for(var i=0; i < this.$store.state.navLinks.length; i++){
               for(var j=0; j < response.data.length; j++){
                 if( this.$store.state.navLinks[i].text == response.data[j]){
                     this.$store.state.rutas.push(this.$store.state.navLinks[i]);
                 }
+                if(this.$route.path == response.data[j]) acceder = true;
               }
-            } 
+            }
+            if(acceder!= true && this.$route.path != '/login' && this.$route.path != '/seleccion'){
+              if(this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path);
+              else if(this.$route.path !== '/userNuevo' && (this.$store.state.rutas == undefined || this.$store.state.rutas.length==0)) this.$router.push('/userNuevo');
+            }
             if((this.$route.path == '/login' || this.$route.path == '/seleccion') && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
             else{
               if(this.$route.path !== '/userNuevo' && (this.$store.state.rutas == undefined || this.$store.state.rutas.length==0)) this.$router.push('/userNuevo');
-            }        
+            }    
           }).catch( e=>console.log(e));
       }
       else{
