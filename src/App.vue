@@ -77,6 +77,7 @@ export default {
 
 <style  lang="scss">
 @import 'https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css';
+@import './assets/styles/main.css';
 @font-face {
   font-family: "Brandon Bold";
   src: url('./assets/fonts/BrandonText-Regular.otf');
