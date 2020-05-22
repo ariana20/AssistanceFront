@@ -4,7 +4,7 @@
         <div id="app" class="container">
             <card @click="irPrograma(item)" v-for="(item,index) in this.programas" :key="index" data-image="https://www.colorhexa.com/009892.png">
                 <h1 @click="irPrograma(item)" slot="header">{{item.programa.nombre}}</h1>
-                <p @click="irPrograma(item)" slot="content">Rol: {{item.tipoUsuario.nombre}}</p>
+                <p slot="content">Rol: {{item.tipoUsuario.nombre}}</p>
             </card>
         </div>
     </div>
@@ -62,7 +62,7 @@ export default {
                 this.$store.state.programaActual = item.programa;
                 let stored = this.openStorage() // extract stored form
                 if (!stored) stored = {} 
-                stored = item.programa; // store new value
+                stored = item; // store new value
                 this.saveStorage(stored)
                 if(this.$route.path == '/seleccion' && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
                 else this.$router.push('/userNuevo')

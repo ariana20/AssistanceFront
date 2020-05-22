@@ -48,7 +48,11 @@ export default {
     if (prog) {
       this.$store.state.programaActual = {
         ...this.$store.state.programaActual,
-        ...prog
+        ...prog.programa
+      }
+      this.$store.state.tipoActual = {
+        ...this.$store.state.tipoActual,
+        ...prog.tipoUsuario
       }
     }
   },
