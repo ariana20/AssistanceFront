@@ -56,18 +56,9 @@
             
 
     </div>
-    <br>
-       <br>
-        <br>
-         <br>
-       <td><button  type="button" style="margin-left:400px" class="btn btn-info" 
-            v-on:click="guardarUsuario()">Guardar</button>
-       <td><button type="button" class="btn btn-secondary" style="margin-left:20px"
-            v-on:click="cancelarUsuario()" >Cancelar</button>
-        </td>
+    </div>
+  
 
-
-  </div>
 </template>
 
 <script>
@@ -271,7 +262,15 @@ export default {
 </script>
 
 <style scoped>
-
+.formUsuario { 
+  font-size: 20px;
+}
+.form-control {
+    border-radius: 1rem;  
+    border: 2px solid #757575;
+    text-align-last: right;
+    margin-bottom:1.3em;
+}
   body{
     background-image: null;
     background-color: #B2EBF2;

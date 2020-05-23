@@ -1,6 +1,7 @@
 <template>
   <div class="Usuario">
-    <CabezeraTitulo msg="Listado de tipos de tutoria en mi programa"/>
+    <CabezeraTitulo msg="Listado de tipos de tutoria en mi programa"
+    :image-path="require('.././assets/images/coffe-cream.jpg')"/>
     <FormListarTiposTutoria/>
   </div>
 </template>

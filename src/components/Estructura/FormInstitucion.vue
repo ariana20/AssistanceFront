@@ -1,36 +1,44 @@
 <template>
-  <div class="FormInstitucion">
+  <div class="FormInstitucion ">
     <div class="container" style="text-align: left;left:-100px;margin-top:30px">
-      <table>
-      <tbody>
-        <td style="width:662px">
-          <tr style="text-align:left"></tr>
-          <tr style="text-align:left"><td>Nombre</td>   <td> <input type="text" v-model="nombre"></td></tr>
-          <tr style="text-align:left"><td>Siglas</td>   <td> <input type="text" v-model="siglas"></td></tr>
-          <tr style="text-align:left"><td>Direccion</td>   <td> <input type="text" v-model="direccion"></td></tr>
-          <tr style="text-align:left"><td>Telefono</td>   <td> <input type="text" v-model="telefono"></td></tr><br>
-          <button type="button" style="margin-left:210px" class="btn btn-info" v-on:click="guardarInstitucion()">Guardar</button>
-        </td>
-        <td style="width:662px">
-          <tr style="text-align:left"><h3>Logo</h3></tr>
-          <tr style="border-color: red">
-            <img v-if="this.selectedFile!==null" style="border: 2px solid black;margin-left:100px;heigth:70px;width:200px" alt="Vue logo" :src="selectedFile" id='LogoInst'>
-            <img v-else style="border: 2px solid black;margin-left:100px;heigth:70px;width:200px" alt="Vue logo" v-bind:src="logo" id='LogoInst'>
-          </tr>
-          <tr style="height:40px">
-            <input type="file" v-on:change="onFileSelected" style="margin-top:10px"></tr>
-          <tr >
-            <td><button @click="onUpload" type="button" class="btn btn-info" style="margin-left:135px;margin-top:20px">Subir</button></td>
-            <td><button @click="rut" type="button" class="btn btn-secondary" style="margin-left:-120px;margin-top:20px">Eliminar</button></td>
-          </tr>
-        </td>
-      </tbody>
-      </table>
+      <form v-on:submit.prevent="guardarInstitucion" >
+        <div class="row grid-divider" style="">
+          <div class="izq col-lg-6 col-xm-2 col-md-12">
+            <div class="font-weight-bolder text-left" style="font-size:30px">Datos</div><br>
+            <div class="row rowmar">
+              <div class="font-weight-ligth text-left textF">Nombre </div>
+              <input class="borde-textbox inp" type="text" v-model="nombre">
+            </div>
+            <div class="row rowmar">
+              <div class="font-weight-ligth text-left textF">Siglas </div>
+              <input class="borde-textbox inp" type="text" v-model="siglas" required>
+            </div>
+            <div class="row rowmar">
+              <div class="font-weight-ligth text-left textF">Direccion </div>
+              <input class="borde-textbox inp" type="text" v-model="direccion" required>
+            </div>
+            <div class="row rowmar">
+              <div class="font-weight-ligth text-left textF">Telefono </div>
+              <input class="borde-textbox inp" v-model="telefono" required>
+            </div>
+          </div>
+          <div class="der col-lg-6 col-xm col-md-12">
+            <div class="font-weight-bolder text-left" style="font-size:30px">Logo</div>
+            <div style=";text-align:center;margin-top:40px" >
+              <img class="imgP" v-if="this.selectedFile!==null" alt="Vue logo" :src="selectedFile" id='LogoInst'>
+              <img class="imgP" v-else alt="Vue logo" v-bind:src="logo" id='LogoInst'>        
+            </div>
+            <div style=";text-align:center">
+              <input type="file" v-on:change="onFileSelected" style="margin-top:20px"><br>
+              <button @click="onUpload" type="button" class="btn btn-info" style="margin-top:20px">Subir</button>
+            </div>
+          </div>
+        </div>
+        <div style="margin-left:23%;margin-top:20px">
+          <button type="submit" style="margin-left:210px" class="btn btn-info" v-on:click="guardarInstitucion()">Guardar</button>
+        </div>
+      </form>
     </div>
-
-
-      
-
   </div>
 </template>
 
@@ -121,63 +129,91 @@ export default {
       }
       
     },
-    rut(){
-      this.$router.push({name:'Login'})
-    },
     guardarInstitucion() {
       let nomVal =this.nombre=='' || this.nombre == null;
       let siglasVal = this.siglas=='' || this.siglas == null;
       let dirVal = this.direccion=='' || this.direccion == null;
-      let telVal = this.telefono=='' || this.telefono == null;
-      if( nomVal && siglasVal && dirVal && telVal){
+      var regex = /^(\(\+[0-9][0-9]\)[0-9]{9})$/
+      let telVal = this.telefono=='' || this.telefono == null ;
+      if(!(regex.test(this.telefono))){
         Swal.fire({
-              text:"No ha completado todos los campos",
+              title:"No es un número válido",
+              text:"Formato (+11)111111111",
               icon:"error",
               confirmButtonText: 'OK',
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
-        })        
-      }else{
-        Swal.fire({
-          title: '¿Dese modificar su Institución?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#0097A7',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Confirmar'
-        }).then((result) => {
-          if (result.value) {
-            const params = {
-              nombre: this.nombre,
-              siglas: this.siglas,
-              direccion: this.direccion,
-              telefono: this.telefono,
-              logo: this.logo,
-            };
+        })   
+      } else{
+        if( nomVal || siglasVal || dirVal || telVal){
+          Swal.fire({
+                text:"No ha completado todos los campos",
+                icon:"error",
+                confirmButtonText: 'OK',
+                confirmButtonColor:'#0097A7',
+                showConfirmButton: true,
+          })        
+        }else{
+          Swal.fire({
+            title: '¿Dese modificar su Institución?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0097A7',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirmar'
+          }).then((result) => {
+            if (result.value) {
+              const params = {
+                nombre: this.nombre,
+                siglas: this.siglas,
+                direccion: this.direccion,
+                telefono: this.telefono,
+                logo: this.logo,
+              };
 
-            axios.post('/institucion/modificar/'+this.id,params)
-              .then( response=>{
-                console.log(response)
-                Swal.fire(
-                  'Modificacion Exitosa!',
-                  'Tus institución ha sido actualizada.',
-                  'success'
-                )
-              })
-              .catch(e => {
-                console.log(e.response);
-              })
-          }
-        })
+              axios.post('/institucion/modificar/'+this.id,params)
+                .then( response=>{
+                  console.log(response)
+                  Swal.fire(
+                    'Modificacion Exitosa!',
+                    'Tus institución ha sido actualizada.',
+                    'success'
+                  )
+                })
+                .catch(e => {
+                  console.log(e.response);
+                })
+            }
+          })
+        }
       }
+      
     },
   }
 }
 </script>
-<style scoped>
 
-  body{
-    background-image: null;
-    background-color: #B2EBF2;
+<style scoped>
+  .imgP{
+    border: 2px solid black;
+    margin-left:100px;
+    height: 150px;
+    width:150px;
   }
+
+  .inp{
+    margin-left:50px;
+    width:300px;
+    padding-left: 15px;
+  }
+
+  .textF{
+    width: 50px;
+  }
+
+  .rowmar{
+    margin-left:10px;
+    margin-top:20px
+  }
+
 </style>
