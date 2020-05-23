@@ -1,15 +1,31 @@
 <template>
-  <div class="FormUsuario">
-    <div class="container" style="left:10%;text-align: left">
-     
+  <div class="FormUsuario container">
+    
+    <div class="row top-titulo">
+      <div class="row col-sm-4 tutoria-title" style="margin:20px">Código: 
+        <input placeholder="Ingrese el código del usuario" class="col-sm-10 form-control" type="text" v-model="codigo">  </div>
+      
+      <!-- <h5 class="col-sm-4 tutoria-title">Tipo de usuario: </h5>
+      <select class="col-sm-4 form-control"  style="left:40px;top:0px;" 
+        v-model="arrTUsuarios"  >
+               <option v-for="options in arrTUsuarios" 
+                       v-bind:key="options.id_tipo_usuario">
+                  {{ options.nombre }}
+                </option>
+      </select> -->
+      <div  class="botones">
+        
+            <button type="button" style="margin:20px" class="btn btn-info"  v-on:click="guardarUsuario()">Guardar</button>
+            <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>
+      </div>
+    </div>
+
+  <div>
       <table>
-      <tbody  align="left">
+      <tbody  >
         <td style="width:1662px">
           <tr style="text-align:left"></tr>
           <tr style="text-align:left" ><td>Codigo:</td>  <td > <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="codigo"></td> 
-     
-         
-          
           </tr>
           <tr style="text-align:left"><td>Nombre:</td>   <td> <input id="nombre"  style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="nombre"></td></tr>
           <!-- <tr style="text-align:left"><td>Apellido Paterno:</td>   <td> <input id="apP" style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="ap_paterno"></td></tr>
@@ -260,7 +276,13 @@ export default {
     background-image: null;
     background-color: #B2EBF2;
   }
-  
+  .form-control {
+    border-radius: 1.25rem;  
+    border: 2px solid #757575;
+    margin-bottom: 10px;
+    width: 100%;
+    
+}
 
 
 </style>
