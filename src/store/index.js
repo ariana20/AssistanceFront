@@ -8,6 +8,8 @@ export default new Vuex.Store({
     usuario:null,
     programas:null,
     programaActual:null,
+    cantProg:null,
+    tipoActual:null,
     facultades:null,
     coordionadores:null,
     permisos:null,

@@ -1,24 +1,24 @@
 <template>
     <div name="Seleccion" style="margin-top:30px;margin-left:-250px">
         <h1>Elige tu Programa</h1>
-        <div id="app" class="container">
-            <card @click="irPrograma(item)" v-for="(item,index) in this.programas" :key="index" data-image="https://www.colorhexa.com/009892.png">
-                <h1 @click="irPrograma(item)" slot="header">{{item.programa.nombre}}</h1>
-                <p @click="irPrograma(item)" slot="content">Rol: {{item.tipoUsuario.nombre}}</p>
-            </card>
+        <div id="app" class="container row" style="text-align:center;margin:auto" >
+            <div class="borde" @click="irPrograma(item)" v-for="(item,index) in this.programas" :key="index">
+                <button style="background:transparent;border:red"><h1 @click="irPrograma(item)" slot="header">{{item.programa.nombre}}</h1>
+                <p @click="irPrograma(item)" slot="content">Rol: {{item.tipoUsuario.nombre}}</p></button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import card from '@/components/Card.vue'
+//import card from '@/components/Card.vue'
 import axios from 'axios'
 // Solo llamo al componente, pero es personalizable aquí
 export default {
   name: 'FormSeleccionPrograma',
   components: {
-    card
+    //card
   },
   data(){
       return{
@@ -30,6 +30,15 @@ export default {
         this.axios.post('/usuarios/permisosProgramas',{usuario: this.$store.state.usuario})
             .then(response=>{
                 this.programas = response.data
+                this.$store.state.cantProg = response.data;
+                if(this.programas.length == 1){
+                    this.irPrograma(this.programas[0]);
+                }
+                else{
+                    if(this.programas.length == 0){
+                        this.$router.push('/userNuevo')
+                    }
+                }
             })
       }
   },
@@ -41,9 +50,6 @@ export default {
         localStorage.setItem('programaSel', JSON.stringify(item))
     },
     irPrograma(item){
-        axios.post('/vueuser',{usuario: this.$store.state.usuario}).then(response=>{
-            
-        this.$store.state.usuario = response.data.user;
         if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
             let paramr = {
                 usuario:this.$store.state.usuario,
@@ -60,22 +66,38 @@ export default {
                     }
                 }
                 this.$store.state.programaActual = item.programa;
+                this.$store.state.tipoActual = item.tipoUsuario;
                 let stored = this.openStorage() // extract stored form
                 if (!stored) stored = {} 
-                stored = item.programa; // store new value
+                stored = item; // store new value
                 this.saveStorage(stored)
-                if(this.$route.path == '/seleccion' && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
-                else this.$router.push('/userNuevo')
+                if(this.$route.path == '/seleccion' && this.$store.state.rutas[0]) {
+                    this.$router.push(this.$store.state.rutas[0].path)
+                }
+                else {
+                    if(this.$route.path=='/seleccion') this.$router.push('/userNuevo')
+                }
             }).catch( e=>console.log(e));
         }
-        })
         
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
+
+<!-- <style lang="scss" scoped>
     @import '../assets/styles/seleccion.scss';
-</style>
+ </style>-->
+
+ <style scoped>
+    .borde{
+        border-radius: 1.25rem;  
+        border: 2px solid #757575;
+        width: 300px;
+        padding-block: 30px;
+        margin: 40px auto 40px auto;
+        background-color: aquamarine;
+        display: grid;
+    }
+ </style>

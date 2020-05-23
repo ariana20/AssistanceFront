@@ -35,8 +35,8 @@
                 <input type="submit" value="Ingresar" class="forms_buttons-action">
               </div>
               
-              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:80px">Ingresar con Google</button>
             </form>
+              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:80px">Ingresar con Google</button>
           </div>
           <div class="user_forms-signup">
             <h2 class="forms_title">Usuario Nuevo</h2>
