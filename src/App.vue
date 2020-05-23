@@ -55,6 +55,12 @@ export default {
         ...prog.tipoUsuario
       }
     }
+    if(this.$store.state.usuario){
+      this.axios.post('/usuarios/permisosProgramas',{usuario: this.$store.state.usuario})
+        .then(response=>{
+            this.$store.state.cantProg = response.data;
+        })
+    }
   },
   components: {
     HomeNavBar,

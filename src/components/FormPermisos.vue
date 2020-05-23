@@ -72,7 +72,6 @@ export default {
   methods:{
     
     listarPermisosActuales() {
-        console.log('Fui a llamar mis permisos')
         axios.post('tipoUsuarios/listarPermisos/'+this.idRol)
             .then(response=>{
                 this.nombreRol = response.data.nombre;
@@ -94,8 +93,6 @@ export default {
     Guardar(){
       let nomVal =this.nombreRol=='' || this.nombreRol == null;
       let cambiosVal = this.cambios.length==0 || this.cambios == null;
-      console.log(nomVal)
-      console.log(cambiosVal)
       if(nomVal && (this.nombre=="" || this.nombre==null)){
         Swal.fire({
           text:"No ha completado el nombre",
@@ -129,17 +126,17 @@ export default {
               if(this.idRol=== null || this.idRol === undefined) this.nombreRol = this.nombre;
               axios.post('tipoUsuarios/modPermisos',{nombre: this.nombreRol, cambios: this.cambios})
                   .then(response=>{
-                      alert(response.data)
+                    console.log(response)
+                    Swal.fire({
+                      text:"Guardado Exitosa",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                    })
+                    this.$router.push('/tiposUsuario');
                   })
                   .catch(e=>console.log(e));
-              Swal.fire({
-                  text:"Guardado Exitosa",
-                  icon:"success",
-                  confirmButtonText: 'OK',
-                  confirmButtonColor:'#0097A7',
-                  showConfirmButton: true,
-              })
-              this.$router.push('/tiposUsuario');
             }
           })
         } 
@@ -148,7 +145,6 @@ export default {
         
     },
     cambio(value,event) {
-        console.log(event.target.checked);
         let index = this.cambios.findIndex(element => element.nombre === value)
         if( index !== -1){
             if (event.target.checked) this.cambios[index].estado = 'activo';

@@ -135,7 +135,6 @@ export default {
       let dirVal = this.direccion=='' || this.direccion == null;
       var regex = /^(\(\+[0-9][0-9]\)[0-9]{9})$/
       let telVal = this.telefono=='' || this.telefono == null ;
-      console.log(telVal)
       if(!(regex.test(this.telefono))){
         Swal.fire({
               title:"No es un número válido",

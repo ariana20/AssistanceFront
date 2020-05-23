@@ -53,7 +53,6 @@ export default {
     },
     mandar(event,coordinador){
         this.coordSel = coordinador
-        console.log(this.coordSelcoordSel)
         this.$emit('childToParentProg',this.coordSel)
     },
   },
