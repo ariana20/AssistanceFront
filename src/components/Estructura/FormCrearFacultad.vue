@@ -46,8 +46,8 @@
 
             <b-col sm="1">
             <b-col sm="1">
-            <modalJ2 v-on:childToParent="onChildClick" tipo="Facultad"/>
-              <strong>{{tipoCoord}}</strong>
+            <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>
+              <strong>Facultad</strong>
             
             </b-col>
             </b-col>
@@ -96,8 +96,8 @@
             </b-col>
 
             <b-col sm="1">
-            <modalJ v-on:childToParent="onChildClick" tipo="Programa"/>
-            <strong>{{tipoCoord}}</strong>
+            <modalJ v-on:childToParentProg="onChildClickProg"/>
+            <strong>Programa</strong>
             </b-col>
         </b-row>
         <br>
@@ -133,7 +133,7 @@
 
 <script>
 import axios from 'axios'
-import modalJ from '@/components/Modal.vue'
+import modalJ from '@/components/ModalProg.vue'
 import modalJ2 from '@/components/Modal.vue'
 import Vue from 'vue'
 import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
@@ -226,21 +226,13 @@ export default {
       this.programas.push(prog);
       console.log(this.programas);
     },
-    onChildClick (value, tipo) {
+    onChildClickProg (value) {
       this.coordinadorSeleccionado = value;
-      this.tipoCoord=tipo;
-      console.log(tipo);
-      if(tipo[0]=='P'){
-        console.log("ProgramaABC");
-        this.programa.coordinador=value;
-        console.log(this.programa);
-      }else if(tipo[0]=='F'){
-        console.log("FacultadABC");
-        this.facultad.coordinador=value;
-        console.log(this.facultad);
-      }
-      
-      
+      this.programa.coordinador=value;
+    },
+    onChildClickFacu (value) {
+      this.coordinadorSeleccionado = value;
+      this.facultad.coordinador=value;  
     },
 
 

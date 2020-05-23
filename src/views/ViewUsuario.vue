@@ -7,7 +7,7 @@
 <template>
   <div class="viewusuario">
     <CabezeraTitulo msg="Configuración de un usuario"
-    :image-path="require('.././assets/images/cup-of-coffee-e.jpg')"/>
+    :image-path="require('.././assets/images/person-writing.jpg')"/>
     <FormUsuario/>
   </div>
   

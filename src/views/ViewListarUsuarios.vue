@@ -6,7 +6,8 @@
 
 <template>
   <div class="Usuario">
-    <CabezeraTitulo msg="Listado de usuarios"/>
+    <CabezeraTitulo msg="Listado de usuarios"
+    :image-path="require('.././assets/images/person-writing.jpg')"/>
     <FormListarUsuario/>
   </div>
 </template>

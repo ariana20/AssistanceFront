@@ -1,11 +1,11 @@
 <template>
     <div name="Modal">
-        <a class="button" href="#openModal"><b-icon icon="search"></b-icon></a>
-        <div id="openModal" class="modalbg">
+        <a class="button" href="#openModal2"><b-icon icon="search"></b-icon></a>
+        <div id="openModal2" class="modalbg">
             <div class="dialog">
                 <a href="#close" title="Close" class="close">X</a>
                 <h2>Coordinadores</h2>
-                <h1 class="centered">Facultad</h1>
+                <h1 class="centered">Programa</h1>
                 <table class="table">
                     <thead>
                     <tr>
@@ -16,7 +16,7 @@
                     </tr>
                     </thead>
                     <tbody href="#close">
-                    <tr  v-for="(item, index) in coordinadores" :key="index" v-on:click="$emit('childToParentFacu',item)">
+                    <tr  v-for="(item, index) in coordinadores" :key="index" v-on:click="$emit('childToParentProg',item)">
                         <th scope="row"><a href="#close">{{item.id_usuario}}</a></th>
                         <td><a href="#close">{{item.nombre+" "+item.apellidos}}</a></td>
                         <td><a href="#close">{{item.correo}}</a></td>
@@ -33,7 +33,8 @@
 export default {
   data(){
     return{
-      coordinadores:[]
+      coordinadores:[],
+      coordSel:null,
     }
   },
   mounted(){
@@ -49,6 +50,10 @@ export default {
         .catch(e => {
           console.log(e.response);
         })
+    },
+    mandar(event,coordinador){
+        this.coordSel = coordinador
+        this.$emit('childToParentProg',this.coordSel)
     },
   },
 }

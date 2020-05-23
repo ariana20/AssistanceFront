@@ -1,6 +1,7 @@
 <template>
   <div class="viewRoles">
-    <CabezeraTitulo msg="Tipos de Usuario y Permisos"/>
+    <CabezeraTitulo msg="Tipos de Usuario y Permisos"
+    :image-path="require('.././assets/images/profe-alumna.jpg')"/>
     <FormRoles />
   </div>
 </template>

@@ -4,14 +4,20 @@
 
             
       <b-collapse id="nav-collapse" is-nav>
-              <button v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.programaActual!=null"
-               v-on:click="goToSeleccion()"
-               style="margin-left:250px;width:170px;background-color:#7EC2C9;" 
-               class="btn" 
-               type="button">
-                Cambiar Programa
-              </button>
-
+              <select 
+               v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.cantProg.length!=0"
+               class="col-sm-2 form-control"
+               style="left:250px;top:5px"
+               v-model="selectedPrograma"
+               @change="cambiarProg()">
+                <option selected disabled value="">Cambia de Programa</option>
+                <option 
+                    v-for="(item, index) in $store.state.cantProg" 
+                    :key="index" 
+                    :value="item">
+                    {{ item.programa.nombre }} ({{item.tipoUsuario.nombre}})
+                </option>
+              </select>
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           
@@ -38,7 +44,8 @@ import Swal from 'sweetalert2'
 export default {
   data(){
     return{
-      nombre:null
+      nombre:null ,
+      selectedPrograma: null,
     }
   },
   mounted(){
@@ -53,17 +60,23 @@ export default {
         }
         axios.post('/usuarios/permisos',paramr)
           .then(response=>{
+            let acceder = false;
             for(var i=0; i < this.$store.state.navLinks.length; i++){
               for(var j=0; j < response.data.length; j++){
                 if( this.$store.state.navLinks[i].text == response.data[j]){
                     this.$store.state.rutas.push(this.$store.state.navLinks[i]);
+                    if(this.$route.path == this.$store.state.navLinks[i].path) acceder = true;
                 }
               }
-            } 
+            }
+            if(acceder!= true && this.$route.path != '/login' && this.$route.path != '/seleccion'){
+              if(this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path);
+              else if(this.$route.path !== '/userNuevo' && (this.$store.state.rutas == undefined || this.$store.state.rutas.length==0)) this.$router.push('/userNuevo');
+            }
             if((this.$route.path == '/login' || this.$route.path == '/seleccion') && this.$store.state.rutas[0]) this.$router.push(this.$store.state.rutas[0].path)
             else{
               if(this.$route.path !== '/userNuevo' && (this.$store.state.rutas == undefined || this.$store.state.rutas.length==0)) this.$router.push('/userNuevo');
-            }        
+            }    
           }).catch( e=>console.log(e));
       }
       else{
@@ -83,7 +96,7 @@ export default {
         document.getElementById("mySidenav").style.width = "0";
     },
     logout(){
-      axios.create({withCredentials: true }).post('/vuelogout', null).then(response=>{
+      axios.post('/vuelogout', null).then(response=>{
           if(response.data.status=='success') {
             this.$store.state.usuario=null;
             this.nombre = null;
@@ -96,6 +109,8 @@ export default {
             }).then((result)=>{
               console.log(result)
               localStorage.setItem('usuarioActual', null)
+              localStorage.setItem('programaSel', null)
+              this.$store.state.programaActual = null;
               if (this.$route.path !== '/login') this.$router.go('login');
             }
             )
@@ -105,7 +120,45 @@ export default {
       
     },
     goToSeleccion(){
+      localStorage.setItem('programaSel', null)
       this.$router.push('/seleccion')
+    },
+    openStorage () {
+        return JSON.parse(localStorage.getItem('programaSel'))
+    },
+    saveStorage (item) {
+        localStorage.setItem('programaSel', JSON.stringify(item))
+    },
+    cambiarProg() {
+      if(this.$store.state.usuario !== null && this.$store.state.usuario !== undefined){
+          let paramr = {
+              usuario:this.$store.state.usuario,
+              programa: this.selectedPrograma.programa.nombre
+          }
+          axios.post('/usuarios/permisos',paramr)
+          .then(response=>{
+              this.$store.state.rutas = [];
+              for(var i=0; i < this.$store.state.navLinks.length; i++){
+                  for(var j=0; j < response.data.length; j++){
+                      if( this.$store.state.navLinks[i].text == response.data[j]){
+                          this.$store.state.rutas.push(this.$store.state.navLinks[i]);
+                      }
+                  }
+              }
+              this.$store.state.programaActual = this.selectedPrograma.programa;
+              this.$store.state.tipoActual = this.selectedPrograma.tipoUsuario;
+              let stored = this.openStorage() // extract stored form
+              if (!stored) stored = {} 
+              stored = this.selectedPrograma; // store new value
+              this.saveStorage(stored)
+              if(this.$store.state.rutas[0]) {
+                  this.$router.push(this.$store.state.rutas[0].path)
+              }
+              else {
+                this.$router.push('/userNuevo')
+              }
+          }).catch( e=>console.log(e));
+      }
     }
   }
 }
