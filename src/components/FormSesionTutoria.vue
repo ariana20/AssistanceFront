@@ -12,8 +12,8 @@
                 </option>
             </select>
             <div class="botones">
-            <button type="button" class="btn btn-info">Guardar</button>
-            <button type="button" class="btn btn-info" style="border-color:gray;background-color:gray;">Cancelar</button>
+            <button type="button" class="btn btn-info" @click="guardar()" >Guardar</button>
+            <button type="button" class="btn btn-info" @click="cancelar()" style="border-color:gray;background-color:gray;">Cancelar</button>
             </div>
         </div>
         <hr>
@@ -51,7 +51,7 @@
                                     @click="addAlumno">+
                             </button>
                         </div>
-                        <div type="text" class="form-control" placeholder="Nombre" >{{alSeleccionado}}</div>
+                        <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{alSeleccionado}}</div>
                         <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
                             <li class="form-control" 
                                 v-for="(newAlumno,alIndex) in listAlumnosNom"  
@@ -104,9 +104,13 @@
                     <div class="top-titulo" style="text-align:left;">
                     <div class="col-sm-4 derivar-dropdown-title">Derivar: </div>
                     <select class="col-sm form-control" style="left:-40px;">
-                        <option value="+47">Unidad</option>
-                        <option value="+46">de</option>
-                        <option value="+45">Apoyo</option>
+                        <option selected disabled value="">Seleccionar</option>
+                        <option
+                        v-for="(unidadApoyo, i) in unidadesApoyo" 
+                        :key="i" 
+                        :value="unidadApoyo.id_unidad_apoyo">
+                        {{ unidadApoyo.nombre }}
+                        </option>
                     </select>
                     </div>
                 </div>
@@ -129,9 +133,9 @@ export default Vue.extend ({
             descripcion: null,
             motivo: null,
             bordes:'borde-textbox',
-            sel: null,
-            alSeleccionado: null,
-            codigos:[{}],
+            sel: '',
+            alSeleccionado: 'Nombre Alumno',
+            codigos:[],
             campoCodigo: {value:'codigo'},    
             selectedTipoTutoria: '',
             tiposTutoria: [],
@@ -142,20 +146,28 @@ export default Vue.extend ({
             motivosBorrados:[],
             listAlumnosNom: [],
             listAlumnosCod: [],
+            unidadesApoyo: []
         }
     },
     mounted(){
-    axios.post('TipoTutoria/listarTodo/4')
+    axios.post('unidadesApoyo/listarTodo')
+        .then(response => {
+            this.unidadesApoyo = response.data;
+        }).catch(e => {
+            console.log(e.response);
+        });
+    axios.post('sesiones/alumnoProg/'+ this.$store.state.programaActual.id_programa + '/' + this.$store.state.tipoActual.id_tipo_usuario)
         .then( response => {
-            this.tiposTutoria = response.data;
+            for(var i in response.data){ 
+                this.codigos.push(response.data[i][0]);
+            }
         })
         .catch(e => {
-          console.log(e.response);
+            console.log(e.response);
         });
-    axios.post('usuarios/listarTodo')
+    axios.post('TipoTutoria/listarTodo/' + this.$store.state.programaActual.id_programa)
         .then( response => {
-            this.codigos = response.data;
-            this.nombre= response.data.nombre;
+            this.tiposTutoria = response.data;
         })
         .catch(e => {
           console.log(e.response);
@@ -163,7 +175,6 @@ export default Vue.extend ({
     axios.post('motivosConsulta/listarTodo')
         .then( response => {
             this.motivos = response.data;
-            console.log(response.data);
         })
         .catch(e => {
           console.log(e.response);
@@ -172,9 +183,13 @@ export default Vue.extend ({
     methods: {
         onCodigoChange: function () {
             var i;
-            for(i in this.codigos)
-                if(this.sel==this.codigos[i].id_usuario)
-                    this.alSeleccionado = this.codigos[i].nombre;
+            for(i in this.codigos){
+                if(this.sel==this.codigos[i].codigo){
+                    this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
+                }
+                console.log(this.alSeleccionado);
+                //break;   
+            }
         },
         addMotivos: function () {
             var i;
@@ -192,11 +207,22 @@ export default Vue.extend ({
                     this.motivos.push(this.motivosBorrados[i]);
             this.listMotivos.splice(index,1);
         },
-        addAlumno: function () {
-            this.listAlumnosNom.push(this.alSeleccionado);
-            this.listAlumnosCod.push(this.sel);
-            this.alSeleccionado='';
-            this.sel='';
+        addAlumno: function () {  
+            var estaAl = false;
+            for( var i in this.listAlumnosCod ){
+                    if(this.sel == this.listAlumnosCod[i]){
+                        estaAl = true;
+                        break;
+                    }
+            }
+            if(this.alSeleccionado != 'Nombre Alumno' && !estaAl){ 
+                this.listAlumnosNom.push(this.alSeleccionado);
+                this.listAlumnosCod.push(this.sel);
+                this.alSeleccionado='Nombre Alumno';
+                this.sel= '';
+            }
+            
+            
         }
     }
 })
