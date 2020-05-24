@@ -110,7 +110,7 @@ export default {
           }).then((result) => {
             if (result.value) {
               if(this.idRol=== null || this.idRol === undefined) this.nombreRol = this.nombre;
-              axios.post('tipoUsuarios/modPermisos',{nombre: this.nombreRol, cambios: this.cambios})
+              axios.post('tipoUsuarios/modPermisos',{nombre: this.nombreRol, cambios: this.cambios,usuario_actualizacion: this.$store.state.usuario.id_usuario})
                   .then(response=>{
                     console.log(response)
                     Swal.fire({
