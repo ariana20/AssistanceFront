@@ -99,7 +99,7 @@
                     <hr>
                     <div class="form-group" style="text-align:left;margin-bottom:20px;">
                         <label for="descripcion">Descripción:</label>
-                        <textarea class="form-control" id="descripcion-motivo" rows="7"></textarea>
+                        <textarea class="form-control" id="descripcion-motivo" rows="7" v-model="descripcion"></textarea>
                     </div>
                     <div class="top-titulo" style="text-align:left;">
                     <div class="col-sm-4 derivar-dropdown-title">Derivar: </div>
@@ -126,12 +126,13 @@ export default Vue.extend ({
     name: 'formSesionTutoria',
     data: function () {
         return {
+            descripcion: null,
             motivo: null,
             bordes:'borde-textbox',
             sel: null,
             alSeleccionado: null,
             codigos:[{}],
-            campoCodigo: {value:'id_usuario'},    
+            campoCodigo: {value:'codigo'},    
             selectedTipoTutoria: '',
             tiposTutoria: [],
             selectedMotivo: '',
