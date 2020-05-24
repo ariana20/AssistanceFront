@@ -17,9 +17,9 @@
           <!-- Textarea tiene que tener un número menos de largo -->
           </tr>
           
-          <tr>
+          <!-- <tr>
 
-         <tr style="text-align:left"><td>Condiciones  </td> 
+        <tr style="text-align:left"><td>Condiciones  </td> 
           <div >
             <br>
             <ejs-multiselect style='margin-left:100px' id='multiselect' :dataSource='condiciones' :fields='camposcondi' v-model="tipotutoria.condiciones" >
@@ -27,7 +27,7 @@
             
               
           </div>
-        </tr>
+        </tr> -->
         <!-- lista de condiciones -->
           <!-- <tr>
             <li v-for="item in tipotutoria.condiciones " v-bind:key="item.value" >{{ item }}</li>
@@ -36,12 +36,24 @@
           <td >
           </td>
           </tr>
-          <div class="row col-sm-4 " > <input type="radio"  v-model="individual">      <h5>Individual</h5>         
-                                       <input type="radio" style="margin-left:70px"   v-model="picked">      <h5>Grupal</h5></div>
-          <br>
-          <div class="row col-sm-4 " > 
-          <input type="radio"  v-model="picked">      <h5>Obligatoria</h5>         
-          <input type="radio" style="margin-left:70px"  v-model="picked">       <h5>Opcional</h5> </div>
+          <div class="row col-sm-6 tutoria-title"  > 
+            <div>Condiciones: </div>
+            <b-form-radio-group style="margin-left:25px" v-model="tipotutoria.individual" :options="indgru">    </b-form-radio-group></div>
+          <div class="row col-sm-6 " style="margin-left:100px;" > 
+            <b-form-radio-group v-model="tipotutoria.obligatorio" :options="oblopc">    </b-form-radio-group></div>
+        
+          
+          <div class="row col-sm-6 " style="margin-left:100px;"> 
+            <b-form-radio-group v-model="tipotutoria.tutorasignado" :options="asigsol">    </b-form-radio-group></div>
+            
+        
+          <div class="row col-sm-6 " style="margin-left:100px;"> 
+            <b-form-radio-group v-model="tipotutoria.tutorfijo" :options="fijvar">    </b-form-radio-group></div>
+
+           <br>
+          <div class="row col-sm-6 " style="margin-left:80px;" > 
+            <b-form-checkbox v-model="tipotutoria.estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div>
+            
 
           
         </td>        
@@ -78,65 +90,58 @@ export default Vue.extend( {
         nombre:"",
         descripcion:"",
         obligatorio:"",  
-        individual:"", 
-        planificado:"",
+        individual:"",         
         tutorasignado:"",
         tutorfijo:"",
         estado:null,
         tutoresrelacionados:null,
         condiciones:"",
-        // id_tipo_tutoria_entrante:parseInt((this.$route.path).charAt(16),10),
-        id_tipo_tutoria_entrante:this.id,
+         id_tipo_tutoria_entrante:undefined,
+        //id_tipo_tutoria_entrante:this.id,
 
       },
-      
-      campocondi:{value:'value',text:'text'},      
-      condiciones:[
-        {value:'Individual',text:'Individual',Condic:'Individual o Grupal'},            
-        {value:'Grupal',text:'Grupal',Condic:'Individual o Grupal'},
-        {value:'Obligatoria',text:'Obligatoria',Condic:'Obligatoria u Opcional'},      
-        {value:'Opcional',text:'Opcional',Condicion:'Obligatoria u Opcional'},
-        {value:'Con tutor fijo',text:'Con tutor fijo',Condic:'Con tutor fijo o variable'},      
-        {value:'Con tutor variable',text:'Con tutor variable',Condic:'Con tutor fijo o variable'},
-        {value:'Con tutor asignado',text:'Con tutor asignado',Condic:'Con tutor asignado o solicitado'},      
-        {value:'Con tutor solicitado',text:'Con tutor solicitado',Condic:'Con tutor asignado o solicitado'}, 
-        {value:'Planificado',text:'Planificado',Condic:'Planificado o no planificado'},      
-        {value:'No Planificado',text:'No Planificado',Condic:'Planificado o no planificado'},
-      ],  
+      indgru:[
+        {value: '1',text: 'Individual'}, //guardo el value
+        {value: '0',text: 'Grupal'},
+      ],
+      oblopc:[
+        {value: '1',text: 'Obligatorio'},
+        {value: '0',text: 'Opcional'},
+      ],
+      asigsol:[
+        {value: '1',text: 'Con tutor asignado'},
+        {value: '0',text: 'Con tutor solicitado'},
+      ],
+      fijvar:[
+        {value: '1',text: 'Con tutor fijo'},
+        {value: '0',text: 'Con tutor variable'},
+      ],
+    
     }
   },
   created(){
-      console.log(this.id);
+     console.log(this.id_tipo_tutoria_entrante);
+    console.log(parseInt((this.$route.path).substring(16,18),10));
+      console.log(this.$store.state.tipostutorias);
   },
   mounted(){
     //Aquí lleno mis datos con la api
    
-
-        if(this.id_tipo_tutoria_entrante!="0" && this.id_tipo_tutoria_entrante!=undefined ){
-           Axios.create({withCredentials: true })
+       this.id_tipo_tutoria_entrante=parseInt((this.$route.path).charAt(16),10);
+       console.log('Id entrante en mounted ',this.id_tipo_tutoria_entrante);
+        if(this.id_tipo_tutoria_entrante!=0 && this.id_tipo_tutoria_entrante!=undefined ){
+           Axios.create()
           .post('/TipoTutoria/mostrar/'+this.id_tipo_tutoria_entrante).
           then( response =>{
-            console.log(this.id_tipo_tutoria_entrante);
-           this.nombre= response.data.nombre;
-           this.descripcion=response.data.descripcion;
-
-           var aux=response.data.obligatorio;
-          if (aux=="1" ){            this.condiciones[0]='Obligatoria';
-          }else if (aux=="0" ){            this.condiciones[0]='Opcional';          }
-
-          aux=response.data.individual;
-          if (aux=="1" ){            this.condiciones[1]    ='Individual';
-          }else if (aux=="0" ){            this.condiciones[1]='Grupal';          }
-          aux=response.data.planificado;
-          if (aux=="1" ){            this.condiciones[2]='Planificado';
-          }else if (aux=="0" ){            this.condiciones[2]='No planificado';          }
-          aux=response.data.tutorasignado;
-          if (aux=="1" ){            this.condiciones[3]='Con tutor asignado';
-          }else if (aux=="0" ){            this.condiciones[3]='Con tutor solicitado';          }
-          aux=response.data.tutorfijo;
-          if (aux=="1" ){           this.condiciones[4]='Con tutor fijo';
-          }else if (aux=="0" ){           this.condiciones[4]='Con tutor variable';          }
-          
+            console.log('Id del tipo tutoria ',response.data.id_tipo_tutoria);
+           this.tipotutoria.nombre= response.data.nombre;
+           this.tipotutoria.descripcion=response.data.descripcion;
+           this.tipotutoria.individual=response.data.individual;
+           this.tipotutoria.obligatorio=response.data.obligatorio;
+           this.tipotutoria.tutorasignado=response.data.tutor_asignado;
+           this.tipotutoria.tutorfijo=response.data.tutor_fijo;
+            this.tipotutoria.estado=response.data.estado;
+         
          });
     }
 
@@ -156,10 +161,8 @@ export default Vue.extend( {
       //     else this.tipotutoria.estado="ina";
 
       ////manejo de condiciones
-      var verifLongi=this.tipotutoria.condiciones.length; //sale s
-      
-      console.log(verifLongi);
-      if(verifLongi<5 || (this.tipotutoria.descripcion =="" || this.tipotutoria.nombre=="" )){
+      var verifLongi=1;
+      if(this.tipotutoria.descripcion =="" || this.tipotutoria.nombre==""   ){
          Swal.fire({
               text:"No ha completado todos los campos",
               icon:"error",
@@ -168,10 +171,10 @@ export default Vue.extend( {
               showConfirmButton: true,
         })        
       }   
-      else if (verifLongi>5 ){
-        console.log('Entro al elseif mayor de 5 condiciones');
+      else if (this.individual=="" ||  this.tipotutoria.obligatorio=="" || this.tipotutoria.tutorasignado=="" || this.tipotutoria.tutorfijo=="" ){
+        console.log('Entro al elseif  de 4 condiciones');
               Swal.fire({
-              text:"Debe colocar solo 5 condiciones.\n",
+              text:"Debe elegir 1 opción de cada condición.\n",
               icon:'error',
               confirmButtonText: 'Corregir',
               confirmButtonColor:'#0097A7',
@@ -282,5 +285,9 @@ export default Vue.extend( {
     background-image: null;
     background-color: #FFFFFF;
   }
+  .tutoria-title{
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
   @import '../assets/styles/material.css';
 </style>

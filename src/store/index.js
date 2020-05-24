@@ -14,6 +14,9 @@ export default new Vuex.Store({
     coordionadores:null,
     permisos:null,
     roles:null, //Filtrar Tipos de Usuario
+    tipostutorias:null,
+    usuarios:null,
+    usuariosA:null,
     rutas:[],
     navLinks: [
       {
@@ -89,6 +92,31 @@ export default new Vuex.Store({
         return roles;
       }
       return state.roles;
+    },
+    filtrarTipoTutorias(state){
+      if(state.filtro.query.length > 1){
+        let tipostutorias = state.tipostutorias.filter(tt => tt.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return tipostutorias;
+      }
+      return state.tipostutorias;
+    },
+    filtrarUsuarios(state){
+      if(state.filtro.query.length > 1){
+        let usuarios = state.usuarios.filter(usu => usu.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return usuarios;
+      }
+      return state.usuarios;
+
+    },
+    filtrarUsuariosAdmin(state){
+      if(state.filtro.query.length > 1){
+        let usuariosA = state.usuarios.filter(usu => usu.usuario.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        console.log('UsuariosA ',this.usuariosA);
+        return usuariosA;
+      }
+      return state.usuariosA;
+
     }
+
   }
 })

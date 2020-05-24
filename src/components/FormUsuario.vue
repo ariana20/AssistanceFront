@@ -69,7 +69,7 @@ export default {
  
     return{
       id_usuario:null,
-      codigo:"20152354",
+      codigo:"",
       nombre:"",
       // ap_paterno:"",
       // ap_materno:"",
@@ -176,7 +176,7 @@ export default {
              
           
           if(this.id_usuario_entrante==0){
-            Axios.create({withCredentials: true })
+            Axios.create()
             .post('/usuarios/insertar',params)
             .then( response=>{
             console.log(response)
@@ -196,6 +196,7 @@ export default {
               console.log(response)
             })  .catch(e => {
                  console.log(e.response);
+                 //
               });
             Swal.fire({
               text:"Se modificaron los datos con éxito",
