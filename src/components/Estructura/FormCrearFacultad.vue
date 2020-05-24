@@ -138,11 +138,12 @@ Vue.use(MultiSelectPlugin);
 import Swal from 'sweetalert2'
 
 export default {
-  props: {
-      idFacultad: String,
-  },
+  //props: {
+  //    idFacultad: String,
+  //},
   data(){
     return{
+      idFacultad: (this.$route.path).substring(15,17),
       facultad:{
           id_facultad:null,
           id_programa:null,
@@ -171,12 +172,32 @@ export default {
     modalJ,
     modalJ2
   },
-  created(){
-
-    
+  mounted(){
+    if(this.idFacultad) this.obtenerDatos();
+    console.log(this.idFacultad);
   },
 
   methods:{
+
+    obtenerDatos() {
+        axios.post('/facultad/listar/'+this.idFacultad)
+            .then(response=>{
+                this.facultad.id_facultad = response.data.id_facultad;
+                this.facultad.id_programa = response.data.id_programa;
+                this.facultad.nombre = response.data.nombre;
+                this.facultad.correo = response.data.correo;
+                console.log(response);
+            })
+            .catch(e=>console.log(e));
+
+        axios.post('/facultad/listarProgramas')
+            .then(response=>{
+                this.programas = response.data;
+                console.log(response);
+
+            })
+            .catch(e=>console.log(e));
+    },
 
     guardarFacultad() {
 
