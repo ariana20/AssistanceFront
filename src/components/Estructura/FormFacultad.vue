@@ -34,7 +34,8 @@
           <tr v-for="(item,index) in facultadesFiltradas" :key="index">
             <th scope="row">{{index+1}}</th>
             <td v-if="item!=undefined">{{item.nombre}}</td>
-            <td v-if="coordinadores[index]!=undefined">{{coordinadores[index].nombre}}</td>
+            <td v-if="coordinadores[index]!=undefined && coordinadores[index][0]!=undefined">{{coordinadores[index][0].nombre+" "+coordinadores[index][0].apellidos}}</td>
+            <td v-else-if="coordinadores[index]!=undefined" >{{coordinadores[index].nombre}}</td>
             <td>{{item.correo}}</td>
             <td style="text-align: center">{{item.cantidad-1}}</td>
             <td style="text-align: center">
