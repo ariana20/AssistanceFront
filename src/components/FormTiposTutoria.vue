@@ -36,12 +36,12 @@
           <td >
           </td>
           </tr>
-          <div class="row col-sm-4 " > <input type="radio" value="One" v-model="picked">      <h5 for="one">Individual</h5>         
-                                       <input type="radio" style="margin-left:70px"  value="Two" v-model="picked">      <h5 for="two">Grupal</h5></div>
+          <div class="row col-sm-4 " > <input type="radio"  v-model="individual">      <h5>Individual</h5>         
+                                       <input type="radio" style="margin-left:70px"   v-model="picked">      <h5>Grupal</h5></div>
           <br>
           <div class="row col-sm-4 " > 
-          <input type="radio"  value="One" v-model="picked">      <h5 for="one">Obligatoria</h5>         
-          <input type="radio" style="margin-left:70px"  value="Two" v-model="picked">       <h5 for="two">Opcional</h5> </div>
+          <input type="radio"  v-model="picked">      <h5>Obligatoria</h5>         
+          <input type="radio" style="margin-left:70px"  v-model="picked">       <h5>Opcional</h5> </div>
 
           
         </td>        
