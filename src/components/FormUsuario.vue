@@ -4,6 +4,8 @@
     <div class="row top-titulo">
       <div class="row col-sm-4 tutoria-title" style="margin:20px">Código: 
         <input placeholder="Ingrese el código del usuario" class="col-sm-10 form-control" type="text" v-model="codigo">  </div>
+      <div class="row col-sm-4 tutoria-title" style="margin:20px">Nombre: 
+        <input placeholder="Ingrese el código del usuario" class="col-sm-10 form-control" type="text" v-model="nombre">  </div>
       
       <!-- <h5 class="col-sm-4 tutoria-title">Tipo de usuario: </h5>
       <select class="col-sm-4 form-control"  style="left:40px;top:0px;" 
@@ -24,10 +26,6 @@
       <table>
       <tbody  >
         <td style="width:1662px">
-          <tr style="text-align:left"></tr>
-          <tr style="text-align:left" ><td>Codigo:</td>  <td > <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="codigo"></td> 
-          </tr>
-          <tr style="text-align:left"><td>Nombre:</td>   <td> <input id="nombre"  style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="nombre"></td></tr>
            <tr style="text-align:left"><td>Apellidos:</td>   <td> <input id="ap" style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="apellidos"></td></tr>
           
           <tr style="text-align:left"><td>Teléfono:</td>   
