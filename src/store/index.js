@@ -10,8 +10,8 @@ export default new Vuex.Store({
     programaActual:null, // Objeto Programa Actual (this.$store.state.programa)
     cantProg:null,
     tipoActual:null, // Objeto Tipo de Usuario Actual (this.$store.state.tipoActual)
-    facultades:null,
-    coordionadores:null,
+    facultades:null, 
+    coordinadores:null,
     permisos:null,
     roles:null, //Filtrar Tipos de Usuario
     rutas:[],
@@ -89,6 +89,20 @@ export default new Vuex.Store({
         return roles;
       }
       return state.roles;
+    },
+    filtrarFacultades(state){
+      if(state.filtro.query.length > 1){
+        let facultades = state.facultades.filter(facultad => facultad.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return facultades;
+      }
+      return state.facultades;
+    },
+    filtrarCoordinadores(state){
+      if(state.filtro.query.length > 1){
+        let coordinadores = state.coordinadores.filter(coordinador => coordinador.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return coordinadores;
+      }
+      return state.coordinadores;
     }
   }
 })
