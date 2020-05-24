@@ -1,37 +1,64 @@
 <template>
-	<div class="formUsuario container" style="margin-top:2em;">
-    <div class="row">
-      <div class="col-md-4 col-sm-4" style="text-align: left">
-        <div class="title-field">Codigo</div>
-        <div class="title-field">Nombre</div>
-        <div class="title-field">Apellidos</div>
-        <div class="title-field">Teléfono</div>
-        <div class="title-field">Correo</div>
-        <div class="title-field">Tipos de usuarios</div>
-        <div class="title-field"><input type="checkbox" class="form-check-input" height="20px" v-on:change="cambio($event)" checked>
-          <span style="display:inline-block;margin-left:40px;">ACTIVO</span>
-        </div>
+  <div class="FormUsuario container">
+    
+    <div class="row top-titulo">
+      <div class="row col-sm-4 tutoria-title" style="margin:20px">Código: 
+        <input placeholder="Ingrese el código del usuario" class="col-sm-10 form-control" type="text" v-model="codigo">  </div>
+      
+      <!-- <h5 class="col-sm-4 tutoria-title">Tipo de usuario: </h5>
+      <select class="col-sm-4 form-control"  style="left:40px;top:0px;" 
+        v-model="arrTUsuarios"  >
+               <option v-for="options in arrTUsuarios" 
+                       v-bind:key="options.id_tipo_usuario">
+                  {{ options.nombre }}
+                </option>
+      </select> -->
+      <div  class="botones">
+        
+            <button type="button" style="margin:20px" class="btn btn-info"  v-on:click="guardarUsuario()">Guardar</button>
+            <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>
       </div>
-      <div class="col-md-4 col-sm-6">
-        <input id="codigo" class="row form-control" type="text" v-model="codigo">
-        <input id="nombre" class="row form-control" type="text" v-model="nombre">
-        <input id="apellidos" class="row form-control" type="text" v-model="apellidos">
-        <input id="telefono" class="row form-control" type="number" v-model="telefono">
-        <input id="correo" class="row form-control" type="text" v-model="correo">
-        <select v-model="arrTUsuarios" class="row form-control">
-          <option v-for="options in arrTUsuarios" v-bind:key="options.id_tipo_usuario">
-            {{ options.nombre}}
-          </option>
-        </select>
-      </div>
-      <div class="col-md-4 col-sm-12" style="text-align:rigth">
-      <div>FOTO</div>
-      <img class="foto-side" src='http://es.web.img3.acsta.net/c_215_290/pictures/18/01/18/16/02/1109391.jpg' heigth="200px" width="200px" style="border-radius:4em"/>
+    </div>
+
+  <div>
+      <table>
+      <tbody  >
+        <td style="width:1662px">
+          <tr style="text-align:left"></tr>
+          <tr style="text-align:left" ><td>Codigo:</td>  <td > <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="codigo"></td> 
+          </tr>
+          <tr style="text-align:left"><td>Nombre:</td>   <td> <input id="nombre"  style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="nombre"></td></tr>
+          <!-- <tr style="text-align:left"><td>Apellido Paterno:</td>   <td> <input id="apP" style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="ap_paterno"></td></tr>
+          <tr style="text-align:left"><td>Apellido Materno:</td>   <td> <input id="apM"    style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="ap_materno"></td></tr> -->
+          <tr style="text-align:left"><td>Apellidos:</td>   <td> <input id="ap" style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="apellidos"></td></tr>
+          
+          <tr style="text-align:left"><td>Teléfono:</td>   
+          <td> <input  type="number"
+          style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" v-model="telefono"></td></tr>
+          <tr style="text-align:left"><td>Correo:</td>   <td> <input id="corr" style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="correo"></td></tr>
+        <!-- Combos box -->        
+        <tr style="text-align:left"><td>Tipos de usuarios:</td>   
+          <select style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" v-model="arrTUsuarios">
+            <option v-for="options in arrTUsuarios" v-bind:key="options.id_tipo_usuario">
+             {{ options.nombre}}
+             </option>
+          </select>
+        </tr>   
+         
+        <tr style="margin-left:100px">
+          <td></td>
+          <input type="checkbox" class="form-check-input" v-on:change="cambio($event)" checked>
+          Activo
+          </tr>    
+       </td> 
+      </tbody>
+            </table>
+            
+
     </div>
     </div>
-    <button class="btn btn-info" @click="guardarUsuario()">Guardar</button>
-			<button class="btn btn-secondary" @click="cancelarUsuario()">Cancelar</button> 
-	</div>
+  
+
 </template>
 
 <script>
@@ -243,22 +270,18 @@ export default {
     border: 2px solid #757575;
     text-align-last: right;
     margin-bottom:1.3em;
+}
+  body{
+    background-image: null;
+    background-color: #B2EBF2;
+  }
+  .form-control {
+    border-radius: 1.25rem;  
+    border: 2px solid #757575;
+    margin-bottom: 10px;
+    width: 100%;
+    
+}
 
-}
-.col-md-4{ 
-  overflow:hidden; 
-}
-.title-field {
-  padding: 6px 12px;
-  margin: 0px 15px;
-  display:flex;
-  margin-bottom:1em;
-}
-.btn {
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 10px;
-    margin: 5px;
-    font-size: 20px;
-}
+
 </style>

@@ -113,12 +113,23 @@ export default {
                 let imgIns = response.data.path
                 console.log(imgIns)
                 this.logo = imgIns;
-                Swal.fire({
-                  text:"Subida Exitosa",
-                  icon:"success",
-                  confirmButtonText: 'OK',
-                  confirmButtonColor:'#0097A7',
-                  showConfirmButton: true,
+                let params = {
+                  logo: this.logo,
+                  usuario_actualizacion : this.$store.state.usuario,
+                }
+                axios.post('/institucion/modificar/'+this.id,params)
+                .then( response=>{
+                  console.log(response)
+                  Swal.fire({
+                    text:"Subida Exitosa",
+                    icon:"success",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  })
+                })
+                .catch(e => {
+                  console.log(e.response);
                 })
               })
               .catch(e => {
@@ -168,7 +179,7 @@ export default {
                 siglas: this.siglas,
                 direccion: this.direccion,
                 telefono: this.telefono,
-                logo: this.logo,
+                usuario_actualizacion : this.$store.state.usuario.id_usuario,
               };
 
               axios.post('/institucion/modificar/'+this.id,params)
