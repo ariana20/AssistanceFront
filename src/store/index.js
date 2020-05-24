@@ -5,15 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    usuario:null,
+    usuario:null, // Objeto Usuario Actual (this.$store.state.usuario)
     programas:null,
-    programaActual:null,
+    programaActual:null, // Objeto Programa Actual (this.$store.state.programa)
     cantProg:null,
-    tipoActual:null,
+    tipoActual:null, // Objeto Tipo de Usuario Actual (this.$store.state.tipoActual)
     facultades:null,
     coordionadores:null,
     permisos:null,
-    roles:null,
+    roles:null, //Filtrar Tipos de Usuario
     rutas:[],
     navLinks: [
       {
@@ -62,13 +62,13 @@ export default new Vuex.Store({
       icon: 'ion-ios-school'
     },
     ],
-    programasFilter:{
+    filtro:{
       query: '',
     }
   },
   mutations: {
     SET_QUERY (state,query){
-      state.programasFilter.query = query;
+      state.filtro.query = query;
     },
   },
   actions: {
@@ -77,11 +77,18 @@ export default new Vuex.Store({
   },
   getters:{
     filtrarProgramas(state){
-      if(state.programasFilter.query.length > 2){
-        let programas = state.programas.filter(programa => programa.nombre.toLowerCase().includes(state.programasFilter.query.toLowerCase()))
+      if(state.filtro.query.length > 1){
+        let programas = state.programas.filter(programa => programa.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return programas;
       }
       return state.programas;
+    },
+    filtrarRoles(state){
+      if(state.filtro.query.length > 1){
+        let roles = state.roles.filter(rol => rol.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return roles;
+      }
+      return state.roles;
     }
   }
 })

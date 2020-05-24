@@ -3,10 +3,16 @@
     <div class="container" style="left:60px;text-align: left">
       <table style="margin-bottom:20px">
       <tbody>
-        <td style="width:662px">
+        <td style="width:100%">
           <tr style="text-align:left"></tr>
           <tr style="text-align:left">
-            <td> <b-button v-on:click="nuevo()" style="margin-left:860px;background: #0097A7">Añadir</b-button></td>
+            <td style="width:400px">
+              <div class="row" style="width:350px">
+                <a class="font-weight-ligth text-left" style="font-size:25px">Buscar: </a>
+                <input class="borde-textbox" style="margin-left:30px;padding:8px" type="text" v-model="nombre">
+              </div>
+            </td>
+            <td> <b-button v-on:click="nuevo()" style="margin-left:580%;background: #0097A7">Añadir</b-button></td>
           </tr>
         </td>
       </tbody>
@@ -19,7 +25,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in $store.state.roles" :key="index">
+          <tr v-for="(item, index) in rolesFiltrados" :key="index">
             <td>{{item.nombre}}</td>
             <td  style="text-align: center"><button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil"/></button>
             <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill"/></button></td>
@@ -39,24 +45,24 @@ import Swal from 'sweetalert2'
 export default {
   data(){
     return{
-      programas:[]
+      roles:[]
     }
   },
-  created(){
-    if(this.$store.state.programas === null) this.listarRoles();
-    else this.programas = this.$store.state.programas;
+  mounted(){
+    if(this.$store.state.roles === null) this.listarRoles();
+    else this.roles = this.$store.state.roles;
   },
   computed:{
         nombre:{
-            get(){
-                return this.$store.state.programasFilter.query;
-            },
-            set(val){
-                this.$store.commit('SET_QUERY',val);
-            }
+          get(){
+              return this.$store.state.filtro.query;
+          },
+          set(val){
+              this.$store.commit('SET_QUERY',val);
+          }
         },
         ...mapGetters({
-            programasFiltrados: 'filtrarProgramas'
+          rolesFiltrados: 'filtrarRoles'
         })
   },
   methods:{
