@@ -56,7 +56,7 @@
                 </div>
                 <div class="forms_field">
                   <select style="border-radius: 15px;border: 2px solid #757575;width:100%;padding: 12px 20px;" v-model="programaEl">
-                    <option v-for="options in programasT" v-bind:key="options.id_programa">
+                    <option v-for="options in programasT" v-bind:key="options.id_programa" :value="options">
                       {{ options.nombre}}
                     </option>
                   </select>
@@ -306,16 +306,16 @@ import Swal from 'sweetalert2'
                 */
                 let output = JSON.stringify(profile, undefined, 4);
                 _this.profileRes = output;
-                let parametros = {
-                  password: "dummy123",
-                  correo: profile.email,
-                  imagen: profile.picture,
+                let obj = {
+                  password : 'dummy123',
+                  correo:profile.email,
+                  imagen:profile.picture,
                   nombre: profile.given_name,
                   apellidos: profile.family_name,
                   institucion: profile.hd,
-                  programa: this.programaEl
+                  programa: _this.programaEl,
                 }
-                axios.post('/googleregister', parametros,)
+                axios.post('/googleregister', obj,)
                   .then(response=>{
                     if(response.data.status=='success') {
                       _this.$store.state.usuario = response.data.user;
@@ -330,7 +330,7 @@ import Swal from 'sweetalert2'
                         confirmButtonColor:'#0097A7',
                         showConfirmButton: true,
                       })
-                      this.$router.push('/userNuevo')
+                      _this.$router.push('/userNuevo')
                     }
                   }).catch( e=>console.log(e));
               });

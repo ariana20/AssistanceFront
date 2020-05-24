@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
@@ -55,19 +54,6 @@ export default {
   created(){
     if(this.idRol) this.listarPermisosActuales();
     if(this.$store.state.permisos === null) this.listarPermisos();
-  },
-  computed:{
-        nombre:{
-            get(){
-                return this.$store.state.programasFilter.query;
-            },
-            set(val){
-                this.$store.commit('SET_QUERY',val);
-            }
-        },
-        ...mapGetters({
-            programasFiltrados: 'filtrarProgramas'
-        })
   },
   methods:{
     
@@ -124,7 +110,7 @@ export default {
           }).then((result) => {
             if (result.value) {
               if(this.idRol=== null || this.idRol === undefined) this.nombreRol = this.nombre;
-              axios.post('tipoUsuarios/modPermisos',{nombre: this.nombreRol, cambios: this.cambios})
+              axios.post('tipoUsuarios/modPermisos',{nombre: this.nombreRol, cambios: this.cambios,usuario_actualizacion: this.$store.state.usuario.id_usuario})
                   .then(response=>{
                     console.log(response)
                     Swal.fire({

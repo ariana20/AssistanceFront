@@ -32,12 +32,17 @@
           <!-- <tr>
             <li v-for="item in tipotutoria.condiciones " v-bind:key="item.value" >{{ item }}</li>
           </tr> -->
-          <tr> <br>
+          <tr> 
           <td >
           </td>
           </tr>
-          <!-- <input type="checkbox"   id="checkeestado">
-          <label for="checkbox"> Activo</label> -->
+          <div class="row col-sm-4 " > <input type="radio" value="One" v-model="picked">      <h5 for="one">Individual</h5>         
+                                       <input type="radio" style="margin-left:70px"  value="Two" v-model="picked">      <h5 for="two">Grupal</h5></div>
+          <br>
+          <div class="row col-sm-4 " > 
+          <input type="radio"  value="One" v-model="picked">      <h5 for="one">Obligatoria</h5>         
+          <input type="radio" style="margin-left:70px"  value="Two" v-model="picked">       <h5 for="two">Opcional</h5> </div>
+
           
         </td>        
       </tbody>
