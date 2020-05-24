@@ -5,14 +5,15 @@
       <div class="float-right">
         
         <router-link to="/crearFacultad">
-          <button type="button"  class="btn btn-outline-secondary">Añadir</button>
+          <button type="button"  class="btn btn-info">Añadir</button>
         </router-link>
       </div><br>
 
       <div class="form-group row">
-        <label for="inputNombre" class="col-sm-1 col-form-label">Buscar</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" v-model="nombre">
+        <div class="col-sm-3" style="text-align: left"><label for="inputNombre" class="col-sm-1 col-form-label">Nombre</label></div>
+        <div class="col-sm-6">
+          <!--input type="text" class="form-control" v-model="nombre"-->
+          <input id="nombre" class="row form-control" type="text" v-model="nombre">
         </div>
         <button type="button" class="btn btn-outline-secondary"><b-icon icon="search"></b-icon></button>
       </div>
@@ -96,3 +97,15 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+.form-control {
+    border-radius: 1rem;  
+    border: 2px solid #757575;
+    text-align-last: right;
+    margin-bottom:1.3em;
+
+}
+
+</style>

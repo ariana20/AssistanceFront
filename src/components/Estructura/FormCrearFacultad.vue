@@ -40,15 +40,13 @@
             <label>Coordinador de Facultad:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombre" ></b-form-input>
+            <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombCompleto" ></b-form-input>
             <b-form-input id="idCoordinadorF" readonly v-else></b-form-input>
             </b-col>
 
             <b-col sm="1">
             <b-col sm="1">
-            <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>
-              <strong>Facultad</strong>
-            
+            <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>            
             </b-col>
             </b-col>
         </b-row>
@@ -91,13 +89,12 @@
             <label>Coordinador de Programa:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinador" readonly v-if="programa.coordinador!=null" v-model="programa.coordinador.nombre" ></b-form-input>
+            <b-form-input id="idCoordinador" readonly v-if="programa.coordinador!=null" v-model="programa.coordinador.nombCompleto" ></b-form-input>
             <b-form-input id="idCoordinador" readonly v-else></b-form-input>
             </b-col>
 
             <b-col sm="1">
             <modalJ v-on:childToParentProg="onChildClickProg"/>
-            <strong>Programa</strong>
             </b-col>
         </b-row>
         <br>
@@ -148,6 +145,7 @@ export default {
     return{
       facultad:{
           id_facultad:null,
+          id_programa:null,
           id_institucion:1,
           nombre:"",
           descripcion:null,
@@ -193,16 +191,31 @@ export default {
 
       }else{
 
-      axios.create({withCredentials: true })
+      axios.create()
         .post('/facultad/insertar',this.facultad)
           .then( response=>{
             this.facultad.id_facultad=response.data.id_facultad;
+            this.facultad.id_programa=response.data.id_programa;
             console.log(response)
 
+            const params = [{
+              id_usuario: this.facultad.coordinador.id_usuario,
+              id_programa: this.facultad.id_programa
+            }];
+            axios.create()
+              .post('/facultad/asignarCoordi',params)
+                .then( response=>{
+                  console.log(response)
+                })
+              .catch(e => {
+                console.log(e.response);
+              })
+
+            
             for(var i=0; i<this.programas.length; i++){
               this.programas[i].id_facultad=this.facultad.id_facultad;
             }
-            axios.create({withCredentials: true })
+            axios.create()
               .post('/programa/insertarVariosPro',this.programas)
                 .then( response=>{
                   console.log(response)
@@ -227,15 +240,29 @@ export default {
       console.log(this.programas);
     },
     onChildClickProg (value) {
-      this.coordinadorSeleccionado = value;
       this.programa.coordinador=value;
+      this.programa.coordinador.nombCompleto=value.nombre+" "+value.apellidos;
+
     },
     onChildClickFacu (value) {
-      this.coordinadorSeleccionado = value;
       this.facultad.coordinador=value;  
+      this.facultad.coordinador.nombCompleto=value.nombre+" "+value.apellidos;
+
     },
 
 
   }
 }
 </script>
+
+<style scoped>
+
+.form-control {
+    border-radius: 1rem;  
+    border: 2px solid #757575;
+    text-align-last: left;
+    margin-bottom:1.3em;
+
+}
+
+</style>
