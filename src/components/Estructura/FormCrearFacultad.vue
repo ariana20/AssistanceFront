@@ -105,7 +105,7 @@
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">Id</th>
+                <th scope="col">N°</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Correo</th>
                 <th scope="col">Coordinador</th>
@@ -114,11 +114,11 @@
             </thead>
             <tbody>
             <tr v-for="(item, index) in programas" :key="index">
-                <th scope="row">{{index+1}}</th>
-                <td>{{item.nombre}}</td>
-                <td>{{item.correo}}</td>
-                <td></td>
-                <td></td>
+                <th v-if="item!=''" scope="row">{{index}}</th>
+                <td v-if="item!=''">{{item.nombre}}</td>
+                <td v-if="item!=''">{{item.correo}}</td>
+                <td v-if="item!=''"></td>
+                <td v-if="item!=''"></td>
             </tr>
             </tbody>
         </table>
@@ -187,16 +187,20 @@ export default {
                 this.facultad.nombre = response.data.nombre;
                 this.facultad.correo = response.data.correo;
                 console.log(response);
+                const paramL = {
+                  id_facultad: this.facultad.id_facultad,
+                  nombre: this.facultad.nombre
+                };
+                axios.post('/facultad/listarProgramas', paramL)
+                    .then(response=>{
+                        this.programas = response.data;
+                        console.log(response);
+
+                    })
+                    .catch(e=>console.log(e));
             })
             .catch(e=>console.log(e));
 
-        axios.post('/facultad/listarProgramas')
-            .then(response=>{
-                this.programas = response.data;
-                console.log(response);
-
-            })
-            .catch(e=>console.log(e));
     },
 
     guardarFacultad() {
