@@ -5,11 +5,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    usuario:null,
+    usuario:null, // Objeto Usuario Actual (this.$store.state.usuario)
     programas:null,
-    programaActual:null,
+    programaActual:null, // Objeto Programa Actual (this.$store.state.programa)
     cantProg:null,
-    tipoActual:null,
+    tipoActual:null, // Objeto Tipo de Usuario Actual (this.$store.state.tipoActual)
     facultades:null,
     coordionadores:null,
     permisos:null,
