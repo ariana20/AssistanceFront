@@ -131,7 +131,7 @@ export default Vue.extend ({
             bordes:'borde-textbox',
             sel: null,
             alSeleccionado: null,
-            codigos:[{}],
+            codigos:[],
             campoCodigo: {value:'codigo'},    
             selectedTipoTutoria: '',
             tiposTutoria: [],
@@ -142,20 +142,24 @@ export default Vue.extend ({
             motivosBorrados:[],
             listAlumnosNom: [],
             listAlumnosCod: [],
+            listNombre: []
         }
     },
     mounted(){
-    axios.post('TipoTutoria/listarTodo/4')
+    axios.post('sesiones/alumnoProg/'+ this.$store.state.programaActual.id_programa + '/' + this.$store.state.tipoActual.id_tipo_usuario)
         .then( response => {
-            this.tiposTutoria = response.data;
+            for(var i in response.data){ 
+                this.codigos.push(response.data[i][0]);
+                //this.listNombre.push(response.data[i][0].nombre + " " + response.data[i][0].apellidos);
+                //console.log(this.listNombre);
+            }
         })
         .catch(e => {
-          console.log(e.response);
+            console.log(e.response);
         });
-    axios.post('usuarios/listarTodo')
+    axios.post('TipoTutoria/listarTodo/' + this.$store.state.programaActual.id_programa)
         .then( response => {
-            this.codigos = response.data;
-            this.nombre= response.data.nombre;
+            this.tiposTutoria = response.data;
         })
         .catch(e => {
           console.log(e.response);
@@ -163,7 +167,6 @@ export default Vue.extend ({
     axios.post('motivosConsulta/listarTodo')
         .then( response => {
             this.motivos = response.data;
-            console.log(response.data);
         })
         .catch(e => {
           console.log(e.response);
@@ -173,8 +176,11 @@ export default Vue.extend ({
         onCodigoChange: function () {
             var i;
             for(i in this.codigos)
-                if(this.sel==this.codigos[i].id_usuario)
-                    this.alSeleccionado = this.codigos[i].nombre;
+                if(this.sel==this.codigos[i].codigo){
+                    this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;
+                    break;                    
+                }
+                console.log(this.alSeleccionado);
         },
         addMotivos: function () {
             var i;
@@ -193,10 +199,13 @@ export default Vue.extend ({
             this.listMotivos.splice(index,1);
         },
         addAlumno: function () {
-            this.listAlumnosNom.push(this.alSeleccionado);
-            this.listAlumnosCod.push(this.sel);
-            this.alSeleccionado='';
-            this.sel='';
+            if(this.alSeleccionado!=null){ 
+                this.listAlumnosNom.push(this.alSeleccionado);
+                this.listAlumnosCod.push(this.sel);
+                this.alSeleccionado='';
+                this.sel= null;
+            }
+            
         }
     }
 })
