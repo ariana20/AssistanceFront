@@ -12,8 +12,6 @@
           <!-- <tr style="text-align:left"><td>Buscar</td>   <td> <input type="text" v-model="busqnombre"></td> -->
           
           <!-- <td >  -->
-           
-          
           <!-- </td> -->
           <!-- </tr> -->
         </td>
