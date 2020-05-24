@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
@@ -55,19 +54,6 @@ export default {
   created(){
     if(this.idRol) this.listarPermisosActuales();
     if(this.$store.state.permisos === null) this.listarPermisos();
-  },
-  computed:{
-        nombre:{
-            get(){
-                return this.$store.state.programasFilter.query;
-            },
-            set(val){
-                this.$store.commit('SET_QUERY',val);
-            }
-        },
-        ...mapGetters({
-            programasFiltrados: 'filtrarProgramas'
-        })
   },
   methods:{
     
