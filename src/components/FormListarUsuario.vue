@@ -32,8 +32,8 @@
         <tbody>
           <tr v-for="(item, index) in usuariosFiltrados"  :key="index">
             <th scope="row">{{index+1}}</th>
-            <td>{{item.nombre}}</td>
-            <td>{{item.correo}}</td>   
+            <td>{{item.usuario.nombre}}</td>
+            <td>{{item.usuario.correo}}</td>   
             <!-- va a cambiar, me daran nombre -->
             <!-- <div  v-for="e in TodosarrayTU" :key="e.id">
               <td style="width:645px" v-if="e.id_tipo_usuario == item.pivot.id_tipo_usuario">
@@ -56,7 +56,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Axios from 'axios'
+import axios from 'axios'
 import Swal from 'sweetalert2'
 export default {
   data(){
@@ -96,7 +96,7 @@ export default {
     //1 es el id tipo usuario de admin
     //2 es el id de usuairo admin
      listarTUsuarios() {
-      Axios.post('/tipoUsuarios/listarTodo')
+      axios.post('/tipoUsuarios/listarTodo')
         .then(res =>{
           // Ordenadito
           let par=res.data;
@@ -111,10 +111,10 @@ export default {
     listarUsuarios() {
     
      if(this.$store.state.tipoActual.nombre!="Admin"){
-        Axios.post('/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa) //Por ahora dsp será x program
+        axios.post('/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa) //Por ahora dsp será x program
         .then(res =>{
           console.log(res.data);          
-          this.usuarios=res.data;
+          this.$store.state.usuarios=res.data;
                    
         })
         .catch(e => {
@@ -123,10 +123,10 @@ export default {
      }
      else{
        //esa admin le debe de listar todos los usuarios
-       Axios.post('/usuarios/listarTodo') //Por ahora dsp será x program
+       axios.post('/usuarios/listarTodo') //Por ahora dsp será x program
         .then(res =>{
-                 
-          this.usuarios=res.data;
+                        
+          this.$store.state.usuarios=res.data;
           console.log('Usuarios[0].usuario ',this.usuarios[0].usuario);   
                    
         })
@@ -161,7 +161,7 @@ export default {
               )
               //aqui iriía el eliminar
               //ESte eliminar no debería estar.Debería ser un eliminar del programa
-              Axios.create({withCredentials: true }).post('/usuarios/eliUsuarioPrograma/'+id)
+              axios.post('/usuarios/eliUsuarioPrograma/'+id)
               .then(res =>{
               // Ordenadito
                     console.log(res);

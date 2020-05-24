@@ -5,7 +5,7 @@
             
       <b-collapse id="nav-collapse" is-nav>
               <select 
-               v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.cantProg.length!=0"
+               v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.cantProg !== null && this.$store.state.cantProg.length!=0"
                class="col-sm-2 form-control"
                style="left:250px;top:5px"
                v-model="selectedPrograma"

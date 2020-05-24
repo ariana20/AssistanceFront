@@ -40,15 +40,13 @@
             <label>Coordinador de Facultad:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombre" ></b-form-input>
+            <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombCompleto" ></b-form-input>
             <b-form-input id="idCoordinadorF" readonly v-else></b-form-input>
             </b-col>
 
             <b-col sm="1">
             <b-col sm="1">
-            <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>
-              <strong>Facultad</strong>
-            
+            <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>            
             </b-col>
             </b-col>
         </b-row>
@@ -91,13 +89,12 @@
             <label>Coordinador de Programa:</label>
             </b-col>
             <b-col sm="8">
-            <b-form-input id="idCoordinador" readonly v-if="programa.coordinador!=null" v-model="programa.coordinador.nombre" ></b-form-input>
+            <b-form-input id="idCoordinador" readonly v-if="programa.coordinador!=null" v-model="programa.coordinador.nombCompleto" ></b-form-input>
             <b-form-input id="idCoordinador" readonly v-else></b-form-input>
             </b-col>
 
             <b-col sm="1">
             <modalJ v-on:childToParentProg="onChildClickProg"/>
-            <strong>Programa</strong>
             </b-col>
         </b-row>
         <br>
@@ -108,7 +105,7 @@
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">Id</th>
+                <th scope="col">N°</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Correo</th>
                 <th scope="col">Coordinador</th>
@@ -117,11 +114,11 @@
             </thead>
             <tbody>
             <tr v-for="(item, index) in programas" :key="index">
-                <th scope="row">{{index+1}}</th>
-                <td>{{item.nombre}}</td>
-                <td>{{item.correo}}</td>
-                <td></td>
-                <td></td>
+                <th v-if="item!=''" scope="row">{{index}}</th>
+                <td v-if="item!=''">{{item.nombre}}</td>
+                <td v-if="item!=''">{{item.correo}}</td>
+                <td v-if="item!=''"></td>
+                <td v-if="item!=''"></td>
             </tr>
             </tbody>
         </table>
@@ -141,13 +138,15 @@ Vue.use(MultiSelectPlugin);
 import Swal from 'sweetalert2'
 
 export default {
-  props: {
-      idFacultad: String,
-  },
+  //props: {
+  //    idFacultad: String,
+  //},
   data(){
     return{
+      idFacultad: (this.$route.path).substring(15,17),
       facultad:{
           id_facultad:null,
+          id_programa:null,
           id_institucion:1,
           nombre:"",
           descripcion:null,
@@ -173,12 +172,36 @@ export default {
     modalJ,
     modalJ2
   },
-  created(){
-
-    
+  mounted(){
+    if(this.idFacultad) this.obtenerDatos();
+    console.log(this.idFacultad);
   },
 
   methods:{
+
+    obtenerDatos() {
+        axios.post('/facultad/listar/'+this.idFacultad)
+            .then(response=>{
+                this.facultad.id_facultad = response.data.id_facultad;
+                this.facultad.id_programa = response.data.id_programa;
+                this.facultad.nombre = response.data.nombre;
+                this.facultad.correo = response.data.correo;
+                console.log(response);
+                const paramL = {
+                  id_facultad: this.facultad.id_facultad,
+                  nombre: this.facultad.nombre
+                };
+                axios.post('/facultad/listarProgramas', paramL)
+                    .then(response=>{
+                        this.programas = response.data;
+                        console.log(response);
+
+                    })
+                    .catch(e=>console.log(e));
+            })
+            .catch(e=>console.log(e));
+
+    },
 
     guardarFacultad() {
 
@@ -193,16 +216,31 @@ export default {
 
       }else{
 
-      axios.create({withCredentials: true })
+      axios.create()
         .post('/facultad/insertar',this.facultad)
           .then( response=>{
             this.facultad.id_facultad=response.data.id_facultad;
+            this.facultad.id_programa=response.data.id_programa;
             console.log(response)
 
+            const params = [{
+              id_usuario: this.facultad.coordinador.id_usuario,
+              id_programa: this.facultad.id_programa
+            }];
+            axios.create()
+              .post('/facultad/asignarCoordi',params)
+                .then( response=>{
+                  console.log(response)
+                })
+              .catch(e => {
+                console.log(e.response);
+              })
+
+            
             for(var i=0; i<this.programas.length; i++){
               this.programas[i].id_facultad=this.facultad.id_facultad;
             }
-            axios.create({withCredentials: true })
+            axios.create()
               .post('/programa/insertarVariosPro',this.programas)
                 .then( response=>{
                   console.log(response)
@@ -227,15 +265,29 @@ export default {
       console.log(this.programas);
     },
     onChildClickProg (value) {
-      this.coordinadorSeleccionado = value;
       this.programa.coordinador=value;
+      this.programa.coordinador.nombCompleto=value.nombre+" "+value.apellidos;
+
     },
     onChildClickFacu (value) {
-      this.coordinadorSeleccionado = value;
       this.facultad.coordinador=value;  
+      this.facultad.coordinador.nombCompleto=value.nombre+" "+value.apellidos;
+
     },
 
 
   }
 }
 </script>
+
+<style scoped>
+
+.form-control {
+    border-radius: 1rem;  
+    border: 2px solid #757575;
+    text-align-last: left;
+    margin-bottom:1.3em;
+
+}
+
+</style>
