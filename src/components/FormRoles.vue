@@ -98,15 +98,16 @@ export default {
                     return element.id_tipo_usuario === item.id_tipo_usuario;
                   })
                 this.$store.state.roles.splice(index, 1);
+                Swal.fire({
+                  text:"Eliminación Exitosa",
+                  icon:"success",
+                  confirmButtonText: 'OK',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+                })
               })
               .catch(e=>console.log(e));
-            Swal.fire({
-              text:"Eliminación Exitosa",
-              icon:"success",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
-            })
+
           }
         })
       
