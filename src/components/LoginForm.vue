@@ -56,6 +56,7 @@
                 </div>
                 <div class="forms_field">
                   <select style="border-radius: 15px;border: 2px solid #757575;width:100%;padding: 12px 20px;" v-model="programaEl">
+                    <option selected disabled :value="null">Elige un Programa</option>
                     <option v-for="options in programasT" v-bind:key="options.id_programa" :value="options">
                       {{ options.nombre}}
                     </option>

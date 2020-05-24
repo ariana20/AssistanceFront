@@ -123,7 +123,7 @@ export default new Vuex.Store({
 
     },
     filtrarUsuariosAdmin(state){
-      if(state.filtro.query.length > 1){
+      if(state.filtro.query.length > 0){
         let usuariosA = state.usuarios.filter(usu => usu.usuario.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return usuariosA;
       }
