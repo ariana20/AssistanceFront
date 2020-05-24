@@ -28,9 +28,7 @@
           <tr style="text-align:left" ><td>Codigo:</td>  <td > <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="codigo"></td> 
           </tr>
           <tr style="text-align:left"><td>Nombre:</td>   <td> <input id="nombre"  style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="nombre"></td></tr>
-          <!-- <tr style="text-align:left"><td>Apellido Paterno:</td>   <td> <input id="apP" style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="ap_paterno"></td></tr>
-          <tr style="text-align:left"><td>Apellido Materno:</td>   <td> <input id="apM"    style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="ap_materno"></td></tr> -->
-          <tr style="text-align:left"><td>Apellidos:</td>   <td> <input id="ap" style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="apellidos"></td></tr>
+           <tr style="text-align:left"><td>Apellidos:</td>   <td> <input id="ap" style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="apellidos"></td></tr>
           
           <tr style="text-align:left"><td>Teléfono:</td>   
           <td> <input  type="number"
@@ -71,7 +69,7 @@ export default {
  
     return{
       id_usuario:null,
-      codigo:"",
+      codigo:"20152354",
       nombre:"",
       // ap_paterno:"",
       // ap_materno:"",
@@ -87,10 +85,11 @@ export default {
   },
   created(){
     
-    this.listarTUsuarios();
+    
   
   },
   mounted(){
+    this.listarTUsuarios();
     if(this.id_usuario_entrante!=0){
       console.log('Id usuario entrante: ');
       

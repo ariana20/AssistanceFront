@@ -22,7 +22,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in $store.state.roles" :key="index">
+          <tr v-for="(item, index) in $store.state.tipostutoria" :key="index">
             <td>{{item.nombre}}</td>
             <td  style="text-align: center"><button v-on:click="Editar(item.id_tipo_tutoria)" class="btn link"><b-icon icon="pencil"/></button>
             <button v-on:click="eliminarTtutoria(item.id_tipo_tutoria)" class="btn link"><b-icon icon="dash-circle-fill"/></button></td>
@@ -36,40 +36,29 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+//import { mapGetters } from 'vuex'
 import Axios from 'axios'
 import Swal from 'sweetalert2'
 export default {
   data(){
     return{
-      programas:[] //
+      tipostutorias:[], //
+      miprog:this.$store.state.programaActual,
     }
   },
   created(){
-    if(this.$store.state.programas === null) this.listarRoles(); //
-    else this.programas = this.$store.state.programas; //
+    if(this.$store.state.tipostutorias === null) this.listarTT(); //
+    else this.tipostutorias = this.$store.state.tipostutorias; //
   },
-  computed:{
-        nombre:{
-            get(){
-                return this.$store.state.programasFilter.query; //
-            },
-            set(val){
-                this.$store.commit('SET_QUERY',val);
-            }
-        },
-        ...mapGetters({
-            programasFiltrados: 'filtrarProgramas' //
-        })
-  },
+
   methods:{
     
-    listarRoles() {
+    listarTT() {
     //   this.axios.post('/TipoTutoria/listarTodo/'+this.programas.id) //
-      Axios.post('/TipoTutoria/listarTodo/4')
+      Axios.post('/TipoTutoria/listarTodo/')
         .then(response=>{
-            this.$store.state.roles = response.data; //
-            console.log(this.$store.state.roles)
+            this.$store.state.tipostutorias = response.data; //
+            console.log(this.$store.state.tipostutorias)
         })
         .catch(e=>console.log(e));
     },

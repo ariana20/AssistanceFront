@@ -9,11 +9,11 @@
       <tbody>
         <td style="width:662px">
           <tr style="text-align:left"></tr>
-          <!-- <tr style="text-align:left"><td>Buscar</td>   <td> <input type="text" v-model="busqnombre"></td> -->
+          <tr style="text-align:left"><td>Buscar</td>   <td> <input type="text" v-model="busqnombre"></td>
           
           <!-- <td >  -->
           <!-- </td> -->
-          <!-- </tr> -->
+          </tr>
         </td>
       </tbody>
       </table>
@@ -22,7 +22,7 @@
           <tr>
             <th scope="col">N°</th>
             <th scope="col">Nombre</th>
-            <th scope="col">Coreo</th>
+            <th scope="col">Correo</th>
             <th scope="col">Tipo de Usuario</th>
             <th scope="col">Modif/Elim</th>
           </tr>
@@ -64,16 +64,21 @@ export default {
       TodosarrayTU:[],
       tipoXUsuario:[],
       miUsuario:this.$store.state.usuario, //Para sacar el id del programa
+
       
     }
   },
   created(){
-  console.log(this.miUsuario); //no funciona hasta que tenga el login
+   
+      // if(this.miUsuario.id_usuario ==5)
     
+    
+
+  },
+  mounted(){
+     console.log(this.$store.state.tipoActual.nombre); //no funciona hasta que tenga el login    
     this.listarTUsuarios();
     this.listarUsuarios();
-
-    
   },
   methods:{
     //4 es el id del programa de admin
@@ -93,10 +98,9 @@ export default {
         })
     },
     listarUsuarios() {
-      //Proximameeente
-      //var mi_id_prog=this.miUsuario.id_usuario; //con pivot?
-      //post('/programa/usuarioPrograma/'+mi_id_prog)
-      Axios.post('/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa) //Por ahora dsp será x program
+    
+     if(this.$store.state.tipoActual.nombre!="Admin"){
+        Axios.post('/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa) //Por ahora dsp será x program
         .then(res =>{
           console.log(res.data);          
           this.usuarios=res.data;
@@ -105,6 +109,22 @@ export default {
         .catch(e => {
           console.log(e.response);
         })
+     }
+     else{
+       //esa admin le debe de listar todos los usuarios
+       Axios.post('/usuarios/listarTodo') //Por ahora dsp será x program
+        .then(res =>{
+          console.log(res.data);          
+          this.usuarios=res.data;
+                   
+        })
+        .catch(e => {
+          console.log(e.response);
+          //DEBE DE HABER UNMENSAJITO AQUI
+        })
+     }
+      
+       
     },
     eliminarUsuario(id){
       Swal.fire({
