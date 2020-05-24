@@ -1,16 +1,25 @@
 <template>
   <div class="FormRoles" style="margin-top:20px">
     <div class="container" style="left:60px;text-align: left">
+        <tr style="text-align:left"></tr>
+          <tr style="text-align:left"><td>Buscar</td>   <td> <input type="text" v-model="nombre"></td>
+          
+        
+             <div style="text-align:right" >
+                <router-link to="tiposdeTutoria/0"> 
+                  <button  type="button" class="btn btn-info">Añadir</button>
+                </router-link></div>    
+  </tr>
       <table style="margin-bottom:20px">
       <tbody>
         <td style="width:662px">
           <tr style="text-align:left"></tr>
-          <tr style="text-align:left">
-            <div style="text-align:right">
-            <router-link to="tiposdeTutoria/0"> 
-                  <button  type="button" class="btn btn-info">Añadir</button>
-                </router-link></div>  
-          </tr>
+          
+          
+        
+          <!-- <td >  -->
+          <!-- </td> -->
+        
         </td>
       </tbody>
       </table>
@@ -22,10 +31,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in $store.state.tipostutoria" :key="index">
-            <td>{{item.nombre}}</td>
-            <td  style="text-align: center"><button v-on:click="Editar(item.id_tipo_tutoria)" class="btn link"><b-icon icon="pencil"/></button>
-            <button v-on:click="eliminarTtutoria(item.id_tipo_tutoria)" class="btn link"><b-icon icon="dash-circle-fill"/></button></td>
+          <tr v-for="(item, index) in tipostutoriasFiltrados" :key="index">
+            <td>{{item.nombre}}</td>             
+            <td  style="text-align: center">
+                 <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}"> 
+                <button  class="btn link">         
+                <b-icon icon="pencil"/></button>
+                       </router-link>  
+                <button v-on:click="eliminarTtutoria(item.id_tipo_tutoria)" class="btn link"><b-icon icon="dash-circle-fill"/>
+                </button>
+            </td>
+          
           </tr>
         </tbody>
       </table>
@@ -36,7 +52,7 @@
 </template>
 
 <script>
-//import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import Axios from 'axios'
 import Swal from 'sweetalert2'
 export default {
@@ -44,18 +60,32 @@ export default {
     return{
       tipostutorias:[], //
       miprog:this.$store.state.programaActual,
+    
     }
   },
-  created(){
+  mounted(){
+    console.log(this.$store.state.programaActual);
     if(this.$store.state.tipostutorias === null) this.listarTT(); //
     else this.tipostutorias = this.$store.state.tipostutorias; //
   },
-
+computed:{
+        nombre:{
+          get(){
+              return this.$store.state.filtro.query;
+          },
+          set(val){
+              this.$store.commit('SET_QUERY',val);
+          }
+        },
+        ...mapGetters({
+          tipostutoriasFiltrados: 'filtrarTipoTutorias'
+        })
+  },
   methods:{
     
     listarTT() {
     //   this.axios.post('/TipoTutoria/listarTodo/'+this.programas.id) //
-      Axios.post('/TipoTutoria/listarTodo/')
+      Axios.post('/TipoTutoria/listarTodo/'+ this.miprog.id_programa)
         .then(response=>{
             this.$store.state.tipostutorias = response.data; //
             console.log(this.$store.state.tipostutorias)
@@ -92,11 +122,11 @@ export default {
               Axios.post('/TipoTutoria/eliminar/'+id)
                 .then(response=>{
                   console.log(response);
-                  let index = this.$store.state.roles.indexOf( //
+                  let index = this.$store.state.tipostutorias.indexOf( //
                     function(element){
                       return element.id_tipo_tutoria === id; //
                     })
-                  this.$store.state.roles.splice(index, 1); //
+                  this.$store.state.tipostutorias.splice(index, 1); //
                 })
                 .catch(e=>console.log(e));
 

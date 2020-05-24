@@ -2,19 +2,21 @@
   <div class="FormListarUsuario">
     <div class="container">
        <div style="text-align:right" >
+          <tr style="text-align:left"><td>Buscar</td>   <td> <input type="text" v-model="nombre"></td>
+          
                 <router-link to="/Usuario/0"> 
                   <button  type="button" class="btn btn-info">Añadir</button>
-                </router-link></div>      
+                </router-link>
+                  </tr>  
+                   </div>   
+
+              
       <table>
       <tbody>
-        <td style="width:662px">
-          <tr style="text-align:left"></tr>
-          <tr style="text-align:left"><td>Buscar</td>   <td> <input type="text" v-model="busqnombre"></td>
-          
+        
           <!-- <td >  -->
           <!-- </td> -->
-          </tr>
-        </td>
+         
       </tbody>
       </table>
       <table class="table" >
@@ -28,15 +30,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in usuarios"  :key="index">
+          <tr v-for="(item, index) in usuariosFiltrados"  :key="index">
             <th scope="row">{{index+1}}</th>
-            <td>{{item.nombre}}</td>
-            <td>{{item.correo}}</td>   
-            <div  v-for="e in TodosarrayTU" :key="e.id">
+            <td>{{item.usuario.nombre}}</td>
+            <td>{{item.usuario.correo}}</td>   
+            <!-- va a cambiar, me daran nombre -->
+            <!-- <div  v-for="e in TodosarrayTU" :key="e.id">
               <td style="width:645px" v-if="e.id_tipo_usuario == item.pivot.id_tipo_usuario">
-                    <span >{{e.nombre}}</span>
+                    <span >{{e.nombre}}</span>  
               </td>
-            </div>
+            </div> -->
             <td style="text-align: center">
                <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
               <button class="btn link"><b-icon icon="pencil"></b-icon></button>
@@ -52,12 +55,13 @@
 </template>
 
 <script>
-import Axios from 'axios'
+import { mapGetters } from 'vuex'
+import axios from 'axios'
 import Swal from 'sweetalert2'
 export default {
   data(){
     return{
-      busqnombre:null,
+      
       usuarios:[],
       //id_tipoXUsuario:[],
       cantU:null,
@@ -68,24 +72,31 @@ export default {
       
     }
   },
-  created(){
-   
-      // if(this.miUsuario.id_usuario ==5)
-    
-    
-
+ 
+  computed:{
+        nombre:{
+          get(){
+              return this.$store.state.filtro.query;
+          },
+          set(val){
+              this.$store.commit('SET_QUERY',val);
+          }
+        },
+        ...mapGetters({
+          usuariosFiltrados: 'filtrarUsuariosAdmin'
+        })
   },
   mounted(){
-     console.log(this.$store.state.tipoActual.nombre); //no funciona hasta que tenga el login    
-    this.listarTUsuarios();
-    this.listarUsuarios();
+    console.log('Store state usuariosA',this.$store.state.usuariosA);
+     if(this.$store.state.usuariosA === null) {     this.listarUsuarios(); } //}
+    else this.usuarios = this.$store.state.usuariosA; //
   },
   methods:{
     //4 es el id del programa de admin
     //1 es el id tipo usuario de admin
     //2 es el id de usuairo admin
      listarTUsuarios() {
-      Axios.post('/tipoUsuarios/listarTodo')
+      axios.post('/tipoUsuarios/listarTodo')
         .then(res =>{
           // Ordenadito
           let par=res.data;
@@ -100,10 +111,10 @@ export default {
     listarUsuarios() {
     
      if(this.$store.state.tipoActual.nombre!="Admin"){
-        Axios.post('/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa) //Por ahora dsp será x program
+        axios.post('/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa) //Por ahora dsp será x program
         .then(res =>{
           console.log(res.data);          
-          this.usuarios=res.data;
+          this.$store.state.usuarios=res.data;
                    
         })
         .catch(e => {
@@ -112,10 +123,11 @@ export default {
      }
      else{
        //esa admin le debe de listar todos los usuarios
-       Axios.post('/usuarios/listarTodo') //Por ahora dsp será x program
+       axios.post('/usuarios/listarTodo') //Por ahora dsp será x program
         .then(res =>{
-          console.log(res.data);          
-          this.usuarios=res.data;
+                        
+          this.$store.state.usuarios=res.data;
+          console.log('Usuarios[0].usuario ',this.usuarios[0].usuario);   
                    
         })
         .catch(e => {
@@ -149,7 +161,7 @@ export default {
               )
               //aqui iriía el eliminar
               //ESte eliminar no debería estar.Debería ser un eliminar del programa
-              Axios.create({withCredentials: true }).post('/usuarios/eliUsuarioPrograma/'+id)
+              axios.post('/usuarios/eliUsuarioPrograma/'+id)
               .then(res =>{
               // Ordenadito
                     console.log(res);
