@@ -10,7 +10,7 @@
                style="left:250px;top:5px"
                v-model="selectedPrograma"
                @change="cambiarProg()">
-                <option selected disabled value="">Cambia de Programa</option>
+                <option selected disabled :value="null">Cambia de Programa</option>
                 <option 
                     v-for="(item, index) in $store.state.cantProg" 
                     :key="index" 
