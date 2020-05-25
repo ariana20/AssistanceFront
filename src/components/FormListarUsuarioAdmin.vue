@@ -11,14 +11,12 @@
                 </router-link>
                 </div>  
          
-
       <table class="table" >
         <thead>
           <tr>
             <th scope="col">N°</th>
             <th scope="col">Nombre</th>
             <th scope="col">Correo</th>
-            <th scope="col">Estado</th>
             <th scope="col">Tipo de Usuario</th>
             <th scope="col">Modif/Elim</th>
           </tr>
@@ -26,17 +24,16 @@
         <tbody>
           <tr v-for="(item, index) in usuariosFiltrados"  :key="index">
             <th scope="row">{{index+1}}</th>
-            <td>{{item.nombre}}</td>
-            <td>{{item.correo}}</td>  
-            <td>{{item.estado}}</td>    
+            <td>{{item.usuario.nombre}}</td>
+            <td>{{item.usuario.correo}}</td>   
             <!-- va a cambiar, me daran nombre -->
-            <div  v-for="e in TodosarrayTU" :key="e.id">
-              <td style="width:585px" v-if="e.id_tipo_usuario == item.pivot.id_tipo_usuario">
+            <!-- <div  v-for="e in TodosarrayTU" :key="e.id">
+              <td style="width:645px" v-if="e.id_tipo_usuario == item.pivot.id_tipo_usuario">
                     <span >{{e.nombre}}</span>  
               </td>
-            </div>
+            </div> -->
             <td style="text-align: center">
-               <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
+               <router-link :to="{name: 'GestionarUsuario', params: {id: item.usuario.id_usuario}}"> 
               <button class="btn link"><b-icon icon="pencil"></b-icon></button>
               </router-link>              
               <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
@@ -78,15 +75,14 @@ export default {
           }
         },
         ...mapGetters({
-          usuariosFiltrados: 'filtrarUsuarios'
+          usuariosFiltrados: 'filtrarUsuariosAdmin'
         })
   },
   mounted(){
-    this.listarTUsuarios();
     console.log('Store state usuariosA',this.$store.state.usuariosA);
-     if(this.$store.state.usuarios === null  ) {     
+     if(this.$store.state.usuariosA === null  ) {     
        this.listarUsuarios(); } //}
-    else this.usuarios = this.$store.state.usuarios; //
+    else this.usuarios = this.$store.state.usuariosA; //
   },
   methods:{
     //4 es el id del programa de admin
@@ -106,11 +102,11 @@ export default {
         })
     },
     listarUsuarios() {
-    console.log(this.$store.state.programaActual.id_programa);
-     if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador
+    console.log('Estoy en listarU,mi rol es:');
+     if(this.$store.state.tipoActual.nombre!="Admin"){
         axios.post('/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa) //Por ahora dsp será x program
         .then(res =>{
-          console.log('Usuarios ',res.data);          
+          console.log(res.data);          
           this.$store.state.usuarios=res.data;
           console.log(this.$store.state.tipoActual.nombre);
                    
@@ -118,9 +114,23 @@ export default {
         .catch(e => {
           console.log(e.response);
         })
-      }
-     
-     
+     }
+     else{
+       //esa admin le debe de listar todos los usuarios
+       axios.post('/usuarios/listarTodo') //Por ahora dsp será x program
+        .then(res =>{
+                        
+          this.$store.state.usuarios=res.data;
+          console.log(this.$store.state.tipoActual.nombre);
+          console.log('Store state usuariosA en es Admin',this.$store.state.usuariosA);
+          console.log('Usuarios[0].usuario ',this.usuarios[0].usuario);   
+                   
+        })
+        .catch(e => {
+          console.log(e.response);
+          //DEBE DE HABER UNMENSAJITO AQUI
+        })
+     }
       
        
     },
@@ -177,8 +187,6 @@ export default {
   }
 }
 </script>
-
-
 <style scoped>
 .formUsuario { 
   font-size: 20px;
@@ -192,10 +200,10 @@ export default {
     border-radius: 1.25rem;  
     border: 2px solid #757575;
     margin-bottom: 10px;
-    /* width: 100%; */
+    width: 100%;
     
 }
 .btn-derecha{
-   margin-top: 5px;
+   margin-top: 0px;
 }  
 </style>

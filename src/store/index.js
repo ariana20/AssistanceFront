@@ -52,7 +52,7 @@ export default new Vuex.Store({
        {
         text: 'Gestionar Usuario',
 		path: '/ListaUsuarios',
-		icon: 'ion-ios-book'
+		icon: 'ion-ios-people'
       },
       {
        text: 'Tipos de Usuario',
@@ -127,7 +127,7 @@ export default new Vuex.Store({
         let usuariosA = state.usuarios.filter(usu => usu.usuario.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return usuariosA;
       }
-      return state.usuarios;
+      return state.usuariosA; //cambie de usuarios a usuariosA cuado ya estaba duplicado el form
 
     }
 
