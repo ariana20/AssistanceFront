@@ -12,6 +12,7 @@ export default new Vuex.Store({
     tipoActual:null, // Objeto Tipo de Usuario Actual (this.$store.state.tipoActual)
     facultades:null, 
     coordinadores:null,
+    coordinadoresL:null,
     permisos:null,
     roles:null, //Filtrar Tipos de Usuario
     tipostutorias:null,
@@ -37,7 +38,7 @@ export default new Vuex.Store({
       },
       {
         text: 'Coordinador',
-		path: '/institucion',
+		path: '/coordinadores',
 		icon: 'ion-ios-person'
       },
       {
@@ -135,7 +136,14 @@ export default new Vuex.Store({
       }
       return state.usuariosA; //cambie de usuarios a usuariosA cuado ya estaba duplicado el form
 
-    }
+    },
+    filtrarCoordinadoresL(state){
+      if(state.filtro.query.length > 0){
+        let coordinadoresL = state.coordinadoresL.filter(coordinador => coordinador.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return coordinadoresL;
+      }
+      return state.coordinadoresL;
+    },
 
   }
 })

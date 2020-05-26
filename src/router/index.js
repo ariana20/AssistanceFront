@@ -154,6 +154,14 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewUsuarioAdmin.vue')
   },
+  {
+    path: '/coordinadores',
+    name: 'Coordinador',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewCoordinadores.vue')
+  },
 
 ]
 

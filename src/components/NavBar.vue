@@ -148,6 +148,8 @@ export default {
               }
               this.$store.state.programaActual = this.selectedPrograma.programa;
               this.$store.state.tipoActual = this.selectedPrograma.tipoUsuario;
+              this.$store.state.roles = null;
+              this.$store.state.permisos = null;
               let stored = this.openStorage() // extract stored form
               if (!stored) stored = {} 
               stored = this.selectedPrograma; // store new value
