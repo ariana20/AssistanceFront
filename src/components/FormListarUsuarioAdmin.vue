@@ -33,11 +33,10 @@
               </div>  
             </td>
             <td style="text-align: center">
-               <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
-              <button class="btn link"><b-icon icon="pencil"></b-icon></button>
-              </router-link>              
-              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
-              
+              <div class="row" style="width:115px">
+                <button class="btn link"><b-icon icon="pencil"></b-icon></button>
+                <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
+              </div>              
             </td>
           </tr>
         </tbody>
