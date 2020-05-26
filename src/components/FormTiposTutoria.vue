@@ -205,6 +205,7 @@ export default Vue.extend( {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
               });
+              this.$router.push('/ListaTiposTutorias');
                 });
         }
         else{
@@ -235,13 +236,14 @@ export default Vue.extend( {
           })
            .catch(e => {
                   console.log(e.response);
-              //      Swal.fire({
-              //       text:"Ocurrió un incoveniente. Vuelva a intentar en unos minutos.",
-              //       icon:'error',
-              //       confirmButtonText: 'ok',
-              //       confirmButtonColor:'#0097A7',
-              //       showConfirmButton: true,
-              // });
+                   Swal.fire({
+                    text:"Ocurrió un incoveniente al modificar. Vuelva a intentar en unos minutos.",
+                    icon:'error',
+                    confirmButtonText: 'ok',
+                    confirmButtonColor:'#0097A7',
+                   showConfirmButton: true,
+              });
+              //No lo redirigo porque perdería sus cambios
                 });
 
 

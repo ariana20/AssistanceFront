@@ -39,7 +39,7 @@
                <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
               <button class="btn link"><b-icon icon="pencil"  v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
               </router-link>              
-              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item)"></b-icon></button>
+              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item,index)"></b-icon></button>
               
             </td>
           </tr>
@@ -127,7 +127,7 @@ export default {
       
        
     },
-    eliminarUsuario(item){
+    eliminarUsuario(item,index){
       Swal.fire({
             text:'¿Desea eliminar?',
             icon:'warning',
@@ -159,11 +159,7 @@ export default {
               .then(res =>{
               // Ordenadito
                     console.log(res);
-                     let index = this.$store.state.usuarios.indexOf( //
-                    function(element){
-                      return element.id_tipo_tutoria === item.id_usuario; //
-                    })
-                  this.$store.state.usuarios.splice(index, 1); //
+                    this.$store.state.usuarios.splice(index, 1); //
           
                 })
                 .catch(e => {
