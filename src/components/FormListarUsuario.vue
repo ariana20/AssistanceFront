@@ -37,7 +37,7 @@
             </div>
             <td style="text-align: center">
                <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
-              <button class="btn link"><b-icon icon="pencil"></b-icon></button>
+              <button class="btn link"><b-icon icon="pencil"  v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
               </router-link>              
               <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
               
@@ -63,7 +63,8 @@ export default {
       TodosarrayTU:[],
       tipoXUsuario:[],
       miUsuario:this.$store.state.usuario, //Para sacar el id del programa
-
+      state:{
+        usuarioEscogido:null,}
       
     }
   },
@@ -82,6 +83,8 @@ export default {
         })
   },
   mounted(){
+    if(this.$store.state.usuario==null) this.$router.push('/login');
+    
     this.listarTUsuarios();
     console.log('Store state usuariosA',this.$store.state.usuariosA);
      if(this.$store.state.usuarios === null  ) {     
@@ -172,7 +175,13 @@ export default {
               )
             }
           })
-   } // eliminart
+   }, // eliminart
+   llenarUsuarioEscogido(item){
+      console.log('usuario escogido :',item);
+      this.$store.state.usuarioEscogido=item;
+      console.log('usuario escogido en store:',this.$store.state.usuarioEscogido);
+      this.usuarioEscogido=item;
+   }
    
   }
 }
