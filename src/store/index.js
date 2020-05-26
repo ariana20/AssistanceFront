@@ -65,6 +65,11 @@ export default new Vuex.Store({
       path: '/sesiontutoria',
       icon: 'ion-ios-school'
     },
+   {
+    text: 'Gestionar Usuarios Admin',
+    path: '/AListaUsuarios',
+    icon: 'ion-ios-people'
+  },
     ],
     filtro:{
       query: '',
@@ -125,7 +130,7 @@ export default new Vuex.Store({
     },
     filtrarUsuariosAdmin(state){
       if(state.filtro.query.length > 0){
-        let usuariosA = state.usuarios.filter(usu => usu.usuario.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        let usuariosA = state.usuariosA.filter(usu => usu.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return usuariosA;
       }
       return state.usuariosA; //cambie de usuarios a usuariosA cuado ya estaba duplicado el form

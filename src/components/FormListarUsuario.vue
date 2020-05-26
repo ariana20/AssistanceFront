@@ -39,7 +39,7 @@
                <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
               <button class="btn link"><b-icon icon="pencil"  v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
               </router-link>              
-              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
+              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item)"></b-icon></button>
               
             </td>
           </tr>
@@ -127,7 +127,7 @@ export default {
       
        
     },
-    eliminarUsuario(id){
+    eliminarUsuario(item){
       Swal.fire({
             text:'¿Desea eliminar?',
             icon:'warning',
@@ -148,15 +148,20 @@ export default {
                 confirmButtonColor:'#0097A7'
                 }
               )
+              let param = {
+                id_usuario:item.id_usuario,
+                tipo_usuario:item.pivot.id_tipo_usuario,
+                id_programa:item.pivot.id_programa,
+              }
               //aqui iriía el eliminar
               //ESte eliminar no debería estar.Debería ser un eliminar del programa
-              axios.post('/usuarios/eliUsuarioPrograma/'+id)
+              axios.post('/usuarios/eliUsuarioPrograma',param)
               .then(res =>{
               // Ordenadito
                     console.log(res);
                      let index = this.$store.state.usuarios.indexOf( //
                     function(element){
-                      return element.id_tipo_tutoria === id; //
+                      return element.id_tipo_tutoria === item.id_usuario; //
                     })
                   this.$store.state.usuarios.splice(index, 1); //
           

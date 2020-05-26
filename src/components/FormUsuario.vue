@@ -17,12 +17,12 @@
             <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index">
              {{ tipoU.nombre}}
              </option>
-          <!-- </select>
+          </select>
           <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Tipo de tutoria:</td>  
             <select v-model="tipostutoriasselect" class="col-sm-10 form-control" >
             <option v-for="(tipotuto,index) in tipostutorias" :value="tipotuto.id_tipo_tutoria" v-bind:key="index">
              {{ tipotuto.nombre}}
-             </option> -->
+             </option>
           </select>
          
         </tr>
