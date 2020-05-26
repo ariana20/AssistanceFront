@@ -41,11 +41,11 @@ export default new Vuex.Store({
 		path: '/coordinadores',
 		icon: 'ion-ios-person'
       },
-      {
-        text: 'Unidades de Apoyo',
-		path: '/about',
-		icon: 'ion-ios-people'
-      },
+    //   {
+    //     text: 'Unidades de Apoyo',
+		// path: '/about',
+		// icon: 'ion-ios-people'
+    //   },
       {
         text: 'Tipos de Tutoria',
 		path: '/ListaTiposTutorias',

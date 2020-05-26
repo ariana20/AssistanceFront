@@ -147,8 +147,8 @@ export default Vue.extend ({
             time: '',
             timePickerOptions:{
                 start: '07:00',
-                step: '00:15',
-                end: '20:45'
+                step: '00:30',
+                end: '21:00'
             },
             datetime: '',
             descripcion: null,
