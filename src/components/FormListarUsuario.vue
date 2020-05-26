@@ -39,7 +39,7 @@
                <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
               <button class="btn link"><b-icon icon="pencil"  v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
               </router-link>              
-              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
+              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item)"></b-icon></button>
               
             </td>
           </tr>
@@ -127,7 +127,7 @@ export default {
       
        
     },
-    eliminarUsuario(id){
+    eliminarUsuario(item){
       Swal.fire({
             text:'¿Desea eliminar?',
             icon:'warning',
@@ -150,16 +150,22 @@ export default {
               )
               //aqui iriía el eliminar
               //ESte eliminar no debería estar.Debería ser un eliminar del programa
-              axios.post('/usuarios/eliUsuarioPrograma/'+id)
+              let parametros={
+                    id_usuario:item.id_usuario,
+                    tipo_usuario:item.pivot.id_tipo_usuario,
+                    id_programa:this.$store.state.programaActual.id_programa,
+              };
+              axios.post('/usuarios/eliUsuarioPrograma/',parametros)
               .then(res =>{
               // Ordenadito
                     console.log(res);
-                     let index = this.$store.state.usuarios.indexOf( //
-                    function(element){
-                      return element.id_tipo_tutoria === id; //
-                    })
-                  this.$store.state.usuarios.splice(index, 1); //
-          
+                  //    let index = this.$store.state.usuarios.indexOf( //
+                  //   function(element){
+                  //     return element.id_tipo_tutoria === id; //
+                  //   })
+                  // this.$store.state.usuarios.splice(index, 1); //
+
+                  this.$router.href('/ListaUsuarios'); 
                 })
                 .catch(e => {
                   console.log(e.response);
