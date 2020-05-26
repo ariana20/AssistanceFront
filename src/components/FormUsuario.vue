@@ -165,6 +165,7 @@ export default {
             estado:this.estado,
             id_programaNuevo:this.miprog.id_programa,
             id_tipo_usuario:this.tiposUsuariosselect,  
+            //ahora, si es tipo usuario 4 de tutor debe insertar el tipo de tutoria
 
             };
       const params2 = {
@@ -174,6 +175,8 @@ export default {
             apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
             estado:this.estado,
             telefono:this.telefono,    
+            // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
+            id_tipo_usuario:this.tiposUsuariosselect, 
             };
              
           
@@ -215,6 +218,7 @@ export default {
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
               }) 
+              this.$router.href('/ListaUsuarios');
             })  .catch(e => {
                  console.log(e.response);
                  Swal.fire({
