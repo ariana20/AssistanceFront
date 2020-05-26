@@ -193,6 +193,8 @@ export default Vue.extend( {
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
               });
+              //push
+              this.$router.push('/ListaTiposTutorias');
           })
            .catch(e => {
                   console.log(e.response);
@@ -229,6 +231,7 @@ export default Vue.extend( {
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
               });
+              this.$router.push('/ListaTiposTutorias');
           })
            .catch(e => {
                   console.log(e.response);

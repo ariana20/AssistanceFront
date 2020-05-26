@@ -5,15 +5,15 @@
     <div> -->
       <table>
       <tbody>
-        <td style="width:1662px">
-        <tr style="text-align:left"><td>Codigo:</td>   <td> <input class="col-sm-10 form-control" type="text"       v-model="codigo"></td></tr>
-        <tr style="text-align:left"><td>Nombre:</td>   <td> <input class="col-sm-10 form-control" type="text"       v-model="nombre"></td></tr>
-        <tr style="text-align:left"><td>Apellidos:</td>   <td> <input class="col-sm-10 form-control" type="text"    v-model="apellidos"></td></tr>
-        <tr style="text-align:left"><td>Celular:</td>   <td> <input class="col-sm-10 form-control"  type="number"  v-model="telefono"></td></tr>
-          <tr style="text-align:left"><td>Correo:</td>   <td> <input id="corr" class="col-sm-10 form-control"  type="text" v-model="correo"></td></tr>
+        <td >
+        <tr style="text-align:left"><td>Codigo:</td>   <td> <input class=" form-control" type="text"       v-model="codigo"></td></tr>
+        <tr style="text-align:left"><td>Nombre:</td>   <td> <input class="form-control" type="text"       v-model="nombre"></td></tr>
+        <tr style="text-align:left"><td>Apellidos:</td>   <td> <input class="form-control" type="text"    v-model="apellidos"></td></tr>
+        <tr style="text-align:left"><td>Celular:</td>   <td> <input class="form-control"  type="number"  v-model="telefono"></td></tr>
+          <tr style="text-align:left"><td>Correo:</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
         <!-- Combos box -->        
         <tr style="text-align:left"><td>Tipos de usuarios:</td>   
-          <select  v-model="tiposUsuariosselect" class="col-sm-10 form-control" >
+          <select  v-model="tiposUsuariosselect" class="form-control" >
             <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index">
              {{ tipoU.nombre}}
              </option>
@@ -189,7 +189,8 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
               }) 
-              this.$router.push('/ListaUsuarios');  
+              this.$router.href('/ListaUsuarios'); 
+
             }).catch(e => {
                  console.log(e.response);
                  Swal.fire({
@@ -199,7 +200,7 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });  
-                   this.$router.push('/ListaUsuarios');         
+                   this.$router.href('/ListaUsuarios');         
                 } );
           }
           else if (this.id_usuario_entrante!=0){
@@ -223,7 +224,7 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   })
-                  this.$router.push('/ListaUsuarios');
+                  this.$router.href('/ListaUsuarios');
               });
             
           }
@@ -317,7 +318,7 @@ export default {
     border-radius: 1.25rem;  
     border: 2px solid #757575;
     margin-bottom: 10px;
-    width: 100%;
+    width: 200%;
     
 }
 
