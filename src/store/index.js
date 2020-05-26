@@ -18,6 +18,7 @@ export default new Vuex.Store({
     usuarios:null,
     usuariosA:null,
     rutas:[],
+    usuarioEscogido:null,
     navLinks: [
       {
         text: 'Institucion',

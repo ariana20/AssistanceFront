@@ -1,31 +1,28 @@
 <template>
-  <div class="FormUsuario container" style="margin-top:20px">
-    <div style="margin-right:200px"></div>  
-    <div  class="botones">   
-            <button type="button" style="margin:20px" class="btn btn-info"  v-on:click="guardarUsuario()">Guardar</button>
-            <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>
+  <div class="FormUsuario container" style="margin-top:5px">
+    <div style="margin-right:50px"></div>  
     <!-- </div>
     <div> -->
       <table>
       <tbody>
-        <td style="width:1662px">
-        <tr style="text-align:left"><td>Codigo:</td>   <td> <input class="col-sm-10 form-control" type="text"       v-model="codigo"></td></tr>
-        <tr style="text-align:left"><td>Nombre:</td>   <td> <input class="col-sm-10 form-control" type="text"       v-model="nombre"></td></tr>
-        <tr style="text-align:left"><td>Apellidos:</td>   <td> <input class="col-sm-10 form-control" type="text"    v-model="apellidos"></td></tr>
-        <tr style="text-align:left"><td>Celular:</td>   <td> <input class="col-sm-10 form-control"  type="number"  v-model="telefono"></td></tr>
-          <tr style="text-align:left"><td>Correo:</td>   <td> <input id="corr" class="col-sm-10 form-control"  type="text" v-model="correo"></td></tr>
+        <td >
+        <tr style="text-align:left"><td>Codigo:</td>   <td> <input class=" form-control" type="text"       v-model="codigo"></td></tr>
+        <tr style="text-align:left"><td>Nombre:</td>   <td> <input class="form-control" type="text"       v-model="nombre"></td></tr>
+        <tr style="text-align:left"><td>Apellidos:</td>   <td> <input class="form-control" type="text"    v-model="apellidos"></td></tr>
+        <tr style="text-align:left"><td>Celular:</td>   <td> <input class="form-control"  type="number"  v-model="telefono"></td></tr>
+          <tr style="text-align:left"><td>Correo:</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
         <!-- Combos box -->        
         <tr style="text-align:left"><td>Tipos de usuarios:</td>   
-          <select  v-model="tiposUsuariosselect" class="col-sm-10 form-control" >
+          <select  v-model="tiposUsuariosselect" class="form-control" >
             <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index">
              {{ tipoU.nombre}}
              </option>
-          </select>
+          <!-- </select>
           <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Tipo de tutoria:</td>  
             <select v-model="tipostutoriasselect" class="col-sm-10 form-control" >
             <option v-for="(tipotuto,index) in tipostutorias" :value="tipotuto.id_tipo_tutoria" v-bind:key="index">
              {{ tipotuto.nombre}}
-             </option>
+             </option> -->
           </select>
          
         </tr>
@@ -45,7 +42,10 @@
        </td> 
       </tbody>
       </table>
-            
+       <div  class="botones">   
+            <button type="button" style="margin:5px" class="btn btn-info"  v-on:click="guardarUsuario()">Guardar</button>
+            <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>
+         
 
     </div>
     </div>
@@ -77,26 +77,41 @@ export default {
       tipostutorias:"",
       tipostutoriasselect:null,
        miprog:this.$store.state.programaActual,
+      usuario_entrante:this.$store.state.usuarioEscogido,
     }
   },
 
   mounted(){
+    if(this.$store.state.usuario==null) this.$router.push('/login');
+     console.log('usuario entrante?: ',this.usuario_entrante);
     this.listarTUsuarios();
     this.listarTT();
     if(this.id_usuario_entrante!=0){
-      console.log('Id usuario entrante: ');
-      
+      console.log('Id usuario entrante: ');      
       console.log(this.id_usuario_entrante);
+      this.tiposUsuariosselect=this.usuario_entrante.pivot.id_tipo_usuario;
      Axios.create()
        .post('/usuarios/listar/'+this.id_usuario_entrante).then( response =>{
          document.getElementById("corr").disabled = true;
+         console.log('usuario listado para modificar',response);
           this.codigo=response.data.codigo;
            this.nombre= response.data.nombre;
            this.apellidos=response.data.apellidos;
            this.correo=response.data.correo;
            this.telefono=response.data.telefono;
            this.estado=response.data.estado;
-         });
+         }).catch(e => {
+                 console.log(e.response);
+                 Swal.fire({
+                    text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  }); 
+                   this.$router.push('/ListaUsuarios');          
+                } );
+
     }
   },
   methods:{
@@ -128,7 +143,7 @@ export default {
         }) 
        
       }
-      else if(this.telefono<1000000000){ //Esto será válido?
+      else if(this.telefono<10000000){ //Esto será válido?
      
           Swal.fire({
               text:"No ha colocado un número de teléfono válido. Mínimo 7 dígitos",
@@ -141,17 +156,16 @@ export default {
       
       else{//está bien y envío
       const params = {
-      //yo creo que primero analizo los ids
-            codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+           codigo:this.codigo.trim().replace(/\s+/g, ' '), 
             nombre:this.nombre.trim().replace(/\s+/g, ' '),
             apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
             correo:this.correo.trim(),
             telefono:this.telefono,
             password:"1234",
             estado:this.estado,
-            id_programaNuevo:this.$store.state.programaActual.id_programa,
-            //
-      // id_tipo_usuario:this.arrayTU[id_tipo_usuario],      
+            id_programaNuevo:this.miprog.id_programa,
+            id_tipo_usuario:this.tiposUsuariosselect,  
+
             };
       const params2 = {
       
@@ -167,18 +181,30 @@ export default {
             Axios.create()
             .post('/usuarios/insertar',params)
             .then( response=>{
-            console.log(response)
-            });
-            Swal.fire({
-              text:"Se guardaron los datos con éxito",
-              icon:"success",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
+                  console.log(response);
+                  Swal.fire({
+                    text:"Se guardaron los datos con éxito",
+                    icon:"success",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
               }) 
-          } 
+              this.$router.href('/ListaUsuarios'); 
+
+            }).catch(e => {
+                 console.log(e.response);
+                 Swal.fire({
+                    text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  });  
+                   this.$router.href('/ListaUsuarios');         
+                } );
+          }
           else if (this.id_usuario_entrante!=0){
-            Axios.create({withCredentials: true })
+            Axios.create()
             .post('/usuarios/modificar/'+this.id_usuario_entrante,params2)
             .then( response=>{
               console.log(response)
@@ -198,7 +224,7 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   })
-                 //
+                  this.$router.href('/ListaUsuarios');
               });
             
           }
@@ -292,7 +318,7 @@ export default {
     border-radius: 1.25rem;  
     border: 2px solid #757575;
     margin-bottom: 10px;
-    width: 100%;
+    width: 200%;
     
 }
 
