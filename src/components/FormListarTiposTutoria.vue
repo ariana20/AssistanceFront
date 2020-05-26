@@ -1,37 +1,27 @@
 <template>
-  <div class="FormRoles" style="margin-top:20px">
-    <div class="container" style="left:60px;text-align: left">
-        <tr style="text-align:left"></tr>
-          <tr style="text-align:left"><td>Buscar</td>   <td> <input type="text" v-model="nombre"></td>
-          
-        
-             <div style="text-align:right" >
+  <div class="FormRoles container" style="margin-top:20px">
+        <div class="row top-titulo">
+        <div class="row col-sm-4 tutoria-title" style="margin:10px">Buscar:  
+        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
+        </div>
+        <div style="margin-right:500px"></div>
+        <div class="row btn-derecha" >
                 <router-link to="tiposdeTutoria/0"> 
-                  <button  type="button" class="btn btn-info">Añadir</button>
-                </router-link></div>    
-  </tr>
-      <table style="margin-bottom:20px">
-      <tbody>
-        <td style="width:662px">
-          <tr style="text-align:left"></tr>
-          
-          
-        
-          <!-- <td >  -->
-          <!-- </td> -->
-        
-        </td>
-      </tbody>
-      </table>
+                  <button  type="button"  style="text-align:right" class="btn btn-info">Añadir</button>
+           </router-link></div>    
+  <!-- </tr> -->
+
       <table class="table">
         <thead>
           <tr>
+            <th scope="col">N°</th>
             <th scope="col">Nombre</th>
             <th scope="col" style="text-align: center">Modif/Elim</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in tipostutoriasFiltrados" :key="index">
+            <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>             
             <td  style="text-align: center">
                  <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}"> 
@@ -64,7 +54,7 @@ export default {
     }
   },
   mounted(){
-    console.log(this.$store.state.programaActual);
+    console.log('mi programa actual: ',this.$store.state.programaActual);
     if(this.$store.state.tipostutorias === null) this.listarTT(); //
     else this.tipostutorias = this.$store.state.tipostutorias; //
   },
@@ -145,3 +135,30 @@ computed:{
   }
 }
 </script>
+<style scoped>
+.formUsuario { 
+  font-size: 20px;
+}
+
+  body{
+    background-image: null;
+    background-color: #B2EBF2;
+  }
+  .form-control {
+    border-radius: 1.25rem;  
+    border: 2px solid #757575;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+    .tutoria-title{
+    margin-top: 30px;
+    margin-bottom: 20px;
+    }
+
+.btn-derecha{
+   margin-top: 5px;
+}  
+
+
+
+</style>
