@@ -2,7 +2,7 @@
   <div class="FormListarUsuario container"  style="margin-top:20px">
     <!-- para que lo vea bien un coordinador -->
     <div class="row top-titulo">
-      <div class="row col-sm-4 tutoria-title" style="margin:10px;">Buscar: 
+      <div class="row col-sm-4 tutoria-title" style="margin:10px;font-size:25px;font-weight:bold" >Buscar: 
         <input style="left:25px;" placeholder="Busque por nombre" class="row col-sm-8 form-control" type="text" v-model="nombre">  </div>
                 <div style="margin-right:600px"></div>
                 <div class="row btn-derecha" >
