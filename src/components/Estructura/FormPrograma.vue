@@ -43,7 +43,8 @@ export default {
       programas:[]
     }
   },
-  created(){
+  mounted(){
+    if(this.$store.state.usuario==null) this.$router.push('/login')
     this.listarProgramas();
   },
   methods:{

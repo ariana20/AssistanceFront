@@ -11,11 +11,12 @@
                v-model="selectedPrograma"
                @change="cambiarProg()">
                 <option selected disabled :value="null">Cambia de Programa</option>
-                <option 
+                <option
                     v-for="(item, index) in $store.state.cantProg" 
                     :key="index" 
                     :value="item">
-                    {{ item.programa.nombre }} ({{item.tipoUsuario.nombre}})
+                    <a v-if="item.programa && item.programa.nombre!=='Administrador'">{{ item.programa.nombre }} ({{item.tipoUsuario.nombre}})</a>
+                    <a v-else>Administrador</a>
                 </option>
               </select>
         <!-- Right aligned nav items -->

@@ -16,6 +16,7 @@
     "bootstrap-toggle": "^2.2.2",
     "bootstrap-vue": "^2.14.0",
     "core-js": "^3.6.4",
+    "emailjs-com": "^2.4.1",
     "hellojs": "^1.18.4",
     "jquery": "^3.5.1",
     "sweetalert2": "^9.11.0",

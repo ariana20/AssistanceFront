@@ -49,6 +49,7 @@ export default {
     }
   },
   mounted(){
+    if(this.$store.state.usuario==null) this.$router.push('/login')
     if(this.$store.state.roles === null) this.listarRoles();
     else this.roles = this.$store.state.roles;
   },
