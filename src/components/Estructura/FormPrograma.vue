@@ -5,13 +5,17 @@
       <tbody>
         <td style="width:662px">
           <tr style="text-align:left"></tr>
-          <tr style="text-align:left"><td>Buscar:</td>   <td> <input type="text" style="margin-left:10%" v-model="nombre"></td></tr>
+          <tr style="text-align:left">
+            <td>Buscar:</td>
+            <td> <input class="borde-textbox" type="text" style="margin-left:10%;padding:7px" v-model="nombre"></td>
+          </tr>
         </td>
       </tbody>
       </table>
       <table class="table">
         <thead>
           <tr>
+            <th scope="col">N°</th>
             <th scope="col">Nombre</th>
             <th scope="col">Correo</th>
             <th scope="col">Coordinador</th>
@@ -20,6 +24,7 @@
         </thead>
         <tbody>
           <tr v-for="(item, index) in programasFiltrados" :key="index">
+            <td>{{index+1}}</td>
             <td>{{item.programa.nombre}}</td>
             <td>{{item.programa.correo}}</td>
             <td>
