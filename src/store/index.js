@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     usuario:null, // Objeto Usuario Actual (this.$store.state.usuario)
-    programas:null,
+    programas:[],
     programaActual:null, // Objeto Programa Actual (this.$store.state.programa)
     cantProg:null,
     tipoActual:null, // Objeto Tipo de Usuario Actual (this.$store.state.tipoActual)
@@ -81,7 +81,7 @@ export default new Vuex.Store({
   getters:{
     filtrarProgramas(state){
       if(state.filtro.query.length > 1){
-        let programas = state.programas.filter(programa => programa.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        let programas = state.programas.filter(programa => programa.programa.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return programas;
       }
       return state.programas;
