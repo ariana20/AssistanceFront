@@ -15,7 +15,6 @@
           <!--input type="text" class="form-control" v-model="nombre"-->
           <input id="nombre" class="row form-control" type="text" v-model="nombre">
         </div>
-        <button type="button" class="btn btn-outline-secondary"><b-icon icon="search"></b-icon></button>
       </div>
 
             
