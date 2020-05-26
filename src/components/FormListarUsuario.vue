@@ -148,24 +148,23 @@ export default {
                 confirmButtonColor:'#0097A7'
                 }
               )
+              let param = {
+                id_usuario:item.id_usuario,
+                tipo_usuario:item.pivot.id_tipo_usuario,
+                id_programa:item.pivot.id_programa,
+              }
               //aqui iriía el eliminar
               //ESte eliminar no debería estar.Debería ser un eliminar del programa
-              let parametros={
-                    id_usuario:item.id_usuario,
-                    tipo_usuario:item.pivot.id_tipo_usuario,
-                    id_programa:this.$store.state.programaActual.id_programa,
-              };
-              axios.post('/usuarios/eliUsuarioPrograma/',parametros)
+              axios.post('/usuarios/eliUsuarioPrograma',param)
               .then(res =>{
               // Ordenadito
                     console.log(res);
-                  //    let index = this.$store.state.usuarios.indexOf( //
-                  //   function(element){
-                  //     return element.id_tipo_tutoria === id; //
-                  //   })
-                  // this.$store.state.usuarios.splice(index, 1); //
-
-                  this.$router.href('/ListaUsuarios'); 
+                     let index = this.$store.state.usuarios.indexOf( //
+                    function(element){
+                      return element.id_tipo_tutoria === item.id_usuario; //
+                    })
+                  this.$store.state.usuarios.splice(index, 1); //
+          
                 })
                 .catch(e => {
                   console.log(e.response);

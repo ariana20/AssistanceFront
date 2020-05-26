@@ -3,11 +3,11 @@
         <h1>Elige tu Programa</h1>
         <div id="app" class="container row" style="text-align:center;margin:auto" >
             <div class="borde" v-for="(item,index) in this.programas" :key="index">
-                <button v-on:click="irPrograma(item)" v-if="item.programa && item.programa.nombre!=='Administrador'" style="background:transparent;border:red">
+                <button v-on:click="irPrograma(item)" v-if="item.programa && item.programa.nombre!=='Administrador'" style="background:transparent;border:red;color:white;">
                     <h1 slot="header">{{item.programa.nombre}}</h1>
                     <p slot="content">Rol: {{item.tipoUsuario.nombre}}</p>
                 </button>
-                <button v-on:click="irAdmin(item)" v-else style="background:transparent;border:red">
+                <button v-on:click="irAdmin(item)" v-else style="background:transparent;border:red;color:white;">
                     <h1 slot="header">Administrador</h1>
                 </button>
             </div>
@@ -135,7 +135,8 @@ export default {
         width: 300px;
         padding-block: 30px;
         margin: 40px auto 40px auto;
-        background-color: aquamarine;
+        background-color: #009892;
         display: grid;
+        color: white;
     }
  </style>
