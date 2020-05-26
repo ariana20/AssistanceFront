@@ -1,18 +1,24 @@
+<!-- <template>
+  <div class="viewusuario">
+    <Usuario/>
+  </div> 
+</template> -->
+
 <template>
   <div class="Usuario">
-    <CabezeraTitulo msg="Listado de tipos de tutoria"
-    :image-path="require('.././assets/images/coffe-cream.jpg')"/>
-    <FormListarTiposTutoria/>
+    <CabezeraTitulo msg="Listado de usuarios"
+    :image-path="require('.././assets/images/person-writing.jpg')"/>
+    <FormListarUsuarioAdmin/>
   </div>
 </template>
 <script>
 import CabezeraTitulo from '@/components/CabezeraTitulo.vue'
-import FormListarTiposTutoria  from '@/components/FormListarTiposTutoria.vue'
+import FormListarUsuarioAdmin    from '@/components/FormListarUsuarioAdmin.vue'
 export default {
-  name: 'ViewListarUsuarios',
+  name: 'ViewListarUsuariosAdmin',
   components: {
     CabezeraTitulo,
-    FormListarTiposTutoria,
+    FormListarUsuarioAdmin,
   }
 }
 </script>

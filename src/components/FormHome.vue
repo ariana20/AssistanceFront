@@ -1,6 +1,6 @@
 <template lang="pug">
-<!-- JOHANA HIZO UN COMEN DESDE VSC -->
-  <div class="HomeForm" style="background:#7EC2C9;margin-top:-20px">
+<!-- Animacion de Codepen -->
+  <div class="HomeForm" style="background:#7EC2C9">
     <div class ="container" style="margin-left:-50px">
         div.main        
             div.human

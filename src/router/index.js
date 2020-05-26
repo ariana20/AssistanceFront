@@ -138,6 +138,23 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "ViewListarTiposTutoria" */ '../views/ViewListarTiposTutoria.vue')
   },
+  {
+    path: '/AListaUsuarios',
+    name: 'AListar Usuarios',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewListarUsuarios" */ '../views/ViewListarUsuariosAdmin.vue')
+  },
+  {
+    path: '/AUsuario/:id',
+    name: 'AGestionarUsuario',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewUsuarioAdmin.vue')
+  },
+
 ]
 
 const router = new VueRouter({

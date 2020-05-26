@@ -1,31 +1,37 @@
 <template>
-  <div class="FormRoles" style="margin-top:20px">
-    <div class="container" style="left:60px;text-align: left">
-      <table style="margin-bottom:20px">
-      <tbody>
-        <td style="width:662px">
-          <tr style="text-align:left"></tr>
-          <tr style="text-align:left">
-            <div style="text-align:right">
-            <router-link to="tiposdeTutoria/0"> 
-                  <button  type="button" class="btn btn-info">Añadir</button>
-                </router-link></div>  
-          </tr>
-        </td>
-      </tbody>
-      </table>
+  <div class="FormRoles container" style="margin-top:20px">
+        <div class="row top-titulo">
+        <div class="row col-sm-4 tutoria-title" style="margin:10px">Buscar:  
+        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
+        </div>
+        <div style="margin-right:500px"></div>
+        <div class="row btn-derecha" >
+                <router-link to="tiposdeTutoria/0"> 
+                  <button  type="button"  style="text-align:right" class="btn btn-info">Añadir</button>
+           </router-link></div>    
+  <!-- </tr> -->
+
       <table class="table">
         <thead>
           <tr>
+            <th scope="col">N°</th>
             <th scope="col">Nombre</th>
             <th scope="col" style="text-align: center">Modif/Elim</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in $store.state.roles" :key="index">
-            <td>{{item.nombre}}</td>
-            <td  style="text-align: center"><button v-on:click="Editar(item.id_tipo_tutoria)" class="btn link"><b-icon icon="pencil"/></button>
-            <button v-on:click="eliminarTtutoria(item.id_tipo_tutoria)" class="btn link"><b-icon icon="dash-circle-fill"/></button></td>
+          <tr v-for="(item, index) in tipostutoriasFiltrados" :key="index">
+            <th scope="row">{{index+1}}</th>
+            <td>{{item.nombre}}</td>             
+            <td  style="text-align: center">
+                 <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}"> 
+                <button  class="btn link">         
+                <b-icon icon="pencil"/></button>
+                       </router-link>  
+                <button v-on:click="eliminarTtutoria(item.id_tipo_tutoria)" class="btn link"><b-icon icon="dash-circle-fill"/>
+                </button>
+            </td>
+          
           </tr>
         </tbody>
       </table>
@@ -42,34 +48,38 @@ import Swal from 'sweetalert2'
 export default {
   data(){
     return{
-      programas:[] //
+      tipostutorias:[], //
+      miprog:this.$store.state.programaActual,
+    
     }
   },
-  created(){
-    if(this.$store.state.programas === null) this.listarRoles(); //
-    else this.programas = this.$store.state.programas; //
+  mounted(){
+    if(this.$store.state.usuario==null) this.$router.push('/login');
+    console.log('mi programa actual: ',this.$store.state.programaActual);
+    if(this.$store.state.tipostutorias === null) this.listarTT(); //
+    else this.tipostutorias = this.$store.state.tipostutorias; //
   },
-  computed:{
+computed:{
         nombre:{
-            get(){
-                return this.$store.state.programasFilter.query; //
-            },
-            set(val){
-                this.$store.commit('SET_QUERY',val);
-            }
+          get(){
+              return this.$store.state.filtro.query;
+          },
+          set(val){
+              this.$store.commit('SET_QUERY',val);
+          }
         },
         ...mapGetters({
-            programasFiltrados: 'filtrarProgramas' //
+          tipostutoriasFiltrados: 'filtrarTipoTutorias'
         })
   },
   methods:{
     
-    listarRoles() {
+    listarTT() {
     //   this.axios.post('/TipoTutoria/listarTodo/'+this.programas.id) //
-      Axios.post('/TipoTutoria/listarTodo/4')
+      Axios.post('/TipoTutoria/listarTodo/'+ this.miprog.id_programa)
         .then(response=>{
-            this.$store.state.roles = response.data; //
-            console.log(this.$store.state.roles)
+            this.$store.state.tipostutorias = response.data; //
+            console.log(this.$store.state.tipostutorias)
         })
         .catch(e=>console.log(e));
     },
@@ -78,7 +88,7 @@ export default {
     },
     
     eliminarTtutoria(id){
-        console.log(id);
+        console.log('Id del tipo de tutoria a eliminar: ',id);
       Swal.fire({
             text:'¿Desea eliminar?',
             icon:'warning',
@@ -93,7 +103,7 @@ export default {
         }).then((result) => {
             if (result.value) {
               Swal.fire({
-                icon:'success!',
+                icon:'success',
                 text:'El tipo de tutoria ha sido eliminado',
                 confirmButtonText:'Confirmo' ,
                 confirmButtonColor:'#0097A7'
@@ -103,11 +113,12 @@ export default {
               Axios.post('/TipoTutoria/eliminar/'+id)
                 .then(response=>{
                   console.log(response);
-                  let index = this.$store.state.roles.indexOf( //
+                  console.log('eliminaré a :', this.$store.state.tipostutorias.id_tipo_tutoria);
+                  let index = this.$store.state.tipostutorias.indexOf( //
                     function(element){
                       return element.id_tipo_tutoria === id; //
                     })
-                  this.$store.state.roles.splice(index, 1); //
+                  this.$store.state.tipostutorias.splice(index, 1); //
                 })
                 .catch(e=>console.log(e));
 
@@ -117,6 +128,7 @@ export default {
             ) {
               Swal.fire({
                 text:'Se ha cancelado la eliminación',
+                icon:'warning',
                 confirmButtonColor:'#0097A7',}
               )
             }
@@ -126,3 +138,30 @@ export default {
   }
 }
 </script>
+<style scoped>
+.formUsuario { 
+  font-size: 20px;
+}
+
+  body{
+    background-image: null;
+    background-color: #B2EBF2;
+  }
+  .form-control {
+    border-radius: 1.25rem;  
+    border: 2px solid #757575;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+    .tutoria-title{
+    margin-top: 30px;
+    margin-bottom: 20px;
+    }
+
+.btn-derecha{
+   margin-top: 5px;
+}  
+
+
+
+</style>
