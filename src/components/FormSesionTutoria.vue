@@ -53,17 +53,23 @@
                         </div>
                         <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{alSeleccionado}}</div>
                         <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
-                            <li class="form-control" 
+                            <li class="form-control list-group-item" 
                                 v-for="(newAlumno,alIndex) in listAlumnosNom"  
                                 :key="alIndex">
-                                {{newAlumno}}           
+                                <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span>
+                                {{newAlumno}}    
+                                       
                             </li>
                         </ul>
                     </div>
                     
                 </div>
-
+                <div style="position:absolute; bottom:30px;">
+                    <date-picker v-model="datetime" lang="es" type="datetime" format="YYYY-MM-DD HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
+                    <!--<date-picker v-model="datetime" type="datetime" :time-picker-options="timePickerOptions" placeholder="Selecciona Hora y Fecha"></date-picker> -->
+                </div>
             </div>
+            
             <div class="der col-lg-6 col-xm col-md-12">
                 <div class="font-weight-bolder text-left">Resultado</div>
                  <div class="top-titulo" style="margin-bottom:20px;">
@@ -81,7 +87,7 @@
                     <button type="button" 
                             class="btn btn-info" 
                             style="border-color:gray;background-color:gray;"
-                            @click="addMotivos">Seleccionar</button>
+                            @click="addMotivos(i)">Seleccionar</button>
                     </div>
                 </div>
                 <div class="left-content" >
@@ -103,7 +109,7 @@
                     </div>
                     <div class="top-titulo" style="text-align:left;">
                     <div class="col-sm-4 derivar-dropdown-title">Derivar: </div>
-                    <select class="col-sm form-control" style="left:-40px;">
+                    <select class="col-sm form-control" style="left:-40px;" v-model="selectedUnidadApoyo">
                         <option selected disabled value="">Seleccionar</option>
                         <option
                         v-for="(unidadApoyo, i) in unidadesApoyo" 
@@ -122,14 +128,29 @@
 </template>
 
 <script>
+import DatePicker from 'vue2-datepicker'
+import moment from 'moment'
+import Swal from 'sweetalert2'
+import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import Vue from 'vue'
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
 export default Vue.extend ({
     name: 'formSesionTutoria',
+    components:{
+        DatePicker
+    },
     data: function () {
         return {
+            date: '',
+            time: '',
+            timePickerOptions:{
+                start: '07:00',
+                step: '00:15',
+                end: '20:45'
+            },
+            datetime: '',
             descripcion: null,
             motivo: null,
             bordes:'borde-textbox',
@@ -137,27 +158,33 @@ export default Vue.extend ({
             alSeleccionado: 'Nombre Alumno',
             codigos:[],
             campoCodigo: {value:'codigo'},    
-            selectedTipoTutoria: '',
+            selectedTipoTutoria: null,
             tiposTutoria: [],
             selectedMotivo: '',
             motivos: [],
             newMotivo: null,
             listMotivos:[],
+            listMotivosId: [],
             motivosBorrados:[],
             listAlumnosNom: [],
             listAlumnosCod: [],
-            unidadesApoyo: []
+            listAlumnosId: [],
+            unidadesApoyo: [],
+            selectedUnidadApoyo: null,
         }
     },
     mounted(){
+        document.querySelector("#container > div > div.formSesionTutoria.container > div.row.grid-divider > div.izq.col-lg-6.col-xm-2.col-md-12 > div:nth-child(3) > div > div > input").style.borderRadius = "1.25rem";  
+        document.querySelector("#container > div > div.formSesionTutoria.container > div.row.grid-divider > div.izq.col-lg-6.col-xm-2.col-md-12 > div:nth-child(3) > div > div > input").style.border= "2px solid #757575";    
     axios.post('unidadesApoyo/listarTodo')
         .then(response => {
             this.unidadesApoyo = response.data;
         }).catch(e => {
             console.log(e.response);
         });
-    axios.post('sesiones/alumnoProg/'+ this.$store.state.programaActual.id_programa + '/' + this.$store.state.tipoActual.id_tipo_usuario)
+    axios.post('sesiones/alumnoProg/', {idProg: this.$store.state.programaActual.id_programa,idTipoU: 5})
         .then( response => {
+            console.log(response.data)
             for(var i in response.data){ 
                 this.codigos.push(response.data[i][0]);
             }
@@ -181,6 +208,93 @@ export default Vue.extend ({
         });
     },
     methods: {
+        guardar: function () {
+            const sesion_params = {
+                id_usuario: this.$store.state.usuario.id_usuario,
+                fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
+                hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
+                usuario_creacion: this.$store.state.usuario.id_usuario,
+                usuario_actualizacion: this.$store.state.usuario.id_usuario,
+                id_tipo_tutoria: this.selectedTipoTutoria,
+                id_motivo_consulta: this.listMotivosId[0],
+                resultado: this.descripcion,
+                idAlumnos: this.listAlumnosId,
+                idMotivos: this.listMotivosId,
+            };
+            if(this.listAlumnosCod.length > 0) {
+                if(this.listMotivos.length > 0) {
+                    if(this.selectedTipoTutoria != null) {
+                        if(this.datetime != null) {
+                            axios.post('/sesiones/asistencia/',sesion_params)
+                            .then( response=>{
+                                console.log(response);
+                                Swal.fire({
+                                    text:"Se ha registrado la sesión con éxito",
+                                    icon:"success",
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor:'#0097A7',
+                                    showConfirmButton: true,
+                                }) 
+                            })  .catch(e => {
+                                console.log(e.response);
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                text:"Debe seleccionar una hora y fecha",
+                                icon:"error",
+                                confirmButtonText: 'OK',
+                                confirmButtonColor:'#0097A7',
+                                showConfirmButton: true,
+                            })
+                        }
+                    }
+                    else {
+                        Swal.fire({
+                            text:"Debe seleccionar el tipo de tutoría",
+                            icon:"error",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor:'#0097A7',
+                            showConfirmButton: true,
+                        })
+                    }
+                }
+                else {
+                    Swal.fire({
+                        text:"Debe seleccionar por lo menos un motivo",
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                }
+            }
+            else {
+                Swal.fire({
+                    text:"Debe agregar por lo menos un alumno",
+                    icon:"error",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                })
+            }
+        },
+        cancelar: function () {
+            this.datetime= '';
+            this.descripcion= null;
+            this.motivo= null;
+            this.sel= '';
+            this.alSeleccionado= 'Nombre Alumno';
+            this.selectedTipoTutoria= null;
+            this.selectedMotivo= '';
+            this.newMotivo= null;
+            this.listMotivosId= [];
+            this.motivosBorrados=[];
+            this.listAlumnosNom= [];
+            this.listAlumnosCod= [];
+            this.listAlumnosId= [];
+            this.selectedUnidadApoyo= null;
+        },
         onCodigoChange: function () {
             var i;
             for(i in this.codigos){
@@ -192,10 +306,10 @@ export default Vue.extend ({
             }
         },
         addMotivos: function () {
-            var i;
-            for(i in this.motivos)
+            for(var i in this.motivos)
                 if(this.selectedMotivo==this.motivos[i].id_motivo_consulta) {
                     this.listMotivos.push(this.motivos[i].nombre);
+                    this.listMotivosId.push(this.motivos[i].id_motivo_consulta);
                     this.motivosBorrados.push(this.motivos[i]);
                     this.motivos.splice(i,1);  
                 }
@@ -203,9 +317,16 @@ export default Vue.extend ({
         deleteMotivo: function (index) {
             var i;
             for(i in this.motivosBorrados)
-                if(this.listMotivos[index]==this.motivosBorrados[i].nombre)
+                if(this.listMotivos[index]==this.motivosBorrados[i].nombre) {
                     this.motivos.push(this.motivosBorrados[i]);
+                    break;
+                }
             this.listMotivos.splice(index,1);
+            this.listMotivosId.splice(index,1);
+        },
+        deleteAl: function(index) {
+            this.listAlumnosCod.splice(index,1);
+            this.listAlumnosNom.splice(index,1);
         },
         addAlumno: function () {  
             var estaAl = false;
@@ -218,9 +339,14 @@ export default Vue.extend ({
             if(this.alSeleccionado != 'Nombre Alumno' && !estaAl){ 
                 this.listAlumnosNom.push(this.alSeleccionado);
                 this.listAlumnosCod.push(this.sel);
+                for(var j in this.codigos){
+                    if(this.sel == this.codigos[j].codigo)
+                        this.listAlumnosId.push(this.codigos[j].id_usuario);
+                }
                 this.alSeleccionado='Nombre Alumno';
                 this.sel= '';
             }
+            console.log(this.listAlumnosId);
             
             
         }
@@ -313,6 +439,7 @@ export default Vue.extend ({
     top: 10px;
     text-align: left;
 }
+
 .form-control {
     border-radius: 1.25rem;  
     border: 2px solid #757575;
