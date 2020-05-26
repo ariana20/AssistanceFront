@@ -10,10 +10,13 @@ export default new Vuex.Store({
     programaActual:null, // Objeto Programa Actual (this.$store.state.programa)
     cantProg:null,
     tipoActual:null, // Objeto Tipo de Usuario Actual (this.$store.state.tipoActual)
-    facultades:null,
-    coordionadores:null,
+    facultades:null, 
+    coordinadores:null,
     permisos:null,
     roles:null, //Filtrar Tipos de Usuario
+    tipostutorias:null,
+    usuarios:null,
+    usuariosA:null,
     rutas:[],
     navLinks: [
       {
@@ -49,7 +52,7 @@ export default new Vuex.Store({
        {
         text: 'Gestionar Usuario',
 		path: '/ListaUsuarios',
-		icon: 'ion-ios-book'
+		icon: 'ion-ios-people'
       },
       {
        text: 'Tipos de Usuario',
@@ -89,6 +92,44 @@ export default new Vuex.Store({
         return roles;
       }
       return state.roles;
+    },
+    filtrarFacultades(state){
+      if(state.filtro.query.length > 1){
+        let facultades = state.facultades.filter(facultad => facultad.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return facultades;
+      }
+      return state.facultades;
+    },
+    filtrarCoordinadores(state){
+      if(state.filtro.query.length > 1){
+        let coordinadores = state.coordinadores.filter(coordinador => coordinador.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return coordinadores;
+      }
+      return state.coordinadores;
+    },
+    filtrarTipoTutorias(state){
+      if(state.filtro.query.length > 1){
+        let tipostutorias = state.tipostutorias.filter(tt => tt.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return tipostutorias;
+      }
+      return state.tipostutorias;
+    },
+    filtrarUsuarios(state){
+      if(state.filtro.query.length > 1){
+        let usuarios = state.usuarios.filter(usu => usu.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return usuarios;
+      }
+      return state.usuarios;
+
+    },
+    filtrarUsuariosAdmin(state){
+      if(state.filtro.query.length > 0){
+        let usuariosA = state.usuarios.filter(usu => usu.usuario.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return usuariosA;
+      }
+      return state.usuariosA; //cambie de usuarios a usuariosA cuado ya estaba duplicado el form
+
     }
+
   }
 })
