@@ -17,27 +17,26 @@
             <th scope="col">N°</th>
             <th scope="col">Nombre</th>
             <th scope="col">Correo</th>
-            <th scope="col">Tipo de Usuario</th>
+            <th scope="col">Programa (Tipo de Usuario)</th>
             <th scope="col">Modif/Elim</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in usuariosFiltrados"  :key="index">
             <th scope="row">{{index+1}}</th>
-            <td>{{item.usuario.nombre}}</td>
-            <td>{{item.usuario.correo}}</td>   
+            <td>{{item.nombre}} {{item.apellidos}}</td>
+            <td>{{item.correo}}</td>   
             <!-- va a cambiar, me daran nombre -->
-            <!-- <div  v-for="e in TodosarrayTU" :key="e.id">
-              <td style="width:645px" v-if="e.id_tipo_usuario == item.pivot.id_tipo_usuario">
-                    <span >{{e.nombre}}</span>  
-              </td>
-            </div> -->
+            <td style="width:50%">
+              <div class="row" v-for="(item,index) in item.usuario_x_programas" :key="index" style="text-align:center">
+                <span>{{item.programa.nombre}} ({{item.tipo_usuario.nombre}})</span>
+              </div>  
+            </td>
             <td style="text-align: center">
-               <router-link :to="{name: 'GestionarUsuario', params: {id: item.usuario.id_usuario}}"> 
-              <button class="btn link"><b-icon icon="pencil"></b-icon></button>
-              </router-link>              
-              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
-              
+              <div class="row" style="width:115px">
+                <button class="btn link"><b-icon icon="pencil"></b-icon></button>
+                <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
+              </div>              
             </td>
           </tr>
         </tbody>
@@ -119,11 +118,9 @@ export default {
        //esa admin le debe de listar todos los usuarios
        axios.post('/usuarios/listarTodo') //Por ahora dsp será x program
         .then(res =>{
-                        
-          this.$store.state.usuarios=res.data;
-          console.log(this.$store.state.tipoActual.nombre);
-          console.log('Store state usuariosA en es Admin',this.$store.state.usuariosA);
-          console.log('Usuarios[0].usuario ',this.usuarios[0].usuario);   
+          console.log('Respuesta: ')
+          console.log(res.data)
+          this.$store.state.usuariosA=res.data;
                    
         })
         .catch(e => {
@@ -157,7 +154,7 @@ export default {
               )
               //aqui iriía el eliminar
               //ESte eliminar no debería estar.Debería ser un eliminar del programa
-              axios.post('/usuarios/eliUsuarioPrograma/'+id)
+              axios.post('/usuarios/eliminar/'+id)
               .then(res =>{
               // Ordenadito
                     console.log(res);

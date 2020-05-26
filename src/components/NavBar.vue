@@ -7,10 +7,10 @@
               <select 
                v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.cantProg !== null && this.$store.state.cantProg.length!=0"
                class="col-sm-2 form-control"
-               style="left:250px;top:5px"
+               style="left:250px;top:5px;font-family:'Brandon Bold'"
                v-model="selectedPrograma"
                @change="cambiarProg()">
-                <option selected disabled :value="null">Cambia de Programa</option>
+                <option selected disabled :value="null" style=";font-family:'Brandon Bold'">Cambia de Programa</option>
                 <option
                     v-for="(item, index) in $store.state.cantProg" 
                     :key="index" 
@@ -30,8 +30,8 @@
                 <template v-slot:button-content>
                 <em style="color:#000000;font-weight:normal;" >{{$store.state.usuario.nombre}}</em>
                 </template>
-                <b-dropdown-item href="#">Profile</b-dropdown-item>
-                <b-dropdown-item v-on:click="logout()">Sign Out</b-dropdown-item>
+                <!-- <b-dropdown-item href="#">Profile</b-dropdown-item> -->
+                <b-dropdown-item v-on:click="logout()">Cerrar Sesión</b-dropdown-item>
             </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -148,6 +148,8 @@ export default {
               }
               this.$store.state.programaActual = this.selectedPrograma.programa;
               this.$store.state.tipoActual = this.selectedPrograma.tipoUsuario;
+              this.$store.state.roles = null;
+              this.$store.state.permisos = null;
               let stored = this.openStorage() // extract stored form
               if (!stored) stored = {} 
               stored = this.selectedPrograma; // store new value

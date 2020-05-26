@@ -109,7 +109,7 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Correo</th>
                 <th scope="col">Coordinador</th>
-                <th scope="col">Acciones</th>
+                <th scope="col" style="text-align: center">Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -117,8 +117,12 @@
                 <th v-if="item!=''" scope="row">{{index}}</th>
                 <td v-if="item!=''">{{item.nombre}}</td>
                 <td v-if="item!=''">{{item.correo}}</td>
-                <td v-if="item!=''"></td>
-                <td v-if="item!=''"></td>
+                <td v-if="item!='' && item.coordinador!=undefined">{{item.coordinador.nombre}}</td>
+                <td v-else-if="item!=''">Sin coordinador</td>
+                <td v-if="item!=''" style="text-align: center">
+                  <button class="btn link" v-on:click="Editar(item.id_programa)"><b-icon icon="pencil"></b-icon></button>
+                  <button class="btn link" v-on:click="Eliminar(item)"><b-icon icon="dash-circle-fill"></b-icon></button>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -198,6 +202,14 @@ export default {
 
                     })
                     .catch(e=>console.log(e));
+
+                axios.post('/facultad/coordinador/'+this.facultad.id_programa)
+                    .then(response=>{
+                        this.facultad.coordinador=response.data;
+                        console.log(response);
+
+                    })
+                    .catch(e=>console.log(e));
             })
             .catch(e=>console.log(e));
 
@@ -223,10 +235,10 @@ export default {
             this.facultad.id_programa=response.data.id_programa;
             console.log(response)
 
-            const params = [{
+            const params = {
               id_usuario: this.facultad.coordinador.id_usuario,
               id_programa: this.facultad.id_programa
-            }];
+            };
             axios.create()
               .post('/facultad/asignarCoordi',params)
                 .then( response=>{
@@ -273,6 +285,9 @@ export default {
       this.facultad.coordinador=value;  
       this.facultad.coordinador.nombCompleto=value.nombre+" "+value.apellidos;
 
+    },
+    Eliminar(item){
+      this.programas.splice(item);
     },
 
 

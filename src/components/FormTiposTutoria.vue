@@ -1,37 +1,23 @@
 <template>
-  <div class="FormTiposTutoria">
-    <div class="container" style="left:10%;text-align: left">
+  <div class="FormTiposTutoria" style="margin-top:20px">
+    <div class="container" >
       <table>
       <tbody  align="left">
         <p style="white-space: pre-line;"></p>
         <br>
         <td style="width:1062px">
           <tr style="text-align:left"></tr>
-          <tr style="text-align:left" ><td>Nombre</td>   
-            <td> <input style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="tipotutoria.nombre"> </td>
+          <tr style="text-align:left" ><td>Nombre:</td>   
+            <td> <input class="col-sm-10 form-control" type="text" v-model="tipotutoria.nombre"> </td>
           </tr>
        
-          <tr style="text-align:left" ><td>Descripcion</td> 
-          <textarea rows =3 cols=49  style="margin-left:50px;border-radius: 15px;border: 2px solid #757575;width:350px;padding: 12px 20px;" type="text" v-model="tipotutoria.descripcion">    
+          <tr style="text-align:left" ><td>Descripcion:</td> 
+          <textarea rows =3 cols=49  class="col-sm-10 form-control" type="text" v-model="tipotutoria.descripcion">    
           </textarea> 
           <!-- Textarea tiene que tener un número menos de largo -->
           </tr>
           
-          <!-- <tr>
 
-        <tr style="text-align:left"><td>Condiciones  </td> 
-          <div >
-            <br>
-            <ejs-multiselect style='margin-left:100px' id='multiselect' :dataSource='condiciones' :fields='camposcondi' v-model="tipotutoria.condiciones" >
-            </ejs-multiselect>
-            
-              
-          </div>
-        </tr> -->
-        <!-- lista de condiciones -->
-          <!-- <tr>
-            <li v-for="item in tipotutoria.condiciones " v-bind:key="item.value" >{{ item }}</li>
-          </tr> -->
           <tr> 
           <td >
           </td>
@@ -96,7 +82,8 @@ export default Vue.extend( {
         estado:null,
         tutoresrelacionados:null,
         condiciones:"",
-         id_tipo_tutoria_entrante:undefined,
+        id_tipo_tutoria_entrante:undefined,
+        miprog:this.$store.state.programaActual,
         //id_tipo_tutoria_entrante:this.id,
 
       },
@@ -120,18 +107,19 @@ export default Vue.extend( {
     }
   },
   created(){
-     console.log(this.id_tipo_tutoria_entrante);
+     console.log(this.tipotutoria.id_tipo_tutoria_entrante);
     console.log(parseInt((this.$route.path).substring(16,18),10));
       console.log(this.$store.state.tipostutorias);
+      console.log('mi programa ',this.tipotutoria.miprog);
   },
   mounted(){
     //Aquí lleno mis datos con la api
-   
-       this.id_tipo_tutoria_entrante=parseInt((this.$route.path).charAt(16),10);
-       console.log('Id entrante en mounted ',this.id_tipo_tutoria_entrante);
-        if(this.id_tipo_tutoria_entrante!=0 && this.id_tipo_tutoria_entrante!=undefined ){
+      if(this.$store.state.usuario==null) this.$router.push('/login')
+       this.tipotutoria.id_tipo_tutoria_entrante=parseInt((this.$route.path).substring(16,18),10);
+       console.log('Id entrante en mounted ',this.tipotutoria.id_tipo_tutoria_entrante);
+        if(this.tipotutoria.id_tipo_tutoria_entrante!=0 && this.tipotutoria.id_tipo_tutoria_entrante!=undefined ){
            Axios.create()
-          .post('/TipoTutoria/mostrar/'+this.id_tipo_tutoria_entrante).
+          .post('/TipoTutoria/mostrar/'+this.tipotutoria.id_tipo_tutoria_entrante).
           then( response =>{
             console.log('Id del tipo tutoria ',response.data.id_tipo_tutoria);
            this.tipotutoria.nombre= response.data.nombre;
@@ -149,19 +137,7 @@ export default Vue.extend( {
   methods:{
     
     guardarTipoTutoria() {
-      var cond1,cond2, cond3,cond4,cond5;
-      var entro1=false,entro2=false,entro3=false,entro4=false,entro5=false;
-      var entro6=false,entro7=false,entro8=false,entro9=false,entro10=false;
-       var aviso="";
-      //  aviso1=false,aviso2=false,aviso3=false,aviso4=false,aviso5=false;      
-      //manejo del estado
-      // if(document.checkeestado.click()==true){
-      //       this.tipotutoria.estado="act";
-      //     }
-      //     else this.tipotutoria.estado="ina";
-
-      ////manejo de condiciones
-      var verifLongi=1;
+    
       if(this.tipotutoria.descripcion =="" || this.tipotutoria.nombre==""   ){
          Swal.fire({
               text:"No ha completado todos los campos",
@@ -181,77 +157,101 @@ export default Vue.extend( {
               showConfirmButton: true,
               })
         
-      }   
-      else if(verifLongi==5 ){
-          console.log('Entro a verificar que las 5 condiciones');
-        for (let i = 0; i <5; i++) {            
-                //Si no pongo uno de los 5 se loquea
-                if (this.tipotutoria.condiciones[i]=='Individual' ){             cond1='1';entro1=true; continue;
-                }else if (this.tipotutoria.condiciones[i]=='Grupal' ){        cond1='0';   entro2=true; continue;  }
-                
-                else if (this.tipotutoria.condiciones[i]=='Obligatoria' ){           cond2='1';entro3=true;continue;
-                }else if (this.tipotutoria.condiciones[i]=='Opcional' ){        cond2='0';  entro4=true;   continue; }
-                
-                else if (this.tipotutoria.condiciones[i]=='Con tutor fijo' ){          cond3='1';  entro5=true  ; continue; }
-                else if (this.tipotutoria.condiciones[i]=='Con tutor variable' ){        cond3='0';   entro6=true;  continue; }
-                
-                else if (this.tipotutoria.condiciones[i]=='Con tutor asignado' ){  cond4='1';      entro7=true;continue;
-                }else if (this.tipotutoria.condiciones[i]=='Con tutor solicitado' ){        cond4='0'; entro8=true;   continue;  }
-                
-                else if (this.tipotutoria.condiciones[i]=='Planificado' ){           cond5='1';entro9=true;continue;
-                }else if (this.tipotutoria.condiciones[i]=='No Planificado' ){        cond5='0';  entro10=true; continue;   }
-                
-    
-           }
-          //Cuando hay 5 pero agrupó mal
-              if( entro1==true && entro2==true ) aviso=aviso+" Individual y Grupal a la vez,";
-              if( entro3==true && entro4==true ) aviso=aviso+" Opcional y Obligatoria a la vez,";
-              if( entro5==true && entro6==true ) aviso=aviso+" Tutor fijo y variable a la vez,";
-              if( entro7==true && entro8==true ) aviso=aviso+" Tutor solicitado y asignado a la vez,";              
-              if( entro9==true && entro10==true ) aviso=aviso+" Planificado o No planificado a la vez,";
-              if(aviso!=""){
-              Swal.fire({
-              text:"Verifique la agrupación de condiciones: Individual o Grupal, Opcional u obligatoria, Tutor fijo o varibale, Tutor solicitado o asignado, Planificado o No planificado. No puede ingresar la condición\n"+aviso+".",
+      }  
+      else if( this.tipotutoria.estado==null){
+          Swal.fire({
+              text:"Debe seleccionar el estado del tipo de tutoría.\n",
               icon:'error',
               confirmButtonText: 'Corregir',
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
               })
-              }
-              else{
-                 console.log('Entro porque no saltó aviso');
-      const params = {
-        nombre: this.tipotutoria.nombre, 
-        descripcion: this.tipotutoria.descripcion,
-        obligatorio:cond2,  
-        individual:cond1, 
-        planificado:cond5, 
-        tutor_asignado:cond4,
-        tutor_fijo:cond3,
-        estado:"act",   
-        id_programa:4,
-          
-      };
-      console.log('condi1: ',cond1,'condi2: ',cond2,'condi3: ',cond3,'condi4: ',cond4,'condi5: ',cond5);
-      Axios.create({withCredentials: true })
+      } 
+      else{
+        if(this.tipotutoria.id_tipo_tutoria_entrante==0){
+        const params = {
+              nombre: this.tipotutoria.nombre, 
+              descripcion: this.tipotutoria.descripcion,
+              obligatorio:this.tipotutoria.obligatorio,  
+              individual:this.tipotutoria.individual, 
+              planificado:this.tipotutoria.planificado, 
+              tutor_asignado:this.tipotutoria.tutorasignado,
+              tutor_fijo:this.tipotutoria.tutorfijo,
+              estado:this.tipotutoria.estado,   
+              id_programa:this.tipotutoria.miprog.id_programa, 
+              // id_programa:4,         
+           };
+         Axios.create()
       // http://18.232.253.212/Back-end-Software/public/api/      
         .post('TipoTutoria/insertar',params)
           .then( response=>{
-            console.log(response)
-          })
-           .catch(e => {
-                  console.log(e.response);
-                });
-
-          Swal.fire({
-              text:"Tipo de tutoria guardada con exito",
+            console.log(response);
+               Swal.fire({
+              text:"El nuevo tipo de tutoria fue guardada con exito",
               icon:'success',
               confirmButtonText: 'ok',
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
-              })
-              }
-          
+              });
+              //push
+              this.$router.push('/ListaTiposTutorias');
+          })
+           .catch(e => {
+                  console.log(e.response);
+                   Swal.fire({
+                    text:"Ocurrió un incoveniente. Vuelva a intentar en unos minutos.",
+                    icon:'error',
+                    confirmButtonText: 'ok',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+              });
+              this.$router.push('/ListaTiposTutorias');
+                });
+        }
+        else{
+          const params = {
+              nombre: this.tipotutoria.nombre, 
+              descripcion: this.tipotutoria.descripcion,
+              obligatorio:this.tipotutoria.obligatorio,  
+              individual:this.tipotutoria.individual, 
+              planificado:this.tipotutoria.planificado, 
+              tutor_asignado:this.tipotutoria.tutorasignado,
+              tutor_fijo:this.tipotutoria.tutorfijo,
+              estado:this.tipotutoria.estado,   
+              id_programa:this.tipotutoria.miprog.id_programa, 
+              // id_programa:4,           
+           };
+          Axios.create()   
+        .post('TipoTutoria/modificar/'+this.tipotutoria.id_tipo_tutoria_entrante,params)
+          .then( response=>{
+            console.log(response);
+               Swal.fire({
+              text:"El nuevo tipo de tutoria fue guardada con exito",
+              icon:'success',
+              confirmButtonText: 'ok',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+              });
+              this.$router.push('/ListaTiposTutorias');
+          })
+           .catch(e => {
+                  console.log(e.response);
+                   Swal.fire({
+                    text:"Ocurrió un incoveniente al modificar. Vuelva a intentar en unos minutos.",
+                    icon:'error',
+                    confirmButtonText: 'ok',
+                    confirmButtonColor:'#0097A7',
+                   showConfirmButton: true,
+              });
+              //No lo redirigo porque perdería sus cambios
+                });
+
+
+
+
+        }
+         
+            
       
       }
       
@@ -288,6 +288,13 @@ export default Vue.extend( {
   .tutoria-title{
     margin-top: 30px;
     margin-bottom: 20px;
+}
+.form-control {
+    border-radius: 1.25rem;  
+    border: 2px solid #757575;
+    margin-bottom: 10px;
+    /* width: 100%; */
+    
 }
   @import '../assets/styles/material.css';
 </style>

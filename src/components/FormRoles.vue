@@ -67,13 +67,23 @@ export default {
         })
   },
   methods:{
-    
     listarRoles() {
-      this.axios.post('/tipoUsuarios/listarTodo')
+        this.axios.post('/tipoUsuarios/listarTodo')
         .then(response=>{
+          if(this.$store.state.tipoActual.nombre == 'Admin'){
             this.$store.state.roles = response.data;
+          }
+          else{
+            this.$store.state.roles = response.data;
+            let index;
+            for (index = 0; index < this.$store.state.roles.length; index++) {
+              if(this.$store.state.roles[index].nombre == "Admin") break;              
+            }
+            this.$store.state.roles.splice(index, 1);
+          }
         })
         .catch(e=>console.log(e));
+      
     },
     Editar(id){
       this.$router.push('/permisos/'+id);
@@ -93,7 +103,7 @@ export default {
           if (result.value) {
             this.axios.post('/tipoUsuarios/eliminar/'+item.id_tipo_usuario)
               .then(response=>{
-                console.log(response)
+                response
                 let index = this.$store.state.roles.indexOf(
                   function(element){
                     return element.id_tipo_usuario === item.id_tipo_usuario;

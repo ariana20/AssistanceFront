@@ -2,7 +2,7 @@
   <div class="FormListarUsuario container"  style="margin-top:20px">
     <!-- para que lo vea bien un coordinador -->
     <div class="row top-titulo">
-      <div class="row col-sm-4 tutoria-title" style="margin:10px;">Buscar: 
+      <div class="row col-sm-4 tutoria-title" style="margin:10px;font-size:25px;font-weight:bold" >Buscar: 
         <input style="left:25px;" placeholder="Busque por nombre" class="row col-sm-8 form-control" type="text" v-model="nombre">  </div>
                 <div style="margin-right:600px"></div>
                 <div class="row btn-derecha" >
@@ -37,9 +37,9 @@
             </div>
             <td style="text-align: center">
                <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
-              <button class="btn link"><b-icon icon="pencil"></b-icon></button>
+              <button class="btn link"><b-icon icon="pencil"  v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
               </router-link>              
-              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
+              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item,index)"></b-icon></button>
               
             </td>
           </tr>
@@ -63,7 +63,8 @@ export default {
       TodosarrayTU:[],
       tipoXUsuario:[],
       miUsuario:this.$store.state.usuario, //Para sacar el id del programa
-
+      state:{
+        usuarioEscogido:null,}
       
     }
   },
@@ -82,6 +83,8 @@ export default {
         })
   },
   mounted(){
+    if(this.$store.state.usuario==null) this.$router.push('/login');
+    
     this.listarTUsuarios();
     console.log('Store state usuariosA',this.$store.state.usuariosA);
      if(this.$store.state.usuarios === null  ) {     
@@ -124,7 +127,7 @@ export default {
       
        
     },
-    eliminarUsuario(id){
+    eliminarUsuario(item,index){
       Swal.fire({
             text:'¿Desea eliminar?',
             icon:'warning',
@@ -145,17 +148,18 @@ export default {
                 confirmButtonColor:'#0097A7'
                 }
               )
+              let param = {
+                id_usuario:item.id_usuario,
+                tipo_usuario:item.pivot.id_tipo_usuario,
+                id_programa:item.pivot.id_programa,
+              }
               //aqui iriía el eliminar
               //ESte eliminar no debería estar.Debería ser un eliminar del programa
-              axios.post('/usuarios/eliUsuarioPrograma/'+id)
+              axios.post('/usuarios/eliUsuarioPrograma',param)
               .then(res =>{
               // Ordenadito
                     console.log(res);
-                     let index = this.$store.state.usuarios.indexOf( //
-                    function(element){
-                      return element.id_tipo_tutoria === id; //
-                    })
-                  this.$store.state.usuarios.splice(index, 1); //
+                    this.$store.state.usuarios.splice(index, 1); //
           
                 })
                 .catch(e => {
@@ -172,7 +176,13 @@ export default {
               )
             }
           })
-   } // eliminart
+   }, // eliminart
+   llenarUsuarioEscogido(item){
+      console.log('usuario escogido :',item);
+      this.$store.state.usuarioEscogido=item;
+      console.log('usuario escogido en store:',this.$store.state.usuarioEscogido);
+      this.usuarioEscogido=item;
+   }
    
   }
 }

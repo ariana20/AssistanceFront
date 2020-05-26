@@ -6,18 +6,20 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     usuario:null, // Objeto Usuario Actual (this.$store.state.usuario)
-    programas:null,
+    programas:[],
     programaActual:null, // Objeto Programa Actual (this.$store.state.programa)
     cantProg:null,
     tipoActual:null, // Objeto Tipo de Usuario Actual (this.$store.state.tipoActual)
     facultades:null, 
     coordinadores:null,
+    coordinadoresL:null,
     permisos:null,
     roles:null, //Filtrar Tipos de Usuario
     tipostutorias:null,
     usuarios:null,
     usuariosA:null,
     rutas:[],
+    usuarioEscogido:null,
     navLinks: [
       {
         text: 'Institucion',
@@ -36,14 +38,14 @@ export default new Vuex.Store({
       },
       {
         text: 'Coordinador',
-		path: '/institucion',
+		path: '/coordinadores',
 		icon: 'ion-ios-person'
       },
-      {
-        text: 'Unidades de Apoyo',
-		path: '/about',
-		icon: 'ion-ios-people'
-      },
+    //   {
+    //     text: 'Unidades de Apoyo',
+		// path: '/about',
+		// icon: 'ion-ios-people'
+    //   },
       {
         text: 'Tipos de Tutoria',
 		path: '/ListaTiposTutorias',
@@ -64,6 +66,11 @@ export default new Vuex.Store({
       path: '/sesiontutoria',
       icon: 'ion-ios-school'
     },
+   {
+    text: 'Gestionar Usuarios Admin',
+    path: '/AListaUsuarios',
+    icon: 'ion-ios-people'
+  },
     ],
     filtro:{
       query: '',
@@ -81,7 +88,7 @@ export default new Vuex.Store({
   getters:{
     filtrarProgramas(state){
       if(state.filtro.query.length > 1){
-        let programas = state.programas.filter(programa => programa.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        let programas = state.programas.filter(programa => programa.programa.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return programas;
       }
       return state.programas;
@@ -124,12 +131,19 @@ export default new Vuex.Store({
     },
     filtrarUsuariosAdmin(state){
       if(state.filtro.query.length > 0){
-        let usuariosA = state.usuarios.filter(usu => usu.usuario.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        let usuariosA = state.usuariosA.filter(usu => usu.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return usuariosA;
       }
       return state.usuariosA; //cambie de usuarios a usuariosA cuado ya estaba duplicado el form
 
-    }
+    },
+    filtrarCoordinadoresL(state){
+      if(state.filtro.query.length > 0){
+        let coordinadoresL = state.coordinadoresL.filter(coordinador => coordinador.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return coordinadoresL;
+      }
+      return state.coordinadoresL;
+    },
 
   }
 })

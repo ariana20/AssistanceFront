@@ -71,7 +71,19 @@ export default {
     listarPermisos() {
         axios.post('ModuloPermiso/listarTodoPermisos')
             .then(response=>{
+              if(this.$store.state.tipoActual.nombre == 'Admin'){
                 this.$store.state.permisos = response.data;
+              }
+              else{
+                this.$store.state.permisos = response.data;
+                let indexA;
+                for (let mod in this.$store.state.permisos) {
+                  indexA = mod;
+                  if(mod.nombre == "Configuracion") break;              
+                }
+                delete this.$store.state.permisos[indexA];
+                console.log(this.$store.state.permisos)
+              }
             })
             .catch(e=>console.log(e));
     },

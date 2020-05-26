@@ -15,7 +15,6 @@
           <!--input type="text" class="form-control" v-model="nombre"-->
           <input id="nombre" class="row form-control" type="text" v-model="nombre">
         </div>
-        <button type="button" class="btn btn-outline-secondary"><b-icon icon="search"></b-icon></button>
       </div>
 
             
@@ -34,7 +33,7 @@
           <tr v-for="(item,index) in facultadesFiltradas" :key="index">
             <th scope="row">{{index+1}}</th>
             <td v-if="item!=undefined">{{item.nombre}}</td>
-            <td v-if="item.coordinador!=undefined">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
+            <td v-if="item.coordinador!=undefined && item.coordinador!=null">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
             <td v-else>Sin coordinador</td>
             <td>{{item.correo}}</td>
             <td style="text-align: center">{{item.cantidad-1}}</td>

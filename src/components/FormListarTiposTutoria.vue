@@ -1,7 +1,7 @@
 <template>
   <div class="FormRoles container" style="margin-top:20px">
         <div class="row top-titulo">
-        <div class="row col-sm-4 tutoria-title" style="margin:10px">Buscar:  
+        <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px;font-weight:bold">Buscar:  
         <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
         </div>
         <div style="margin-right:500px"></div>
@@ -54,6 +54,7 @@ export default {
     }
   },
   mounted(){
+    if(this.$store.state.usuario==null) this.$router.push('/login');
     console.log('mi programa actual: ',this.$store.state.programaActual);
     if(this.$store.state.tipostutorias === null) this.listarTT(); //
     else this.tipostutorias = this.$store.state.tipostutorias; //
@@ -87,7 +88,7 @@ computed:{
     },
     
     eliminarTtutoria(id){
-        console.log(id);
+        console.log('Id del tipo de tutoria a eliminar: ',id);
       Swal.fire({
             text:'¿Desea eliminar?',
             icon:'warning',
@@ -102,7 +103,7 @@ computed:{
         }).then((result) => {
             if (result.value) {
               Swal.fire({
-                icon:'success!',
+                icon:'success',
                 text:'El tipo de tutoria ha sido eliminado',
                 confirmButtonText:'Confirmo' ,
                 confirmButtonColor:'#0097A7'
@@ -112,6 +113,7 @@ computed:{
               Axios.post('/TipoTutoria/eliminar/'+id)
                 .then(response=>{
                   console.log(response);
+                  console.log('eliminaré a :', this.$store.state.tipostutorias.id_tipo_tutoria);
                   let index = this.$store.state.tipostutorias.indexOf( //
                     function(element){
                       return element.id_tipo_tutoria === id; //
@@ -126,6 +128,7 @@ computed:{
             ) {
               Swal.fire({
                 text:'Se ha cancelado la eliminación',
+                icon:'warning',
                 confirmButtonColor:'#0097A7',}
               )
             }
