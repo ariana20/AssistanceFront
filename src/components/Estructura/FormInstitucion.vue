@@ -58,6 +58,7 @@ export default {
     }
   },
   mounted(){
+    if(this.$store.state.usuario==null) this.$router.push('/login')
     axios
       .post('/institucion/listarTodo')
         .then( response=>{

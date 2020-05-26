@@ -76,7 +76,7 @@ export default {
   methods:{    
     openStorage (nombre) {
       return JSON.parse(localStorage.getItem(nombre))
-    },  
+    },
   }
 }
 </script>

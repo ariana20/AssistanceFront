@@ -223,10 +223,10 @@ export default {
             this.facultad.id_programa=response.data.id_programa;
             console.log(response)
 
-            const params = [{
+            const params = {
               id_usuario: this.facultad.coordinador.id_usuario,
               id_programa: this.facultad.id_programa
-            }];
+            };
             axios.create()
               .post('/facultad/asignarCoordi',params)
                 .then( response=>{

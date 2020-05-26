@@ -34,8 +34,8 @@
           <tr v-for="(item,index) in facultadesFiltradas" :key="index">
             <th scope="row">{{index+1}}</th>
             <td v-if="item!=undefined">{{item.nombre}}</td>
-            <td v-if="coordinadores[index]!=undefined && coordinadores[index][0]!=undefined">{{coordinadores[index][0].nombre+" "+coordinadores[index][0].apellidos}}</td>
-            <td v-else-if="coordinadores[index]!=undefined" >{{coordinadores[index].nombre}}</td>
+            <td v-if="item.coordinador!=undefined && item.coordinador!=null">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
+            <td v-else>Sin coordinador</td>
             <td>{{item.correo}}</td>
             <td style="text-align: center">{{item.cantidad-1}}</td>
             <td style="text-align: center">
@@ -85,24 +85,27 @@ export default {
       .post('/facultad/listFacuConCant')
         .then(res =>{
           console.log(res.data);
-          this.facultades=res.data
+          this.facultades=res.data;
           this.$store.state.facultades = res.data;
-
-
+          axios
+          .post('/facultad/listFacuConCoordi')
+            .then(res =>{
+              console.log(res.data);
+              this.coordinadores=res.data[1];
+              this.$store.state.coordinadores=res.data;
+              for(var i=0; i<this.facultades.length; i++){
+                this.facultades[i].coordinador=this.coordinadores[i][0];
+              }
+            })
+            .catch(e => {
+              console.log(e.response);
+            })
+            
         })
         .catch(e => {
           console.log(e.response);
         })
-      axios
-      .post('/facultad/listFacuConCoordi')
-        .then(res =>{
-          console.log(res.data);
-          this.coordinadores=res.data
 
-        })
-        .catch(e => {
-          console.log(e.response);
-        })
     },
     Editar(id){
       this.$router.push('/crearFacultad/'+id);
