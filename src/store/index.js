@@ -87,7 +87,7 @@ export default new Vuex.Store({
   },
   getters:{
     filtrarProgramas(state){
-      if(state.filtro.query.length > 1){
+      if(state.filtro.query.length > 0){
         let programas = state.programas.filter(programa => programa.programa.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return programas;
       }
@@ -101,14 +101,14 @@ export default new Vuex.Store({
       return state.roles;
     },
     filtrarFacultades(state){
-      if(state.filtro.query.length > 1){
+      if(state.filtro.query.length > 0){
         let facultades = state.facultades.filter(facultad => facultad.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return facultades;
       }
       return state.facultades;
     },
     filtrarCoordinadores(state){
-      if(state.filtro.query.length > 1){
+      if(state.filtro.query.length > 0){
         let coordinadores = state.coordinadores.filter(coordinador => coordinador.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return coordinadores;
       }
