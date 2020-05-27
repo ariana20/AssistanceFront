@@ -183,7 +183,7 @@ export default Vue.extend ({
         }).catch(e => {
             console.log(e.response);
         });
-    axios.post('sesiones/alumnoProg/', {idProg: this.$store.state.programaActual.id_programa,idTipoU: 5})
+    axios.post('sesiones/alumnoProg', {idProg: this.$store.state.programaActual.id_programa,idTipoU: 5})
         .then( response => {
             console.log(response.data)
             for(var i in response.data){ 
