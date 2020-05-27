@@ -3,7 +3,7 @@
         <div class="top-titulo" style="text-align:left;">
             <h4 class="col-sm-4 tutoria-title">Tipo de Tutoría: </h4>
             <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="selectedTipoTutoria">
-                <option disabled selected :value="null">Selecciona un tipo de tutoría</option>
+                <option disabled selected :value="null" focusable="false">Selecciona un tipo de tutoría</option>
                 <option 
                     v-for="(tipoTutoria, index) in tiposTutoria" 
                     :key="index" 
@@ -11,7 +11,8 @@
                     {{ tipoTutoria.nombre }}
                 </option>
             </select>
-            <div class="botones">
+            <date-picker class="col-sm-3 " style="left:-160px;top:26px" v-model="datetime" lang="es" type="datetime" format="YYYY-MM-DD HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
+            <div class="botones col-sm-4" style="margin-left: -150px;margin-bottom:10px">
             <button type="button" class="btn btn-info" @click="guardar()" >Guardar</button>
             <button type="button" class="btn btn-info" @click="cancelar()" style="border-color:gray;background-color:gray;">Cancelar</button>
             </div>
@@ -30,13 +31,13 @@
                             placeholder="Código" 
                             :change='onCodigoChange'
                             v-model="sel"
-                            :cssClass="bordes"
+                            class="form-control"
                             style="margin-bottom: 10px;"
                             :showClearButton="false">
                         </ejs-autocomplete>
 
                         <ul class="col-sm-12 col-md-12" style="text-align:left;margin-left:-8px;">
-                            <li class="form-control" style="width:120%;text-align:center;"
+                            <li class="form-control" style="width:120%;text-align:center;margin-top:8px;"
                                 v-for="(newAlumnoCod,alcIndex) in listAlumnosCod"  
                                 :key="alcIndex">
                                 {{newAlumnoCod}}           
@@ -47,26 +48,25 @@
                     <div class="col">
                         <div class="col" style="text-align:left;padding-bottom:30px;">
                             <label for="formGroupExampleInput" style="margin-right:50px">Nombre y Apellidos</label>
-                            <button  :disabled="!this.sel" type="button" class="btn btn-light" style="display:inline;margin:-3px;"
-                                    @click="addAlumno">+
+                            <button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:-3px;"
+                                    @click="addAlumno">Agregar
                             </button>
                         </div>
                         <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{alSeleccionado}}</div>
                         <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
-                            <li class="form-control list-group-item" 
+                            <li class="form-control list-group-item" style="padding: 0.4rem 0.5rem;"
                                 v-for="(newAlumno,alIndex) in listAlumnosNom"  
                                 :key="alIndex">
-                                <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span>
                                 {{newAlumno}}    
-                                       
+                                <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
                             </li>
                         </ul>
                     </div>
                     
                 </div>
                 <div style="position:absolute; bottom:30px;">
-                    <date-picker v-model="datetime" lang="es" type="datetime" format="YYYY-MM-DD HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
-                    <!--<date-picker v-model="datetime" type="datetime" :time-picker-options="timePickerOptions" placeholder="Selecciona Hora y Fecha"></date-picker> -->
+                    <!--<date-picker v-model="datetime" lang="es" type="datetime" format="YYYY-MM-DD HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
+                    <date-picker v-model="datetime" type="datetime" :time-picker-options="timePickerOptions" placeholder="Selecciona Hora y Fecha"></date-picker> -->
                 </div>
             </div>
             
@@ -75,7 +75,7 @@
                  <div class="top-titulo" style="margin-bottom:20px;">
                     <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
                     <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="selectedMotivo">
-                        <option selected disabled value="">Selecciona un motivo</option>
+                        <option disabled selected value=null>Selecciona un motivo</option>
                         <option
                         v-for="(motivo, i) in motivos" 
                         :key="i" 
@@ -85,8 +85,8 @@
                     </select>
                     <div class="botones">
                     <button type="button" 
+                            :disabled="!this.selectedMotivo"
                             class="btn btn-info" 
-                            style="border-color:gray;background-color:gray;"
                             @click="addMotivos(i)">Seleccionar</button>
                     </div>
                 </div>
@@ -123,7 +123,7 @@
                 
             </div>
         </div>
-        <hr>
+        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
     </div>
 </template>
 
@@ -174,18 +174,21 @@ export default Vue.extend ({
         }
     },
     mounted(){
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.row.grid-divider > div.izq.col-lg-6.col-xm-2.col-md-12 > div:nth-child(3) > div > div > input").style.borderRadius = "1.25rem"; 
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.row.grid-divider > div.izq.col-lg-6.col-xm-2.col-md-12 > div:nth-child(3) > div > div > input").style.border= "0.5px solid #757575";    
-        
+        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.borderRadius = "1.25rem"; 
+        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.border= "0.5px solid #757575";    
+        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontWeight = "400";
+        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontSize = "1rem";
+        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.height = "2.4em";
+  
     axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {
             this.unidadesApoyo = response.data;
         }).catch(e => {
             console.log(e.response);
         });
-    axios.post('sesiones/alumnoProg', {idProg: this.$store.state.programaActual.id_programa,idTipoU: 5})
+    axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
         .then( response => {
-            console.log(response.data)
+            console.log("listado alumnos: ",response.data)
             for(var i in response.data){ 
                 this.codigos.push(response.data[i][0]);
             }
@@ -222,24 +225,35 @@ export default Vue.extend ({
                 idAlumnos: this.listAlumnosId,
                 idMotivos: this.listMotivosId,
             };
-            if(this.listAlumnosCod.length > 0) {
+            if(this.selectedTipoTutoria != null) {
                 if(this.listMotivos.length > 0) {
-                    if(this.selectedTipoTutoria != null) {
+                    if(this.listAlumnosCod.length > 0) {
                         if(this.datetime != null) {
-                            axios.post('/sesiones/asistencia/',sesion_params)
-                            .then( response=>{
-                                console.log(response);
-                                Swal.fire({
-                                    text:"Se ha registrado la sesión con éxito",
-                                    icon:"success",
-                                    confirmButtonText: 'OK',
-                                    confirmButtonColor:'#0097A7',
-                                    showConfirmButton: true,
-                                }) 
-                            })  .catch(e => {
-                                console.log(e.response);
-                            });
-                        }
+                            if(this.descripcion!=null) {
+                                axios.post('/sesiones/asistencia',sesion_params)
+                                    .then( response=>{
+                                        console.log(response);
+                                        Swal.fire({
+                                            text:"Se ha registrado la sesión con éxito",
+                                            icon:"success",
+                                            confirmButtonText: 'OK',
+                                            confirmButtonColor:'#0097A7',
+                                            showConfirmButton: true,
+                                        }) 
+                                    })  .catch(e => {
+                                        console.log(e.response);
+                                    });
+                                }
+                                else {
+                                    Swal.fire({
+                                        text:"Debe llenar el campo descripción",
+                                        icon:"error",
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+                                    })
+                                }
+                            }
                         else {
                             Swal.fire({
                                 text:"Debe seleccionar una hora y fecha",
@@ -252,7 +266,7 @@ export default Vue.extend ({
                     }
                     else {
                         Swal.fire({
-                            text:"Debe seleccionar el tipo de tutoría",
+                            text:"Debe agregar por lo menos un alumno",
                             icon:"error",
                             confirmButtonText: 'OK',
                             confirmButtonColor:'#0097A7',
@@ -272,7 +286,7 @@ export default Vue.extend ({
             }
             else {
                 Swal.fire({
-                    text:"Debe agregar por lo menos un alumno",
+                    text:"Debe seleccionar el tipo de tutoría",
                     icon:"error",
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
@@ -337,7 +351,7 @@ export default Vue.extend ({
                         break;
                     }
             }
-            if(this.alSeleccionado != 'Nombre Alumno' && !estaAl){ 
+            if(this.alSeleccionado != 'Nombre Alumno' && !estaAl && this.sel.length == 8){ 
                 this.listAlumnosNom.push(this.alSeleccionado);
                 this.listAlumnosCod.push(this.sel);
                 for(var j in this.codigos){
@@ -403,7 +417,7 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
 }
 .grid-divider > [class*="col-"]:nth-child(n + 2):after {
   content: "";
-  background-color: gray;
+  background-color: #BABABA;
   position: absolute;
   top: 0;
   bottom: 0;
