@@ -1,11 +1,18 @@
 <template>
   <div class="FormPrograma">
-    <div class="container" style="left:60px;text-align: left;margin-top:20px">
-        <div class="row" style="margin-top:40px;margin-bottom:40px">
+    <div class="container" style="left:60px;text-align: left">
+      <div class="top-titulo">
+            <h4 class="col-sm-4 title-container">Buscar: </h4>
+            <input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre del coordinador">
+            <div class="botones">
+            <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:190px" >Añadir</button>
+            </div>
+      </div>
+        <!--<div class="row" style="margin-top:40px;margin-bottom:40px">
             <div class="font-weight-ligth text-left textF" style="font-size:20px;line-height: 35px;">Buscar:</div>
             <input class="borde-textbox" type="text" style="margin-left:3%;padding:7px" v-model="nombre">
             <b-button v-on:click="nuevo()" style="margin-left:60%;background: #0097A7">Añadir</b-button>
-        </div>
+        </div>-->
       <table class="table" style="text-align:center">
         <thead>
           <tr>
@@ -124,7 +131,30 @@ export default {
           }
         })
       
+    },
+    nuevo(){
+      this.$router.push('/coordinador/'+0);
     }
   }
 }
 </script>
+
+<style scoped>
+.title-container{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    color:black !important;
+}
+.form-control {
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
+    margin-bottom: 10px;
+}
+.top-titulo {
+    display: flex;
+    justify-content: space-between;
+}
+.botones {
+    margin:auto;
+}
+</style>

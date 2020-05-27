@@ -1,7 +1,11 @@
 <template>
   <div class="FormPrograma">
-    <div class="container" style="left:60px;text-align: left;margin-top:20px">
-      <table>
+    <div class="container" style="left:60px;text-align: left;">
+      <div class="top-titulo">
+            <h4 class="col-sm-4 title-container">Buscar: </h4>
+            <input class="col-sm-4 form-control" style="left:-600px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre del programa">
+      </div>
+      <!--<table>
       <tbody>
         <td style="width:662px">
           <tr style="text-align:left"></tr>
@@ -11,7 +15,7 @@
           </tr>
         </td>
       </tbody>
-      </table>
+      </table>-->
       <table class="table">
         <thead>
           <tr>
@@ -85,3 +89,22 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.title-container{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.form-control {
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
+    margin-bottom: 10px;
+}
+.top-titulo {
+    display: flex;
+    justify-content: space-between;
+}
+.botones {
+    margin:auto;
+}
+</style>

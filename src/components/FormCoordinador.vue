@@ -149,7 +149,8 @@ export default {
             nombre:this.nombre.trim().replace(/\s+/g, ' '),
             apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
             estado:this.estado,
-            telefono:this.telefono,    
+            telefono:this.telefono,  
+            id_tipo_usuario:3,   
             // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
             };
              

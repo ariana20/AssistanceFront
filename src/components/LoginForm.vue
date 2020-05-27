@@ -30,13 +30,13 @@
                   <input v-model="state.password" type="password" placeholder="Contraseña" class="forms_field-input" required />
                 </div>
               </fieldset>
-              <div class="forms_buttons" style="margin-top:60px">
-                <a href="#openModal" type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</a>
-                <input type="submit" value="Ingresar" class="forms_buttons-action">
+              <div class="forms_buttons" style="margin-top:60px; font-size:15px;  font-family:'Brandon Bold'">
+                <!-- <a href="#openModal" type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</a> -->
+                <input type="submit" value="Ingresar" class="forms_buttons-action" style="width:100%">
               </div>
               
             </form>
-              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:80px">Ingresar con Google</button>
+              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:60px;font-family:'Brandon Bold'">Ingresar con Google</button>
           </div>
           <div class="user_forms-signup">
             <h2 class="forms_title">Usuario Nuevo</h2>
@@ -55,7 +55,7 @@
                   <input v-model="reg.password" type="password" placeholder="Contraseña" class="forms_field-input" required />
                 </div>
                 <div class="forms_field">
-                  <select style="border-radius: 15px;border: 2px solid #757575;width:100%;padding: 12px 20px;" v-model="programaEl">
+                  <select class= "form-control" style="color:gray" v-model="programaEl">
                     <option selected disabled :value="null">Elige un Programa</option>
                     <option v-for="options in programasT" v-bind:key="options.id_programa" :value="options">
                       {{ options.nombre}}
@@ -64,10 +64,11 @@
                 </div>
               </fieldset>
               <div class="forms_buttons">
-                <input type="submit" value="Registrarse" class="forms_buttons-action" style="width:100%">
+                <input type="submit" value="Registrarse" class="forms_buttons-action" style="font-size:15px;font-family:'Brandon Bold';width:70%;height:45px">
+                <button @click="registrate('google')" class="btn btn-lg btn-google btn-block" style="font-size:15px;  font-family:'Brandon Bold'width:40%">Registrarse con Google</button>
               </div>
             </form>
-            <button @click="registrate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:20px">Registrarse con Google</button>
+            
           </div>
         </div>
       </div>
@@ -421,5 +422,11 @@ import emailjs from 'emailjs-com';
     background-color: #DD4B39;
     height: 45px;
   }
+  .form-control {
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
+    margin-bottom: 10px;
+    margin-top: 40px;
+}
 </style>
 

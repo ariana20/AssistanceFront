@@ -1,6 +1,14 @@
 <template>
-  <div class="FormListarUsuario container"  style="margin-top:20px">
-    <!-- para que lo vea bien un coordinador -->
+  <div class="FormListarUsuario">
+    <div class="container" style="margin-left:100px;text-align: left">
+      <div class="top-titulo">
+            <h4 class="col-sm-4 title-container">Buscar: </h4>
+            <input class="col-sm-6 form-control" style="top:26px;right:230px;" v-model="nombre" placeholder="Ingrese nombre del usuario">
+            <div class="botones">
+            <button type="button" class="btn btn-info" style="text-align:right">Añadir</button>
+            </div>
+      </div>
+    <!-- para que lo vea bien un coordinador
     <div class="row top-titulo">
       <div class="row col-sm-4 tutoria-title" style="margin:10px;">Buscar: 
         <input style="left:25px;" placeholder="Busque por nombre" class="row col-sm-8 form-control" type="text" v-model="nombre">  </div>
@@ -9,8 +17,8 @@
                 <router-link to="/Usuario/0"> 
                   <button  type="button" style="margin-right:10px" class="row btn btn-info">Añadir</button>
                 </router-link>
-                </div>  
-         
+                </div>  -->
+      
       <table class="table" >
         <thead>
           <tr>
@@ -195,10 +203,9 @@ export default {
   }
   .form-control {
     border-radius: 1.25rem;  
-    border: 2px solid #757575;
+    border: 0.5px solid #757575;
     margin-bottom: 10px;
     width: 100%;
-    
 }
 .btn-derecha{
    margin-top: 0px;
