@@ -35,6 +35,7 @@
       <div id="derecho" class="col-md-4">
        <tr style="text-align:left"><td style="width:150px;">Tipos de usuarios:</td>   
           <select  v-model="tiposUsuariosselect" class="form-control" >
+            <option disabled selected :value="null">Selecciona un tipo de usuario</option>
             <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index">
              {{ tipoU.nombre}}
              </option>

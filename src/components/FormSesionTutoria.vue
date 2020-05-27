@@ -3,7 +3,7 @@
         <div class="top-titulo" style="text-align:left;">
             <h4 class="col-sm-4 tutoria-title">Tipo de Tutoría: </h4>
             <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="selectedTipoTutoria">
-                <option disabled selected >Selecciona un tipo de tutoría</option>
+                <option disabled selected :value="null">Selecciona un tipo de tutoría</option>
                 <option 
                     v-for="(tipoTutoria, index) in tiposTutoria" 
                     :key="index" 
@@ -110,7 +110,7 @@
                     <div class="top-titulo" style="text-align:left;">
                     <div class="col-sm-4 derivar-dropdown-title">Derivar: </div>
                     <select class="col-sm form-control" style="left:-40px;" v-model="selectedUnidadApoyo">
-                        <option selected disabled value="">Seleccionar</option>
+                        <option selected disabled :value="null">Seleccionar</option>
                         <option
                         v-for="(unidadApoyo, i) in unidadesApoyo" 
                         :key="i" 

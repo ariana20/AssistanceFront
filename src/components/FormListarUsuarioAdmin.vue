@@ -5,7 +5,7 @@
             <h4 class="col-sm-4 title-container">Buscar: </h4>
             <input class="col-sm-6 form-control" style="top:26px;right:230px;" v-model="nombre" placeholder="Ingrese nombre del usuario">
             <div class="botones">
-            <button type="button" class="btn btn-info" style="text-align:right">Añadir</button>
+            <!-- <button type="button" class="btn btn-info" style="text-align:right">Añadir</button> -->
             </div>
       </div>
     <!-- para que lo vea bien un coordinador
@@ -26,7 +26,7 @@
             <th scope="col">Nombre</th>
             <th scope="col">Correo</th>
             <th scope="col">Programa (Tipo de Usuario)</th>
-            <th scope="col">Modif/Elim</th>
+            <!-- <th scope="col">Modif/Elim</th> -->
           </tr>
         </thead>
         <tbody>
@@ -37,15 +37,17 @@
             <!-- va a cambiar, me daran nombre -->
             <td style="width:50%">
               <div class="row" v-for="(item,index) in item.usuario_x_programas" :key="index" style="text-align:center">
-                <span>{{item.programa.nombre}} ({{item.tipo_usuario.nombre}})</span>
+                <span v-if="item.programa">{{item.programa.nombre}}</span>
+                <span v-else> Sin Asignar </span>
+                <span style="margin-left:5px"> ({{item.tipo_usuario.nombre}})</span>
               </div>  
             </td>
-            <td style="text-align: center">
+            <!-- <td style="text-align: center">
               <div class="row" style="width:115px">
                 <button class="btn link"><b-icon icon="pencil"></b-icon></button>
                 <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
               </div>              
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </table>

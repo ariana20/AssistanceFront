@@ -39,8 +39,10 @@
         <div class="row text-left" style="margin-left:5%;margin-top:10px;width:100%;text-align:left" v-for="(itemA, indexA) in item.permisos" :key="indexA">
           <input v-on:click="cambio(itemA.nombre,$event)" v-if="permisosActuales.includes(itemA.nombre)" type="checkbox" class="form-check-input" :id="'exampleCheck'+indexA" checked>
           <input v-on:click="cambio(itemA.nombre,$event)" v-else type="checkbox" class="form-check-input" :id="'exampleCheck'+indexA">
-          <div class="row font-weight-light" style="margin-left:2%;font-size:20px">
+          <div class="row font-weight-light" style="margin-left:2%;font-size:20px;width:200px">
             {{itemA.nombre}}
+          </div>
+          <div class="row font-weight-light" style="margin-left:2%;font-size:20px">
             {{itemA.descripcion}}
           </div>
         </div>
@@ -147,6 +149,7 @@ export default {
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                     })
+                    this.$store.state.roles = null;
                     this.$router.push('/tiposUsuario');
                   })
                   .catch(e=>console.log(e));

@@ -6,12 +6,21 @@
       <table>
       <tbody>
         <td >
-        <tr style="text-align:left"><td>Codigo:</td>   <td> <input class=" form-control" type="text"       v-model="codigo"></td></tr>
-        <tr style="text-align:left"><td>Nombre:</td>   <td> <input class="form-control" type="text"       v-model="nombre"></td></tr>
-        <tr style="text-align:left"><td>Apellidos:</td>   <td> <input class="form-control" type="text"    v-model="apellidos"></td></tr>
-        <tr style="text-align:left"><td>Celular:</td>   <td> <input class="form-control"  type="number"  v-model="telefono"></td></tr>
-          <tr style="text-align:left"><td>Correo:</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
-
+        <tr style="text-align:left"><td>Codigo:</td>   <td> <input  class=" form-control" type="text" v-model="codigo"></td></tr>
+        <tr style="text-align:left"><td>Nombre:</td>   <td> <input class="form-control" type="text" v-model="nombre"></td></tr>
+        <tr style="text-align:left"><td>Apellidos:</td>   <td> <input class="form-control" type="text" v-model="apellidos"></td></tr>
+        <tr style="text-align:left"><td>Celular:</td>   <td> <input class="form-control" type="text" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" v-model="telefono"></td></tr>
+        <tr style="text-align:left"><td>Correo:</td>   <td> <input id="corr" class="form-control" type="text" v-model="correo"></td></tr>
+        <tr style="text-align:left">
+          <td>Tipo de Coordinador</td>
+          <td>
+            <select class= "form-control" style="color:gray" v-model="tipoSel">
+              <option selected="true" disabled :value="0">Elige un Tipo de Coordinador</option>
+              <option :value="2">Coordinador de Facultad</option>
+              <option :value="3">Coordinador de Programa</option>
+            </select>
+          </td>
+        </tr>
        
         <tr style="margin-left:100px"  >
           <div class="row col-sm-6 " style="margin-left:80px;" > 
@@ -53,9 +62,11 @@ export default {
       correo:"",
       telefono:"",
       tiposUsuarios:"",
+      tipoSel:0,
       estado:null,
       miprog:this.$store.state.programaActual,
       usuario_entrante:this.$store.state.usuarioEscogido,
+      tipos:["Facultad","Coordinador"]
     }
   },
 
@@ -129,6 +140,15 @@ export default {
               showConfirmButton: true,
           })   
       }
+      else if(this.tipoSel==0){
+        Swal.fire({
+          text:"No ha seleccionado un Tipo de Coordinador",
+          icon:"error",
+          confirmButtonText: 'OK',
+          confirmButtonColor:'#0097A7',
+          showConfirmButton: true,
+        }) 
+      }
       
       else{//está bien y envío
       const params = {
@@ -139,7 +159,7 @@ export default {
             telefono:this.telefono,
             password:"1234",
             estado:this.estado,
-            id_tipo_usuario:3,  
+            id_tipo_usuario:this.tipoSel,  
             //ahora, si es tipo usuario 4 de tutor debe insertar el tipo de tutoria
 
             };
@@ -150,7 +170,7 @@ export default {
             apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
             estado:this.estado,
             telefono:this.telefono,  
-            id_tipo_usuario:3,  
+            id_tipo_usuario:this.tipoSel,  
             // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
             };
              
