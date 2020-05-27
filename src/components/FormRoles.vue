@@ -1,12 +1,19 @@
 <template>
-  <div class="FormRoles container" style="margin-top:20px">
-    <div class="row top-titulo " >
-        <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px;font-weight:bold">Buscar:  
+  <div class="FormRoles container" >
+    <div class="row top-titulo" style="text-align: left" >
+      <div class="top-titulo">
+            <h4 class="col-sm-4 title-container">Buscar: </h4>
+            <input class="col-sm-6 form-control" style="top:26px;right:100px;" v-model="nombre" placeholder="Ingrese nombre del tipo de usuario">
+            <div class="botones">
+            <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:280px" >Añadir</button>
+            </div>
+      </div>
+        <!--<div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px;font-weight:bold">Buscar:  
         <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
         </div>
         <div style="margin-right:100px"></div>                   
-                  <!-- <button  type="button"  style="text-align:right" class="btn btn-info">Añadir</button> -->
-                  <b-button v-on:click="nuevo()" style="height:40px;border-color:transparent;margin-left:25%;background: #0097A7">Añadir</b-button>
+                 <button  type="button"  style="text-align:right" class="btn btn-info">Añadir</button> 
+                  <b-button v-on:click="nuevo()" style="height:40px;border-color:transparent;margin-left:25%;background: #0097A7">Añadir</b-button>-->
            
       </div>
       <table class="table"  style="text-align:left">
@@ -122,11 +129,40 @@ export default {
 }
 </script>
 <style scoped>
-  .form-control {
+
+.form-control {
     border-radius: 1.25rem;  
-    border: 2px solid #757575;
+    border: 0.5px solid #757575;
     margin-bottom: 10px;
-    width: 200%;
-    
+}
+.motivo-dropdown-title {
+    top: 10px;
+    text-align: left;
+}
+.btn {
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    margin: 5px;
+}
+.close {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    padding: 12px 16px;
+    transform: translate(0%, -50%);
+}
+.title-container{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.top-titulo {
+    display: flex;
+    justify-content: space-between;
+}
+.botones {
+    margin:auto;
 }
 </style>

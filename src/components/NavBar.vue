@@ -167,7 +167,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.form-control {
+    border-radius: 1.25rem ;  
+    border: 0.5px solid #757575 ;
+    width: 110%;
+    margin-bottom: 10px;
+}
+
   .sidenav {
   height: 100%;
   width: 0;

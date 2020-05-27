@@ -1,7 +1,19 @@
 <template>
-  <div class="FormRoles" style="margin-top:20px">
-    <div class="container" style="left:60px;text-align: left">
-      <div style="width:100%">
+  <div class="FormRoles">
+    <div class="container" style="margin-left:100px;text-align: left">
+      <div class="top-titulo">
+            <h4 class="col-sm-4 title-container">Tipo Usuario: </h4>
+            <input class="col-sm-6 form-control" style="top:26px;right:150px;" v-model="nombre" placeholder="Ingrese tipo de usuario">
+            <div class="botones" style="display: inline-flex;margin-left: -30px;">
+            <button type="button" class="btn btn-info" @click="Guardar()" >Guardar</button>
+            <button type="button" class="btn btn-info" @click="Regresar()" style="border-color:gray;background-color:gray;">Cancelar</button>
+            </div>
+      </div>
+
+
+
+
+      <!--<div style="width:100%">
             <div class="row" style="text-align:left;height:100px;margin-top:40px">
               <div class="row" style="text-align:left;height:40px;width:100%">
                 <div class="row" style="margin-left:5%;width:50%">
@@ -15,8 +27,11 @@
                 </div>
               </div>
             </div>
-      </div>
-      <div class="col-md-12" style="border-bottom:3px solid #0097A7; "></div>
+      </div>-->
+
+
+
+      <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
       <div v-for="(item, index) in $store.state.permisos" :key="index" style="width:100%;margin-bottom: 35px;">
         <div class="font-weight-bolder text-left" style="font-size:20px;margin-top:25px;margin-bottom: 25px;">
           {{item.nombre}}
@@ -166,4 +181,40 @@ export default {
     width:300px;
     padding-left: 15px;
   }
+  
+.form-control {
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
+    margin-bottom: 10px;
+}
+.motivo-dropdown-title {
+    top: 10px;
+    text-align: left;
+}
+.btn {
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    margin: 5px;
+}
+.close {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    padding: 12px 16px;
+    transform: translate(0%, -50%);
+}
+.title-container{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.top-titulo {
+    display: flex;
+    justify-content: space-between;
+}
+.botones {
+    margin:auto;
+}
 </style>

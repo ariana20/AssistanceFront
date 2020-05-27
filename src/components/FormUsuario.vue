@@ -4,19 +4,17 @@
       <div id="izquierdo" class="col-md-4">
         <table >
             <tbody >
-            <td >  
-              <tr style="text-align:left"><td style="width:90px;">Codigo:</td>   <td> <input class="form-control" type="text"   maxlength="8"    v-model="codigo"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Nombre:</td>   <td> <input class="form-control" type="text"   maxlength="100"    v-model="nombre"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Apellidos:</td>   <td> <input class="form-control" type="text"  maxlength="100"  v-model="apellidos"></td></tr>
+            <td >
+              <tr style="text-align:left"><td style="width:90px;">Codigo:</td>   <td> <input class="form-control" type="text"       v-model="codigo"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Nombre:</td>   <td> <input class="form-control" type="text"       v-model="nombre"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Apellidos:</td>   <td> <input class="form-control" type="text"    v-model="apellidos"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Correo:</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
             </td> 
           </tbody>
         </table>
       </div>
-     
       <div id="medio" class="col-md-2">
-        <tr></tr>
         <tr style="text-align:right;margin:600px"  >
               <div class="" style="position:absolute; bottom:0px;margin-left:40px;" > 
                 <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div>
@@ -47,7 +45,6 @@
         <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>  
     </div>
     </div>
-
 </template>
 
 <script>
@@ -55,7 +52,7 @@ import Axios from 'axios'
 import Swal from 'sweetalert2'
 
 export default {
-  
+  name: 'FormUsuario',
   data(){
  
     return{
@@ -315,19 +312,17 @@ export default {
   font-size: 20px;
 }
 
-  body{
-    background-image: null;
-    background-color: #B2EBF2;
-  }
-  .form-control {
-    border-radius: 1.25rem;  
-    border: 2px solid #757575;
-    margin-bottom: 10px;
-    width: 200%;
-    
+body{
+  background-image: null;
+  background-color: #B2EBF2;
+}
+.form-control {
+  border-radius: 1.25rem;  
+  border: 0.5px solid #757575;
+  margin-bottom: 10px;
+  width: 200%;
 }
 td { 
   margin-bottom:10px;
 }
-
 </style>

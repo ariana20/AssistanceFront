@@ -1,6 +1,6 @@
 .borde-textbox {
     border-radius: 1.25rem;  
-    border: 2px solid #757575;
+    border: 0.5px solid #757575;
 }
 .grid-divider {
     overflow-x: hidden; 
@@ -26,7 +26,7 @@
 }
 .form-control {
     border-radius: 1.25rem;  
-    border: 1px solid #757575;
+    border: 0.5px solid #757575;
     margin-bottom: 10px;
 }
 .motivo-dropdown-title {
@@ -46,4 +46,16 @@
     right: 0%;
     padding: 12px 16px;
     transform: translate(0%, -50%);
+}
+.title-container{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.top-titulo {
+    display: flex;
+    justify-content: space-between;
+}
+.botones {
+    margin:auto;
 }
