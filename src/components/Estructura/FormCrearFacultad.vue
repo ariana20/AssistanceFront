@@ -129,7 +129,7 @@
                 <th scope="row">{{index+1}}</th>
                 <td >{{item.nombre}}</td>
                 <td >{{item.correo}}</td>
-                <td v-if="item.coordinador!=undefined">{{item.coordinador.nombCompleto}}</td>
+                <td v-if="item.coordinador!=undefined">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
                 <td v-else>Sin coordinador</td>
                 <td style="text-align: center">
                   <button class="btn link" v-on:click="Editar(item, index)"><b-icon icon="pencil"></b-icon></button>
@@ -210,24 +210,25 @@ export default {
     obtenerDatos() {
         axios.post('/facultad/listar/'+this.idFacultad)
             .then(response=>{
+                console.log(response);
                 this.facultad.id_facultad = response.data[0].id_facultad;
                 this.facultad.id_programa = response.data[0].id_programa;
                 this.facultad.nombre = response.data[0].nombre;
                 this.facultad.correo = response.data[0].correo;
                 this.facultad.descripcion=response.data[0].descripcion;
                 console.log(response);
-                const paramL = {
-                  id_facultad: this.facultad.id_facultad,
-                  nombre: this.facultad.nombre
-                };
-                axios.post('/facultad/listarProgramas', paramL)
+
+                axios.post('/programa/listarConCoord/'+ this.facultad.id_facultad)
                     .then(response=>{
-                        this.programas = response.data;
-                        let index;
-                        for (index = 0; index < this.programas.length; index++) {
-                          if(this.programas[index] == "") break;
+                        for (let index = 0; index < response.data.length; index++) {
+                          var prog= new Object()
+                          prog=response.data[index].programa;
+                          prog.coordinador=response.data[index].coordinador;
+                          console.log('---------');
+                          console.log(response.data[index]);
+                          this.programas.push(prog);
                         }
-                        this.programas.splice(index,1);
+                        
                         console.log(response);
 
                     })
@@ -284,7 +285,7 @@ export default {
                   console.log(e.response);
                 })
             }
-            /*
+            
           axios.create()
             .post('/programa/insertarVariosPro',this.progagregar)
               .then( response=>{
@@ -308,7 +309,7 @@ export default {
               })
             .catch(e => {
               console.log(e.response);
-            })*/
+            })
 
         }else{
           //creo una facultad con la data final construida
@@ -431,7 +432,7 @@ export default {
         }).then((result) => {
           if (result.value) {
             this.programas.splice(ind,1 );
-            if(this.id_facultad)
+            if(this.$store.state.facultadEscogida)
               this.progeliminar.push(item);
 
           }
@@ -444,6 +445,9 @@ export default {
       this.programa.nombre=item.nombre;
       this.programa.correo=item.correo;
       this.programa.coordinador=item.coordinador;
+      this.programa.id_facultad=item.id_facultad;
+      this.programa.id_programa=item.id_programa;
+
       
     }
 
