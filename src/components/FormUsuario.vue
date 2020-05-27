@@ -9,7 +9,7 @@
         <tr style="text-align:left"><td>Codigo:</td>   <td> <input class=" form-control" type="text"       v-model="codigo"></td></tr>
         <tr style="text-align:left"><td>Nombre:</td>   <td> <input class="form-control" type="text"       v-model="nombre"></td></tr>
         <tr style="text-align:left"><td>Apellidos:</td>   <td> <input class="form-control" type="text"    v-model="apellidos"></td></tr>
-        <tr style="text-align:left"><td>Celular:</td>   <td> <input class="form-control"  type="number"  v-model="telefono"></td></tr>
+        <tr style="text-align:left"><td>Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
           <tr style="text-align:left"><td>Correo:</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
         <!-- Combos box -->        
         <tr style="text-align:left"><td>Tipos de usuarios:</td>   
@@ -33,7 +33,7 @@
             <!-- <div>{{this.tiposUsuariosselect}}</div> -->
 
        
-        <tr style="margin-left:100px"  >
+        <tr style="margin-left:600px"  >
           <div class="row col-sm-6 " style="margin-left:80px;" > 
             <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div>
             <!-- <div>{{estado}}</div> -->
@@ -109,6 +109,7 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   }); 
+                  this.$store.state.usuarios=null;
                    this.$router.push('/ListaUsuarios');          
                 } );
 
@@ -191,8 +192,10 @@ export default {
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
-              }) 
-              this.$router.href('/ListaUsuarios'); 
+                  }) 
+
+              this.$store.state.usuarios=null;
+              this.$router.push('/ListaUsuarios'); 
 
             }).catch(e => {
                  console.log(e.response);
@@ -203,7 +206,8 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });  
-                   this.$router.href('/ListaUsuarios');         
+                  this.$store.state.usuarios=null;
+                   this.$router.push('/ListaUsuarios');         
                 } );
           }
           else if (this.id_usuario_entrante!=0){
@@ -218,7 +222,8 @@ export default {
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
               }) 
-              this.$router.href('/ListaUsuarios');
+              this.$store.state.usuarios=null;
+              this.$router.push('/ListaUsuarios');
             })  .catch(e => {
                  console.log(e.response);
                  Swal.fire({
@@ -228,7 +233,8 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   })
-                  this.$router.href('/ListaUsuarios');
+                  this.$store.state.usuarios=null;
+                  this.$router.push('/ListaUsuarios');
               });
             
           }
@@ -259,6 +265,7 @@ export default {
               showConfirmButton: true,
         }).then((result) => {
             if (result.value) {
+              this.$store.state.usuarios=null;
               //lo redirigo
               this.$router.push('/ListaUsuarios');
             } 
@@ -279,6 +286,7 @@ export default {
         }).then((result) => {
             if (result.value) {
               //lo redirigo
+              this.$store.state.usuarios=null;
               this.$router.push('/ListaUsuarios');
             } 
           })
@@ -308,12 +316,7 @@ export default {
 .formUsuario { 
   font-size: 20px;
 }
-.form-control {
-    border-radius: 1rem;  
-    border: 2px solid #757575;
-    text-align-last: right;
-    margin-bottom:1.3em;
-}
+
   body{
     background-image: null;
     background-color: #B2EBF2;
