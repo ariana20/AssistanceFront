@@ -177,7 +177,8 @@ export default {
             estado:this.estado,
             telefono:this.telefono,    
             // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
-            id_tipo_usuario:this.tiposUsuariosselect, 
+            id_tipo_usuario_Nuevo:this.tiposUsuariosselect, 
+            
             };
              
           
