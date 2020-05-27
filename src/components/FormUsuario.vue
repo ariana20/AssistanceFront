@@ -1,18 +1,31 @@
 <template>
-  <div class="FormUsuario container" style="margin-top:5px">
-    <div style="margin-right:50px"></div>  
-    <!-- </div>
-    <div> -->
-      <table>
-      <tbody>
-        <td >
-        <tr style="text-align:left"><td>Codigo:</td>   <td> <input class=" form-control" type="text"       v-model="codigo"></td></tr>
-        <tr style="text-align:left"><td>Nombre:</td>   <td> <input class="form-control" type="text"       v-model="nombre"></td></tr>
-        <tr style="text-align:left"><td>Apellidos:</td>   <td> <input class="form-control" type="text"    v-model="apellidos"></td></tr>
-        <tr style="text-align:left"><td>Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
-          <tr style="text-align:left"><td>Correo:</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
-        <!-- Combos box -->        
-        <tr style="text-align:left"><td>Tipos de usuarios:</td>   
+  <div class="FormUsuario container" style="height:450px">
+    <div class="row grid-divider" style="margin-top:60px" >
+      <div id="izquierdo" class="col-md-4">
+        <table >
+            <tbody >
+            <td >  
+              <tr style="text-align:left"><td style="width:90px;">Codigo:</td>   <td> <input class="form-control" type="text"   maxlength="8"    v-model="codigo"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Nombre:</td>   <td> <input class="form-control" type="text"   maxlength="100"    v-model="nombre"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Apellidos:</td>   <td> <input class="form-control" type="text"  maxlength="100"  v-model="apellidos"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Correo:</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
+            </td> 
+          </tbody>
+        </table>
+      </div>
+     
+      <div id="medio" class="col-md-2">
+        <tr></tr>
+        <tr style="text-align:right;margin:600px"  >
+              <div class="" style="position:absolute; bottom:0px;margin-left:40px;" > 
+                <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div>
+                <!-- <div>{{estado}}</div> -->
+
+        </tr>    
+      </div>
+      <div id="derecho" class="col-md-4">
+       <tr style="text-align:left"><td style="width:150px;">Tipos de usuarios:</td>   
           <select  v-model="tiposUsuariosselect" class="form-control" >
             <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index">
              {{ tipoU.nombre}}
@@ -23,33 +36,17 @@
             <option v-for="(tipotuto,index) in tipostutorias" :value="tipotuto.id_tipo_tutoria" v-bind:key="index">
              {{ tipotuto.nombre}}
              </option>
+             
           </select>
          
         </tr>
-
-        <!-- </tr>    -->
-        <!-- <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Celular:</td>   <td> <input class="col-sm-10 form-control"  type="number"  v-model="telefono"></td></tr> -->
-
-            <!-- <div>{{this.tiposUsuariosselect}}</div> -->
-
-       
-        <tr style="margin-left:600px"  >
-          <div class="row col-sm-6 " style="margin-left:80px;" > 
-            <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div>
-            <!-- <div>{{estado}}</div> -->
-
-          </tr>    
-       </td> 
-      </tbody>
-      </table>
-       <div  class="botones">   
-            <button type="button" style="margin:5px" class="btn btn-info"  v-on:click="guardarUsuario()">Guardar</button>
-            <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>
-         
-
+      </div>
+    </div>
+    <div  class="botones" style="position:absolute;bottom:25px">   
+        <button type="button" style="margin:5px" class="btn btn-info" id="btnGuardar" v-on:click="guardarUsuario()">Guardar</button>
+        <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>  
     </div>
     </div>
-  
 
 </template>
 
@@ -136,7 +133,7 @@ export default {
       else if( !expresion2.test(this.correo) &&  !expresion1.test(this.correo)){ //Verificación de correo
           Swal.fire({
             
-              text:"No ha escrito una dirección de correo válida. Todos los correos deben contener @pucp.edu.pe",
+              text:"No ha escrito una dirección de correo válida. Todos los correos deben contener ser dominio @pucp.edu.pe o @pucp.pe",
               icon:"error",
               confirmButtonText: 'OK',
               confirmButtonColor:'#0097A7',
@@ -329,6 +326,8 @@ export default {
     width: 200%;
     
 }
-
+td { 
+  margin-bottom:10px;
+}
 
 </style>

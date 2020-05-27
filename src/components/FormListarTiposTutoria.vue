@@ -11,18 +11,23 @@
            </router-link></div>    
   <!-- </tr> -->
 
-      <table class="table">
+      <table class="table" style="text-align:left" >
         <thead>
           <tr>
             <th scope="col">N°</th>
             <th scope="col">Nombre</th>
+            <th scope="col">Estado</th>
             <th scope="col" style="text-align: center">Modif/Elim</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in tipostutoriasFiltrados" :key="index">
             <th scope="row">{{index+1}}</th>
-            <td>{{item.nombre}}</td>             
+            <td>{{item.nombre}}</td>        
+            <td style=";font-size:30px">
+                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
+                <b-icon v-else icon="check" style="color:#757575"/>
+            </td>     
             <td  style="text-align: center">
                  <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}"> 
                 <button  class="btn link">         
