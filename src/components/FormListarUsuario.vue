@@ -1,31 +1,36 @@
 <template>
   <div class="FormListarUsuario container"  style="margin-top:20px">
     <!-- para que lo vea bien un coordinador -->
-    <div class="row top-titulo">
-      <div class="row col-sm-4 tutoria-title" style="margin:10px;font-size:25px;font-weight:bold" >Buscar: 
-        <input style="left:25px;" placeholder="Busque por nombre" class="row col-sm-8 form-control" type="text" v-model="nombre">  </div>
-                <div style="margin-right:600px"></div>
-                <div class="row btn-derecha" >
-                <router-link to="/Usuario/0"> 
-                  <button  type="button" style="margin-right:10px" class="row btn btn-info">Añadir</button>
-                </router-link>
-                </div>  
+    <div class="row top-titulo" style="text-align: left">
+      <div class="col-sm-1 tutoria-title" style="margin:10px;font-size:25px" >
+        Nombre: 
+      </div>
+      <div class="col-sm-8" style="margin:10px; text-align: left" >  
+        <input placeholder="Busque por nombre" class="form-control" type="text" v-model="nombre">  
+      </div>
+      <div class="row btn-derecha" >
+      <router-link to="/Usuario/0"> 
+        <button  type="button" style="margin-right:100px" class="row btn btn-info">Añadir</button>
+      </router-link>
+      </div>  
          
 
       <table class="table" style="text-align:left" >
         <thead>
           <tr>
             <th scope="col">N°</th>
+            <th scope="col">Código</th>
             <th scope="col">Nombre</th>
             <th scope="col">Correo</th>
             <th scope="col">Estado</th>
             <th scope="col">Tipo de Usuario</th>
-            <th scope="col">Modif/Elim</th>
+            <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in usuariosFiltrados"  :key="index">
             <th scope="row">{{index+1}}</th>
+            <td>{{item.codigo}}</td>
             <td>{{item.nombre}}</td>
             <td>{{item.correo}}</td>  
             <td style="font-size:30px">
@@ -198,7 +203,7 @@ export default {
   }
   .form-control {
     border-radius: 1.25rem;  
-    border: 2px solid #757575;
+    border: 1px solid #757575;
     margin-bottom: 10px;
     /* width: 100%; */
     

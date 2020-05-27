@@ -1,7 +1,7 @@
 <template>
   <div class="FormRoles container" style="margin-top:20px">
         <div class="row top-titulo">
-        <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px;font-weight:bold">Buscar:  
+        <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px">Nombre:  
         <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
         </div>
         <div style="margin-right:500px"></div>
@@ -154,7 +154,7 @@ computed:{
   }
   .form-control {
     border-radius: 1.25rem;  
-    border: 2px solid #757575;
+    border: 1px solid #757575;
     margin-bottom: 10px;
     width: 100%;
   }
