@@ -115,14 +115,14 @@ export default new Vuex.Store({
       return state.coordinadores;
     },
     filtrarTipoTutorias(state){
-      if(state.filtro.query.length > 1){
+      if(state.filtro.query.length > 0){
         let tipostutorias = state.tipostutorias.filter(tt => tt.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return tipostutorias;
       }
       return state.tipostutorias;
     },
     filtrarUsuarios(state){
-      if(state.filtro.query.length > 1){
+      if(state.filtro.query.length > 0){
         let usuarios = state.usuarios.filter(usu => usu.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return usuarios;
       }
