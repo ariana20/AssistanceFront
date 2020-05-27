@@ -2,17 +2,23 @@
   <div class="FormCrearFacultad">
 
     <div class="container" style="text-align: left">
-      
+      <div class="top-title title-container" style="text-align:right">
+        <button type="button" class="btn btn-info" style="margin-left:30px" v-on:click="guardarFacultad()">Guardar</button>
+            
+            <router-link to="/facultad">
+              <button type="button" class="btn btn-secondary" style="margin-left:30px">Cancelar</button>
+            </router-link>
+      </div>
         <b-container fluid>
         <b-row class="my-1"  style="text-align: right">
-            <b-col sm="12">
+            <!--<b-col sm="12">
             
             <button type="button" class="btn btn-info" style="margin-left:30px" v-on:click="guardarFacultad()">Guardar</button>
             
             <router-link to="/facultad">
               <button type="button" class="btn btn-secondary" style="margin-left:30px">Cancelar</button>
             </router-link>
-            </b-col>
+            </b-col>-->
         </b-row>
         <b-row>
         </b-row>
@@ -56,17 +62,22 @@
         </b-container>
         <br>
 
-     
+        <div class="top-titulo" style="">
+          <h4 class="font-weight-bolder " style="margin-bottom:40px">Programas de la Facultad</h4>
+          <button type="submit" class="btn btn-info" style="margin-right:-510px; height:38px" v-on:click="agregarPrograma()">Añadir Programa</button>            
+          <router-link to="/facultad"><button type="button" class="btn btn-secondary" style="margin-left:0px">Cancelar</button></router-link>
+        </div>
+
         <b-container fluid>
-        <b-row>
+        <!--<b-row>
             
-            <h4 class="font-weight-bold">Programas de la Facultad:</h4>
+            <h4 class="font-weight-bolder" style="color:black;">Programas de la Facultad</h4>
             
 
             <b-col sm="12" style="text-align: right">
             <b-button class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="agregarPrograma()">Añadir Programa</b-button>
             </b-col>
-        </b-row>
+        </b-row>-->
         <b-row class="my-1">
             <b-col sm="3">
             <label>Nombre del Programa:</label>
@@ -298,11 +309,17 @@ export default {
 <style scoped>
 
 .form-control {
-    border-radius: 1rem;  
-    border: 2px solid #757575;
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
     text-align-last: left;
     margin-bottom:1.3em;
 
+}
+.btn {
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    margin: 5px;
 }
 
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div class="FormInstitucion ">
-    <div class="container" style="text-align: left;left:-100px;margin-top:30px">
+    <div class="container" style="text-align: left;left:-100px;">
       <form v-on:submit.prevent="guardarInstitucion" >
         <div class="row grid-divider" style="">
           <div class="izq col-lg-6 col-xm-2 col-md-12">
-            <div class="font-weight-bolder text-left" style="font-size:30px">Datos</div><br>
+            <h4 class="font-weight-bolder text-left institucion-title">Datos</h4><br>
             <div class="row rowmar">
               <div class="font-weight-ligth text-left textF">Nombre </div>
               <input class="borde-textbox inp" type="text" v-model="nombre">
@@ -23,19 +23,19 @@
             </div>
           </div>
           <div class="der col-lg-6 col-xm col-md-12">
-            <div class="font-weight-bolder text-left" style="font-size:30px">Logo</div>
-            <div style=";text-align:center;margin-top:40px" >
+            <h4 class="font-weight-bolder text-left institucion-title">Logo</h4>
+            <div style="width:80px;text-align:center;margin-top:40px" >
               <img class="imgP" v-if="this.selectedFile!==null" alt="Vue logo" :src="selectedFile" id='LogoInst'>
               <img class="imgP" v-else alt="Vue logo" v-bind:src="logo" id='LogoInst'>        
             </div>
             <div style=";text-align:center">
               <input type="file" v-on:change="onFileSelected" style="margin-top:20px"><br>
-              <button @click="onUpload" type="button" class="btn btn-info" style="margin-top:20px">Subir</button>
+              <button @click="onUpload" type="button" class="btn btn-info" style="margin-left: -280px;margin-top:20px">Subir</button>
             </div>
           </div>
         </div>
         <div style="margin-left:23%;margin-top:20px">
-          <button type="submit" style="margin-left:210px" class="btn btn-info" v-on:click="guardarInstitucion()">Guardar</button>
+          <button type="submit" style="margin-left:80px" class="btn btn-info" v-on:click="guardarInstitucion()">Guardar</button>
         </div>
       </form>
     </div>
@@ -227,5 +227,9 @@ export default {
     margin-left:10px;
     margin-top:20px
   }
-
+  
+  .institucion-title{
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
 </style>

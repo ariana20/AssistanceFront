@@ -1,9 +1,9 @@
 <template>
     <div class= "formSesionTutoria container">
-        <div class="top-titulo">
+        <div class="top-titulo" style="text-align:left;">
             <h4 class="col-sm-4 tutoria-title">Tipo de Tutoría: </h4>
-            <select class="col-sm-4 form-control" style="left:-40px;top:26px;" v-model="selectedTipoTutoria">
-                <option selected disabled value="">Selecciona Tipo de Tutoría</option>
+            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="selectedTipoTutoria">
+                <option disabled selected >Selecciona un tipo de tutoría</option>
                 <option 
                     v-for="(tipoTutoria, index) in tiposTutoria" 
                     :key="index" 
@@ -16,7 +16,7 @@
             <button type="button" class="btn btn-info" @click="cancelar()" style="border-color:gray;background-color:gray;">Cancelar</button>
             </div>
         </div>
-        <hr>
+        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         <div class="row grid-divider">
             <div class="izq col-lg-6 col-xm-2 col-md-12">
                 <div class="font-weight-bolder text-left">Alumno</div>
@@ -174,9 +174,10 @@ export default Vue.extend ({
         }
     },
     mounted(){
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.row.grid-divider > div.izq.col-lg-6.col-xm-2.col-md-12 > div:nth-child(3) > div > div > input").style.borderRadius = "1.25rem";  
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.row.grid-divider > div.izq.col-lg-6.col-xm-2.col-md-12 > div:nth-child(3) > div > div > input").style.border= "2px solid #757575";    
-    axios.post('unidadesApoyo/listarTodo')
+        document.querySelector("#container > div > div.formSesionTutoria.container > div.row.grid-divider > div.izq.col-lg-6.col-xm-2.col-md-12 > div:nth-child(3) > div > div > input").style.borderRadius = "1.25rem"; 
+        document.querySelector("#container > div > div.formSesionTutoria.container > div.row.grid-divider > div.izq.col-lg-6.col-xm-2.col-md-12 > div:nth-child(3) > div > div > input").style.border= "0.5px solid #757575";    
+        
+    axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {
             this.unidadesApoyo = response.data;
         }).catch(e => {
@@ -356,6 +357,7 @@ export default Vue.extend ({
 
 <style lang="scss" scoped>
 @import '../assets/styles/material.css';
+
 .close {
     cursor: pointer;
     position: absolute;
@@ -364,14 +366,17 @@ export default Vue.extend ({
     padding: 12px 16px;
     transform: translate(0%, -50%);
 }
+
+input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper input.e-input, textarea.e-input, .e-input-group textarea.e-input, .e-input-group.e-control-wrapper textarea.e-input{
+    border-width: 1px !important;
+}
 .input.e-input, .e-input-group input.e-input, .e-input-group input, .e-input-group.e-control-wrapper input.e-input, .e-input-group.e-control-wrapper input, .e-float-input input, .e-float-input.e-input-group input, .e-float-input.e-control-wrapper input, .e-float-input.e-control-wrapper.e-input-group input, .e-input-group, .e-input-group.e-control-wrapper, .e-float-input, .e-float-input.e-control-wrapper {
     border-radius: 1.25rem;  
-    border: 2px solid #757575;
-    z-index: 10000;
+    border: 0.5px solid #757575;
     text-align: center;
     font-family: "Brandon Bold",Helvetica,Arial,sans-serif;
     font-size: 17px;
-    margin-bottom:4px!important;
+    margin-bottom:0px!important;
 }
 .e-control .e-autocomplete .e-lib .e-input .e-keyboard {
     z-index: -100;
@@ -442,7 +447,8 @@ export default Vue.extend ({
 
 .form-control {
     border-radius: 1.25rem;  
-    border: 2px solid #757575;
+    border: 0.5px solid #757575;
     margin-bottom: 10px;
 }
+
 </style>
