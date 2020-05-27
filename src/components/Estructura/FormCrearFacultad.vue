@@ -362,6 +362,8 @@ export default {
 
       console.log(this.programa);
       var prog= new Object();
+      prog.id_facultad=this.facultad.id_facultad;
+      prog.id_programa=this.programa.id_programa;
       prog.nombre=this.programa.nombre;
       prog.correo=this.programa.correo;
       prog.coordinador=this.programa.coordinador;
