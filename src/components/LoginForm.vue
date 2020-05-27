@@ -43,10 +43,10 @@
             <form v-on:submit.prevent="checkFormReg" class="forms_form">
               <fieldset class="forms_fieldset">
                 <div class="forms_field">
-                  <input v-model="reg.nombre" type="text" placeholder="Nombre" class="forms_field-input" required />
+                  <input v-model="reg.nombre" type="text" placeholder="Nombre" class="forms_field-input" onkeypress="return (event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122)" required />
                 </div>
                 <div class="forms_field">
-                  <input v-model="reg.apellidos" type="text" placeholder="Apellidos" class="forms_field-input" required />
+                  <input v-model="reg.apellidos" type="text" placeholder="Apellidos" class="forms_field-input" onkeypress="return (event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122)" required />
                 </div>
                 <div class="forms_field">
                   <input v-model="reg.email" type="email" placeholder="Correo" class="forms_field-input" required />
@@ -65,7 +65,7 @@
               </fieldset>
               <div class="forms_buttons">
                 <input type="submit" value="Registrarse" class="forms_buttons-action" style="font-size:15px;font-family:'Brandon Bold';width:70%;height:45px">
-                <button @click="registrate('google')" class="btn btn-lg btn-google btn-block" style="font-size:15px;  font-family:'Brandon Bold'width:40%">Registrarse con Google</button>
+                <button type="button" v-on:click="registrate('google')" class="btn btn-lg btn-google btn-block" style="font-size:15px;  font-family:'Brandon Bold'width:40%">Registrarse con Google</button>
               </div>
             </form>
             
@@ -291,7 +291,8 @@ import emailjs from 'emailjs-com';
                   }
                   else{
                     Swal.fire({
-                      text:"Ingreso Incorrecto",
+                      title:"Ingreso Incorrecto",
+                      text:"Credenciales Inválidas",
                       icon:"error",
                       confirmButtonText: 'OK',
                       confirmButtonColor:'#0097A7',
@@ -353,6 +354,16 @@ import emailjs from 'emailjs-com';
                         showConfirmButton: true,
                       })
                       _this.$router.push('/userNuevo')
+                    }
+                    else{
+                      Swal.fire({
+                        title:"Registro Incorrecto",
+                        text:"El correo no pertenece a la institución",
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                      })
                     }
                   }).catch( e=>console.log(e));
               });
