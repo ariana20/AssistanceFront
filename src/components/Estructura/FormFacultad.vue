@@ -30,7 +30,7 @@
             <td>{{item.correo}}</td>
             <td style="text-align: center">{{item.cantidad-1}}</td>
             <td style="text-align: center">
-              <button class="btn link" v-on:click="Editar(item.id_facultad)"><b-icon icon="pencil"></b-icon></button>
+              <button class="btn link" v-on:click="Editar(item)"><b-icon icon="pencil"></b-icon></button>
               <button class="btn link" v-on:click="Eliminar(item)"><b-icon icon="dash-circle-fill"></b-icon></button>
             </td>
           </tr>
@@ -98,11 +98,13 @@ export default {
         })
 
     },
-    Editar(id){
-      this.$router.push('/crearFacultad/'+id);
+    Editar(item){
+      this.$store.state.facultadEscogida=item;
+      this.$router.push('/crearFacultad/'+item.id_facultad);
     },
     nuevo(){
-      this.$router.push('/crearFacultad/'+0);
+      this.$store.state.facultadEscogida=null;
+      this.$router.push('/crearFacultad');
     },
     
     Eliminar(item){

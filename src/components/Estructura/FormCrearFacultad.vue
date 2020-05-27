@@ -154,20 +154,18 @@ Vue.use(MultiSelectPlugin);
 import Swal from 'sweetalert2'
 
 export default {
-  props: {
-      idFacultad: String,
-  },
+
   data(){
     return{
       nuevoProg:0,
       editProg:0,
-      //idFacultad: (this.$route.path).substring(15,17),
+      idFacultad: 0,
       facultad:{
           id_facultad:null,
           id_programa:null,
           id_institucion:1,
           nombre:"",
-          descripcion:null,
+          descripcion:"",
           correo:"",
           coordinador:null
       },
@@ -197,8 +195,14 @@ export default {
     modalJ2
   },
   mounted(){
-    if(this.idFacultad) this.obtenerDatos();
-    console.log(this.idFacultad);
+    if(this.$store.state.facultadEscogida) {
+      this.idFacultad=this.$store.state.facultadEscogida.id_facultad;
+      this.obtenerDatos();
+    }else{
+      this.idFacultad=0;
+    }
+    console.log(this.$store.state.facultadEscogida);
+    console.log('Id facultad='+this.idFacultad);
   },
 
   methods:{
@@ -210,6 +214,7 @@ export default {
                 this.facultad.id_programa = response.data[0].id_programa;
                 this.facultad.nombre = response.data[0].nombre;
                 this.facultad.correo = response.data[0].correo;
+                this.facultad.descripcion=response.data[0].descripcion;
                 console.log(response);
                 const paramL = {
                   id_facultad: this.facultad.id_facultad,
@@ -254,7 +259,7 @@ export default {
         }) 
 
       }else{
-        if(this.id_facultad){
+        if(this.$store.state.facultadEscogida){
           //cómo agarro el id? por eso no funciona 
           //modifico la facultad, debo considerar progactualizar, progeliminar, progagregar
           axios.create()
@@ -265,18 +270,20 @@ export default {
             .catch(e => {
               console.log(e.response);
             })
-          const params = {
-            id_usuario: this.facultad.coordinador.id_usuario,
-            id_programa: this.facultad.id_programa
-          };
-          axios.create()
-            .post('/facultad/asignarCoordi',params)
-              .then( response=>{
-                console.log(response)
-              })
-            .catch(e => {
-              console.log(e.response);
-            })
+            if(this.facultad.coordinador){
+              const params = {
+                id_usuario: this.facultad.coordinador.id_usuario,
+                id_programa: this.facultad.id_programa
+              };
+              axios.create()
+                .post('/facultad/asignarCoordi',params)
+                  .then( response=>{
+                    console.log(response)
+                  })
+                .catch(e => {
+                  console.log(e.response);
+                })
+            }
             /*
           axios.create()
             .post('/programa/insertarVariosPro',this.progagregar)
@@ -313,19 +320,20 @@ export default {
               this.facultad.id_programa=response.data.id_programa;
               console.log(response)
 
-              const params = {
-                id_usuario: this.facultad.coordinador.id_usuario,
-                id_programa: this.facultad.id_programa
-              };
-              axios.create()
-                .post('/facultad/asignarCoordi',params)
-                  .then( response=>{
-                    console.log(response)
+              if(this.facultad.coordinador){
+                const params = {
+                  id_usuario: this.facultad.coordinador.id_usuario,
+                  id_programa: this.facultad.id_programa
+                };
+                axios.create()
+                  .post('/facultad/asignarCoordi',params)
+                    .then( response=>{
+                      console.log(response)
+                    })
+                  .catch(e => {
+                    console.log(e.response);
                   })
-                .catch(e => {
-                  console.log(e.response);
-                })
-
+              }
               
               for(var i=0; i<this.programas.length; i++){
                 this.programas[i].id_facultad=this.facultad.id_facultad;
