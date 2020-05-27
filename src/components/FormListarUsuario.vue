@@ -3,13 +3,16 @@
     <!-- para que lo vea bien un coordinador -->
     <div class="row top-titulo" style="text-align: left">
     
-      <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px">Nombre:  
-        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
+      <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:20px">Nombre o Código:  
+        <input placeholder="Nombre o código" class="row col-sm-6 form-control" style="left:25px;" type="text"  id="nombres"  v-model="nombre">  
         </div>
+        <!-- <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px">Codigo:  
+        <input placeholder="Busque por Código" class="row col-sm-8 form-control" style="left:25px;" type="text" id="codigos" v-model="codigo">  
+        </div> -->
         
       <div class="row btn-derecha" >
       <router-link to="/Usuario/0"> 
-        <button  type="button" style="margin-right:100px" class="row btn btn-info">Añadir</button>
+        <button  type="button" style="margin-right:50px" class="row btn btn-info">Añadir</button>
       </router-link>
       </div>  
          
@@ -82,7 +85,18 @@ export default {
         },
         ...mapGetters({
           usuariosFiltrados: 'filtrarUsuarios'
-        })
+        }),
+        // codigo:{
+        //   get(){
+        //       return this.$store.state.filtro.query;
+        //   },
+        //   set(val){
+        //       this.$store.commit('SET_QUERY',val);
+        //   }
+        // },
+        // ...mapGetters({
+        //   usuariosFiltrados2: 'filtrarUsuariosCod'
+        // })
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login');

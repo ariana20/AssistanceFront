@@ -123,10 +123,17 @@ export default new Vuex.Store({
     },
     filtrarUsuarios(state){
       if(state.filtro.query.length > 0){
-        let usuarios = state.usuarios.filter(usu => usu.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
-        return usuarios;
+        if(isNaN(state.filtro.query)){
+          let usuarios = state.usuarios.filter(usu => usu.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()));
+          return usuarios;
+         
+        }
+        let usuariocod = state.usuarios.filter(usu => usu.codigo.toLowerCase().includes(state.filtro.query.toLowerCase()));
+        return usuariocod;
+       
       }
       return state.usuarios;
+
 
     },
     filtrarUsuariosAdmin(state){
@@ -143,6 +150,15 @@ export default new Vuex.Store({
         return coordinadoresL;
       }
       return state.coordinadoresL;
+    },
+    filtrarUsuariosCod(state){
+      if(state.filtro.query.length > 0){
+        let usuarios = state.usuarios.filter(usu => usu.codigo.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        
+        return usuarios;
+      }
+      return state.usuarios;
+
     },
 
   }

@@ -2,8 +2,8 @@
   <div class="FormRoles container" >
     <div class="row top-titulo" style="text-align: left" >
       <div class="top-titulo">
-            <h4 class="col-sm-4 title-container">Buscar: </h4>
-            <input class="col-sm-6 form-control" style="top:26px;right:100px;" v-model="nombre" placeholder="Ingrese nombre del tipo de usuario">
+            <h5 class="col-sm-4 title-container">Nombre: </h5>
+            <input class="col-sm-6 form-control" style="top:26px;right:100px;" v-model="nombre" placeholder="Busque por nombre">
             <div class="botones">
             <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:280px" >Añadir</button>
             </div>

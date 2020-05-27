@@ -13,7 +13,7 @@
               <tr style="text-align:left"><td style="width:90px;"></td></tr>
                
               <tr class="" style="bottom:0px;margin-left:0px;" > 
-                <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox>
+                <b-form-checkbox v-model="estado" value="act" unchecked-value="ina" > Activo</b-form-checkbox>
                 </tr>
                  
 
@@ -93,7 +93,7 @@ export default {
       correo:"",
       telefono:"",
       tiposUsuarios:"",
-      estado:null,
+      estado:"act",
       id_usuario_entrante:parseInt((this.$route.path).substring(9,11),10),
       tiposUsuariosselect:null,
       tipostutorias:"",
@@ -203,6 +203,18 @@ export default {
              
           
           if(this.id_usuario_entrante==0){
+            if(this.estado=="ina"){
+                   
+                Swal.fire({
+              text:"No puede crear un nuevo usuario como inactivo.",
+              icon:"warning",
+              confirmButtonText: 'Sí',
+              confirmButtonColor:'#0097A7',              
+                  showConfirmButton: true,
+                 });
+              }
+            
+            else{
             Axios.create()
             .post('/usuarios/insertar',params)
             .then( response=>{
@@ -221,6 +233,7 @@ export default {
             }).catch(e => {
                  console.log(e.response);
                  console.log('Respuesta del insertar ',e.response.data.exception);
+                 //Este if va a cambiar CORREO
                   if(e.response.data.line==671){
                     console.log('entro al error');
                   Swal.fire({
@@ -231,6 +244,7 @@ export default {
                     showConfirmButton: true,
                   });  
                   }
+          
                   else{
                  Swal.fire({
                     text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
@@ -243,6 +257,8 @@ export default {
                   this.$store.state.usuarios=null;
                   //  this.$router.push('/ListaUsuarios');         
                 } );
+          }
+
           }
           else if (this.id_usuario_entrante!=0){
             Axios.create()
