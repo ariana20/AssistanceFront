@@ -39,13 +39,12 @@
              {{ tipoU.nombre}}
              </option>
           </select>
-          <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Tipo de tutoria:</td>  
+          <!-- <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Tipo de tutoria:</td>  
             <select v-model="tipostutoriasselect" class="col-sm-10 form-control" >
             <option v-for="(tipotuto,index) in tipostutorias" :value="tipotuto.id_tipo_tutoria" v-bind:key="index">
              {{ tipotuto.nombre}}
-             </option>
-             
-          </select>
+             </option>             
+          </select> -->
          
         </tr>
                  <!-- <div class="top-titulo" style="margin-bottom:20px;">
@@ -78,7 +77,7 @@
 <script>
 import Axios from 'axios'
 import Swal from 'sweetalert2'
-
+import emailjs from 'emailjs-com';
 export default {
   name: 'FormUsuario',
   data(){
@@ -226,6 +225,21 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   }) 
+                  //Enviar un correo
+                  let direccion = "localhost:8000/login"
+                emailjs.send(
+                  "gmail",
+                  "template_bV7OIjEW",
+                  {
+                  "nombre":response.data.user.nombre,
+                  "mensaje":"Se te creó un nuevo usuario en el programa de tutoría Assistance. Ingresa con la contraseña: '12345' <br><br>Entra a este <a href="+direccion+">link</a> "+direccion,
+                  "correo": response.data.user.correo
+                  }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                  .then((result) => {
+                      console.log('SUCCESS!', result.status, result.text);
+                  }, (error) => {
+                      console.log('FAILED...', error);
+                  });
 
               this.$store.state.usuarios=null;
               this.$router.push('/ListaUsuarios'); 
