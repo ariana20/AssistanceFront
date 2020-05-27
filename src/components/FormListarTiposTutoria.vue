@@ -1,7 +1,7 @@
 <template>
   <div class="FormRoles container" style="margin-top:20px">
         <div class="row top-titulo">
-        <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px">Nombre:  
+        <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:20px">Nombre:  
         <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
         </div>
         <div style="margin-right:500px"></div>

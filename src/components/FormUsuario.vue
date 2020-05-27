@@ -13,7 +13,7 @@
               <tr style="text-align:left"><td style="width:90px;"></td></tr>
                
               <tr class="" style="bottom:0px;margin-left:0px;" > 
-                <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox>
+                <b-form-checkbox v-model="estado" value="act" unchecked-value="ina" > Activo</b-form-checkbox>
                 </tr>
                  
 
@@ -40,13 +40,12 @@
              {{ tipoU.nombre}}
              </option>
           </select>
-          <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Tipo de tutoria:</td>  
+          <!-- <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Tipo de tutoria:</td>  
             <select v-model="tipostutoriasselect" class="col-sm-10 form-control" >
             <option v-for="(tipotuto,index) in tipostutorias" :value="tipotuto.id_tipo_tutoria" v-bind:key="index">
              {{ tipotuto.nombre}}
-             </option>
-             
-          </select>
+             </option>             
+          </select> -->
          
         </tr>
                  <!-- <div class="top-titulo" style="margin-bottom:20px;">
@@ -79,7 +78,7 @@
 <script>
 import Axios from 'axios'
 import Swal from 'sweetalert2'
-
+import emailjs from 'emailjs-com';
 export default {
   name: 'FormUsuario',
   data(){
@@ -94,7 +93,7 @@ export default {
       correo:"",
       telefono:"",
       tiposUsuarios:"",
-      estado:null,
+      estado:"act",
       id_usuario_entrante:parseInt((this.$route.path).substring(9,11),10),
       tiposUsuariosselect:null,
       tipostutorias:"",
@@ -204,6 +203,18 @@ export default {
              
           
           if(this.id_usuario_entrante==0){
+            if(this.estado=="ina"){
+                   
+                Swal.fire({
+              text:"No puede crear un nuevo usuario como inactivo.",
+              icon:"warning",
+              confirmButtonText: 'Sí',
+              confirmButtonColor:'#0097A7',              
+                  showConfirmButton: true,
+                 });
+              }
+            
+            else{
             Axios.create()
             .post('/usuarios/insertar',params)
             .then( response=>{
@@ -215,6 +226,21 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   }) 
+                  //Enviar un correo
+                  let direccion = "localhost:8000/login"
+                emailjs.send(
+                  "gmail",
+                  "template_bV7OIjEW",
+                  {
+                  "nombre":response.data.user.nombre,
+                  "mensaje":"Se te creó un nuevo usuario en el programa de tutoría Assistance. Ingresa con la contraseña: '12345' <br><br>Entra a este <a href="+direccion+">link</a> "+direccion,
+                  "correo": response.data.user.correo
+                  }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                  .then((result) => {
+                      console.log('SUCCESS!', result.status, result.text);
+                  }, (error) => {
+                      console.log('FAILED...', error);
+                  });
 
               this.$store.state.usuarios=null;
               this.$router.push('/ListaUsuarios'); 
@@ -222,6 +248,7 @@ export default {
             }).catch(e => {
                  console.log(e.response);
                  console.log('Respuesta del insertar ',e.response.data.exception);
+                 //Este if va a cambiar CORREO
                   if(e.response.data.line==671){
                     console.log('entro al error');
                   Swal.fire({
@@ -232,6 +259,7 @@ export default {
                     showConfirmButton: true,
                   });  
                   }
+          
                   else{
                  Swal.fire({
                     text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
@@ -244,6 +272,8 @@ export default {
                   this.$store.state.usuarios=null;
                   //  this.$router.push('/ListaUsuarios');         
                 } );
+          }
+
           }
           else if (this.id_usuario_entrante!=0){
             Axios.create()

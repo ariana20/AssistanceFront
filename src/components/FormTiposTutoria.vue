@@ -38,7 +38,7 @@
 
            <br>
           <div class="row col-sm-6 " style="margin-left:80px;" > 
-            <b-form-checkbox v-model="tipotutoria.estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div>
+            <b-form-checkbox v-model="tipotutoria.estado" value="act" unchecked-value="ina" checked> Activo</b-form-checkbox></div>
             
 
           
@@ -79,7 +79,7 @@ export default Vue.extend( {
         individual:"",         
         tutorasignado:"",
         tutorfijo:"",
-        estado:null,
+        estado:"act",
         tutoresrelacionados:null,
         condiciones:"",
         id_tipo_tutoria_entrante:undefined,
@@ -158,18 +158,21 @@ export default Vue.extend( {
               })
         
       }  
-      else if( this.tipotutoria.estado==null){
-          Swal.fire({
-              text:"Debe seleccionar el estado del tipo de tutoría.\n",
-              icon:'error',
-              confirmButtonText: 'Corregir',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
-              })
-      } 
       else{
         if(this.tipotutoria.id_tipo_tutoria_entrante==0){
-        const params = {
+          //tt nuevo
+           if(this.tipotutoria.estado=="ina"){      
+                Swal.fire({
+              text:"No puede crear un tipo de tutoría como inactivo.",
+              icon:"warning",
+              confirmButtonText: 'Sí',
+              confirmButtonColor:'#0097A7',              
+              showConfirmButton: true,
+             });
+
+           }
+           else{
+           const params = {
               nombre: this.tipotutoria.nombre, 
               descripcion: this.tipotutoria.descripcion,
               obligatorio:this.tipotutoria.obligatorio,  
@@ -204,9 +207,10 @@ export default Vue.extend( {
                     confirmButtonText: 'ok',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
-              });
-              this.$router.push('/ListaTiposTutorias');
-                });
+                  });
+            
+            });
+           }
         }
         else{
           const params = {
