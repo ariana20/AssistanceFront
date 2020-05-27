@@ -74,7 +74,7 @@
             <h4 class="font-weight-bold">Programas de la Facultad:</h4>
             <b-col sm="12" style="text-align: right">
             <b-button v-if="nuevoProg==0 && editProg==0" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="agregarPrograma()">Añadir Programa</b-button>
-            <b-button v-if="nuevoProg==1 || editProg==1" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="guardarPrograma()">Guargar Programa</b-button>
+            <b-button v-if="nuevoProg==1 || editProg==1" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="guardarPrograma()">Guardar Programa</b-button>
             </b-col>
         </b-row>
         <b-row class="my-1">
