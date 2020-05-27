@@ -1,18 +1,30 @@
 <template>
-  <div class="FormUsuario container" style="margin-top:5px">
+  <div class="FormUsuario container" style="margin-top:20px">
+    <div class="row grid-divider" >
     <div style="margin-right:50px"></div>  
-    <!-- </div>
-    <div> -->
-      <table>
-      <tbody>
+ <div id="izquierdo" class="row izq col-lg-6 col-xm-2 col-md-12">
+      <table >
+        
+        <tbody >
         <td >
-        <tr style="text-align:left"><td>Codigo:</td>   <td> <input class=" form-control" type="text"       v-model="codigo"></td></tr>
+        <tr style="text-align:left"><td>Codigo:</td>   <td> <input class="form-control" type="text"       v-model="codigo"></td></tr>
         <tr style="text-align:left"><td>Nombre:</td>   <td> <input class="form-control" type="text"       v-model="nombre"></td></tr>
         <tr style="text-align:left"><td>Apellidos:</td>   <td> <input class="form-control" type="text"    v-model="apellidos"></td></tr>
         <tr style="text-align:left"><td>Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
           <tr style="text-align:left"><td>Correo:</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
-        <!-- Combos box -->        
-        <tr style="text-align:left"><td>Tipos de usuarios:</td>   
+             
+        <tr style="margin-left:600px"  >
+          <div class="row col-sm-6 " style="margin-left:80px;" > 
+            <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div>
+            <!-- <div>{{estado}}</div> -->
+
+          </tr>    
+       </td> 
+      </tbody>
+      </table>
+      </div>
+      <div id="derecho" class="row izq col-lg-6 col-xm-2 col-md-12">
+       <tr style="text-align:left"><td>Tipos de usuarios:</td>   
           <select  v-model="tiposUsuariosselect" class="form-control" >
             <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index">
              {{ tipoU.nombre}}
@@ -26,27 +38,12 @@
           </select>
          
         </tr>
-
-        <!-- </tr>    -->
-        <!-- <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Celular:</td>   <td> <input class="col-sm-10 form-control"  type="number"  v-model="telefono"></td></tr> -->
-
-            <!-- <div>{{this.tiposUsuariosselect}}</div> -->
-
-       
-        <tr style="margin-left:600px"  >
-          <div class="row col-sm-6 " style="margin-left:80px;" > 
-            <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div>
-            <!-- <div>{{estado}}</div> -->
-
-          </tr>    
-       </td> 
-      </tbody>
-      </table>
+        </div>
        <div  class="botones">   
-            <button type="button" style="margin:5px" class="btn btn-info"  v-on:click="guardarUsuario()">Guardar</button>
+            <button type="button" style="margin:5px" class="btn btn-info" id="btnGuardar" v-on:click="guardarUsuario()">Guardar</button>
             <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>
          
-
+</div>
     </div>
     </div>
   
@@ -328,6 +325,9 @@ export default {
     margin-bottom: 10px;
     width: 200%;
     
+}
+.row {
+  width: 50%;
 }
 
 
