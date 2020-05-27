@@ -2,23 +2,23 @@
   <div class="FormCrearFacultad">
 
     <div class="container" style="text-align: left">
-      <div class="top-title title-container" style="text-align:right">
+      <!--<div class="top-title title-container" style="text-align:right">
         <button type="button" class="btn btn-info" style="margin-left:30px" v-on:click="guardarFacultad()">Guardar</button>
             
             <router-link to="/facultad">
               <button type="button" class="btn btn-secondary" style="margin-left:30px">Cancelar</button>
             </router-link>
-      </div>
+      </div>-->
         <b-container fluid>
         <b-row class="my-1"  style="text-align: right">
-            <!--<b-col sm="12">
+            <b-col sm="12">
             
             <button type="button" class="btn btn-info" style="margin-left:20px" v-on:click="guardarFacultad()">Guardar</button>
             
             <router-link to="/facultad">
               <button type="button" class="btn btn-secondary" style="margin-left:20px">Cancelar</button>
             </router-link>
-            </b-col>-->
+            </b-col>
         </b-row>
         <b-row>
         </b-row>
@@ -62,21 +62,21 @@
         </b-container>
         <br>
 
-        <div class="top-titulo" style="">
+        <!--<div class="top-titulo" style="">
           <h4 class="font-weight-bolder " style="margin-bottom:40px">Programas de la Facultad</h4>
           <button type="submit" class="btn btn-info" style="margin-right:-510px; height:38px" v-on:click="agregarPrograma()">Añadir Programa</button>            
           <router-link to="/facultad"><button type="button" class="btn btn-secondary" style="margin-left:0px">Cancelar</button></router-link>
-        </div>
+        </div>-->
 
         <b-container fluid>
-        <!--<b-row>
+        <b-row>
             
             <h4 class="font-weight-bold">Programas de la Facultad:</h4>
             <b-col sm="12" style="text-align: right">
             <b-button v-if="nuevoProg==0 && editProg==0" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="agregarPrograma()">Añadir Programa</b-button>
-            <b-button v-if="nuevoProg==1 || editProg==1" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="guardarPrograma()">Guargar Programa</b-button>
+            <b-button v-if="nuevoProg==1 || editProg==1" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="guardarPrograma()">Guardar Programa</b-button>
             </b-col>
-        </b-row>-->
+        </b-row>
         <b-row class="my-1">
             <b-col sm="3">
             <label>Nombre del Programa:</label>
@@ -362,6 +362,8 @@ export default {
 
       console.log(this.programa);
       var prog= new Object();
+      prog.id_facultad=this.facultad.id_facultad;
+      prog.id_programa=this.programa.id_programa;
       prog.nombre=this.programa.nombre;
       prog.correo=this.programa.correo;
       prog.coordinador=this.programa.coordinador;

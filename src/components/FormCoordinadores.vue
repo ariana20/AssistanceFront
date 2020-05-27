@@ -2,7 +2,7 @@
   <div class="FormPrograma">
     <div class="container" style="left:60px;text-align: left">
       <div class="top-titulo">
-            <h4 class="col-sm-4 title-container">Buscar: </h4>
+            <h4 class="col-sm-4 title-container">Nombre: </h4>
             <input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre del coordinador">
             <div class="botones">
             <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:190px" >Añadir</button>

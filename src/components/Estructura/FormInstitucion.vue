@@ -24,7 +24,7 @@
           </div>
           <div class="der col-lg-6 col-xm col-md-12">
             <h4 class="font-weight-bolder text-left institucion-title">Logo</h4>
-            <div style="width:80px;text-align:center;margin-top:40px" >
+            <div style="width:100px;text-align:center;margin-top:40px" >
               <img class="imgP" v-if="this.selectedFile!==null" alt="Vue logo" :src="selectedFile" id='LogoInst'>
               <img class="imgP" v-else alt="Vue logo" v-bind:src="logo" id='LogoInst'>        
             </div>
@@ -104,7 +104,7 @@ export default {
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
-          cancelButtonColor: '#d33',
+          cancelButtonColor: '#757575',
           confirmButtonText: 'Confirmar'
         }).then((result) => {
           if (result.value) {
@@ -116,7 +116,7 @@ export default {
                 this.logo = imgIns;
                 let params = {
                   logo: this.logo,
-                  usuario_actualizacion : this.$store.state.usuario,
+                  usuario_actualizacion : this.$store.state.usuario.id_usuario,
                 }
                 axios.post('/institucion/modificar/'+this.id,params)
                 .then( response=>{
@@ -171,7 +171,7 @@ export default {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',
-            cancelButtonColor: '#d33',
+            cancelButtonColor: '#757575',
             confirmButtonText: 'Confirmar'
           }).then((result) => {
             if (result.value) {

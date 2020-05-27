@@ -5,7 +5,6 @@
             <div class="dialog">
                 <a href="#close" title="Close" class="close">X</a>
                 <h2>Coordinadores</h2>
-                <h1 class="centered">Facultad</h1>
                 <table class="table">
                     <thead>
                     <tr>

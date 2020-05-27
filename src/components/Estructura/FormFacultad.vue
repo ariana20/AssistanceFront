@@ -1,30 +1,15 @@
 <template>
   <div name="FormFacultad">
-    <div class="container">
-
-      <!--<div class="float-right">
-        
-        <router-link to="/crearFacultad">
-          <button type="button"  class="btn btn-info">Añadir</button>
-        </router-link>
-      </div><br>
-
-      <div class="form-group row">
-        <div class="col-sm-3" style="text-align: left"><label for="inputNombre" class="col-sm-1 col-form-label">Nombre</label></div>
-        <div class="col-sm-6">
-          <input type="text" class="form-control" v-model="nombre">
-          <input id="nombre" class="row form-control" type="text" v-model="nombre">
-        </div>
-      </div>-->
-      <div class="top-titulo" style="text-align: left">
-            <h4 class="col-sm-4 title-container" style="margin-bottom: 30px;!important">Nombre: </h4>
-            <input class="col-sm-4 form-control" style="left:-200px;top:26px;" v-model="nombre" placeholder='Ingrese nombre de facultad'>
-
+    <div class="container" style="left:60px;text-align: left;">
+      <div class="top-titulo">
+        <h4 class="col-sm-4 title-container">Nombre: </h4>
+        <input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre de la facultad">
             <div class="botones">
-            <router-link to="/crearFacultad"><button type="button" class="btn btn-info" >Añadir</button></router-link>
+            <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:190px" >Añadir</button>
             </div>
-        </div>
-            
+      </div>
+
+           
       <table class="table" style="text-align: left">
         <thead>
           <tr>
@@ -119,6 +104,7 @@ export default {
     nuevo(){
       this.$router.push('/crearFacultad');
     },
+    
     Eliminar(item){
       Swal.fire({
           title: '¿Dese eliminar '+item.nombre+'?',
@@ -157,16 +143,11 @@ export default {
 <style scoped>
 
 .form-control {
-    border-radius: 1.5rem;  
-    border: 0.5px solid #757575;
+    border-radius: 1rem;  
+    border: 1px solid #757575;
     text-align-last: left;
-    margin-bottom:1.2em;
+    margin-bottom:1.3em;
 
 }
-.btn {
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 10px;
-    margin: 5px;
-}
+
 </style>
