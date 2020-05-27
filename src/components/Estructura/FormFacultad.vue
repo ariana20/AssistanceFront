@@ -1,24 +1,15 @@
 <template>
   <div name="FormFacultad">
-    <div class="container">
-
-      <div class="float-right">
-        
-        <router-link to="/crearFacultad">
-          <button type="button"  class="btn btn-info">Añadir</button>
-        </router-link>
-      </div><br>
-
-
-      <div class="form-group row">
-        <div class="col-sm-3" style="text-align: left"><label for="inputNombre" class="col-sm-1 col-form-label">Nombre</label></div>
-        <div class="col-sm-6">
-          <!--input type="text" class="form-control" v-model="nombre"-->
-          <input id="nombre" class="row form-control" type="text" v-model="nombre">
-        </div>
+    <div class="container" style="left:60px;text-align: left;">
+      <div class="top-titulo">
+        <h4 class="col-sm-4 title-container">Nombre: </h4>
+        <input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre de la facultad">
+            <div class="botones">
+            <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:190px" >Añadir</button>
+            </div>
       </div>
 
-            
+           
       <table class="table" style="text-align: left">
         <thead>
           <tr>
@@ -113,6 +104,7 @@ export default {
     nuevo(){
       this.$router.push('/crearFacultad');
     },
+    
     Eliminar(item){
       Swal.fire({
           title: '¿Dese eliminar '+item.nombre+'?',
