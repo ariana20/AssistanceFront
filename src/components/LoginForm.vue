@@ -31,12 +31,12 @@
                 </div>
               </fieldset>
               <div class="forms_buttons" style="margin-top:60px">
-                <a href="#openModal" type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</a>
-                <input type="submit" value="Ingresar" class="forms_buttons-action">
+                <!-- <a href="#openModal" type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</a> -->
+                <input type="submit" value="Ingresar" class="forms_buttons-action" style="margin-top:20px;width:100%">
               </div>
               
             </form>
-              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:80px">Ingresar con Google</button>
+              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:50px">Ingresar con Google</button>
           </div>
           <div class="user_forms-signup">
             <h2 class="forms_title">Usuario Nuevo</h2>

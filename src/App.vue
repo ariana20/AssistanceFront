@@ -8,7 +8,7 @@
     :image-path="require('./assets/images/assistance-logo.png')"
     background="#009892"
     link-color="#eee"
-    hoverBackground="#ccc"
+    hoverBackground="#026662"
     v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404' && this.$route.path !== '/seleccion'"   />
     <div style="height:60px"></div>
     <div v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'" id="container" class="wrapper">

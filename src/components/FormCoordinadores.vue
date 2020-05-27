@@ -124,6 +124,9 @@ export default {
           }
         })
       
+    },
+    nuevo(){
+      this.$router.push('/coordinador/'+0);
     }
   }
 }

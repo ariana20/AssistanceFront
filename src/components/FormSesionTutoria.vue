@@ -16,7 +16,9 @@
             <button type="button" class="btn btn-info" @click="cancelar()" style="border-color:gray;background-color:gray;">Cancelar</button>
             </div>
         </div>
-        <hr>
+        <!-- <hr style="color:#bababa;size:1px"> -->
+        <!-- <div style="width:100%; border-bottom:1px solid #bababa; height:1px"></div> -->
+        <div style="width:100%; border-bottom:1px solid #bababa; height:1px; padding-top:15px; margin-bottom:25px;"></div>
         <div class="row grid-divider">
             <div class="izq col-lg-6 col-xm-2 col-md-12">
                 <div class="font-weight-bolder text-left">Alumno</div>
@@ -366,7 +368,7 @@ export default Vue.extend ({
 }
 .input.e-input, .e-input-group input.e-input, .e-input-group input, .e-input-group.e-control-wrapper input.e-input, .e-input-group.e-control-wrapper input, .e-float-input input, .e-float-input.e-input-group input, .e-float-input.e-control-wrapper input, .e-float-input.e-control-wrapper.e-input-group input, .e-input-group, .e-input-group.e-control-wrapper, .e-float-input, .e-float-input.e-control-wrapper {
     border-radius: 1.25rem;  
-    border: 2px solid #757575;
+    border: 1px solid #757575;
     z-index: 10000;
     text-align: center;
     font-family: "Brandon Bold",Helvetica,Arial,sans-serif;
@@ -378,7 +380,7 @@ export default Vue.extend ({
 }
 .borde-textbox {
     border-radius: 1.25rem;  
-    border: 2px solid #757575;
+    border: 1px solid #757575;
 }
 .izq {
     //background-color: cornflowerblue;
@@ -442,7 +444,7 @@ export default Vue.extend ({
 
 .form-control {
     border-radius: 1.25rem;  
-    border: 2px solid #757575;
+    border: 1px solid #757575;
     margin-bottom: 10px;
 }
 </style>

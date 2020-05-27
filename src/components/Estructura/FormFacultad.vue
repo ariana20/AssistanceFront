@@ -151,9 +151,9 @@ export default {
 
 .form-control {
     border-radius: 1rem;  
-    border: 2px solid #757575;
+    border: 0px solid #757575;
     text-align-last: left;
-    margin-bottom:1.3em;
+    margin-bottom:1.2em;
 
 }
 
