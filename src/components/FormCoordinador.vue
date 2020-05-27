@@ -139,7 +139,7 @@ export default {
             telefono:this.telefono,
             password:"1234",
             estado:this.estado,
-            id_programaNuevo:this.miprog.id_programa,
+            id_tipo_usuario:3,  
             //ahora, si es tipo usuario 4 de tutor debe insertar el tipo de tutoria
 
             };
@@ -150,7 +150,7 @@ export default {
             apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
             estado:this.estado,
             telefono:this.telefono,  
-            id_tipo_usuario:3,   
+            id_tipo_usuario:3,  
             // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
             };
              
