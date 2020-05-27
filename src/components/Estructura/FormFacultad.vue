@@ -102,7 +102,7 @@ export default {
       this.$router.push('/crearFacultad/'+id);
     },
     nuevo(){
-      this.$router.push('/crearFacultad');
+      this.$router.push('/crearFacultad/'+0);
     },
     
     Eliminar(item){

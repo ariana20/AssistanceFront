@@ -154,14 +154,14 @@ Vue.use(MultiSelectPlugin);
 import Swal from 'sweetalert2'
 
 export default {
-  //props: {
-  //    idFacultad: String,
-  //},
+  props: {
+      idFacultad: String,
+  },
   data(){
     return{
       nuevoProg:0,
       editProg:0,
-      idFacultad: (this.$route.path).substring(15,17),
+      //idFacultad: (this.$route.path).substring(15,17),
       facultad:{
           id_facultad:null,
           id_programa:null,

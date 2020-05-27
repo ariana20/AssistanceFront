@@ -3,7 +3,7 @@
     <CabezeraTitulo 
     msg="Configuración de una Facultad"
     :image-path="require('.././assets/images/gray-laptop.jpg')"/>
-    <FormCrearFacultad/>
+    <FormCrearFacultad :idFacultad="id"/>
   </div>
 </template>
 
@@ -11,6 +11,9 @@
 import CabezeraTitulo from '@/components/CabezeraTitulo.vue'
 import FormCrearFacultad from '@/components/Estructura/FormCrearFacultad.vue'
 export default {
+  props: {
+      id: String,
+  },
   name: 'ViewCrearFacultad',
   components: {
     CabezeraTitulo,
