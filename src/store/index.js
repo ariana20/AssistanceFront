@@ -11,6 +11,7 @@ export default new Vuex.Store({
     cantProg:null,
     tipoActual:null, // Objeto Tipo de Usuario Actual (this.$store.state.tipoActual)
     facultades:null, 
+    facultadEscogida:null,
     coordinadores:null,
     coordinadoresL:null,
     permisos:null,
