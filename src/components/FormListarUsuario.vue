@@ -12,7 +12,7 @@
                 </div>  
          
 
-      <table class="table" >
+      <table class="table" style="text-align:left" >
         <thead>
           <tr>
             <th scope="col">N°</th>
@@ -30,16 +30,18 @@
             <td>{{item.correo}}</td>  
             <td>{{item.estado}}</td>    
             <!-- va a cambiar, me daran nombre -->
-            <div  v-for="e in TodosarrayTU" :key="e.id">
-              <td style="width:585px" v-if="e.id_tipo_usuario == item.pivot.id_tipo_usuario">
+            <!-- <div  v-for="e in TodosarrayTU" :key="e.id">
+              <td  v-if="e.id_tipo_usuario == item.pivot.id_tipo_usuario">
                     <span >{{e.nombre}}</span>  
-              </td>
-            </div>
-            <td style="text-align: center">
+              </td> -->
+
+              <!-- </div> -->
+              <td>{{item.tipo_usuario[0].nombre}}</td>
+            <td style="text-align:right" >
                <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
-              <button class="btn link"><b-icon icon="pencil"  v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
+              <button class="btn link"><b-icon icon="pencil" style="margin-left:-120px" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
               </router-link>              
-              <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item,index)"></b-icon></button>
+              <button class="btn link"><b-icon icon="dash-circle-fill" style="margin-left:-100px"  v-on:click="eliminarUsuario(item,index)"></b-icon></button>
               
             </td>
           </tr>
@@ -87,7 +89,7 @@ export default {
     
     this.listarTUsuarios();
     console.log('Store state usuariosA',this.$store.state.usuariosA);
-     if(this.$store.state.usuarios === null  ) {     
+     if(this.$store.state.usuarios == null  ) {     
        this.listarUsuarios(); } //}
     else this.usuarios = this.$store.state.usuarios; //
   },
