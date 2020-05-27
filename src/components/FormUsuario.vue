@@ -1,6 +1,6 @@
 <template>
-  <div class="FormUsuario container" style="height:450px">
-    <div class="row grid-divider" style="margin-top:60px" >
+  <div class="FormUsuario container">
+    <div class="row grid-divider" style="margin-top:40px" >
       <div id="izquierdo" class="col-md-4">
         <table >
             <tbody >
@@ -10,18 +10,28 @@
               <tr style="text-align:left"><td style="width:90px;">Apellidos:</td>   <td> <input class="form-control" type="text"    v-model="apellidos"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Correo:</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;"></td></tr>
+               
+              <tr class="" style="bottom:0px;margin-left:0px;" > 
+                <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox>
+                </tr>
+                 
+
+ 
             </td> 
           </tbody>
         </table>
       </div>
       <div id="medio" class="col-md-2">
-        <tr style="text-align:right;margin:600px"  >
-              <div class="" style="position:absolute; bottom:0px;margin-left:40px;" > 
-                <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div>
-                <!-- <div>{{estado}}</div> -->
+         <!-- <tr style="text-align:right;margin:600px"  ></tr> -->
+        <!-- <tr style="text-align:right;margin:600px"  > </tr>   -->
+              <!-- <div class="" style="padding:220px; bottom:0px;margin-left:40px;" > 
+                <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div> -->
+                
 
-        </tr>    
+         
       </div>
+
       <div id="derecho" class="col-md-4">
        <tr style="text-align:left"><td style="width:150px;">Tipos de usuarios:</td>   
           <select  v-model="tiposUsuariosselect" class="form-control" >
@@ -38,6 +48,24 @@
           </select>
          
         </tr>
+                 <!-- <div class="top-titulo" style="margin-bottom:20px;">
+                    <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
+                    <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="tipostutoriasselect">
+                        <option selected disabled value="">Selecciona un motivo</option>
+                        <option
+                        v-for="(tt, i) in tipostutorias" 
+                        :key="i" 
+                        :value="tt.id_tipo">
+                        {{ tt.nombre }}
+                        </option>
+                    </select>
+                    <div class="botones">
+                    <button type="button" 
+                            class="btn btn-info" 
+                            style="border-color:gray;background-color:gray;"
+                            @click="addMotivos(i)">Seleccionar</button>
+                    </div>
+                </div> -->
       </div>
     </div>
     <div  class="botones" style="position:absolute;bottom:25px">   
@@ -161,11 +189,9 @@ export default {
             id_programaNuevo:this.miprog.id_programa,
             id_tipo_usuario:this.tiposUsuariosselect,  
             //ahora, si es tipo usuario 4 de tutor debe insertar el tipo de tutoria
-
             };
       const params2 = {
-      
-            codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+             codigo:this.codigo.trim().replace(/\s+/g, ' '), 
             nombre:this.nombre.trim().replace(/\s+/g, ' '),
             apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
             estado:this.estado,
@@ -180,7 +206,7 @@ export default {
             Axios.create()
             .post('/usuarios/insertar',params)
             .then( response=>{
-                  console.log(response);
+              console.log('Usuario insertado',response.data);                  
                   Swal.fire({
                     text:"Se guardaron los datos con éxito",
                     icon:"success",
@@ -194,6 +220,18 @@ export default {
 
             }).catch(e => {
                  console.log(e.response);
+                 console.log('Respuesta del insertar ',e.response.data.exception);
+                  if(e.response.data.line==671){
+                    console.log('entro al error');
+                  Swal.fire({
+                    text:"Ha ingresado un correo que ya existe en la institución. Por favor, corriga los datos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  });  
+                  }
+                  else{
                  Swal.fire({
                     text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
                     icon:"warning",
@@ -201,8 +239,9 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });  
+                  }
                   this.$store.state.usuarios=null;
-                   this.$router.push('/ListaUsuarios');         
+                  //  this.$router.push('/ListaUsuarios');         
                 } );
           }
           else if (this.id_usuario_entrante!=0){
@@ -228,8 +267,8 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   })
-                  this.$store.state.usuarios=null;
-                  this.$router.push('/ListaUsuarios');
+                  // this.$store.state.usuarios=null;
+                  // this.$router.push('/ListaUsuarios');
               });
             
           }
