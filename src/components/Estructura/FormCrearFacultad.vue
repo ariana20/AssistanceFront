@@ -7,10 +7,10 @@
         <b-row class="my-1"  style="text-align: right">
             <b-col sm="12">
             
-            <button type="button" class="btn btn-info" style="margin-left:30px" v-on:click="guardarFacultad()">Guardar</button>
+            <button type="button" class="btn btn-info" style="margin-left:20px" v-on:click="guardarFacultad()">Guardar</button>
             
             <router-link to="/facultad">
-              <button type="button" class="btn btn-secondary" style="margin-left:30px">Cancelar</button>
+              <button type="button" class="btn btn-secondary" style="margin-left:20px">Cancelar</button>
             </router-link>
             </b-col>
         </b-row>
@@ -61,18 +61,18 @@
         <b-row>
             
             <h4 class="font-weight-bold">Programas de la Facultad:</h4>
-            
-
             <b-col sm="12" style="text-align: right">
-            <b-button class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="agregarPrograma()">Añadir Programa</b-button>
+            <b-button v-if="nuevoProg==0 && editProg==0" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="agregarPrograma()">Añadir Programa</b-button>
+            <b-button v-if="nuevoProg==1 || editProg==1" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="guardarPrograma()">Guargar Programa</b-button>
             </b-col>
         </b-row>
-        <b-row class="my-1">
+        <b-row class="my-1" >
             <b-col sm="3">
             <label>Nombre del Programa:</label>
             </b-col>
             <b-col sm="9">
-            <b-form-input id="nombre" v-model="programa.nombre"></b-form-input>
+            <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="programa.nombre"></b-form-input>
+            <b-form-input v-else readonly id="nombre" v-model="programa.nombre"></b-form-input>
             </b-col>
 
         </b-row>
@@ -81,7 +81,8 @@
             <label>Correo Electrónico:</label>
             </b-col>
             <b-col sm="9">
-            <b-form-input id="correo" v-model="programa.correo"></b-form-input>
+            <b-form-input v-if="nuevoProg==1 || editProg==1" id="correo" v-model="programa.correo"></b-form-input>
+            <b-form-input v-else readonly id="correo" v-model="programa.correo"></b-form-input>
             </b-col>
         </b-row>
         <b-row class="my-1">
@@ -114,14 +115,14 @@
             </thead>
             <tbody>
             <tr v-for="(item, index) in programas" :key="index">
-                <th v-if="item!=''" scope="row">{{index}}</th>
-                <td v-if="item!=''">{{item.nombre}}</td>
-                <td v-if="item!=''">{{item.correo}}</td>
-                <td v-if="item!='' && item.coordinador!=undefined">{{item.coordinador.nombre}}</td>
-                <td v-else-if="item!=''">Sin coordinador</td>
-                <td v-if="item!=''" style="text-align: center">
-                  <button class="btn link" v-on:click="Editar(item.id_programa)"><b-icon icon="pencil"></b-icon></button>
-                  <button class="btn link" v-on:click="Eliminar(item)"><b-icon icon="dash-circle-fill"></b-icon></button>
+                <th scope="row">{{index+1}}</th>
+                <td >{{item.nombre}}</td>
+                <td >{{item.correo}}</td>
+                <td v-if="item.coordinador!=undefined">{{item.coordinador.nombCompleto}}</td>
+                <td v-else>Sin coordinador</td>
+                <td style="text-align: center">
+                  <button class="btn link" v-on:click="Editar(item, index)"><b-icon icon="pencil"></b-icon></button>
+                  <button class="btn link" v-on:click="Eliminar(index, item)"><b-icon icon="dash-circle-fill"></b-icon></button>
                 </td>
             </tr>
             </tbody>
@@ -147,6 +148,8 @@ export default {
   //},
   data(){
     return{
+      nuevoProg:0,
+      editProg:0,
       idFacultad: (this.$route.path).substring(15,17),
       facultad:{
           id_facultad:null,
@@ -157,9 +160,15 @@ export default {
           correo:"",
           coordinador:null
       },
+      //para crear facultad
       programas:[],
-      
+      //para editar facultad
+      progeliminar:[],
+      progactualizar:[],
+      progagregar:[],
+      //////
       programa:{
+          index:0,
           id_programa:null,
           id_facultad:null,
           nombre:null,
@@ -186,10 +195,10 @@ export default {
     obtenerDatos() {
         axios.post('/facultad/listar/'+this.idFacultad)
             .then(response=>{
-                this.facultad.id_facultad = response.data.id_facultad;
-                this.facultad.id_programa = response.data.id_programa;
-                this.facultad.nombre = response.data.nombre;
-                this.facultad.correo = response.data.correo;
+                this.facultad.id_facultad = response.data[0].id_facultad;
+                this.facultad.id_programa = response.data[0].id_programa;
+                this.facultad.nombre = response.data[0].nombre;
+                this.facultad.correo = response.data[0].correo;
                 console.log(response);
                 const paramL = {
                   id_facultad: this.facultad.id_facultad,
@@ -198,14 +207,21 @@ export default {
                 axios.post('/facultad/listarProgramas', paramL)
                     .then(response=>{
                         this.programas = response.data;
+                        let index;
+                        for (index = 0; index < this.programas.length; index++) {
+                          if(this.programas[index] == "") break;
+                        }
+                        this.programas.splice(index,1);
                         console.log(response);
 
                     })
                     .catch(e=>console.log(e));
 
-                axios.post('/facultad/coordinador/'+this.facultad.id_programa)
+                axios.post('/facultad/coordinadorFacultad/'+this.facultad.id_programa)
                     .then(response=>{
-                        this.facultad.coordinador=response.data;
+                        this.facultad.coordinador=response.data[0];
+                        this.facultad.coordinador.nombCompleto=response.data[0].nombre+" "+response.data[0].apellidos;
+                        console.log(this.facultad.coordinador);
                         console.log(response);
 
                     })
@@ -227,54 +243,151 @@ export default {
         }) 
 
       }else{
-
-      axios.create()
-        .post('/facultad/insertar',this.facultad)
-          .then( response=>{
-            this.facultad.id_facultad=response.data.id_facultad;
-            this.facultad.id_programa=response.data.id_programa;
-            console.log(response)
-
-            const params = {
-              id_usuario: this.facultad.coordinador.id_usuario,
-              id_programa: this.facultad.id_programa
-            };
-            axios.create()
-              .post('/facultad/asignarCoordi',params)
-                .then( response=>{
-                  console.log(response)
-                })
-              .catch(e => {
-                console.log(e.response);
+        if(this.id_facultad){
+          //cómo agarro el id? por eso no funciona 
+          //modifico la facultad, debo considerar progactualizar, progeliminar, progagregar
+          axios.create()
+            .post('/facultad/modificar/'+this.facultad.id_facultad,this.facultad)
+              .then( response=>{
+                console.log(response);
               })
-
-            
-            for(var i=0; i<this.programas.length; i++){
-              this.programas[i].id_facultad=this.facultad.id_facultad;
-            }
-            axios.create()
-              .post('/programa/insertarVariosPro',this.programas)
-                .then( response=>{
-                  console.log(response)
-                })
-              .catch(e => {
-                console.log(e.response);
+            .catch(e => {
+              console.log(e.response);
+            })
+          const params = {
+            id_usuario: this.facultad.coordinador.id_usuario,
+            id_programa: this.facultad.id_programa
+          };
+          axios.create()
+            .post('/facultad/asignarCoordi',params)
+              .then( response=>{
+                console.log(response)
               })
+            .catch(e => {
+              console.log(e.response);
+            })
+            /*
+          axios.create()
+            .post('/programa/insertarVariosPro',this.progagregar)
+              .then( response=>{
+                console.log(response);
+              })
+            .catch(e => {
+              console.log(e.response);
+            })
+          axios.create()
+            .post('/programa/eliminarVariosPro',this.progeliminar)
+              .then( response=>{
+                console.log(response);
+              })
+            .catch(e => {
+              console.log(e.response);
+            })
+          axios.create()
+            .post('/programa/actualizarVariosPro',this.progactualizar)
+              .then( response=>{
+                console.log(response);
+              })
+            .catch(e => {
+              console.log(e.response);
+            })*/
 
+        }else{
+          //creo una facultad con la data final construida
+          //falta colocarle el insertar coordinador a cada programa
+          axios.create()
+          .post('/facultad/insertar',this.facultad)
+            .then( response=>{
+              this.facultad.id_facultad=response.data.id_facultad;
+              this.facultad.id_programa=response.data.id_programa;
+              console.log(response)
+
+              const params = {
+                id_usuario: this.facultad.coordinador.id_usuario,
+                id_programa: this.facultad.id_programa
+              };
+              axios.create()
+                .post('/facultad/asignarCoordi',params)
+                  .then( response=>{
+                    console.log(response)
+                  })
+                .catch(e => {
+                  console.log(e.response);
+                })
+
+              
+              for(var i=0; i<this.programas.length; i++){
+                this.programas[i].id_facultad=this.facultad.id_facultad;
+              }
+              axios.create()
+                .post('/programa/insertarVariosPro',this.programas)
+                  .then( response=>{
+                    console.log(response);
+                    Swal.fire({
+                      text:"Guardado Exitosa",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                    })
+                    this.$router.push('/facultad');
+
+                  })
+                .catch(e => {
+                  console.log(e.response);
+                })
+
+            })
+          .catch(e => {
+            console.log(e.response);
           })
-        .catch(e => {
-          console.log(e.response);
-        })
-      }
+        }
+        }
+
+      
 
     },
-    agregarPrograma(){
+    guardarPrograma(){
+
       console.log(this.programa);
       var prog= new Object();
       prog.nombre=this.programa.nombre;
       prog.correo=this.programa.correo;
-      this.programas.push(prog);
+      prog.coordinador=this.programa.coordinador;
+
+      if(this.idFacultad){
+        //si estoy modificando una facultad ya existente
+        if(this.nuevoProg==1){
+          this.progagregar.push(prog);
+          this.programas.push(prog);
+          
+        }else if(this.editProg==1){
+          this.progactualizar.push(prog);
+          this.programas[this.programa.index]=prog;
+        }
+      }else{
+        //modifico los programas mientras creo la facultad
+        if(this.nuevoProg==1){
+          this.programas.push(prog);
+        }else if(this.editProg==1){
+          this.programas[this.programa.index]=prog;
+        }
+      }
+
+
+
+      this.programa.id_programa=null;
+      this.programa.id_facultad=null;
+      this.programa.nombre=null;
+      this.programa.descripcion=null;
+      this.programa.correo=null;
+      this.programa.coordinador=null;
+      this.nuevoProg=0;
+      this.editProg=0;
       console.log(this.programas);
+    },
+    agregarPrograma(){
+      this.nuevoProg=1;
     },
     onChildClickProg (value) {
       this.programa.coordinador=value;
@@ -286,10 +399,32 @@ export default {
       this.facultad.coordinador.nombCompleto=value.nombre+" "+value.apellidos;
 
     },
-    Eliminar(item){
-      this.programas.splice(item);
-    },
+    Eliminar(ind, item){
+      Swal.fire({
+          title: '¿Dese eliminar el programa'+item.nombre+'?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#0097A7',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirmar'
+        }).then((result) => {
+          if (result.value) {
+            this.programas.splice(ind,1 );
+            if(this.id_facultad)
+              this.progeliminar.push(item);
 
+          }
+        })
+      
+    },
+    Editar(item, index){
+      this.editProg=1;
+      this.programa.index=index;
+      this.programa.nombre=item.nombre;
+      this.programa.correo=item.correo;
+      this.programa.coordinador=item.coordinador;
+      
+    }
 
   }
 }
