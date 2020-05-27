@@ -10,7 +10,7 @@
                   <input v-else type="text" class="inp borde-textbox" v-model="nombre" style="margin-left:10%">
                 </div>
                 <div class="row" style="margin-left:25%;width:20%">
-                  <b-button v-on:click="Guardar()" style="background: #0097A7">Guardar</b-button>
+                  <b-button v-on:click="Guardar()" style="height:40px;border-color:transparent;background: #0097A7">Guardar</b-button>
                   <b-button v-on:click="Regresar()" style="margin-left:4%;background: #CDCDCDs">Cancelar</b-button>
                 </div>
               </div>

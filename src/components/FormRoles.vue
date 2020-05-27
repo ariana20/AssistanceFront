@@ -1,38 +1,33 @@
 <template>
-  <div class="FormRoles" style="margin-top:20px">
-    <div class="container" style="left:60px;text-align: left">
-      <table style="margin-bottom:20px">
-      <tbody>
-        <td style="width:100%">
-          <tr style="text-align:left"></tr>
-          <tr style="text-align:left">
-            <td style="width:400px">
-              <div class="row" style="width:350px">
-                <a class="font-weight-ligth text-left" style="font-size:25px">Buscar: </a>
-                <input class="borde-textbox" style="margin-left:30px;padding:8px" type="text" v-model="nombre">
-              </div>
-            </td>
-            <td> <b-button v-on:click="nuevo()" style="margin-left:580%;background: #0097A7">Añadir</b-button></td>
-          </tr>
-        </td>
-      </tbody>
-      </table>
-      <table class="table">
+  <div class="FormRoles container" style="margin-top:20px">
+    <div class="row top-titulo " >
+        <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px;font-weight:bold">Buscar:  
+        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
+        </div>
+        <div style="margin-right:100px"></div>                   
+                  <!-- <button  type="button"  style="text-align:right" class="btn btn-info">Añadir</button> -->
+                  <b-button v-on:click="nuevo()" style="height:40px;border-color:transparent;margin-left:25%;background: #0097A7">Añadir</b-button>
+           
+      </div>
+      <table class="table"  style="text-align:left">
         <thead>
           <tr>
+            <th scope="col">N°</th>
             <th scope="col">Nombre</th>
             <th scope="col" style="text-align: center">Acciones</th>
           </tr>
         </thead>
         <tbody>
+          
           <tr v-for="(item, index) in rolesFiltrados" :key="index">
+            <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>
             <td  style="text-align: center"><button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil"/></button>
             <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill"/></button></td>
           </tr>
         </tbody>
       </table>
-    </div>
+  
 
       
   </div>
@@ -126,3 +121,12 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .form-control {
+    border-radius: 1.25rem;  
+    border: 2px solid #757575;
+    margin-bottom: 10px;
+    width: 200%;
+    
+}
+</style>
