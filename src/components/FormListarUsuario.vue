@@ -2,12 +2,11 @@
   <div class="FormListarUsuario container"  style="margin-top:20px">
     <!-- para que lo vea bien un coordinador -->
     <div class="row top-titulo" style="text-align: left">
-      <div class="col-sm-1 tutoria-title" style="margin:10px;font-size:25px" >
-        Nombre: 
-      </div>
-      <div class="col-sm-10" style="margin:10px; text-align: left" >  
-        <input placeholder="Busque por nombre" class="form-control" type="text" v-model="nombre">  
-      </div>
+    
+      <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px">Nombre:  
+        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
+        </div>
+        
       <div class="row btn-derecha" >
       <router-link to="/Usuario/0"> 
         <button  type="button" style="margin-right:100px" class="row btn btn-info">Añadir</button>
