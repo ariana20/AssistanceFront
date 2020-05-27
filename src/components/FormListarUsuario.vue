@@ -5,7 +5,7 @@
       <div class="col-sm-1 tutoria-title" style="margin:10px;font-size:25px" >
         Nombre: 
       </div>
-      <div class="col-sm-8" style="margin:10px; text-align: left" >  
+      <div class="col-sm-10" style="margin:10px; text-align: left" >  
         <input placeholder="Busque por nombre" class="form-control" type="text" v-model="nombre">  
       </div>
       <div class="row btn-derecha" >
