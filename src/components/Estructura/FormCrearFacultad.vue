@@ -306,10 +306,20 @@ export default {
             .post('/programa/actualizarVariosPro',this.progactualizar)
               .then( response=>{
                 console.log(response);
+                Swal.fire({
+                  text:"Guardado Exitosa",
+                  icon:"success",
+                  confirmButtonText: 'OK',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+                })
+                this.$router.push('/facultad');
               })
+              
             .catch(e => {
               console.log(e.response);
             })
+
 
         }else{
           //creo una facultad con la data final construida
@@ -350,6 +360,7 @@ export default {
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                     })
+                  
                     this.$router.push('/facultad');
 
                   })
