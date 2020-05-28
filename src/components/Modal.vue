@@ -8,7 +8,7 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">Id</th>
+                        <th scope="col">Código</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Correo</th>
                         <th scope="col">Estado</th>
@@ -16,7 +16,7 @@
                     </thead>
                     <tbody href="#close">
                     <tr  v-for="(item, index) in coordinadores" :key="index" v-on:click="$emit('childToParentFacu',item)">
-                        <th scope="row"><a href="#close">{{item.id_usuario}}</a></th>
+                        <th scope="row"><a href="#close">{{item.codigo}}</a></th>
                         <td><a href="#close">{{item.nombre+" "+item.apellidos}}</a></td>
                         <td><a href="#close">{{item.correo}}</a></td>
                         <td><a href="#close">{{item.estado}}</a></td>
