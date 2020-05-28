@@ -217,4 +217,7 @@ export default {
 .botones {
     margin:auto;
 }
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
 </style>
