@@ -22,8 +22,7 @@
           <td >
           </td>
           </tr>
-          <div class="row col-sm-6 tutoria-title"  > 
-            <div>Condiciones:</div>
+          <div class="row col-sm-6 tutoria-title"  > <div>Condiciones:</div>
             <b-form-radio-group style="margin-left:25px" v-model="tipotutoria.individual" :options="indgru"></b-form-radio-group></div>
             <div class="row col-sm-6 " style="margin-left:100px;" > 
             <b-form-radio-group v-model="tipotutoria.obligatorio" :options="oblopc">    </b-form-radio-group></div>            
