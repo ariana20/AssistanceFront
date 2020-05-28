@@ -2,7 +2,7 @@
   <div class="FormRoles container" style="margin-top:20px">
         <div class="row top-titulo">
         <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:20px">Nombre:  
-        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
+        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )" >  
         </div>
         <div style="margin-right:500px"></div>
         <div class="row btn-derecha" >
@@ -166,7 +166,9 @@ computed:{
 .btn-derecha{
    margin-top: 5px;
 }  
-
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
 
 
 </style>

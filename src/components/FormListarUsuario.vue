@@ -4,7 +4,7 @@
     <div class="row top-titulo" style="text-align: left">
     
       <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:20px">Nombre o Código:  
-        <input placeholder="Nombre o código" class="row col-sm-6 form-control" style="left:25px;" type="text"  id="nombres"  v-model="nombre">  
+        <input placeholder="Nombre o código" class="input row col-sm-6 form-control" style="left:25px;" type="text"  id="nombres"  v-model="nombre">  
         </div>
         <!-- <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px">Codigo:  
         <input placeholder="Busque por Código" class="row col-sm-8 form-control" style="left:25px;" type="text" id="codigos" v-model="codigo">  
@@ -224,4 +224,7 @@ export default {
 .btn-derecha{
    margin-top: 5px;
 }  
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
 </style>

@@ -182,7 +182,7 @@ export default Vue.extend ({
   
     axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {
-            this.unidadesApoyo = response.data;
+            this.unidadesApoyo = response.data[0];
         }).catch(e => {
             console.log(e.response);
         });
@@ -210,6 +210,7 @@ export default Vue.extend ({
         .catch(e => {
           console.log(e.response);
         });
+        console.log("datetime es: ",this.datetime);
     },
     methods: {
         guardar: function () {
@@ -397,7 +398,7 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
 }
 .borde-textbox {
     border-radius: 1.25rem;  
-    border: 1px solid #757575;
+    border: 2px solid #757575;
 }
 .izq {
     //background-color: cornflowerblue;
@@ -464,5 +465,7 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
     border: 0.5px solid #757575;
     margin-bottom: 10px;
 }
-
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
 </style>

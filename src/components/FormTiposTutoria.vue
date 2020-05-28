@@ -8,11 +8,11 @@
         <td style="width:1062px">
           <tr style="text-align:left"></tr>
           <tr style="text-align:left" ><td>Nombre:</td>   
-            <td> <input class="col-sm-10 form-control" type="text" v-model="tipotutoria.nombre"> </td>
+            <td> <input class="input col-sm-10 form-control" type="text" v-model="tipotutoria.nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )"> </td>
           </tr>
        
           <tr style="text-align:left" ><td>Descripcion:</td> 
-          <textarea rows =3 cols=49  class="col-sm-10 form-control" type="text" v-model="tipotutoria.descripcion">    
+          <textarea rows =3 cols=49  class="col-sm-10 form-control" type="text" v-model="tipotutoria.descripcion" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )" >    
           </textarea> 
           <!-- Textarea tiene que tener un número menos de largo -->
           </tr>
@@ -23,21 +23,17 @@
           </td>
           </tr>
           <div class="row col-sm-6 tutoria-title"  > 
-            <div>Condiciones: </div>
-            <b-form-radio-group style="margin-left:25px" v-model="tipotutoria.individual" :options="indgru">    </b-form-radio-group></div>
-          <div class="row col-sm-6 " style="margin-left:100px;" > 
-            <b-form-radio-group v-model="tipotutoria.obligatorio" :options="oblopc">    </b-form-radio-group></div>
-        
-          
-          <div class="row col-sm-6 " style="margin-left:100px;"> 
+            <div>Condiciones:</div>
+            <b-form-radio-group style="margin-left:25px" v-model="tipotutoria.individual" :options="indgru"></b-form-radio-group></div>
+            <div class="row col-sm-6 " style="margin-left:100px;" > 
+            <b-form-radio-group v-model="tipotutoria.obligatorio" :options="oblopc">    </b-form-radio-group></div>            
+            <div class="row col-sm-6 " style="margin-left:100px;"> 
             <b-form-radio-group v-model="tipotutoria.tutorasignado" :options="asigsol">    </b-form-radio-group></div>
-            
-        
-          <div class="row col-sm-6 " style="margin-left:100px;"> 
+            <div class="row col-sm-6 " style="margin-left:100px;"> 
             <b-form-radio-group v-model="tipotutoria.tutorfijo" :options="fijvar">    </b-form-radio-group></div>
 
            <br>
-          <div class="row col-sm-6 " style="margin-left:80px;" > 
+            <div class="row col-sm-6 " style="margin-left:80px;" > 
             <b-form-checkbox v-model="tipotutoria.estado" value="act" unchecked-value="ina" checked> Activo</b-form-checkbox></div>
             
 
@@ -295,10 +291,15 @@ export default Vue.extend( {
 }
 .form-control {
     border-radius: 1.25rem;  
-    border: 2px solid #757575;
+    border: 1px solid #757575;
     margin-bottom: 10px;
     /* width: 100%; */
     
 }
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
+
+textarea:focus {outline: none;box-shadow: none;}
   @import '../assets/styles/material.css';
 </style>

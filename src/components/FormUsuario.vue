@@ -5,9 +5,11 @@
         <table >
             <tbody >
             <td >
-              <tr style="text-align:left"><td style="width:90px;">Codigo:</td>   <td> <input class="form-control" type="text"       v-model="codigo"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Nombre:</td>   <td> <input class="form-control" type="text"       v-model="nombre"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Apellidos:</td>   <td> <input class="form-control" type="text"    v-model="apellidos"></td></tr>
+              <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) ||( event.charCode== 239) || (event.charCode== 130) || (event.charCod==144 ) || (event.charCod==181) || (event.charCod==214) || (event.charCod==233) || (event.charCod==224))"   -->
+              <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) || event.charCode== 130 || event.charCod==144 ||event.charCod==181 || event.charCod==214 || event.charCod==233 || event.charCod==224)" -->
+              <tr style="text-align:left"><td style="width:90px;">Codigo:</td>   <td> <input class="form-control" type="text"       maxlength="8" v-model="codigo"></td></tr> 
+              <tr style="text-align:left"><td style="width:90px;">Nombre:</td>   <td> <input class="form-control" type="text"   onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )"     v-model="nombre"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Apellidos:</td>   <td> <input class="form-control" type="text"    onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )"   v-model="apellidos"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Correo:</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
               <tr style="text-align:left"><td style="width:90px;"></td></tr>
@@ -34,8 +36,8 @@
 
       <div id="derecho" class="col-md-4">
        <tr style="text-align:left"><td style="width:150px;">Tipos de usuarios:</td>   
-          <select  v-model="tiposUsuariosselect" class="form-control" >
-            <option disabled selected :value="null">Selecciona un tipo de usuario</option>
+          <select v-model="tiposUsuariosselect" class="form-control" >
+            <option value="no" hidden selected >Selecciona un tipo de usuario</option>
             <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index">
              {{ tipoU.nombre}}
              </option>
@@ -68,7 +70,7 @@
                 </div> -->
       </div>
     </div>
-    <div  class="botones" style="position:absolute;bottom:25px">   
+    <div  class="botones" style="position:fixed;margin-top:120px;bottom:25px">   
         <button type="button" style="margin:5px" class="btn btn-info" id="btnGuardar" v-on:click="guardarUsuario()">Guardar</button>
         <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>  
     </div>
@@ -95,7 +97,7 @@ export default {
       tiposUsuarios:"",
       estado:"act",
       id_usuario_entrante:parseInt((this.$route.path).substring(9,11),10),
-      tiposUsuariosselect:null,
+      tiposUsuariosselect:"no",
       tipostutorias:"",
       tipostutoriasselect:null,
        miprog:this.$store.state.programaActual,
@@ -176,7 +178,15 @@ export default {
               showConfirmButton: true,
           })   
       }
-      
+      else if(this.tiposUsuariosselect=="no"){
+           Swal.fire({
+              text:"Falta elegir un tipo de usuario",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+          })  
+      }
       else{//está bien y envío
       const params = {
            codigo:this.codigo.trim().replace(/\s+/g, ' '), 
@@ -218,7 +228,21 @@ export default {
             Axios.create()
             .post('/usuarios/insertar',params)
             .then( response=>{
-              console.log('Usuario insertado',response.data);                  
+
+              console.log('Usuario insertado',response.data);  
+              
+              if(response.data["Error capturado:"]=="El codigo o correo ingresados ya existen"){
+                console.log('Entro al if del error');
+
+                 Swal.fire({
+                    text:"Ha ingresado un correo que ya existe en la institución. Por favor, corriga los datos.",
+                    icon:"warning",
+                    confirmButtonText: 'Corregir',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  });
+              }
+              else{
                   Swal.fire({
                     text:"Se guardaron los datos con éxito",
                     icon:"success",
@@ -244,34 +268,25 @@ export default {
 
               this.$store.state.usuarios=null;
               this.$router.push('/ListaUsuarios'); 
+              }
 
             }).catch(e => {
-                 console.log(e.response);
-                 console.log('Respuesta del insertar ',e.response.data.exception);
-                 //Este if va a cambiar CORREO
-                  if(e.response.data.line==671){
-                    console.log('entro al error');
-                  Swal.fire({
-                    text:"Ha ingresado un correo que ya existe en la institución. Por favor, corriga los datos.",
-                    icon:"warning",
-                    confirmButtonText: 'Sí',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                  });  
-                  }
-          
-                  else{
+              console.log('antes del if',e);
+              console.log(e);
                  Swal.fire({
                     text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
                     icon:"warning",
-                    confirmButtonText: 'Sí',
+                    confirmButtonText: 'Corregir',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });  
-                  }
+                  
                   this.$store.state.usuarios=null;
                   //  this.$router.push('/ListaUsuarios');         
-                } );
+                
+                
+               }
+            );
           }
 
           }
@@ -395,4 +410,7 @@ body{
 td { 
   margin-bottom:10px;
 }
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
 </style>
