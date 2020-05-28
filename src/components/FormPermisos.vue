@@ -3,7 +3,8 @@
     <div class="container" style="margin-left:100px;text-align: left">
       <div class="top-titulo">
             <h4 class="col-sm-4 title-container">Tipo Usuario: </h4>
-            <input class="col-sm-6 form-control" style="top:26px;right:150px;" v-model="nombre" placeholder="Ingrese tipo de usuario">
+            <input v-if="idRol" type="text" class="col-sm-6 form-control-plaintext" style="margin-top:25px;margin-left:-10%;font-size:25px;height:40px;width:65%" :value="nombreRol" readonly>
+            <input v-else class="col-sm-6 form-control" style="top:26px;right:150px;" v-model="nombre" placeholder="Ingrese tipo de usuario">
             <div class="botones" style="display: inline-flex;margin-left: -30px;">
             <button type="button" class="btn btn-info" @click="Guardar()" >Guardar</button>
             <button type="button" class="btn btn-info" @click="Regresar()" style="border-color:gray;background-color:gray;">Cancelar</button>
