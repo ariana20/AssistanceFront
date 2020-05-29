@@ -16,6 +16,7 @@ export default new Vuex.Store({
     coordinadoresL:null,
     permisos:null,
     roles:null, //Filtrar Tipos de Usuario
+    solicitudes:null, //Filtrar Permisos
     tipostutorias:null,
     usuarios:null,
     usuariosA:null,
@@ -67,11 +68,16 @@ export default new Vuex.Store({
       path: '/sesiontutoria',
       icon: 'ion-ios-school'
     },
-   {
+    {
     text: 'Gestionar Usuarios Admin',
     path: '/AListaUsuarios',
     icon: 'ion-ios-people'
-  },
+    },
+    {
+    text: 'Solicitudes',
+    path: '/solicitudes',
+    icon: 'ion-ios-book'
+      },
     ],
     filtro:{
       query: '',
@@ -159,6 +165,14 @@ export default new Vuex.Store({
         return usuarios;
       }
       return state.usuarios;
+
+    },
+    filtrarSolicitudes(state){
+      if(state.filtro.query.length > 0){
+        let solicitudes = state.solicitudes.filter(sol => (sol.usuarioSolicitante.nombre+" "+sol.usuarioSolicitante.apellidos).toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return solicitudes;
+      }
+      return state.solicitudes;
 
     },
 

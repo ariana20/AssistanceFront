@@ -19,9 +19,9 @@
 </template>
 
 <script>
-import HomeNavBar from '@/components/HomeNavBar.vue'
-import NavBar from '@/components/NavBar.vue'
-import SidebarAdministrador from '@/components/SideNavBar'
+import HomeNavBar from '@/components/Principal/HomeNavBar.vue'
+import NavBar from '@/components/Principal/NavBar.vue'
+import SidebarAdministrador from '@/components/Principal/SideNavBar'
 import Vue from 'vue'
 import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(MultiSelectPlugin);

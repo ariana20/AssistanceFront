@@ -1,4 +1,4 @@
-# assistance
+# Assistance
 
 ## Project setup
 ```
