@@ -17,6 +17,7 @@ export default new Vuex.Store({
     permisos:null,
     roles:null, //Filtrar Tipos de Usuario
     solicitudes:null, //Filtrar Permisos
+    unidades:null, //Filtrar Unidades de Apoyo
     tipostutorias:null,
     usuarios:null,
     usuariosA:null,
@@ -26,28 +27,28 @@ export default new Vuex.Store({
       {
         text: 'Institucion',
 		path: '/institucion',
-		icon: 'ion-ios-business'
+		icon: 'ion-ios-globe'
       },
       {
         text: 'Facultad',
 		path: '/facultad',
-		icon: 'ion-ios-school'
+		icon: 'ion-ios-business'
       },
       {
         text: 'Programa',
 		path: '/programa',
-		icon: 'ion-ios-home'
+		icon: 'ion-ios-school'
       },
       {
         text: 'Coordinador',
 		path: '/coordinadores',
 		icon: 'ion-ios-person'
       },
-    //   {
-    //     text: 'Unidades de Apoyo',
-		// path: '/about',
-		// icon: 'ion-ios-people'
-    //   },
+      {
+        text: 'Unidades de Apoyo',
+		path: '/unidadesApoyo',
+		icon: 'ion-ios-medkit'
+      },
       {
         text: 'Tipos de Tutoria',
 		path: '/ListaTiposTutorias',
@@ -175,6 +176,15 @@ export default new Vuex.Store({
       return state.solicitudes;
 
     },
+    filtrarUnidades(state){
+      if(state.filtro.query.length > 0){
+        let unidades = state.unidades.filter(unidad => unidad.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        return unidades;
+      }
+      return state.unidades;
+
+    },
+
 
   }
 })

@@ -32,9 +32,8 @@
             <td>{{item.nombre}}</td>
             <td>{{item.correo}}</td>
             <td>
-                <div v-if="item.programa!=undefined">
-                    <a style="font-weight:normal" v-if="item.pivot.id_tipo_usuario == 2">Facultad - {{item.programa.nombre}}</a>
-                    <a style="font-weight:normal" v-else>Programa - {{item.programa.nombre}}</a>
+                <div v-for="(lugar,ind) in item.lugares" :key="ind">
+                    <a style="font-weight:normal">{{lugar}}</a>
                 </div>
             </td>
             <td style=";font-size:30px">
@@ -86,15 +85,8 @@ export default {
     listarCoordinadores() {
       this.axios.post('/facultad/coordinadoresPyF')
         .then(res =>{
-            let aux = res.data
-            aux.forEach(element => {
-                this.axios.post('/programa/listar/'+element.pivot.id_programa)
-                    .then(response=>{
-                        element.programa = response.data
-                    })
-            });
-            this.$store.state.coordinadoresL = aux;
-            this.coordinadores = aux;
+            this.$store.state.coordinadoresL = res.data;
+            this.coordinadores = res.data;
         })
         .catch(e => {
           console.log(e.response);
@@ -110,7 +102,7 @@ export default {
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
-          cancelButtonColor: '#d33',
+          cancelButtonColor: '#757575',
           confirmButtonText: 'Confirmar'
         }).then((result) => {
           if (result.value) {

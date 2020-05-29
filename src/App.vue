@@ -25,6 +25,7 @@ import SidebarAdministrador from '@/components/Principal/SideNavBar'
 import Vue from 'vue'
 import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(MultiSelectPlugin);
+
 export default {
   name: 'App',
   mounted(){

@@ -113,7 +113,7 @@ export default {
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
-          cancelButtonColor: '#d33',
+          cancelButtonColor: '#757575',
           confirmButtonText: 'Confirmar'
         }).then((result) => {
           if (result.value) {

@@ -16,29 +16,36 @@
       <table class="table"  style="text-align:left">
         <thead>
           <tr>
-            <th scope="col">N°</th>
+            <th scope="col">Código</th>
             <th scope="col">Nombre</th>
             <th scope="col">Tipo de Solicitud</th>
             <th scope="col">Descripción</th>
             <th scope="col">Fecha Solicitud</th>
-            <th scope="col">Estado</th>
+            <th scope="col">Responder</th>
             <th scope="col" style="text-align: center">Acciones</th>
           </tr>
         </thead>
         <tbody>
           
           <tr v-for="(item, index) in solicitudesFiltrados" :key="index">
-            <th scope="row">{{index+1}}</th>
+            <td scope="row">{{item.usuarioSolicitante.codigo}}</td>
             <td>{{item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos}}</td>
             <td>{{item.tipo_solicitud}}</td>
             <td>{{item.descripcion}}</td>
             <td>{{item.fecha_creacion}}</td>
-            <td style=";font-size:30px">
-                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
-                <b-icon v-else icon="cross" style="color:red"/>
+            <td style=";font-size:25px;width:140px">
+                <button style="width:25px;margin-left:-20px" v-on:click="Aceptar(item)" class="btn link">
+                    <b-icon icon="check-circle-fill" style="color:#0097A7"/>
+                </button>
+                <button style="width:25px" v-on:click="Rechazar" class="btn link">
+                    <b-icon icon="x-circle-fill" style="color:#757575"/>
+                </button>
             </td>
-            <td  style="text-align: center"><button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil"/></button>
-            <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill"/></button></td>
+            <td  style="text-align: center;width:144px">
+                <button v-on:click="Elegir(item)" style="width:50px" class="btn link">
+                    <modalJ2 v-on:childToParentFacu="Detalle" :solicitud="item"/>      
+                </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -51,12 +58,18 @@
 <script>
 import { mapGetters } from 'vuex'
 import Swal from 'sweetalert2'
+import emailjs from 'emailjs-com';
+import modalJ2 from '@/components/ModalDetalle.vue'
 
 export default {
   data(){
     return{
-      roles:[]
+      roles:[],
+      solEl:null,
     }
+  },
+  components:{
+    modalJ2
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
@@ -85,16 +98,20 @@ export default {
         .catch(e=>console.log(e));
       
     },
-    Editar(id){
-      this.$router.push('/permisos/'+id);
+    Elegir(item){
+        this.solEl = item;
     },
-    Eliminar(item){
+    Detalle(value){
+        if(value == "Aceptar") this.Aceptar(this.solEl);
+        if(value == "Rechazar") this.Rechazar(this.solEl);
+    },
+    Aceptar(item){
       Swal.fire({
-          title: '¿Dese eliminar '+item.nombre+'?',
+          title: '¿Desea aceptar la solicitud?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
-          cancelButtonColor: '#d33',
+          cancelButtonColor: '#757575',
           confirmButtonText: 'Confirmar'
         }).then((result) => {
           if (result.value) {
@@ -109,9 +126,88 @@ export default {
                   function(element){
                     return element.id_solicitante === item.id_solicitante && element.id_remitente === item.id_remitente;
                   })
-                this.$store.state.solicitudes[index].estado='eli';
+                this.$store.state.solicitudes.splice(index,1);
+                let mensaje;
+                if(item.tipo_solicitud == 'Programa'){
+                    mensaje = "Se aceptó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
+                    let obj ={
+                        id_tipo_usuario:5, 
+                        id_programa:this.$store.state.programaActual.id_programa,
+                    }
+                    this.axios.post('/usuarios/nuevoPrograma/'+item.usuarioSolicitante.id_usuario,obj)
+                        .then(response=>{
+                            response
+                            emailjs.send(
+                                "gmail",
+                                "template_bV7OIjEW",
+                                {
+                                "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                                "mensaje":mensaje,
+                                "correo": item.usuarioSolicitante.correo
+                                }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                            .then((result) => {
+                                console.log('SUCCESS!', result.status, result.text);
+                            }, (error) => {
+                                console.log('FAILED...', error);
+                            });
+                            Swal.fire({
+                            text:"Aceptado exitosamente",
+                            icon:"success",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor:'#0097A7',
+                            showConfirmButton: true,
+                            })
+                        })
+                        .catch(e=>console.log(e))
+                }
+                
+              })
+              .catch(e=>console.log(e));
+
+          }
+        })
+      
+    },
+    Rechazar(item){
+      Swal.fire({
+          title: '¿Desea rechazar la solicitud?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#0097A7',
+          cancelButtonColor: '#757575',
+          confirmButtonText: 'Confirmar'
+        }).then((result) => {
+          if (result.value) {
+            let param = {
+                id_solicitante: item.id_solicitante,
+                id_remitente: item.id_remitente
+            }
+            this.axios.post('/solicitudes/eliminar',param)
+              .then(response=>{
+                response
+                let index = this.$store.state.solicitudes.indexOf(
+                  function(element){
+                    return element.id_solicitante === item.id_solicitante && element.id_remitente === item.id_remitente;
+                  })
+                this.$store.state.solicitudes.splice(index,1);
+                let mensaje;
+                if(item.tipo_solicitud == 'Programa') mensaje = "Se rechazó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
+                console.log(mensaje)
+                emailjs.send(
+                  "gmail",
+                  "template_bV7OIjEW",
+                  {
+                  "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                  "mensaje":mensaje,
+                  "correo": item.usuarioSolicitante.correo
+                  }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                  .then((result) => {
+                      console.log('SUCCESS!', result.status, result.text);
+                  }, (error) => {
+                      console.log('FAILED...', error);
+                  });
                 Swal.fire({
-                  text:"Estado cambiado exitosamente",
+                  text:"Rechazado exitosamente",
                   icon:"success",
                   confirmButtonText: 'OK',
                   confirmButtonColor:'#0097A7',

@@ -29,8 +29,10 @@
           <tr v-for="(item, index) in rolesFiltrados" :key="index">
             <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>
-            <td  style="text-align: center"><button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil"/></button>
-            <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill"/></button></td>
+            <td  style="text-align: center">
+              <button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
+              <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -99,7 +101,7 @@ export default {
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
-          cancelButtonColor: '#d33',
+          cancelButtonColor: '#757575',
           confirmButtonText: 'Confirmar'
         }).then((result) => {
           if (result.value) {

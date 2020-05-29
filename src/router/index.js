@@ -50,6 +50,23 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/Configuracion/ViewPrograma.vue')
     },
+    {
+      path: '/unidadesApoyo',
+      name: 'Unidades de Apoyo',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */ '../views/Configuracion/ViewUnidadesApoyo.vue')
+    },
+    {
+      path: '/unidad/:id?',
+      name: 'Unidad de Apoyo',
+      props: true,
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/Configuracion/ViewUnidadApoyo.vue')
+    },
   {
     path: '/login',
     name: 'Login',
