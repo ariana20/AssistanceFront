@@ -148,7 +148,7 @@ export default {
        var   expresion1=/\w+@\w+\.+pe/;
       // console.log('estado: ',this.estado);
       // if(this.estado==null) console.log('entro al if estado: ',this.estado);
-      if(this.telefono =="" || this.nombre=="" ||this.apellidos=="" || this.codigo=="" || this.correo=="" || this.estado===null   ){
+      if(this.nombre=="" ||this.apellidos=="" || this.codigo=="" || this.correo=="" || this.estado===null   ){
       
       //Cuando está vacio todo
           Swal.fire({
