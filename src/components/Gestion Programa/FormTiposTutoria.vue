@@ -7,24 +7,24 @@
         <br>
         <td style="width:1062px">
           <tr style="text-align:left"></tr>
-          <tr style="text-align:left" ><td>Nombre:</td>   
-            <td> <input class="input col-sm-10 form-control" type="text" v-model="tipotutoria.nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )"> </td>
+          <tr style="text-align:left" ><td>Nombre:*</td>   
+            <td> <input class="input col-sm-10 form-control" type="text" v-model="tipotutoria.nombre"> </td>
           </tr>
        
           <tr style="text-align:left" ><td>Descripcion:</td> 
-          <textarea rows =3 cols=49  class="col-sm-10 form-control" type="text" v-model="tipotutoria.descripcion" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )" >    
+          <textarea rows =3 cols=49  class="col-sm-10 form-control" type="text" v-model="tipotutoria.descripcion"  >    
           </textarea> 
           <!-- Textarea tiene que tener un número menos de largo -->
           </tr>
-          
+        
 
           <tr> 
           <td >
           </td>
           </tr>
-          <div class="row col-sm-6 tutoria-title"  > <div>Condiciones:</div>
-            <b-form-radio-group style="margin-left:25px" v-model="tipotutoria.individual" :options="indgru"></b-form-radio-group></div>
-            <div class="row col-sm-6 " style="margin-left:100px;" > 
+          <div class="row col-sm-6 tutoria-title"  > <div>Condiciones:*</div>
+            <b-form-radio-group style="margin-left:20px" v-model="tipotutoria.individual" :options="indgru"></b-form-radio-group></div>
+          <div class="row col-sm-6 " style="margin-left:100px;" > 
             <b-form-radio-group v-model="tipotutoria.obligatorio" :options="oblopc">    </b-form-radio-group></div>            
             <div class="row col-sm-6 " style="margin-left:100px;"> 
             <b-form-radio-group v-model="tipotutoria.tutorasignado" :options="asigsol">    </b-form-radio-group></div>
@@ -33,19 +33,16 @@
 
            <br>
             <div class="row col-sm-6 " style="margin-left:80px;" > 
-            <b-form-checkbox v-model="tipotutoria.estado" value="act" unchecked-value="ina" checked> Activo</b-form-checkbox></div>
-            
-
-          
+            <b-form-checkbox v-model="tipotutoria.estado" value="act" unchecked-value="ina" checked> Activo</b-form-checkbox></div>          
         </td>        
-      </tbody>
-      
+      </tbody>      
       </table>
-    </div>
-      
-      <button type="button" style="margin-left:70px" class="btn btn-info" v-on:click="guardarTipoTutoria()">Guardar</button>
-      <button type="button" style="margin-left:50px"  class="btn btn-secondary" v-on:click="Cancelar()">Cancelar</button>
-      
+    </div>      
+      <button type="button" class="btn btn-info" style="border-radius: 10px" v-on:click="guardarTipoTutoria()">Guardar</button>
+      <button type="button" style="border-radius: 10px;margin-left:50px"  class="btn btn-secondary" v-on:click="Cancelar()">Cancelar</button>
+      <div style="margin-left:180px;position:fixed;margin-top:120px;bottom:25px">
+      * Campos obligatorios   
+     </div >
   </div>
 
 </template>

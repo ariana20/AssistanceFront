@@ -5,6 +5,7 @@
     
       <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:20px">Nombre o Código:  
         <input placeholder="Nombre o código" class="input row col-sm-6 form-control" style="left:25px;" type="text"  id="nombres"  v-model="nombre">  
+        
         </div>
         <!-- <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px">Codigo:  
         <input placeholder="Busque por Código" class="row col-sm-8 form-control" style="left:25px;" type="text" id="codigos" v-model="codigo">  
@@ -12,7 +13,7 @@
         
       <div class="row btn-derecha" >
       <router-link to="/Usuario/0"> 
-        <button  type="button" style="margin-right:50px" class="row btn btn-info">Añadir</button>
+        <button  type="button" style="border-radius: 10px;margin-right:50px" class="row btn btn-info">Añadir</button>
       </router-link>
       </div>  
          
@@ -37,14 +38,14 @@
             <td>{{item.correo}}</td>  
             <td style="font-size:30px">
                 <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
-                <b-icon v-else icon="check" style="color:#757575"/>
+                <b-icon v-else icon="x" style="color:#757575"/>
             </td>
               <td>{{item.tipo_usuario[0].nombre}}</td>
             <td style="text-align:right" >
                <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
-              <button class="btn link"><b-icon icon="pencil" style="margin-left:-120px" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
+              <button class="btn link"><b-icon icon="pencil" style="color:#0097A7;margin-left:-120px" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
               </router-link>              
-              <button class="btn link"><b-icon icon="dash-circle-fill" style="margin-left:-100px"  v-on:click="eliminarUsuario(item,index)"></b-icon></button>
+              <button class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575;margin-left:-100px"  v-on:click="eliminarUsuario(item,index)"></b-icon></button>
               
             </td>
           </tr>
@@ -129,8 +130,12 @@ export default {
      if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador
         axios.post('/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa) //Por ahora dsp será x program
         .then(res =>{
-          console.log('Usuarios ',res.data);          
-          this.$store.state.usuarios=res.data;
+          console.log('Usuarios ',res.data);    
+          //ordenado por estado
+          let par=res.data;      
+          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado);});
+
+          // this.$store.state.usuarios=res.data;
           console.log(this.$store.state.tipoActual.nombre);
                    
         })

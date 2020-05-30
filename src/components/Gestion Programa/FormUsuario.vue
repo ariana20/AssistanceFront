@@ -7,18 +7,16 @@
             <td >
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) ||( event.charCode== 239) || (event.charCode== 130) || (event.charCod==144 ) || (event.charCod==181) || (event.charCod==214) || (event.charCod==233) || (event.charCod==224))"   -->
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) || event.charCode== 130 || event.charCod==144 ||event.charCod==181 || event.charCod==214 || event.charCod==233 || event.charCod==224)" -->
-              <tr style="text-align:left"><td style="width:90px;">Codigo:</td>   <td> <input class="form-control" type="text"       maxlength="8" v-model="codigo"></td></tr> 
-              <tr style="text-align:left"><td style="width:90px;">Nombre:</td>   <td> <input class="form-control" type="text"   onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )"     v-model="nombre"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Apellidos:</td>   <td> <input class="form-control" type="text"    onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )"   v-model="apellidos"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Codigo:*</td>   <td> <input class="form-control" type="text"       maxlength="8" v-model="codigo"></td></tr> 
+              <tr style="text-align:left"><td style="width:90px;">Nombre:*</td>   <td> <input class="form-control" type="text"   onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )"     v-model="nombre"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Apellidos:*</td>   <td> <input class="form-control" type="text"    onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )"   v-model="apellidos"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Correo:</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Correo:*</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
               <tr style="text-align:left"><td style="width:90px;"></td></tr>
                
               <tr class="" style="bottom:0px;margin-left:0px;" > 
                 <b-form-checkbox v-model="estado" value="act" unchecked-value="ina" > Activo</b-form-checkbox>
                 </tr>
-                 
-
  
             </td> 
           </tbody>
@@ -71,9 +69,13 @@
       </div>
     </div>
     <div  class="botones" style="position:fixed;margin-top:120px;bottom:25px">   
-        <button type="button" style="margin:5px" class="btn btn-info" id="btnGuardar" v-on:click="guardarUsuario()">Guardar</button>
-        <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>  
-    </div>
+        <button type="button" style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnGuardar" v-on:click="guardarUsuario()">Guardar</button>
+        <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>  
+      
+     </div>
+     <div style="position:fixed;margin-top:120px;bottom:25px">
+      * Campos obligatorios   
+     </div >
     </div>
 </template>
 
@@ -413,4 +415,5 @@ td {
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}
 input:focus {outline: none;box-shadow: none;}
+
 </style>

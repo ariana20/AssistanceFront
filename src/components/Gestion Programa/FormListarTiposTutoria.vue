@@ -7,7 +7,7 @@
         <div style="margin-right:500px"></div>
         <div class="row btn-derecha" >
                 <router-link to="tiposdeTutoria/0"> 
-                  <button  type="button"  style="text-align:right" class="btn btn-info">Añadir</button>
+                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Añadir</button>
            </router-link></div>    
   <!-- </tr> -->
 
@@ -17,7 +17,7 @@
             <th scope="col">N°</th>
             <th scope="col">Nombre</th>
             <th scope="col">Estado</th>
-            <th scope="col" style="text-align: center">Modif/Elim</th>
+            <th scope="col" style="text-align: center">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -26,14 +26,15 @@
             <td>{{item.nombre}}</td>        
             <td style=";font-size:30px">
                 <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
-                <b-icon v-else icon="check" style="color:#757575"/>
+                <b-icon v-else icon="x" style="color:#757575"/>
             </td>     
             <td  style="text-align: center">
                  <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}"> 
                 <button  class="btn link">         
-                <b-icon icon="pencil"/></button>
+                <b-icon style="color:#0097A7" icon="pencil"/></button>
                        </router-link>  
-                <button v-on:click="eliminarTtutoria(item.id_tipo_tutoria)" class="btn link"><b-icon icon="dash-circle-fill"/>
+                <button v-on:click="eliminarTtutoria(item.id_tipo_tutoria)" class="btn link">
+                  <b-icon style="color:#757575" icon="dash-circle-fill"/>
                 </button>
             </td>
           
@@ -83,8 +84,13 @@ computed:{
     //   this.axios.post('/TipoTutoria/listarTodo/'+this.programas.id) //
       Axios.post('/TipoTutoria/listarTodo/'+ this.miprog.id_programa)
         .then(response=>{
-            this.$store.state.tipostutorias = response.data; //
-            console.log(this.$store.state.tipostutorias)
+          // Ordenadito por estado
+           let par=response.data;
+           this.$store.state.tipostutorias=par.sort((a, b) => { return a.estado.localeCompare(b.estado);});
+
+            // this.$store.state.tipostutorias = response.data; //
+
+            console.log('Listado de tt: ',this.$store.state.tipostutorias)
         })
         .catch(e=>console.log(e));
     },
