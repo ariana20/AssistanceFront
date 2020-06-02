@@ -50,6 +50,11 @@
       </div>
     </div>
 
+    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
+        Loading... <b-spinner style="margin-left:15px"/>
+      </div>
+    </b-modal>
       
   </div>
 </template>
@@ -139,10 +144,12 @@ export default {
             confirmButtonText: 'Confirmar'
           }).then((result) => {
             if (result.value) {
+              this.showModal();
               if(this.idRol=== null || this.idRol === undefined) this.nombreRol = this.nombre;
               axios.post('tipoUsuarios/modPermisos',{nombre: this.nombreRol, cambios: this.cambios,usuario_actualizacion: this.$store.state.usuario.id_usuario})
                   .then(response=>{
-                    console.log(response)
+                    response
+                    this.hideModal();
                     Swal.fire({
                       text:"Guardado Exitosa",
                       icon:"success",
@@ -153,7 +160,10 @@ export default {
                     this.$store.state.roles = null;
                     this.$router.push('/tiposUsuario');
                   })
-                  .catch(e=>console.log(e));
+                  .catch(e=>{
+                    console.log(e)
+                    this.hideModal();
+                    });
             }
           })
         } 
@@ -174,7 +184,13 @@ export default {
     },
     Regresar(){
         this.$router.push('/tiposUsuario');
-    }
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
   }
 }
 </script>

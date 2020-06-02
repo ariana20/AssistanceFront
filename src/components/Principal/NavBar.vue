@@ -150,6 +150,7 @@ export default {
               this.$store.state.tipoActual = this.selectedPrograma.tipoUsuario;
               this.$store.state.roles = null;
               this.$store.state.permisos = null;
+              this.$store.state.unidades = null;
               let stored = this.openStorage() // extract stored form
               if (!stored) stored = {} 
               stored = this.selectedPrograma; // store new value

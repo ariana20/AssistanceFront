@@ -49,6 +49,11 @@
       </table>
     </div>
 
+    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
+        Loading... <b-spinner style="margin-left:15px"/>
+      </div>
+    </b-modal>
       
   </div>
 </template>
@@ -106,9 +111,11 @@ export default {
           confirmButtonText: 'Confirmar'
         }).then((result) => {
           if (result.value) {
+            this.showModal();
             this.axios.post('/usuarios/eliminar/'+item.id_usuario)
               .then(response=>{
                 response
+                this.hideModal();
                 this.$store.state.roles.splice(index, 1);
                 Swal.fire({
                   text:"Eliminación Exitosa",
@@ -118,7 +125,10 @@ export default {
                   showConfirmButton: true,
                 })
               })
-              .catch(e=>console.log(e));
+              .catch(e=>{
+                console.log(e)
+                this.hideModal();
+              });
 
           }
         })
@@ -126,7 +136,13 @@ export default {
     },
     nuevo(){
       this.$router.push('/coordinador/'+0);
-    }
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
   }
 }
 </script>

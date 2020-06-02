@@ -50,6 +50,11 @@
         </tbody>
       </table>
   
+    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
+        Loading... <b-spinner style="margin-left:15px"/>
+      </div>
+    </b-modal>
 
       
   </div>
@@ -115,6 +120,7 @@ export default {
           confirmButtonText: 'Confirmar'
         }).then((result) => {
           if (result.value) {
+            this.showModal();
             let param = {
                 id_solicitante: item.id_solicitante,
                 id_remitente: item.id_remitente
@@ -150,6 +156,7 @@ export default {
                             }, (error) => {
                                 console.log('FAILED...', error);
                             });
+                            this.hideModal();
                             Swal.fire({
                             text:"Aceptado exitosamente",
                             icon:"success",
@@ -158,11 +165,17 @@ export default {
                             showConfirmButton: true,
                             })
                         })
-                        .catch(e=>console.log(e))
+                        .catch(e=>{
+                          console.log(e)
+                          this.hideModal();
+                        })
                 }
                 
               })
-              .catch(e=>console.log(e));
+              .catch(e=>{
+                console.log(e)
+                this.hideModal();
+              })
 
           }
         })
@@ -178,6 +191,7 @@ export default {
           confirmButtonText: 'Confirmar'
         }).then((result) => {
           if (result.value) {
+            this.showModal();
             let param = {
                 id_solicitante: item.id_solicitante,
                 id_remitente: item.id_remitente
@@ -206,6 +220,7 @@ export default {
                   }, (error) => {
                       console.log('FAILED...', error);
                   });
+                this.hideModal();
                 Swal.fire({
                   text:"Rechazado exitosamente",
                   icon:"success",
@@ -214,12 +229,21 @@ export default {
                   showConfirmButton: true,
                 })
               })
-              .catch(e=>console.log(e));
+              .catch(e=>{
+                console.log(e)
+                this.hideModal();
+              });
 
           }
         })
       
-    }
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
   }
 }
 </script>
