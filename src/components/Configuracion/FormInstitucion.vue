@@ -39,6 +39,11 @@
         </div>
       </form>
     </div>
+    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
+        Loading... <b-spinner style="margin-left:15px"/>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -107,6 +112,7 @@ export default {
           cancelButtonColor: '#757575',
           confirmButtonText: 'Confirmar'
         }).then((result) => {
+          this.showModal();
           if (result.value) {
             axios.post('/institucion/subirLogo',{image: this.selectedFile})
               .then( response=>{
@@ -120,7 +126,8 @@ export default {
                 }
                 axios.post('/institucion/modificar/'+this.id,params)
                 .then( response=>{
-                  console.log(response)
+                  response;
+                  this.hideModal();
                   Swal.fire({
                     text:"Subida Exitosa",
                     icon:"success",
@@ -175,6 +182,7 @@ export default {
             confirmButtonText: 'Confirmar'
           }).then((result) => {
             if (result.value) {
+              this.showModal();
               const params = {
                 nombre: this.nombre,
                 siglas: this.siglas,
@@ -185,7 +193,8 @@ export default {
 
               axios.post('/institucion/modificar/'+this.id,params)
                 .then( response=>{
-                  console.log(response)
+                  response
+                  this.hideModal();
                   Swal.fire(
                     'Modificacion Exitosa!',
                     'Tus institución ha sido actualizada.',
@@ -200,6 +209,12 @@ export default {
         }
       }
       
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
     },
   }
 }

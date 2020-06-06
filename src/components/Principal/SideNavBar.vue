@@ -1,9 +1,13 @@
 <template>
 	<nav style="background: '#FFFFFF'">
 		<ul :style="{ background: background|| '#333'}" ref="nav">
-			<figure class="image-logo" @click="toggleNav">
+			<figure v-if="this.$store.state.usuario && this.$store.state.tipoActual.nombre=='Admin'" class="image-logo" @click="toggleNav">
 				<img :src="imagePath" height="60px" width="60px" />		
 				<nobr>ssistance</nobr>				
+			</figure>
+			<figure v-else class="image-logo" @click="toggleNav">
+				<img v-bind:src="logo" height="40px" width="40px" />		
+				<nobre>{{siglas}}</nobre>				
 			</figure>
 			<li
 				v-for="(link,index) in navLinks"	
@@ -26,6 +30,12 @@
 
 <script>
 export default {
+  data(){
+    return{
+      siglas:null,
+      logo:null,
+    }
+  },
 	props: ['navLinks', 'background','linkColor','hoverBackground','imagePath'],
 	methods: {
 		toggleNav() {
@@ -39,6 +49,15 @@ export default {
 	mounted(){
 		//const nav = this.$refs.nav.classList
 		//if(!nav.contains('active')) nav.add('active');
+		this.axios
+			.post('/institucion/listarTodo')
+				.then( response=>{
+					this.siglas = response.data[0].siglas;
+					this.logo = response.data[0].logo;
+				})
+				.catch(e => {
+					console.log(e.response);
+				});
 	}
 }
 </script>
@@ -79,6 +98,14 @@ nav {
 				color: #000;
 				font-size: 20px;
 				//margin-left:10px;
+			}
+			
+			nobre {
+				top:20px;
+				color: #000;
+				font-size: 30px;
+				margin-left:10px;
+				line-height: 50px;
 			}
 		}
 		a{
@@ -135,7 +162,7 @@ nav {
 
 				nobr {
 					color: #000;
-					font-size: 20px;
+					font-size: 30px;
 					//margin-left:10px;
 				}
 			}

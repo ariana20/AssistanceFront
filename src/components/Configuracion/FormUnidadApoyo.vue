@@ -28,22 +28,24 @@
                                 <input  v-model="unidad.telefono_contacto" type="text" class="form-control" value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
                             </td>
                         </tr>
-                        <tr style="text-align:left">
+                        <tr v-if="$store.state.tipoActual.nombre == 'Admin'" style="text-align:left">
                             <td style="width:200px;">Facultad a Asignar:</td>
                             <td style="width:200px;">
                                 <select @change="Programas(facultadEl)" class= "form-control" style="color:gray" v-model="facultadEl">
-                                    <option selected disabled :value="null">Elige un Programa</option>
+                                    <option selected disabled :value="null">Elige una Facultad</option>
+                                    <option v-if="$store.state.tipoActual.nombre == 'Admin'" :value="0">General</option>
                                     <option v-for="options in facultadesT" v-bind:key="options.id_facultad" :value="options">
                                     {{ options.nombre}}
                                     </option>
                                 </select>
                             </td>
                         </tr>
-                        <tr v-if="idUnidad || prog" style="text-align:left">
+                        <tr v-if="(($store.state.tipoActual.nombre == 'Admin' && (prog) )|| $store.state.tipoActual.nombre == 'Coordinador Facultad') " style="text-align:left">
                             <td style="width:200px;">Programa a Asignar:</td>
                             <td style="width:200px;">
                                 <select class= "form-control" style="color:gray" v-model="programaEl">
                                     <option selected disabled :value="null">Elige un Programa</option>
+                                    <option v-if="$store.state.tipoActual.nombre == 'Admin' || $store.state.tipoActual.nombre == 'Coordinador Facultad'" :value="0">General Facultad</option>
                                     <option v-for="options in programasT" v-bind:key="options.id_programa" :value="options">
                                     {{ options.nombre}}
                                     </option>
@@ -59,6 +61,11 @@
                 <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="Regresar()"  >Cancelar</button>  
             </div>
         </div>
+        <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+        <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
+            Loading... <b-spinner style="margin-left:15px"/>
+        </div>
+        </b-modal>
     </div>
 </template>
 
@@ -80,6 +87,8 @@ export default {
             estado:null,
             telefono_contacto:null,
         },
+        general:false,
+        general2:false,
         vez:true,
         prog:false,
         programaEl:null,
@@ -92,36 +101,66 @@ export default {
     }
   },
   created(){
-    axios.post('/facultad/listarTodo')
-    .then(response=>{
-    this.facultadesT = response.data
-    })
-    if(this.idUnidad){
-        this.axios.post('/unidadesApoyo/listar/'+this.idUnidad).then( response =>{
-            this.unidad= response.data;
-            let index2;
-            for (index2 = 0; index2 < this.facultadesT.length; index2++) {
-                if(this.facultadesT[index2].id_facultad == this.unidad.programas[0].id_facultad) break;
-            }
-            this.facultadEl = this.facultadesT[index2];
-            this.Programas(this.facultadEl);
-        }).catch(e => {
-            e
-            Swal.fire({
-                title: e,
-                text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
-                icon:"warning",
-                confirmButtonText: 'Sí',
-                confirmButtonColor:'#0097A7',
-                showConfirmButton: true,
-            }); 
-            this.$store.state.usuarios=null;
-            //this.$router.push('/unidadesApoyo');          
-        });
+      if(this.$store.state.tipoActual.nombre == 'Admin' || this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+          axios.post('/facultad/listarTodo')
+            .then(response=>{
+                this.facultadesT = response.data
+                if(this.idUnidad){
+                    this.axios.post('/unidadesApoyo/listar/'+this.idUnidad).then( response =>{
+                        this.unidad= response.data;
+                        let index2;
+                        for (index2 = 0; index2 < this.facultadesT.length; index2++) {
+                            if(this.facultadesT[index2].id_facultad == this.unidad.programas[0].id_facultad) break;
+                        }
+                        this.facultadEl = this.facultadesT[index2];
+                        if(index2>=this.facultadesT.length) this.facultadEl = 0;
+                        this.Programas(this.facultadEl);
+                    }).catch(e => {
+                        e
+                        Swal.fire({
+                            title: e,
+                            text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+                            icon:"warning",
+                            confirmButtonText: 'Sí',
+                            confirmButtonColor:'#0097A7',
+                            showConfirmButton: true,
+                        }); 
+                        this.$store.state.usuarios=null;
+                        this.$router.push('/unidadesApoyo');          
+                    });
 
-    }
-    
-    
+                }
+                else if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+                    let index2;
+                    for (index2 = 0; index2 < this.facultadesT.length; index2++) {
+                        if(this.facultadesT[index2].id_facultad == this.$store.state.programaActual.id_facultad) break;
+                    }
+                    this.facultadEl = this.facultadesT[index2];
+                    this.Programas(this.facultadEl);
+                }
+            })
+            
+      }
+      if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+          if(this.idUnidad){
+            this.axios.post('/unidadesApoyo/listar/'+this.idUnidad).then( response =>{
+                this.unidad= response.data;
+            }).catch(e => {
+                e
+                Swal.fire({
+                    title: e,
+                    text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                }); 
+                this.$store.state.usuarios=null;
+                this.$router.push('/unidadesApoyo');          
+            });
+
+        }
+      }
   },
   methods:{
 
@@ -149,25 +188,122 @@ export default {
             showConfirmButton: true,
             })   
         }
-        else if(this.facultadEl==null){
-            Swal.fire({
-                text:"No ha escogido una Facultad",
-                icon:"error",
-                confirmButtonText: 'OK',
-                confirmButtonColor:'#0097A7',
-                showConfirmButton: true,
-            })  
+        else if(this.$store.state.tipoActual.nombre == 'Admin'){
+            if(this.facultadEl==null){
+                Swal.fire({
+                    text:"No ha escogido una Facultad",
+                    icon:"error",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                })  
+            }
+            else if(this.programaEl==null){
+                Swal.fire({
+                    text:"No ha escogido un Programa",
+                    icon:"error",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                }) 
+            }
+            else{
+                if(this.idUnidad==null){
+                    Swal.fire({
+                        title: '¿Dese guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#0097A7',
+                        cancelButtonColor: '#757575',
+                        confirmButtonText: 'Confirmar'
+                    }).then((result) => {
+                        if (result.value) {
+                            this.showModal();
+                            if(this.facultadEl == 0) this.general2 = true;
+                            if(this.programaEl == 0) this.general = true; 
+                            let obj = this.unidad;
+                            obj.usuario_creacion = this.$store.state.usuario.id_usuario;
+                            obj.id_programa = this.programaEl.id_programa;
+                            obj.general = this.general;
+                            obj.general2 = this.general2;
+                            obj.tipo = this.$store.state.tipoActual.nombre;
+                            axios.post('/unidadesApoyo/insertar',obj)
+                                .then(response=>{
+                                    response
+                                    this.hideModal();   
+                                    Swal.fire({
+                                        text:"Guardado Exitoso",
+                                        icon:"success",
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+                                    })
+                                    this.$store.state.unidades = null;
+                                    this.$router.push('/unidadesApoyo');
+                                })
+                                .catch(e=>{
+                                    console.log(e)
+                                    this.hideModal();
+                                });
+                        }
+                    })
+                }
+                else{
+                    Swal.fire({
+                        title: '¿Dese guardar los cambios para '+this.unidad.nombre+'?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#0097A7',
+                        cancelButtonColor: '#757575',
+                        confirmButtonText: 'Confirmar'
+                    }).then((result) => {
+                        if (result.value) {
+                            this.showModal();
+                            if(this.facultadEl == 0) this.general2 = true;
+                            if(this.programaEl == 0) this.general = true; 
+                            let obj = this.unidad;
+                            obj.usuario_creacion = this.$store.state.usuario.id_usuario;
+                            obj.id_programa = this.programaEl.id_programa;
+                            obj.general = this.general;
+                            obj.general2 = this.general2;
+                            obj.tipo = this.$store.state.tipoActual.nombre;
+                            obj.id_facultad = this.facultadEl.id_facultad; 
+                            axios.post('/unidadesApoyo/modificar/'+this.idUnidad,obj)
+                                .then(response=>{
+                                    response
+                                    this.hideModal();
+                                    Swal.fire({
+                                        text:"Modifiación Exitosa",
+                                        icon:"success",
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+                                    })
+                                    this.$store.state.unidades = null;
+                                    this.$router.push('/unidadesApoyo');
+                                })
+                                .catch(e=>{
+                                    console.log('error',e)
+                                    this.showModal();
+                                    Swal.fire({
+                                        text:"El programa ya cuenta con dicha unidad",
+                                        icon:"warning",
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+                                    }).then((result)=>{
+                                        result
+                                        this.$store.state.unidades = null;
+                                        this.$router.push('/unidadesApoyo');
+                                    }
+                                    )
+                                });
+                        }
+                    })
+                }
+            } 
         }
-        else if(this.programaEl==null){
-            Swal.fire({
-                text:"No ha escogido un Programa",
-                icon:"error",
-                confirmButtonText: 'OK',
-                confirmButtonColor:'#0097A7',
-                showConfirmButton: true,
-            }) 
-        }
-        else{
+        else if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
             if(this.idUnidad==null){
                 Swal.fire({
                     title: '¿Dese guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
@@ -178,12 +314,15 @@ export default {
                     confirmButtonText: 'Confirmar'
                 }).then((result) => {
                     if (result.value) {
+                        this.showModal();
                         let obj = this.unidad;
                         obj.usuario_creacion = this.$store.state.usuario.id_usuario;
-                        obj.id_programa = this.programaEl.id_programa;
+                        obj.id_programa = this.$store.state.programaActual.id_programa;
+                        obj.tipo = this.$store.state.tipoActual.nombre;
                         axios.post('/unidadesApoyo/insertar',obj)
                             .then(response=>{
                                 response
+                                this.hideModal();
                                 Swal.fire({
                                     text:"Guardado Exitoso",
                                     icon:"success",
@@ -194,7 +333,10 @@ export default {
                                 this.$store.state.unidades = null;
                                 this.$router.push('/unidadesApoyo');
                             })
-                            .catch(e=>console.log(e));
+                            .catch(e=>{
+                                console.log(e)
+                                this.hideModal();
+                            });
                     }
                 })
             }
@@ -208,12 +350,13 @@ export default {
                     confirmButtonText: 'Confirmar'
                 }).then((result) => {
                     if (result.value) {
+                        this.showModal();
                         let obj = this.unidad;
                         obj.usuario_creacion = this.$store.state.usuario.id_usuario;
-                        obj.id_programa = this.programaEl.id_programa;
                         axios.post('/unidadesApoyo/modificar/'+this.idUnidad,obj)
                             .then(response=>{
                                 response
+                                this.hideModal();
                                 Swal.fire({
                                     text:"Modifiación Exitosa",
                                     icon:"success",
@@ -226,6 +369,7 @@ export default {
                             })
                             .catch(e=>{
                                 console.log('error',e)
+                                this.hideModal();
                                 Swal.fire({
                                     text:"El programa ya cuenta con dicha unidad",
                                     icon:"warning",
@@ -242,8 +386,110 @@ export default {
                     }
                 })
             }
-        } 
-      
+        }
+        else if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+            if(this.programaEl==null){
+                Swal.fire({
+                    text:"No ha escogido un Programa",
+                    icon:"error",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                }) 
+            }
+            else{
+                if(this.idUnidad==null){
+                    Swal.fire({
+                        title: '¿Dese guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#0097A7',
+                        cancelButtonColor: '#757575',
+                        confirmButtonText: 'Confirmar'
+                    }).then((result) => {
+                        if (result.value) {
+                            this.showModal();
+                            if(this.programaEl == 0) this.general = true; 
+                            let obj = this.unidad;
+                            obj.usuario_creacion = this.$store.state.usuario.id_usuario;
+                            obj.id_programa = this.programaEl.id_programa;
+                            obj.id_facultad = this.$store.state.programaActual.id_facultad;
+                            obj.tipo = this.$store.state.tipoActual.nombre;
+                            obj.general = this.general;
+                            axios.post('/unidadesApoyo/insertar',obj)
+                                .then(response=>{
+                                    response
+                                    this.hideModal();
+                                    Swal.fire({
+                                        text:"Guardado Exitoso",
+                                        icon:"success",
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+                                    })
+                                    this.$store.state.unidades = null;
+                                    this.$router.push('/unidadesApoyo');
+                                })
+                                .catch(e=>{
+                                    console.log(e)
+                                    this.hideModal();
+                                });
+                        }
+                    })
+                }
+                else{
+                    Swal.fire({
+                        title: '¿Dese guardar los cambios para '+this.unidad.nombre+'?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#0097A7',
+                        cancelButtonColor: '#757575',
+                        confirmButtonText: 'Confirmar'
+                    }).then((result) => {
+                        if (result.value) {
+                            this.showModal();
+                            if(this.programaEl == 0) this.general = true; 
+                            let obj = this.unidad;
+                            obj.usuario_creacion = this.$store.state.usuario.id_usuario;
+                            obj.id_programa = this.programaEl.id_programa;
+                            obj.id_facultad = this.$store.state.programaActual.id_facultad;
+                            obj.tipo = this.$store.state.tipoActual.nombre;
+                            obj.general = this.general;
+                            axios.post('/unidadesApoyo/modificar/'+this.idUnidad,obj)
+                                .then(response=>{
+                                    response
+                                    this.hideModal();
+                                    Swal.fire({
+                                        text:"Modifiación Exitosa",
+                                        icon:"success",
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+                                    })
+                                    this.$store.state.unidades = null;
+                                    this.$router.push('/unidadesApoyo');
+                                })
+                                .catch(e=>{
+                                    console.log('error',e)
+                                    this.hideModal();
+                                    Swal.fire({
+                                        text:"El programa ya cuenta con dicha unidad",
+                                        icon:"warning",
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+                                    }).then((result)=>{
+                                        result
+                                        this.$store.state.unidades = null;
+                                        this.$router.push('/unidadesApoyo');
+                                    }
+                                    )
+                                });
+                        }
+                    })
+                }
+            } 
+        }
         
     },
     Regresar(){
@@ -251,25 +497,35 @@ export default {
     },
     Programas(facultad){
         this.prog = false;
-        axios.post('/programa/listarConCoord/'+facultad.id_facultad)
-            .then(response=>{
-                let aux=[];
-                for (let index = 0; index < response.data.length; index++) {
-                    aux.push(response.data[index].programa);
-                }
-                this.programaEl = null;
-                this.programasT = aux
-                if(this.idUnidad && this.vez){
-                    let index;
-                    for (index = 0; index < this.programasT.length; index++) {
-                        if(this.programasT[index].nombre == this.unidad.programas[0].nombre) break;
+        if(facultad != "0"){
+            axios.post('/programa/listarConCoord/'+facultad.id_facultad)
+                .then(response=>{
+                    let aux=[];
+                    for (let index = 0; index < response.data.length; index++) {
+                        aux.push(response.data[index].programa);
                     }
-                    this.programaEl = this.programasT[index];
-                    this.vez = false;
-                }
-                this.prog = true;
-            })
-    }
+                    this.programaEl = null;
+                    this.programasT = aux
+                    if(this.idUnidad && this.vez){
+                        let index;
+                        for (index = 0; index < this.programasT.length; index++) {
+                            if(this.programasT[index].nombre == this.unidad.programas[0].nombre) break;
+                        }
+                        this.programaEl = this.programasT[index];
+                        if(index>=this.programasT.length) this.programaEl = 0;
+                        this.vez = false;
+                    }
+                    this.prog = true;
+                })
+        }
+        
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
   }
 }
 </script>

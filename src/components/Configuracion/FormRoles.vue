@@ -37,6 +37,11 @@
         </tbody>
       </table>
   
+    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
+        Loading... <b-spinner style="margin-left:15px"/>
+      </div>
+    </b-modal>
 
       
   </div>
@@ -105,9 +110,11 @@ export default {
           confirmButtonText: 'Confirmar'
         }).then((result) => {
           if (result.value) {
+            this.showModal();
             this.axios.post('/tipoUsuarios/eliminar/'+item.id_tipo_usuario)
               .then(response=>{
                 response
+                this.hideModal();
                 let index = this.$store.state.roles.indexOf(
                   function(element){
                     return element.id_tipo_usuario === item.id_tipo_usuario;
@@ -121,12 +128,21 @@ export default {
                   showConfirmButton: true,
                 })
               })
-              .catch(e=>console.log(e));
+              .catch(e=>{
+                console.log(e)
+                this.hideModal();
+              });
 
           }
         })
       
-    }
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
   }
 }
 </script>

@@ -37,6 +37,11 @@
          
 
     </div>
+    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
+        Loading... <b-spinner style="margin-left:15px"/>
+      </div>
+    </b-modal>
     </div>
   
 
@@ -151,6 +156,7 @@ export default {
       }
       
       else{//está bien y envío
+      this.showModal();
       const params = {
            codigo:this.codigo.trim().replace(/\s+/g, ' '), 
             nombre:this.nombre.trim().replace(/\s+/g, ' '),
@@ -179,34 +185,37 @@ export default {
             Axios.create()
             .post('/usuarios/insertar',params)
             .then( response=>{
-                  console.log(response);
-                  Swal.fire({
-                    text:"Se guardaron los datos con éxito",
-                    icon:"success",
-                    confirmButtonText: 'OK',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
+              response
+              this.hideModal();
+              Swal.fire({
+                text:"Se guardaron los datos con éxito",
+                icon:"success",
+                confirmButtonText: 'OK',
+                confirmButtonColor:'#0097A7',
+                showConfirmButton: true,
               }) 
               this.$store.state.coordinadoresL = null;
               this.$router.push('/coordinadores'); 
 
             }).catch(e => {
-                 console.log(e.response);
-                 Swal.fire({
-                    text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
-                    icon:"warning",
-                    confirmButtonText: 'Sí',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                  });  
-                   this.$router.push('/coordinadores');         
-                } );
+                e
+                this.hideModal();
+                Swal.fire({
+                  text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+                  icon:"warning",
+                  confirmButtonText: 'Sí',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+                });  
+                  this.$router.push('/coordinadores');         
+              } );
           }
           else if (parseInt((this.id),10)!=0){
             Axios.create()
             .post('/usuarios/modificar/'+parseInt((this.id),10),params2)
             .then( response=>{
-              console.log(response)
+              response
+              this.hideModal();
               Swal.fire({
               text:"Se modificaron los datos con éxito",
               icon:"success",
@@ -217,7 +226,8 @@ export default {
               this.$store.state.coordinadoresL = null;
               this.$router.push('/coordinadores');
             }) .catch(e => {
-                console.log(e.response);
+                e
+                this.hideModal();
                 this.$router.push('/coordinadores');
               });
             
@@ -245,19 +255,12 @@ export default {
           })
         
     },
-    listarTT() {
-      Axios.post('/TipoTutoria/listarTodo/'+ this.miprog.id_programa)
-        .then(response=>{
-            this.tipostutorias = response.data; //
-            console.log('Tipos de tutorias: ',this.tipostutorias);
-        })
-        .catch(e=>console.log(e));
+    showModal() {
+      this.$refs['my-modal'].show()
     },
-  
-    
-    
-
-    
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
   }
 
 }

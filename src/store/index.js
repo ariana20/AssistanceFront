@@ -45,11 +45,6 @@ export default new Vuex.Store({
 		icon: 'ion-ios-person'
       },
       {
-        text: 'Unidades de Apoyo',
-		path: '/unidadesApoyo',
-		icon: 'ion-ios-medkit'
-      },
-      {
         text: 'Tipos de Tutoria',
 		path: '/ListaTiposTutorias',
 		icon: 'ion-ios-book'
@@ -63,6 +58,11 @@ export default new Vuex.Store({
        text: 'Tipos de Usuario',
        path: '/tiposUsuario',
        icon: 'ion-ios-people'
+     },
+     {
+       text: 'Unidades de Apoyo',
+   path: '/unidadesApoyo',
+   icon: 'ion-ios-medkit'
      },
      {
       text: 'Sesión de Tutoría',
