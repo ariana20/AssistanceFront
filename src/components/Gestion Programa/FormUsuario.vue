@@ -23,13 +23,11 @@
         </table>
       </div>
       <div id="medio" class="col-md-2">
+        <!-- no borrar, no sé por qué no puedo cambiarlo -->
          <!-- <tr style="text-align:right;margin:600px"  ></tr> -->
         <!-- <tr style="text-align:right;margin:600px"  > </tr>   -->
               <!-- <div class="" style="padding:220px; bottom:0px;margin-left:40px;" > 
                 <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div> -->
-                
-
-         
       </div>
 
       <div id="derecho" class="col-md-4">
@@ -40,18 +38,11 @@
              {{ tipoU.nombre}}
              </option>
           </select>
-          <!-- Tipo de usuario Tutor -->
-          <!-- <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Tipo de tutoria:</td>  
-            <select v-model="tipostutoriasselect" class="col-sm-10 form-control" >
-            <option v-for="(tipotuto,index) in tipostutorias" :value="tipotuto.id_tipo_tutoria" v-bind:key="index">
-             {{ tipotuto.nombre}}
-             </option>             
-          </select> -->
-         <!-- ahora me falta arreglar los métodos -->
+
         </tr>
           <div class="top-titulo" style="margin-bottom:20px;" >
-                    <div class="col-sm-3 motivo-dropdown-title" v-if="this.tiposUsuariosselect === 4" style="margin-left:-15px;">Tipo tutoria:* </div>
-                    <select v-if="this.tiposUsuariosselect === 4" class="col-sm-6 form-control"  style="margin-left:80px;top:5px;"
+                    <div class="col-sm-6" v-if="this.tiposUsuariosselect === 4" style="margin-left:-25px;">Tipos de tutorias:*     </div>
+                    <select v-if="this.tiposUsuariosselect === 4" class="col-sm-6 form-control"  style="margin-left:8px;top:5px;"
                      v-model="tipostutoriasselect">
                         <option selected disabled value="no">Selecciona un tipo de tutoria</option>
                         <option v-for="(tt, i) in tipostutorias"  :key="i"   :value="tt.id_tipo_tutoria">
@@ -64,6 +55,18 @@
                     style="margin-left:100px"
                             @click="addMTT(i)">Seleccionar</button>
                     </div>
+                    <div class="col-sm-6 " v-if="this.tiposUsuariosselect === 5" style="margin-left:-40px;">Condición del alumno:* </div>
+                    <select v-if="this.tiposUsuariosselect === 5" class="col-sm-6 form-control"  style="margin-right:20px;margin-left:-10px;top:5px;"
+                     v-model="tipostutoriasselect">
+                        <option selected disabled value="no">Selecciona una condición</option>
+                        <option v-for="(condi, i) in condiAlumnos"  :key="i"   >
+                        {{ condi.nombre }} 
+                        <!-- podría no ser nombre -->
+                        </option>
+                    </select>
+                   
+
+
           </div>
                  <div class="left-content" v-if="this.tiposUsuariosselect === 4" >
                     <h6 style="color:black;font-weight:900;text-align:left;" v-if="this.tiposUsuariosselect === 4">Tipos de tutoria seleccionados</h6>
@@ -87,16 +90,18 @@
       
      </div>
     <div>
-      <li         v-for="(newTT,ttIndex) in listTTId" :key="ttIndex" >
+       <!-- para mostrar la lista de tt que escoge  -->
+      <!-- <li         v-for="(newTT,ttIndex) in listTTId" :key="ttIndex" >
       {{newTT}}
-     </li>
+     </li> -->
      </div>
      <div style="position:fixed;margin-top:120px;bottom:25px">
       * Campos obligatorios   
      </div >
-     <li         v-for="(newTT,ttIndex) in tipostutorias" :key="ttIndex" >
+     <!-- para mostrar la lista de tt que no escoge  -->
+     <!-- <li         v-for="(newTT,ttIndex) in tipostutorias" :key="ttIndex" >
       {{newTT.id_tipo_tutoria}}  {{newTT.nombre}}
-     </li>
+     </li> -->
      
     </div>
  
@@ -133,6 +138,7 @@ export default {
       listTTId:[],
       listTTnoID:[],
       listTTBorrados:[],
+      condiAlumnos:[],
     }
   },
 
