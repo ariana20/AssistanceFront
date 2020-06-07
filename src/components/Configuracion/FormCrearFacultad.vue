@@ -24,6 +24,17 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
+            <label>Código de la Facultad:</label>
+            </b-col>
+            <b-col sm="9">
+            <b-form-input v-if="idFacultad" id="codigoF" v-model="facultad.codigo"></b-form-input>
+            <b-form-input v-else id="codigoF" v-model="facultad.codigo"></b-form-input>
+
+            </b-col>
+
+        </b-row>
+        <b-row class="my-1">
+            <b-col sm="3">
             <label>Nombre de la Facultad:</label>
             </b-col>
             <b-col sm="9">
@@ -76,6 +87,16 @@
             <b-button v-if="nuevoProg==0 && editProg==0" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="agregarPrograma()">Añadir Programa</b-button>
             <b-button v-if="nuevoProg==1 || editProg==1" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="guardarPrograma()">Guardar Programa</b-button>
             </b-col>
+        </b-row>
+        <b-row class="my-1">
+            <b-col sm="3">
+            <label>Código del Programa:</label>
+            </b-col>
+            <b-col sm="9">
+            <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="programa.codigo"></b-form-input>
+            <b-form-input v-else readonly id="nombre" v-model="programa.codigo"></b-form-input>
+            </b-col>
+
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
@@ -164,6 +185,9 @@ export default {
           id_facultad:null,
           id_programa:null,
           id_institucion:1,
+          codigo:"",
+          usuario_actualizacion:this.$store.state.usuario.id_usuario,
+          usuario_creacion:this.$store.state.usuario.id_usuario,
           nombre:"",
           descripcion:"",
           correo:"",
@@ -181,6 +205,9 @@ export default {
           id_programa:null,
           id_facultad:null,
           nombre:null,
+          codigo:null,
+          usuario_actualizacion:this.$store.state.usuario.id_usuario,
+          usuario_creacion:this.$store.state.usuario.id_usuario,
           descripcion:null,
           correo:null,
           coordinador:null
@@ -214,6 +241,7 @@ export default {
                 this.facultad.id_facultad = response.data[0].id_facultad;
                 this.facultad.id_programa = response.data[0].id_programa;
                 this.facultad.nombre = response.data[0].nombre;
+                this.facultad.codigo=response.data[0].codigo;
                 this.facultad.correo = response.data[0].correo;
                 this.facultad.descripcion=response.data[0].descripcion;
                 console.log(response);
@@ -384,6 +412,9 @@ export default {
       var prog= new Object();
       prog.id_facultad=this.facultad.id_facultad;
       prog.id_programa=this.programa.id_programa;
+      prog.codigo=this.programa.codigo;
+      prog.usuario_actualizacion=this.programa.usuario_actualizacion,
+      prog.usuario_creacion=this.programa.usuario_creacion,
       prog.nombre=this.programa.nombre;
       prog.correo=this.programa.correo;
       prog.coordinador=this.programa.coordinador;
@@ -414,6 +445,7 @@ export default {
       this.programa.nombre=null;
       this.programa.descripcion=null;
       this.programa.correo=null;
+      this.programa.codigo=null;
       this.programa.coordinador=null;
       this.nuevoProg=0;
       this.editProg=0;
@@ -455,9 +487,16 @@ export default {
       this.programa.index=index;
       this.programa.nombre=item.nombre;
       this.programa.correo=item.correo;
-      this.programa.coordinador=item.coordinador;
+      
+      if(item.coordinador!=null){
+        this.programa.coordinador=item.coordinador;
+        this.programa.coordinador.nombCompleto=item.coordinador.nombre+" "+item.coordinador.apellidos;  
+      }
+      
       this.programa.id_facultad=item.id_facultad;
       this.programa.id_programa=item.id_programa;
+      this.programa.codigo=item.codigo;
+
 
       
     }
