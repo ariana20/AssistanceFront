@@ -8,8 +8,8 @@
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) ||( event.charCode== 239) || (event.charCode== 130) || (event.charCod==144 ) || (event.charCod==181) || (event.charCod==214) || (event.charCod==233) || (event.charCod==224))"   -->
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) || event.charCode== 130 || event.charCod==144 ||event.charCod==181 || event.charCod==214 || event.charCod==233 || event.charCod==224)" -->
               <tr style="text-align:left"><td style="width:90px;">Codigo:*</td>   <td> <input class="form-control" type="text"       maxlength="8" v-model="codigo"></td></tr> 
-              <tr style="text-align:left"><td style="width:90px;">Nombre:*</td>   <td> <input class="form-control" type="text"   onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )"     v-model="nombre"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Apellidos:*</td>   <td> <input class="form-control" type="text"    onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )"   v-model="apellidos"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Nombre:*</td>   <td> <input class="form-control" type="text"      v-model="nombre"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Apellidos:*</td>   <td> <input class="form-control" type="text"      v-model="apellidos"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Correo:*</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
               <tr style="text-align:left"><td style="width:90px;"></td></tr>
@@ -23,13 +23,11 @@
         </table>
       </div>
       <div id="medio" class="col-md-2">
+        <!-- no borrar, no sé por qué no puedo cambiarlo -->
          <!-- <tr style="text-align:right;margin:600px"  ></tr> -->
         <!-- <tr style="text-align:right;margin:600px"  > </tr>   -->
               <!-- <div class="" style="padding:220px; bottom:0px;margin-left:40px;" > 
                 <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div> -->
-                
-
-         
       </div>
 
       <div id="derecho" class="col-md-4">
@@ -40,32 +38,50 @@
              {{ tipoU.nombre}}
              </option>
           </select>
-          <!-- <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Tipo de tutoria:</td>  
-            <select v-model="tipostutoriasselect" class="col-sm-10 form-control" >
-            <option v-for="(tipotuto,index) in tipostutorias" :value="tipotuto.id_tipo_tutoria" v-bind:key="index">
-             {{ tipotuto.nombre}}
-             </option>             
-          </select> -->
-         
+
         </tr>
-                 <!-- <div class="top-titulo" style="margin-bottom:20px;">
-                    <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
-                    <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="tipostutoriasselect">
-                        <option selected disabled value="">Selecciona un motivo</option>
-                        <option
-                        v-for="(tt, i) in tipostutorias" 
-                        :key="i" 
-                        :value="tt.id_tipo">
+          <div class="top-titulo" style="margin-bottom:20px;" >
+                    <div class="col-sm-6" v-if="this.tiposUsuariosselect === 4" style="margin-left:-25px;">Tipos de tutorias:*     </div>
+                    <select v-if="this.tiposUsuariosselect === 4" class="col-sm-6 form-control"  style="margin-left:8px;top:5px;"
+                     v-model="tipostutoriasselect">
+                        <option selected disabled value="no">Selecciona un tipo de tutoria</option>
+                        <option v-for="(tt, i) in tipostutorias"  :key="i"   :value="tt.id_tipo_tutoria">
                         {{ tt.nombre }}
                         </option>
                     </select>
-                    <div class="botones">
-                    <button type="button" 
-                            class="btn btn-info" 
-                            style="border-color:gray;background-color:gray;"
-                            @click="addMotivos(i)">Seleccionar</button>
+                    <div class="botones" v-if="this.tiposUsuariosselect === 4">
+                    <button type="button"   class="btn btn-info"   
+                  
+                    style="margin-left:100px"
+                            @click="addMTT(i)">Seleccionar</button>
                     </div>
-                </div> -->
+                    <div class="col-sm-6 " v-if="this.tiposUsuariosselect === 5" style="margin-left:-40px;">Condición del alumno:* </div>
+                    <select v-if="this.tiposUsuariosselect === 5" class="col-sm-6 form-control"  style="margin-right:20px;margin-left:-10px;top:5px;"
+                     v-model="tipostutoriasselect">
+                        <option selected disabled value="no">Selecciona una condición</option>
+                        <option v-for="(condi, i) in condiAlumnos"  :key="i"   >
+                        {{ condi.nombre }} 
+                        <!-- podría no ser nombre -->
+                        </option>
+                    </select>
+                   
+
+
+          </div>
+                 <div class="left-content" v-if="this.tiposUsuariosselect === 4" >
+                    <h6 style="color:black;font-weight:900;text-align:left;" v-if="this.tiposUsuariosselect === 4">Tipos de tutoria seleccionados</h6>
+                    <hr>
+                    <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
+                        <div v-if="listTT.length == 0">No tiene tipos de tutorias seleccionados</div>
+                        <li class="motivos-seleccionados list-group-item" style="text-align:left;"
+                            v-for="(newTT,ttIndex) in listTT"  
+                            :key="ttIndex">
+                            {{newTT}}
+                            <span name="remove" class="close" @click="deleteTT(ttIndex)" style="margin-right : 20px;float:right;">&times;</span>           
+                        </li>
+                    </ul>
+                    </div>
+
       </div>
     </div>
     <div  class="botones" style="position:fixed;margin-top:120px;bottom:25px">   
@@ -73,10 +89,23 @@
         <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>  
       
      </div>
+    <div>
+       <!-- para mostrar la lista de tt que escoge  -->
+      <!-- <li         v-for="(newTT,ttIndex) in listTTId" :key="ttIndex" >
+      {{newTT}}
+     </li> -->
+     </div>
      <div style="position:fixed;margin-top:120px;bottom:25px">
       * Campos obligatorios   
      </div >
+     <!-- para mostrar la lista de tt que no escoge  -->
+     <!-- <li         v-for="(newTT,ttIndex) in tipostutorias" :key="ttIndex" >
+      {{newTT.id_tipo_tutoria}}  {{newTT.nombre}}
+     </li> -->
+     
     </div>
+ 
+ 
 </template>
 
 <script>
@@ -101,9 +130,15 @@ export default {
       id_usuario_entrante:parseInt((this.$route.path).substring(9,11),10),
       tiposUsuariosselect:"no",
       tipostutorias:"",
-      tipostutoriasselect:null,
+      tipostutoriasselect:"no",
        miprog:this.$store.state.programaActual,
       usuario_entrante:this.$store.state.usuarioEscogido,
+      listTT:[],
+      newTT:null,
+      listTTId:[],
+      listTTnoID:[],
+      listTTBorrados:[],
+      condiAlumnos:[],
     }
   },
 
@@ -170,7 +205,7 @@ export default {
         }) 
        
       }
-      else if(this.telefono<10000000){ //Esto será válido?
+      else if(this.telefono<10000000 && this.telefono>0){ //Esto será válido?
      
           Swal.fire({
               text:"No ha colocado un número de teléfono válido. Mínimo 7 dígitos",
@@ -180,7 +215,7 @@ export default {
               showConfirmButton: true,
           })   
       }
-      else if(this.tiposUsuariosselect=="no"){
+      else if(this.tiposUsuariosselect=="no" || this.tiposUsuariosselect.length==0 ){
            Swal.fire({
               text:"Falta elegir un tipo de usuario",
               icon:"error",
@@ -189,8 +224,21 @@ export default {
               showConfirmButton: true,
           })  
       }
+      //Si escogió el tipo de usuario tutor
+      else if( this.tiposUsuariosselect==4 && ( this.tipostutoriasselect=="no" || this.listTTId.length==0 ) ){
+         //evito que deje en 0 los tipos de tutoria al que pertenece el tutor
+         Swal.fire({
+              text:"Falta elegir un tipo de tutoria",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+          })
+      }
       else{//está bien y envío
+      
       const params = {
+        //Parametros insertar de usuario
            codigo:this.codigo.trim().replace(/\s+/g, ' '), 
             nombre:this.nombre.trim().replace(/\s+/g, ' '),
             apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
@@ -203,6 +251,7 @@ export default {
             //ahora, si es tipo usuario 4 de tutor debe insertar el tipo de tutoria
             };
       const params2 = {
+        //Parametros modificados de usuario
              codigo:this.codigo.trim().replace(/\s+/g, ' '), 
             nombre:this.nombre.trim().replace(/\s+/g, ' '),
             apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
@@ -233,6 +282,7 @@ export default {
 
               console.log('Usuario insertado',response.data);  
               
+
               if(response.data["Error capturado:"]=="El codigo o correo ingresados ya existen"){
                 console.log('Entro al if del error');
 
@@ -252,6 +302,10 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   }) 
+                  //Como se guardaron con éxito ahora agrego el titutoria
+                  var idusuarionuevo=response.data["user"].id_usuario;
+                  console.log('id del usuario nuevo: ',response.data["user"].id_usuario);
+                  this.actualizarTT(idusuarionuevo);
                   //Enviar un correo
                   let direccion = "localhost:8000/login"
                 emailjs.send(
@@ -304,6 +358,8 @@ export default {
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
               }) 
+              //Como se guardaron con éxito ahora agrego el titutoria
+               this.actualizarTT(this.id_usuario_entrante);
               this.$store.state.usuarios=null;
               this.$router.push('/ListaUsuarios');
             })  .catch(e => {
@@ -382,8 +438,64 @@ export default {
         })
         .catch(e=>console.log(e));
     },
+    addMTT: function () {
+
+            for(var i in this.tipostutorias)
+            if(this.tipostutoriasselect ==this.tipostutorias[i].id_tipo_tutoria){
+              this.listTT.push(this.tipostutorias[i].nombre);
+              this.listTTId.push(this.tipostutorias[i].id_tipo_tutoria);
+              this.listTTBorrados.push(this.tipostutorias[i]);
+              this.tipostutorias.splice(i,1);
+              
+
+            }
+            
+        },
+        deleteTT: function (index) {
   
-    
+            var i;
+            for(i in this.listTTBorrados)
+              if(this.listTT[index]==this.listTTBorrados[i].nombre){
+                this.tipostutorias.push(this.listTTBorrados[i]);
+                break;
+              }
+              this.listTT.splice(index,1);
+              this.listTTId.splice(index,1);
+         
+        },
+  
+    actualizarTT(i){
+      //Si es tutor
+      // if (this.tiposUsuariosselect==4 && this.listTTId.length!=0){
+        if (this.tiposUsuariosselect==4){
+        //Si escogió por lo menos 1 tipo de tutoria
+
+        const paramsTT={
+        //Para actualizar 
+        tutorias_insertar:this.listTTId,//los id tipos de tutorias que sí escoge
+        tutorias_eliminar:this.tipostutorias,
+
+       }
+        if(i!=0){
+       //actualizo el tipo de tutoria
+        Axios.post('/usuarios/updateTipoTutoria/'+i ,paramsTT)
+        .then(response=>{
+           console.log('tipo de tutoria insertado',response.data);  
+        })
+        .catch(e=>console.log(e));
+        }
+        else if(i==0){
+          //como es nuevo capturo la respuesta del id de usuario
+              Axios.post('/usuarios/updateTipoTutoria/'+ i,paramsTT)
+        .then(response=>{
+           console.log('tipo de tutoria insertado',response.data);  
+        })
+        .catch(e=>console.log(e));
+        }
+
+      }
+        
+    }
     
 
     
@@ -415,5 +527,16 @@ td {
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}
 input:focus {outline: none;box-shadow: none;}
-
+.close {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    padding: 12px 16px;
+    transform: translate(0%, -50%);
+}
+.motivo-dropdown-title {
+    top: 10px;
+    text-align: left;
+}
 </style>
