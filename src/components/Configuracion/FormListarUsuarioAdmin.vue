@@ -3,7 +3,7 @@
     <div class="container" style="margin-left:100px;text-align: left">
       <div class="top-titulo">
             <h4 class="col-sm-4 title-container">Buscar: </h4>
-            <input class="col-sm-6 form-control" style="top:26px;right:230px;" v-model="nombre" placeholder="Ingrese nombre del usuario">
+            <input v-on:change="Buscar(nombre)" class="col-sm-6 form-control" style="top:26px;right:230px;" v-model="nombre" placeholder="Ingrese nombre del usuario">
             <div class="botones">
             <!-- <button type="button" class="btn btn-info" style="text-align:right">Añadir</button> -->
             </div>
@@ -22,7 +22,7 @@
       <table class="table" >
         <thead>
           <tr>
-            <th scope="col">N°</th>
+            <th scope="col">Codigo</th>
             <th scope="col">Nombre</th>
             <th scope="col">Correo</th>
             <th scope="col">Programa (Tipo de Usuario)</th>
@@ -30,8 +30,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in usuariosFiltrados"  :key="index">
-            <th scope="row">{{index+1}}</th>
+          <tr v-for="(item, index) in $store.state.usuariosA"  :key="index">
+            <th scope="row">{{item.codigo}}</th>
             <td>{{item.nombre}} {{item.apellidos}}</td>
             <td>{{item.correo}}</td>   
             <!-- va a cambiar, me daran nombre -->
@@ -51,18 +51,32 @@
           </tr>
         </tbody>
       </table>
+      <div class="row" style="text-align:center">
+        <button v-if="usuarios.current_page!=1" v-on:click="Page(usuarios.current_page-1)"> <b-icon icon="arrow-left-circle"/> </button>
+        <button v-else disabled> <b-icon icon="arrow-left-circle"/> </button>
+        <div v-for="n in usuarios.last_page" :key="n" >
+            <button v-if="n != usuarios.current_page" v-on:click="Page(n)">
+              {{n}}
+            </button>
+            <button v-else disabled>
+              {{n}}
+            </button>
+        </div>
+        <button v-if="usuarios.current_page!=usuarios.last_page" v-on:click="Page(usuarios.current_page+1)"> <b-icon icon="arrow-right-circle"/> </button>
+        <button v-else disabled> <b-icon icon="arrow-right-circle"/> </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+// import { mapGetters } from 'vuex'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 export default {
   data(){
     return{
-      
+      nombre:null,
       usuarios:[],
       //id_tipoXUsuario:[],
       cantU:null,
@@ -74,19 +88,19 @@ export default {
     }
   },
  
-  computed:{
-        nombre:{
-          get(){
-              return this.$store.state.filtro.query;
-          },
-          set(val){
-              this.$store.commit('SET_QUERY',val);
-          }
-        },
-        ...mapGetters({
-          usuariosFiltrados: 'filtrarUsuariosAdmin'
-        })
-  },
+  // computed:{
+  //       nombre:{
+  //         get(){
+  //             return this.$store.state.filtro.query;
+  //         },
+  //         set(val){
+  //             this.$store.commit('SET_QUERY',val);
+  //         }
+  //       },
+  //       ...mapGetters({
+  //         usuariosFiltrados: 'filtrarUsuariosAdmin'
+  //       })
+  // },
   mounted(){
     console.log('Store state usuariosA',this.$store.state.usuariosA);
      if(this.$store.state.usuariosA === null  ) {     
@@ -94,52 +108,39 @@ export default {
     else this.usuarios = this.$store.state.usuariosA; //
   },
   methods:{
-    //4 es el id del programa de admin
-    //1 es el id tipo usuario de admin
-    //2 es el id de usuairo admin
-     listarTUsuarios() {
-      axios.post('/tipoUsuarios/listarTodo')
-        .then(res =>{
-          // Ordenadito
-          let par=res.data;
-          this.TodosarrayTU=par;
-          console.log(res.data);
-          
-        })
-        .catch(e => {
-          console.log(e.response);
-        })
-    },
     listarUsuarios() {
-    console.log('Estoy en listarU,mi rol es:');
-     if(this.$store.state.tipoActual.nombre!="Admin"){
-        axios.post('/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa) //Por ahora dsp será x program
-        .then(res =>{
-          console.log(res.data);          
-          this.$store.state.usuarios=res.data;
-          console.log(this.$store.state.tipoActual.nombre);
-                   
-        })
-        .catch(e => {
-          console.log(e.response);
-        })
-     }
-     else{
-       //esa admin le debe de listar todos los usuarios
-       axios.post('/usuarios/listarTodo') //Por ahora dsp será x program
-        .then(res =>{
-          console.log('Respuesta: ')
-          console.log(res.data)
-          this.$store.state.usuariosA=res.data;
-                   
-        })
-        .catch(e => {
-          console.log(e.response);
-          //DEBE DE HABER UNMENSAJITO AQUI
-        })
-     }
-      
-       
+      axios.post('/usuarios/listarTodo')
+      .then(res =>{
+        this.$store.state.usuariosA=res.data.data;
+        this.usuarios = res.data
+      })
+      .catch(e => {
+        console.log(e.response);
+      })
+    },
+    Buscar(n) {
+      let obj = { busqueda: n}
+      axios.post('/usuarios/listarTodo',obj)
+      .then(res =>{
+        this.$store.state.usuariosA=res.data.data;
+        this.usuarios = res.data
+      })
+      .catch(e => {
+        console.log(e.response);
+      })
+    },
+    Page(n) {
+      let obj;
+      if(this.nombre!='') obj = {page: n, busqueda: this.nombre}
+      else obj = { page: n}
+      axios.post('/usuarios/listarTodo',obj)
+      .then(res =>{
+        this.$store.state.usuariosA=res.data.data;
+        this.usuarios = res.data
+      })
+      .catch(e => {
+        console.log(e.response);
+      })
     },
     eliminarUsuario(id){
       Swal.fire({
