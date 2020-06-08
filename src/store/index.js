@@ -79,6 +79,11 @@ export default new Vuex.Store({
     path: '/solicitudes',
     icon: 'ion-ios-book'
       },
+    {
+    text: 'Agregar Notas',
+    path: '/agregarNotas',
+    icon: 'ion-android-document'
+    },
     ],
     filtro:{
       query: '',
