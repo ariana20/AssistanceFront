@@ -273,7 +273,7 @@ export default {
     
     getExisteCodF: function(){
       axios.create()
-        .post('/facultad/verificarCod',this.codVerifF)
+        .post('/facultad/verificarCod/'+this.idFacultad,this.codVerifF)
           .then( response=>{
             this.existeCodF = response.data.success;
             console.log(this.existeCodF)
@@ -286,7 +286,7 @@ export default {
 
     getExisteNomF: function(){
       axios.create()
-        .post('/facultad/verificarNom',this.nombreVerifF)
+        .post('/facultad/verificarNom/'+this.idFacultad,this.nombreVerifF)
           .then( response=>{
             this.existeNomF = response.data.success;
             console.log(this.existeNomF)
