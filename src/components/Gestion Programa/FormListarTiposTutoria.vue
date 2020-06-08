@@ -1,5 +1,11 @@
 <template>
   <div class="FormRoles container" style="margin-top:20px">
+         <div> <router-link to="agregarNotas"> 
+                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Notas</button>
+        </router-link>
+        </div> 
+
+        
         <div class="row top-titulo">
         <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:20px">Nombre:  
         <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )" >  

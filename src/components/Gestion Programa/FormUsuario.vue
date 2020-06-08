@@ -7,9 +7,9 @@
             <td >
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) ||( event.charCode== 239) || (event.charCode== 130) || (event.charCod==144 ) || (event.charCod==181) || (event.charCod==214) || (event.charCod==233) || (event.charCod==224))"   -->
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) || event.charCode== 130 || event.charCod==144 ||event.charCod==181 || event.charCod==214 || event.charCod==233 || event.charCod==224)" -->
-              <tr style="text-align:left"><td style="width:90px;">Codigo:*</td>   <td> <input class="form-control" type="text"       maxlength="8" v-model="codigo"></td></tr> 
-              <tr style="text-align:left"><td style="width:90px;">Nombre:*</td>   <td> <input class="form-control" type="text"      v-model="nombre"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Apellidos:*</td>   <td> <input class="form-control" type="text"      v-model="apellidos"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Codigo:*</td>   <td> <input class="form-control" type="text"   id="cod"    maxlength="8" v-model="codigo"></td></tr> 
+              <tr style="text-align:left"><td style="width:90px;">Nombre:*</td>   <td> <input class="form-control" type="text"    maxlength="100"   v-model="nombre"></td></tr>
+              <tr style="text-align:left"><td style="width:90px;">Apellidos:*</td>   <td> <input class="form-control" type="text"    maxlength="100"   v-model="apellidos"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Correo:*</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo"></td></tr>
               <tr style="text-align:left"><td style="width:90px;"></td></tr>
@@ -154,6 +154,7 @@ export default {
      Axios.create()
        .post('/usuarios/listar/'+this.id_usuario_entrante).then( response =>{
          document.getElementById("corr").disabled = true;
+          // document.getElementById("cod").disabled = true;
          console.log('usuario listado para modificar',response);
           this.codigo=response.data.codigo;
            this.nombre= response.data.nombre;
@@ -350,18 +351,33 @@ export default {
             Axios.create()
             .post('/usuarios/modificar/'+this.id_usuario_entrante,params2)
             .then( response=>{
-              console.log(response)
-              Swal.fire({
-              text:"Se modificaron los datos con éxito",
-              icon:"success",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
-              }) 
+              
+              console.log(response); //si hay error de =igual codigo salta excepcion
+              console.log('data: ',response.data);
+              console.log('data: ',response.data.substring(0,20));
+              if(response.data.substring(0,20)!='Excepción capturada:'){
+                  Swal.fire({
+                  text:"Se modificaron los datos con éxito",
+                  icon:"success",
+                  confirmButtonText: 'OK',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+                  }) 
               //Como se guardaron con éxito ahora agrego el titutoria
                this.actualizarTT(this.id_usuario_entrante);
               this.$store.state.usuarios=null;
               this.$router.push('/ListaUsuarios');
+              }
+              else{
+                Swal.fire({
+                    text:"Ha ingresado un código que ya existe. Corrígalo,por favor.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  })
+              }
+              
             })  .catch(e => {
                  console.log(e.response);
                  Swal.fire({
