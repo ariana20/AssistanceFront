@@ -27,8 +27,8 @@
             <label>Código de la Facultad:</label>
             </b-col>
             <b-col sm="9">
-            <b-form-input v-if="idFacultad" id="codigoF" v-model="facultad.codigo"></b-form-input>
-            <b-form-input v-else id="codigoF" v-model="facultad.codigo"></b-form-input>
+            <b-form-input v-if="idFacultad" id="codigoF" v-model="codVerifF"></b-form-input>
+            <b-form-input v-else id="codigoF" v-model="codVerifF"></b-form-input>
 
             </b-col>
 
@@ -38,8 +38,8 @@
             <label>Nombre de la Facultad:</label>
             </b-col>
             <b-col sm="9">
-            <b-form-input v-if="idFacultad" id="nombreF" v-model="facultad.nombre"></b-form-input>
-            <b-form-input v-else id="nombreF" v-model="facultad.nombre"></b-form-input>
+            <b-form-input v-if="idFacultad" id="nombreF" v-model="nombreVerifF"></b-form-input>
+            <b-form-input v-else id="nombreF" v-model="nombreVerifF"></b-form-input>
 
             </b-col>
 
@@ -139,6 +139,7 @@
             <thead>
             <tr>
                 <th scope="col">N°</th>
+                <th scope="col">Código</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Correo</th>
                 <th scope="col">Coordinador</th>
@@ -148,6 +149,7 @@
             <tbody>
             <tr v-for="(item, index) in programas" :key="index">
                 <th scope="row">{{index+1}}</th>
+                <td >{{item.codigo}}</td>
                 <td >{{item.nombre}}</td>
                 <td >{{item.correo}}</td>
                 <td v-if="item.coordinador!=undefined">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
@@ -169,6 +171,7 @@
 import axios from 'axios'
 import modalJ from '@/components/ModalProg.vue'
 import modalJ2 from '@/components/Modal.vue'
+import lodash from 'lodash'
 import Vue from 'vue'
 import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(MultiSelectPlugin);
@@ -215,11 +218,45 @@ export default {
       coordinadorSeleccionado:null,
       tipoCoord:"",
 
+      codVerifF: "",
+      existeCodF:false,
+      nombreVerifF: "",
+      existeNomF:false,
+
+      codVerifP: "",
+      existeCodP:false,
+      nombreVerifP: "",
+      existeNomP:false,
+      
+
     }
   },
   components:{
     modalJ,
     modalJ2
+  },
+  
+  watch:{
+      codVerifF: function (){
+        this.debouncedGetAnswerCF()
+      },
+      nombreVerifF: function (){
+        this.debouncedGetAnswerNF()
+      },
+      codVerifP: function (){
+        this.debouncedGetAnswerCP()
+      },
+      nombreVerifP: function (){
+        this.debouncedGetAnswerNP()
+      },
+
+  },
+  
+  created: function(){
+    this.debouncedGetAnswerCF = lodash.debounce(this.getExisteCodF, 500)
+    this.debouncedGetAnswerNF = lodash.debounce(this.getExisteNomF, 500)
+    this.debouncedGetAnswerCP = lodash.debounce(this.getExisteCodP, 500)
+    this.debouncedGetAnswerNP = lodash.debounce(this.getExisteNomP, 500)
   },
   mounted(){
     if(this.$store.state.facultadEscogida) {
@@ -233,6 +270,57 @@ export default {
   },
 
   methods:{
+    
+    getExisteCodF: function(){
+      axios.create()
+        .post('/facultad/verificarCod',this.codVerifF)
+          .then( response=>{
+            this.existeCodF = response.data.success;
+            console.log(this.existeCodF)
+            console.log(response)
+          })
+        .catch(e => {
+          console.log(e.response);
+        })
+    },
+
+    getExisteNomF: function(){
+      axios.create()
+        .post('/facultad/verificarNom',this.nombreVerifF)
+          .then( response=>{
+            this.existeNomF = response.data.success;
+            console.log(this.existeNomF)
+            console.log(response)
+          })
+        .catch(e => {
+          console.log(e.response);
+        })
+    },
+    getExisteCodP: function(){
+      axios.create()
+        .post('/programa/verificarCod',this.codVerifP)
+          .then( response=>{
+            this.existeCodP = response.data.success;
+            console.log(this.existeCodP)
+            console.log(response)
+          })
+        .catch(e => {
+          console.log(e.response);
+        })
+    },
+
+    getExisteNomP: function(){
+      axios.create()
+        .post('/programa/verificarNom',this.nombreVerifP)
+          .then( response=>{
+            this.existeNomP = response.data.success;
+            console.log(this.existeNomF)
+            console.log(response)
+          })
+        .catch(e => {
+          console.log(e.response);
+        })
+    },
 
     obtenerDatos() {
         axios.post('/facultad/listar/'+this.idFacultad)
@@ -240,8 +328,8 @@ export default {
                 console.log(response);
                 this.facultad.id_facultad = response.data[0].id_facultad;
                 this.facultad.id_programa = response.data[0].id_programa;
-                this.facultad.nombre = response.data[0].nombre;
-                this.facultad.codigo=response.data[0].codigo;
+                this.codVerifF=response.data[0].codigo;
+                this.nombreVerifF=response.data[0].nombre;
                 this.facultad.correo = response.data[0].correo;
                 this.facultad.descripcion=response.data[0].descripcion;
                 console.log(response);
@@ -252,8 +340,6 @@ export default {
                           var prog= new Object()
                           prog=response.data[index].programa;
                           prog.coordinador=response.data[index].coordinador;
-                          console.log('---------');
-                          console.log(response.data[index]);
                           this.programas.push(prog);
                         }
                         
@@ -277,20 +363,38 @@ export default {
     },
 
     guardarFacultad() {
-
-      if(this.facultad.nombre =="" || this.facultad.correo==""){
+      this.facultad.codigo=this.codVerifF;
+      this.facultad.nombre=this.nombreVerifF;
+      if(this.facultad.nombre =="" || this.facultad.codigo =="" || this.facultad.correo==""){
          Swal.fire({
-              text:"No ha completado todos los campos",
+              text:"No ha completado todos los campos obligatorios",
               icon:"error",
               confirmButtonText: 'OK',
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
         }) 
-
+      }else if(this.existeCodF==true){
+         Swal.fire({
+              text:"El código de facultad "+ this.codVerifF+" ya existe",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        }) 
+      }else if(this.existeNomF==true){
+         Swal.fire({
+              text:"El nombre de facultad "+ this.nombreVerifF+" ya existe",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        }) 
       }else{
+        
+
         if(this.$store.state.facultadEscogida){
-          //cómo agarro el id? por eso no funciona 
           //modifico la facultad, debo considerar progactualizar, progeliminar, progagregar
+          
           axios.create()
             .post('/facultad/modificar/'+this.facultad.id_facultad,this.facultad)
               .then( response=>{
@@ -500,6 +604,7 @@ export default {
 
       
     }
+    
 
   }
 }
