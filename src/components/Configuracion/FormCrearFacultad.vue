@@ -365,6 +365,8 @@ export default {
     guardarFacultad() {
       this.facultad.codigo=this.codVerifF;
       this.facultad.nombre=this.nombreVerifF;
+      var   expresion2=/\w+@\w+\.+edu.pe/;
+      var   expresion1=/\w+@\w+\.+pe/;
       if(this.facultad.nombre =="" || this.facultad.codigo =="" || this.facultad.correo==""){
          Swal.fire({
               text:"No ha completado todos los campos obligatorios",
@@ -389,7 +391,18 @@ export default {
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
         }) 
-      }else{
+
+      }else if( !expresion2.test(this.facultad.correo) &&  !expresion1.test(this.facultad.correo)){ //Verificación de correo
+          Swal.fire({
+            
+              text:"No ha escrito una dirección de correo válida. Todos los correos deben contener ser dominio @pucp.edu.pe o @pucp.pe",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        }) 
+      }
+      else{
         
 
         if(this.$store.state.facultadEscogida){
