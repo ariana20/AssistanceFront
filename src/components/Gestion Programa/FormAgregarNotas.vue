@@ -10,11 +10,11 @@
              
                 <div class="row " >
                     <div class="col-xs-6 col-sm-2" sytle="padding:50px;padding-top:10px;">
-                        <div class="col-sm-6"><label  for="formGroupExampleInput" >
-                            <b>
-                            Código</b>
-                            
-                            </label></div>
+                        <div class="col-sm-6">
+                            <label  for="formGroupExampleInput" >
+                                <b>Código</b>
+                            </label>
+                        </div>
                         <hr style="width:458%;border:0px;">
                         <ejs-autocomplete
                             :dataSource='codigos' 
@@ -36,43 +36,46 @@
                         </ul>
 
                     </div>
-                    <div class="col-md-8">
-                        <div class="col-sm-4" style="text-align:left;padding-bottom:40px;">
+                    <div class="col-md-4">
+                        <div class="col-sm-8" style="text-align:left;padding-bottom:40px;">
                             <b>Nombre y Apellidos</b>
                          
                         </div>
                         <div type="text" class="col-sm-4 form-control" placeholder="Nombre" style="margin-left:10px;color: white;background:#BEBEBE;" >
                             {{alSeleccionado}} </div>
                          
-                        <ul class="col-sm-4" style="text-align:center;width:200%;margin-left:28px;padding-right:0px;">
-                            <li class="col-sm-8 form-control list-group-item" 
-                            style="padding: 0.4rem 0.5rem;text-align:center;width:200%;margin-left:28px;padding-right:0px;"
-                                v-for="(newAlumno,alIndex) in listAlumnosNom"  
-                                :key="alIndex">
-                                {{newAlumno}}    
-                                <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
-                             <input class="col-sm-4 form-control"  style="text-align:center;
-                             width:200%;margin-left:28px;padding-right:0px;text-align:center; ">
-                            </li>
-                            
-
-                        </ul>
+                        <div class="col-sm-8 form-control list-group-item" 
+                        style="padding: 0.4rem 0.5rem;text-align:center;width:200%;margin-left:10px;padding-right:0px;"
+                            v-for="(newAlumno,alIndex) in listAlumnosNom"  
+                            :key="alIndex">
+                            {{newAlumno}}    
+                            <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
+                        </div>  
                     </div>
-                    <div class="col-xs-6 col-md-4">
-                        <div  style="text-align:left;padding-bottom:40px;" >                        
-                          <b>Archivo</b> 
+                    <div class="col-md-4">
+                        <div class="col-sm-4" style="text-align:left;padding-bottom:40px;">
+                            <b>Notas</b>
+                         
+                        </div>
+                        <div type="text" class="col-sm-4" placeholder="Nombre" style="top:-5px">
                             <button  :disabled="!this.sel" type="button" class="btn btn-info" 
                                     @click="addAlumno">Agregar
-                            </button>                     
+                            </button>          
                         </div>
-                        
-                    
-                    
-                   
+                         
+                        <div class="row" style="margin-left:0px"
+                        v-for="(newAlumno,alIndex) in listAlumnosNom"  
+                        :key="alIndex">
+                            <input class="col-sm-4 form-control"  style="text-align:center;
+                            width:200%;margin-left:10px;padding-right:0px;text-align:center; ">
+                            <div style="line-height:35px;margin-left:10px">
+                                <b>Archivo</b>
+                            </div> 
+                        </div>  
                     </div>
                 </div>
                 <div style="position:absolute; bottom:30px;">
-                    </div>
+                </div>
             </div>
             
         
@@ -292,7 +295,7 @@ export default Vue.extend ({
 
 
 <style lang="scss" scoped>
-@import '../../assets/styles/material.css';
+@import '../../assets/styles/intento.css';
 
 .close {
     cursor: pointer;
@@ -302,7 +305,17 @@ export default Vue.extend ({
     padding: 12px 16px;
     transform: translate(0%, -50%);
 }
-
+.e-input-group:not(.e-float-icon-left),
+.e-input-group.e-success:not(.e-float-icon-left),
+.e-input-group.e-warning:not(.e-float-icon-left),
+.e-input-group.e-error:not(.e-float-icon-left),
+.e-input-group.e-control-wrapper:not(.e-float-icon-left),
+.e-input-group.e-control-wrapper.e-success:not(.e-float-icon-left),
+.e-input-group.e-control-wrapper.e-warning:not(.e-float-icon-left),
+.e-input-group.e-control-wrapper.e-error:not(.e-float-icon-left) {
+  border: transparent;
+  border-width: 0 0 1px 0;
+}
 input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper input.e-input, textarea.e-input, .e-input-group textarea.e-input, .e-input-group.e-control-wrapper textarea.e-input{
     border-width: 1px !important;
 }
@@ -314,6 +327,7 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
     font-size: 17px;
     margin-bottom:0px!important;
 }
+
 .e-control .e-autocomplete .e-lib .e-input .e-keyboard {
     z-index: -100;
 }
