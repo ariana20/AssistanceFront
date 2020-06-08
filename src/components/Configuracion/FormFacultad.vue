@@ -10,10 +10,11 @@
       </div>
 
            
-      <table class="table" style="text-align: left">
+      <table responsive class="table" style="text-align: left">
         <thead>
           <tr>
             <th scope="col">N°</th>
+            <th scope="col">Código</th>
             <th scope="col">Nombre</th>
             <th scope="col">Coordinador</th>
             <th scope="col">Correo</th>
@@ -24,6 +25,7 @@
         <tbody>
           <tr v-for="(item,index) in facultadesFiltradas" :key="index">
             <th scope="row">{{index+1}}</th>
+            <td v-if="item!=undefined">{{item.codigo}}</td>
             <td v-if="item!=undefined">{{item.nombre}}</td>
             <td v-if="item.coordinador!=undefined && item.coordinador!=null">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
             <td v-else>Sin coordinador</td>

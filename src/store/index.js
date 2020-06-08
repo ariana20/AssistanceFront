@@ -84,6 +84,11 @@ export default new Vuex.Store({
     path: '/agregarNotas',
     icon: 'ion-android-document'
     },
+    {
+      text: 'Tutores',
+      path: '/tutoresDisponibles',
+      icon: 'ion-ios-book'
+    },
     ],
     filtro:{
       query: '',
