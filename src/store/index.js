@@ -78,7 +78,12 @@ export default new Vuex.Store({
     text: 'Solicitudes',
     path: '/solicitudes',
     icon: 'ion-ios-book'
-      },
+    },
+    {
+      text: 'Tutores',
+      path: '/tutoresDisponibles',
+      icon: 'ion-ios-book'
+    },
     ],
     filtro:{
       query: '',
