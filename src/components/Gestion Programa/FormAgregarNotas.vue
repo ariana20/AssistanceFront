@@ -15,7 +15,7 @@
                                 <b>Código</b>
                             </label>
                         </div>
-                        <hr style="width:458%;border:0px;">
+                        <hr style="width:730%;border:0px;">
                         <ejs-autocomplete
                             :dataSource='codigos' 
                             :fields='campoCodigo' 
@@ -37,14 +37,14 @@
 
                     </div>
                     <div class="col-md-4">
-                        <div class="col-sm-8" style="text-align:left;padding-bottom:40px;">
+                        <div class="col-sm-12" style="text-align:left;padding-bottom:40px;">
                             <b>Nombre y Apellidos</b>
                          
                         </div>
-                        <div type="text" class="col-sm-4 form-control" placeholder="Nombre" style="margin-left:10px;color: white;background:#BEBEBE;" >
+                        <div type="text" class="col-sm-12 form-control" placeholder="Nombre" style="margin-left:10px;color: white;background:#BEBEBE;" >
                             {{alSeleccionado}} </div>
                          
-                        <div class="col-sm-8 form-control list-group-item" 
+                        <div class="col-sm-12 form-control list-group-item" 
                         style="padding: 0.4rem 0.5rem;text-align:center;width:200%;margin-left:10px;padding-right:0px;"
                             v-for="(newAlumno,alIndex) in listAlumnosNom"  
                             :key="alIndex">
@@ -52,9 +52,9 @@
                             <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
                         </div>  
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="col-sm-4" style="text-align:left;padding-bottom:40px;">
-                            <b>Notas</b>
+                            <b>Archivo</b>
                          
                         </div>
                         <div type="text" class="col-sm-4" placeholder="Nombre" style="top:-5px">
@@ -66,15 +66,24 @@
                         <div class="row" style="margin-left:0px"
                         v-for="(newAlumno,alIndex) in listAlumnosNom"  
                         :key="alIndex">
-                            <input class="col-sm-4 form-control"  style="text-align:center;
+                            <input class="col-sm-8 form-control"  style="text-align:center;
                             width:200%;margin-left:10px;padding-right:0px;text-align:center; ">
-                            <div style="line-height:35px;margin-left:10px">
+                            <b-icon icon="file-earmark-plus" style="color:#757575;width:35px; height:35px;"/>
+                            <b-icon icon="play-fill" style="color:#757575;width:35px; height:35px;"/>
+                            
+                            <!-- <div style="line-height:35px;margin-left:10px">
                                 <b>Archivo</b>
-                            </div> 
+                            </div>  -->
                         </div>  
                     </div>
                 </div>
                 <div style="position:absolute; bottom:30px;">
+                </div>
+                <hr style="width:105%;border:0px;">
+                <div  class="botones" >   
+                    <button type="button" style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnGuardar" v-on:click="guardarNotas()">Guardar</button>
+                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarNotas()"  >Cancelar</button>  
+      
                 </div>
             </div>
             
@@ -102,7 +111,7 @@ export default Vue.extend ({
         
             bordes:'borde-textbox',
             sel: '',
-            alSeleccionado: 'Nombre Alumno',
+            alSeleccionado: 'Nombre de alumno',
             codigos:[],
             campoCodigo: {value:'codigo'},    
             selectedTipoTutoria: null,
