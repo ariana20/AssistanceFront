@@ -29,8 +29,8 @@
             <!-- <th scope="col">Modif/Elim</th> -->
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="(item, index) in $store.state.usuariosA"  :key="index">
+        <tbody v-if="$store.state.usuariosA!=null">
+          <tr v-for="(item, index) in $store.state.usuariosA.data"  :key="index">
             <th scope="row">{{item.codigo}}</th>
             <td>{{item.nombre}} {{item.apellidos}}</td>
             <td>{{item.correo}}</td>   
@@ -51,15 +51,16 @@
           </tr>
         </tbody>
       </table>
+      <div v-if="$store.state.usuariosA!=null">
       <nav aria-label="Page navigation example">
 				<ul class="pagination justify-content-center">
-					<li class="page-item" v-if="usuarios.current_page > 1">
-						<a class="page-link" href="#" tabindex="-1" @click.prevent="Page(usuarios.current_page - 1)" style="color:rgb(0, 152, 146)">
+					<li class="page-item" v-if="$store.state.usuariosA.current_page > 1">
+						<a class="page-link" href="#" tabindex="-1" @click.prevent="Page($store.state.usuariosA.current_page - 1)" style="color:rgb(0, 152, 146)">
 							<span>Anterior</span>
 						</a>
 					</li>
-					<li class="page-item" v-for="page in usuarios.last_page" :key="page">
-						<a  v-if="page != usuarios.current_page" class="page-link" href="#" @click.prevent="Page(page)" style="color:rgb(0, 152, 146)">
+					<li class="page-item" v-for="page in $store.state.usuariosA.last_page" :key="page">
+						<a  v-if="page != $store.state.usuariosA.current_page" class="page-link" href="#" @click.prevent="Page(page)" style="color:rgb(0, 152, 146)">
               <span class="sr-only">(current_page)</span>
               {{ page }}
 						</a>
@@ -68,13 +69,14 @@
               {{ page }}
 						</a>
 					</li>
-					<li class="page-item" v-if="usuarios.current_page < usuarios.last_page">
-						<a class="page-link" href="#" @click.prevent="Page(usuarios.current_page + 1)" style="color:rgb(0, 152, 146)">
+					<li class="page-item" v-if="$store.state.usuariosA.current_page < $store.state.usuariosA.last_page">
+						<a class="page-link" href="#" @click.prevent="Page($store.state.usuariosA.current_page + 1)" style="color:rgb(0, 152, 146)">
 							<span>Siguiente</span>
 						</a>
 					</li>
 				</ul>
 			</nav>
+      </div>
     </div>
   </div>
 </template>
@@ -87,14 +89,6 @@ export default {
   data(){
     return{
       nombre:null,
-      usuarios:[],
-      //id_tipoXUsuario:[],
-      cantU:null,
-      TodosarrayTU:[],
-      tipoXUsuario:[],
-      miUsuario:this.$store.state.usuario, //Para sacar el id del programa
-
-      
     }
   },
  
@@ -114,15 +108,13 @@ export default {
   mounted(){
     console.log('Store state usuariosA',this.$store.state.usuariosA);
      if(this.$store.state.usuariosA === null  ) {     
-       this.listarUsuarios(); } //}
-    else this.usuarios = this.$store.state.usuariosA; //
+       this.listarUsuarios(); } 
   },
   methods:{
     listarUsuarios() {
       axios.post('/usuarios/listarTodo')
       .then(res =>{
-        this.$store.state.usuariosA=res.data.data;
-        this.usuarios = res.data
+        this.$store.state.usuariosA=res.data;
       })
       .catch(e => {
         console.log(e.response);
@@ -132,8 +124,7 @@ export default {
       let obj = { busqueda: n}
       axios.post('/usuarios/listarTodo',obj)
       .then(res =>{
-        this.$store.state.usuariosA=res.data.data;
-        this.usuarios = res.data
+        this.$store.state.usuariosA=res.data;
       })
       .catch(e => {
         console.log(e.response);
@@ -145,8 +136,7 @@ export default {
       else obj = { page: n}
       axios.post('/usuarios/listarTodo',obj)
       .then(res =>{
-        this.$store.state.usuariosA=res.data.data;
-        this.usuarios = res.data
+        this.$store.state.usuariosA=res.data;
       })
       .catch(e => {
         console.log(e.response);
