@@ -20,9 +20,11 @@
             <th scope="col">Nombre</th>
             <th scope="col">Tipo de Solicitud</th>
             <th scope="col">Descripción</th>
+            <th scope="col">Motivo</th>
+            <th scope="col">Usuario Relacionado</th>
             <th scope="col">Fecha Solicitud</th>
             <th scope="col">Responder</th>
-            <th scope="col" style="text-align: center">Acciones</th>
+            <th scope="col">Detalle</th>
           </tr>
         </thead>
         <tbody>
@@ -32,17 +34,21 @@
             <td>{{item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos}}</td>
             <td>{{item.tipo_solicitud}}</td>
             <td>{{item.descripcion}}</td>
+            <td v-if="item.motivo">{{item.motivo}}</td>
+            <td v-else>-</td>
+            <td v-if="item.usuarioRelacionado">{{item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos}}</td>
+            <td v-else style="text-align:center">-</td>
             <td>{{item.fecha_creacion}}</td>
-            <td style=";font-size:25px;width:140px">
-                <button style="width:25px;margin-left:-20px" v-on:click="Aceptar(item)" class="btn link">
+            <td >
+                <button style="padding-left: 5px;padding-right: 5px;width:25px;margin-left:5px" v-on:click="Aceptar(item)" class="btn link">
                     <b-icon icon="check-circle-fill" style="color:#0097A7"/>
                 </button>
-                <button style="width:25px" v-on:click="Rechazar" class="btn link">
+                <button style="padding-left: 5px;padding-right: 5px;margin-left:5px;width:25px" v-on:click="Rechazar" class="btn link">
                     <b-icon icon="x-circle-fill" style="color:#757575"/>
                 </button>
             </td>
-            <td  style="text-align: center;width:144px">
-                <button v-on:click="Elegir(item)" style="width:50px" class="btn link">
+            <td >
+                <button v-on:click="Elegir(item)" style="padding-left: 5px;padding-right: 5px;width:50px" class="btn link">
                     <modalJ2 v-on:childToParentFacu="Detalle" :solicitud="item"/>      
                 </button>
             </td>
@@ -52,7 +58,7 @@
   
     <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-        Loading... <b-spinner style="margin-left:15px"/>
+        Cargando... <b-spinner style="margin-left:15px"/>
       </div>
     </b-modal>
 
@@ -96,7 +102,7 @@ export default {
   },
   methods:{
     listarSolicitudes() {
-        this.axios.post('/solicitudes/listarSol',{id: this.$store.state.usuario.id_usuario})
+        this.axios.post('/solicitudes/listarSol',{id: this.$store.state.usuario.id_usuario, id_programa: this.$store.state.programaActual.id_programa})
         .then(response=>{
             this.$store.state.solicitudes = response.data;
         })
@@ -123,7 +129,8 @@ export default {
             this.showModal();
             let param = {
                 id_solicitante: item.id_solicitante,
-                id_remitente: item.id_remitente
+                id_remitente: item.id_remitente,
+                usuario_actualizacion: this.$store.state.usuario.id_usuario,
             }
             this.axios.post('/solicitudes/eliminar',param)
               .then(response=>{
@@ -173,9 +180,10 @@ export default {
                 else if(item.tipo_solicitud == 'Tutor'){
                   mensaje = "Se te asignó "+item.usuario_relacionado+" como tutor en el programa "+this.$store.state.programaActual.nombreñ
                   let obj ={
-                      id_alumno:item.id_solicitante, 
-                      id_tutor:item.usuario_relacionado,
-                      id_programa:this.$store.state.programaActual.id_programa,
+                    id_alumno:item.id_solicitante, 
+                    id_tutor:item.usuario_relacionado,
+                    id_programa:this.$store.state.programaActual.id_programa,
+                    usuario_actualizacion: this.$store.state.usuario.id_usuario,
                   }
                   this.axios.post('/usuarios/nuevoTutor/'+item.usuarioSolicitante.id_usuario,obj)
                       .then(response=>{
@@ -230,7 +238,8 @@ export default {
             this.showModal();
             let param = {
                 id_solicitante: item.id_solicitante,
-                id_remitente: item.id_remitente
+                id_remitente: item.id_remitente,
+                usuario_actualizacion: this.$store.state.usuario.id_usuario,
             }
             this.axios.post('/solicitudes/eliminar',param)
               .then(response=>{
