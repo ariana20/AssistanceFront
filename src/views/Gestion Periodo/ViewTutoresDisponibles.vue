@@ -1,48 +1,19 @@
 <template>
-  <div name="FormFacultad">
-    <div class="container" style="left:60px;text-align: left;">
-      <div class="top-titulo">
-        <h4 class="col-sm-4 title-container">Nombre: </h4>
-        <input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre de la facultad">
-            <div class="botones">
-            <button type="button" class="btn btn-info" style="margin-left:190px" >Añadir</button>
-            </div>
-      </div>
-
-    </div>
+  <div name="ViewTutoresDisponibles">
+    <CabezeraTitulo msg="Tutores"
+    :image-path="require('@/assets/images/profe-alumna.jpg')"/>
+    <FormTutoresDisponibles />
   </div>
 </template>
 
 <script>
-
-//import axios from 'axios'
-//import Swal from 'sweetalert2'
-
+import CabezeraTitulo from '@/components/Principal/CabezeraTitulo.vue'
+import FormTutoresDisponibles from '@/components/Gestion Periodo/FormTutoresDisponibles.vue'
 export default {
-  data(){
-    return{
-    }
-  },
-  mounted(){
-
-  },
-  computed:{
-
-  },
-  methods:{
-    
+  name: 'ViewTutoresDisponibles',
+  components: {
+    CabezeraTitulo,
+    FormTutoresDisponibles
   }
 }
 </script>
-
-<style scoped>
-
-.form-control {
-    border-radius: 1rem;  
-    border: 1px solid #757575;
-    text-align-last: left;
-    margin-bottom:1.3em;
-
-}
-
-</style>
