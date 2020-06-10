@@ -464,5 +464,13 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
     border: 0.5px solid #757575;
     margin-bottom: 10px;
 }
-
+.btn:focus {
+    outline:none;
+    box-shadow: none;
+    border: 2.3px solid transparent;
+}
+select:focus {
+    outline:none;
+    box-shadow: none;
+}
 </style>

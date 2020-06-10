@@ -20,6 +20,7 @@ export default new Vuex.Store({
     usuariosA:null,
     rutas:[],
     usuarioEscogido:null,
+    events: [],
     navLinks: [
       {
         text: 'Institucion',
@@ -66,11 +67,16 @@ export default new Vuex.Store({
       path: '/sesiontutoria',
       icon: 'ion-ios-school'
     },
-   {
-    text: 'Gestionar Usuarios Admin',
-    path: '/AListaUsuarios',
-    icon: 'ion-ios-people'
-  },
+    {
+      text: 'Gestionar Usuarios Admin',
+      path: '/AListaUsuarios',
+      icon: 'ion-ios-people'
+    },
+    {
+      text: 'Citas',
+      path: '/agendarcita',
+      icon: 'ion-ios-calendar'
+    },
     ],
     filtro:{
       query: '',
@@ -80,6 +86,15 @@ export default new Vuex.Store({
     SET_QUERY (state,query){
       state.filtro.query = query;
     },
+    ADD_EVENT: (state, event) => {
+      state.events.push(event)
+    },
+    UPDATE_EVENT: (state,{id,title,start,end}) => {
+      let index = state.events.findIndex(_event => _event.id == id)
+      state.events[index].title = title;
+      state.events[index].start = start;
+      state.events[index].end = end;      
+    }
   },
   actions: {
   },
@@ -144,6 +159,7 @@ export default new Vuex.Store({
       }
       return state.coordinadoresL;
     },
+    EVENTS: state => state.events
 
   }
 })
