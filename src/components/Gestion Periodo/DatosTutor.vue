@@ -78,7 +78,7 @@ export default {
             .then( response=>{
 
                 Swal.fire({
-                  text:"Resgistro Exitoso",
+                  text:"Registro Exitoso",
                   icon:"success",
                   confirmButtonText: 'OK',
                   confirmButtonColor:'#0097A7',
