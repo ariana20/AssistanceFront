@@ -74,7 +74,7 @@ export default {
                 motivo: ""
             }
             axios.create()
-            .post('/programa/solitarTutor', params)
+            .post('/solicitudes/solicitudTutor', params)
             .then( response=>{
 
                 Swal.fire({
@@ -84,8 +84,6 @@ export default {
                   confirmButtonColor:'#0097A7',
                   showConfirmButton: true,
                 })
-
-                console.log(this.existeCodF)
                 console.log(response)
             })
             .catch(e => {
