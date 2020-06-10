@@ -3,8 +3,8 @@
 		<div class="container" style="left:60px;text-align: left;">
 			<div class="top-titulo">
 				<h4 class="col-sm-4 title-container">Nombre: </h4>
-				<input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre de la facultad">
-						<div class="botones">
+				<input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nomb" v-on:keyup.enter="buscarFacultades(nomb)" placeholder="Ingrese nombre de la facultad">
+						<div class="botones">							
 						<button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:190px" >Añadir</button>
 						</div>
 			</div>
@@ -69,32 +69,24 @@ export default {
 	data(){
 		return{
 			facultades:[],
-			coordinadores:[]
+			coordinadores:[],
+			submitting: false,
+			nomb: '',
+			keeps:[],
+			paginate:{
+				'total': 0,
+				'current_page': 0,
+				'per_page': 0,
+				'last_page': 0,
+				'from': 0,
+				'to': 0
+			},
+			offset: 3,
 		}
 	},
 	mounted(){
 		this.listarFacultades();
 
-	},
-	data1:{
-		nombre:{
-			get(){
-					return this.$store.state.filtro.query;
-			},
-			set(val){
-					this.$store.commit('SET_QUERY',val);
-			}
-		},
-		keeps:[],
-		paginate:{
-			'total': 0,
-			'current_page': 0,
-			'per_page': 0,
-			'last_page': 0,
-			'from': 0,
-			'to': 0
-		},
-		offset: 3,
 	},
 	computed:{
 		isActived: function(){
@@ -134,6 +126,28 @@ export default {
 			var url='/facultad/listFacuConCoordi?page='+page;
 			axios
 			.post(url)
+				.then(res =>{
+					console.log(res.data);
+					this.facultades=res.data.tasks.data;
+					this.$store.state.facultades = res.data.tasks.data;
+					this.paginate=res.data.paginate;
+					this.coordinadores=res.data.tasks;
+					this.$store.state.coordinadores=res.data.tasks;
+					for(var i=0; i<this.facultades.length; i++){
+						this.facultades[i].coordinador=this.coordinadores[i][0];
+					}
+				})
+				.catch(e => {
+					console.log(e.response);
+				})
+		},
+		buscarFacultades(page) {
+			var url='/facultad/listFacuConCoordi?page='+page;
+			const params = {
+                nombre: this.nomb,
+            };
+			axios
+			.post(url,params)
 				.then(res =>{
 					console.log(res.data);
 					this.facultades=res.data.tasks.data;
