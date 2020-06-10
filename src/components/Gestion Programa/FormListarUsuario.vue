@@ -18,7 +18,7 @@
       </div>  
          
 
-      <table class="table" style="text-align:left" >
+      <table responsive class="table" style="text-align:left" >
         <thead>
           <tr>
             <th scope="col">N°</th>
@@ -32,10 +32,9 @@
         </thead>
         <tbody>
           <tr v-for="(item, index) in usuariosFiltrados"  :key="index">
-            <th scope="row">{{index+1}}</th>
-            <td>{{item.codigo}}</td>
-            <td>{{item.nombre}}</td>
-            <td>{{item.correo}}</td>  
+            <td v-if="item!=undefined">{{item.codigo}}</td>
+            <td v-if="item!=undefined">{{item.nombre}}</td>
+            <td v-if="item!=undefined">{{item.correo}}</td>  
             <td style="font-size:30px">
                 <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
                 <b-icon v-else icon="x" style="color:#757575"/>
@@ -52,7 +51,27 @@
         </tbody>
       </table>
     </div>
-  </div>
+    <nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+					<li class="page-item" v-if="paginate.current_page > 1">
+						<a class="page-link" href="#" tabindex="-1" @click.prevent="changePage(paginate.current_page - 1)" style="color:rgb(0, 152, 146)">
+							<span>Anterior</span>
+						</a>
+					</li>
+					<li class="page-item" v-for="page in pagesNumber" :key="page">
+							<a class="page-link" href="#" @click.prevent="changePage(page)" style="color:rgb(0, 152, 146)">
+								<span class="sr-only">(current_page)</span>
+								{{ page }}
+						</a>
+					</li>
+					<li class="page-item" v-if="paginate.current_page < paginate.last_page">
+						<a class="page-link" href="#" @click.prevent="changePage(paginate.current_page + 1)" style="color:rgb(0, 152, 146)">
+							<span>Siguiente</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+  </div>  
 </template>
 
 <script>
@@ -62,7 +81,16 @@ import Swal from 'sweetalert2'
 export default {
   data(){
     return{
-      
+      keeps:[],
+			paginate:{
+				'total': 0,
+				'current_page': 0,
+				'per_page': 0,
+				'last_page': 0,
+				'from': 0,
+				'to': 0
+			},
+			offset: 3,
       usuarios:[],
       //id_tipoXUsuario:[],
       cantU:null,
@@ -76,6 +104,29 @@ export default {
   },
  
   computed:{
+        isActived: function(){
+          return this.paginate.current_page;
+        },
+        pagesNumber: function(){
+          if(!this.paginate.to){
+            return [];
+          }
+          var from = this.paginate.current_page - 2;
+          if(from<1){//debe ser un numero positivo
+            from=1;
+          }
+          var to=from+(2 * 2);//TO DO
+          if(to >= this.paginate.last_page){
+            to=this.paginate.last_page;
+          }
+          //calculo de la numeracion exacta
+          var pagesArray=[];
+          while(from<=to){
+            pagesArray.push(from);
+            from++;
+          }
+          return pagesArray;
+        },
         nombre:{
           get(){
               return this.$store.state.filtro.query;
@@ -109,6 +160,11 @@ export default {
     else this.usuarios = this.$store.state.usuarios; //
   },
   methods:{
+		changePage: function(page){
+			this.paginate.current_page=page;
+			this.listarUsuarios(page);//trae un nuevo listadp
+			event.preventDefault();
+		},
     //4 es el id del programa de admin
     //1 es el id tipo usuario de admin
     //2 es el id de usuairo admin
@@ -125,16 +181,17 @@ export default {
           console.log(e.response);
         })
     },
-    listarUsuarios() {
+    listarUsuarios(page) {
     console.log(this.$store.state.programaActual.id_programa);
+    var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
      if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador
-        axios.post('/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa) //Por ahora dsp será x program
+        axios.post(url) //Por ahora dsp será x program
         .then(res =>{
           console.log('Usuarios ',res.data);    
           //ordenado por estado
-          let par=res.data;      
+          let par=res.data.tasks.data;      
           this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado);});
-
+          this.paginate=res.data.paginate;
           // this.$store.state.usuarios=res.data;
           console.log(this.$store.state.tipoActual.nombre);
                    

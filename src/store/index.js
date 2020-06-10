@@ -49,7 +49,11 @@ export default new Vuex.Store({
 		path: '/ListaTiposTutorias',
 		icon: 'ion-ios-book'
       },
+<<<<<<< HEAD
        {
+=======
+      {
+>>>>>>> origin/Carolina
         text: 'Usuarios',
 		path: '/ListaUsuarios',
 		icon: 'ion-ios-people'
