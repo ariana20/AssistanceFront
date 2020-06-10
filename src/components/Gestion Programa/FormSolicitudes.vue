@@ -170,7 +170,43 @@ export default {
                           this.hideModal();
                         })
                 }
-                
+                else if(item.tipo_solicitud == 'Tutor'){
+                  mensaje = "Se te asignó "+item.usuario_relacionado+" como tutor en el programa "+this.$store.state.programaActual.nombreñ
+                  let obj ={
+                      id_alumno:item.id_solicitante, 
+                      id_tutor:item.usuario_relacionado,
+                      id_programa:this.$store.state.programaActual.id_programa,
+                  }
+                  this.axios.post('/usuarios/nuevoTutor/'+item.usuarioSolicitante.id_usuario,obj)
+                      .then(response=>{
+                          response
+                          emailjs.send(
+                              "gmail",
+                              "template_bV7OIjEW",
+                              {
+                              "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                              "mensaje":mensaje,
+                              "correo": item.usuarioSolicitante.correo
+                              }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                          .then((result) => {
+                              console.log('SUCCESS!', result.status, result.text);
+                          }, (error) => {
+                              console.log('FAILED...', error);
+                          });
+                          this.hideModal();
+                          Swal.fire({
+                          text:"Asignación de tutor exitosa",
+                          icon:"success",
+                          confirmButtonText: 'OK',
+                          confirmButtonColor:'#0097A7',
+                          showConfirmButton: true,
+                          })
+                      })
+                      .catch(e=>{
+                        console.log(e)
+                        this.hideModal();
+                      })
+                }
               })
               .catch(e=>{
                 console.log(e)

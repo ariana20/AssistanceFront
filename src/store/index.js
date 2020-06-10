@@ -78,6 +78,11 @@ export default new Vuex.Store({
     text: 'Solicitudes',
     path: '/solicitudes',
     icon: 'ion-ios-book'
+      },
+    {
+    text: 'Agregar Notas',
+    path: '/agregarNotas',
+    icon: 'ion-android-document'
     },
     {
       text: 'Tutores',
