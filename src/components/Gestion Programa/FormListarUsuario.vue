@@ -21,9 +21,8 @@
       <table responsive class="table" style="text-align:left" >
         <thead>
           <tr>
-            <th scope="col">N°</th>
-            <th scope="col">Código</th>
-            <th scope="col">Nombre</th>
+            <th scope="col" style="width:120px">Código</th>
+            <th scope="col" style="width:200px">Nombre</th>
             <th scope="col">Correo</th>
             <th scope="col">Estado</th>
             <th scope="col">Tipo de Usuario</th>
