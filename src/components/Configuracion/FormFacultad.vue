@@ -21,7 +21,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="(item,index) in facultadesFiltradas" :key="index">
+					<tr v-for="(item,index) in facultades" :key="index">
 						<td v-if="item!=undefined">{{item.codigo}}</td>
 						<td v-if="item!=undefined">{{item.nombre}}</td>
 						<td v-if="item.coordinador!=undefined && item.coordinador!=null">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
@@ -77,6 +77,14 @@ export default {
 
 	},
 	data1:{
+		nombre:{
+			get(){
+					return this.$store.state.filtro.query;
+			},
+			set(val){
+					this.$store.commit('SET_QUERY',val);
+			}
+		},
 		keeps:[],
 		paginate:{
 			'total': 0,
@@ -89,14 +97,6 @@ export default {
 		offset: 3,
 	},
 	computed:{
-		nombre:{
-			get(){
-					return this.$store.state.filtro.query;
-			},
-			set(val){
-					this.$store.commit('SET_QUERY',val);
-			}
-		},
 		isActived: function(){
 			return this.paginate.current_page;
 		},
@@ -120,7 +120,7 @@ export default {
 			}
 			return pagesArray;
 		},
-		...mapGetters({
+		...mapGetters({  
 			facultadesFiltradas: 'filtrarFacultades'
 		})
 	},
