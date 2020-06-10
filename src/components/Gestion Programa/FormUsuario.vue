@@ -102,12 +102,8 @@
      <!-- <li         v-for="(newTT,ttIndex) in tipostutorias" :key="ttIndex" >
       {{newTT.id_tipo_tutoria}}  {{newTT.nombre}}
      </li> -->
-
-     <!-- <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-        Loading... <b-spinner style="margin-left:15px"/>
-      </div>
-    </b-modal> -->
+      <!-- Modal de cargando -->
+  
      
     </div>
     
@@ -153,8 +149,7 @@ export default {
   },
 
   mounted(){
-    // this.showModal();
-    // this.hideModal();
+    
     if(this.$store.state.usuario==null) this.$router.push('/login');
     //  console.log('usuario entrante?: ',this.usuario_entrante);
     
@@ -398,7 +393,7 @@ export default {
                   console.log('params2 ',params2.id_tipo_usuario_Nuevo);
                   //Si es tutor actualizo el tt
               if(this.tiposUsuariosselect==4){
-                   this.actualizarTT();
+                   this.actualizarTT(this.id_usuario_entrante);
               }
               else{
 
@@ -570,9 +565,9 @@ export default {
          
         },
   
-    actualizarTT(){
+    actualizarTT(i){
       //Si es tutor
-      var i=this.id_usuario_entrante;
+      // var i=this.id_usuario_entrante;
       // if (this.tiposUsuariosselect==4 && this.listTTId.length!=0){
         if (this.tiposUsuariosselect==4){  ///Tipo de usuario de tutor
         //Si escogió por lo menos 1 tipo de tutoria
@@ -606,6 +601,7 @@ export default {
         }
         else if(i==0){
           //como es nuevo capturo la respuesta del id de usuario
+              this.id_usuario_entrante=
               Axios.post('/usuarios/updateTipoTutoria/'+ this.id_usuario_entrante,paramsTT)
                .then(response=>{
                     console.log('tipo de tutoria insertado con usuario nuevo',response.data);  
@@ -621,13 +617,7 @@ export default {
         
     },
     //Modal de cargando
-    showModal() {
-      this.$refs['my-modal'].show();
-    },
-    hideModal() {
-      this.$refs['my-modal'].hide();
-    },
-    
+  
 
     
   }
