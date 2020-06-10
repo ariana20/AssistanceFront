@@ -6,8 +6,14 @@
 				<nobr>ssistance</nobr>				
 			</figure>
 			<figure v-else class="image-logo" @click="toggleNav">
-				<img v-bind:src="logo" height="40px" width="40px" />		
-				<nobre>{{siglas}}</nobre>				
+				<img v-bind:src="logo" height="40px" width="40px" style="margin-top:-10px" />		
+				<nobr style="
+				color: rgb(0, 0, 0);
+				font-size: 30px;
+				margin-left:10px;
+				line-height: 55px;">
+					{{siglas}}
+				</nobr>				
 			</figure>
 			<li
 				v-for="(link,index) in navLinks"	
@@ -98,14 +104,6 @@ nav {
 				color: #000;
 				font-size: 20px;
 				//margin-left:10px;
-			}
-			
-			nobre {
-				top:20px;
-				color: #000;
-				font-size: 30px;
-				margin-left:10px;
-				line-height: 50px;
 			}
 		}
 		a{
