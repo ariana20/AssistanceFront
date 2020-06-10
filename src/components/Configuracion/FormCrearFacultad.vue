@@ -73,12 +73,6 @@
         </b-container>
         <br>
 
-        <!--<div class="top-titulo" style="">
-          <h4 class="font-weight-bolder " style="margin-bottom:40px">Programas de la Facultad</h4>
-          <button type="submit" class="btn btn-info" style="margin-right:-510px; height:38px" v-on:click="agregarPrograma()">Añadir Programa</button>            
-          <router-link to="/facultad"><button type="button" class="btn btn-secondary" style="margin-left:0px">Cancelar</button></router-link>
-        </div>-->
-
         <b-container fluid>
         <b-row>
             
@@ -93,8 +87,8 @@
             <label>Código del Programa:</label>
             </b-col>
             <b-col sm="9">
-            <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="programa.codigo"></b-form-input>
-            <b-form-input v-else readonly id="nombre" v-model="programa.codigo"></b-form-input>
+            <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="codVerifP"></b-form-input>
+            <b-form-input v-else readonly id="nombre" v-model="codVerifP"></b-form-input>
             </b-col>
 
         </b-row>
@@ -103,8 +97,8 @@
             <label>Nombre del Programa:</label>
             </b-col>
             <b-col sm="9">
-            <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="programa.nombre"></b-form-input>
-            <b-form-input v-else readonly id="nombre" v-model="programa.nombre"></b-form-input>
+            <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="nombreVerifP"></b-form-input>
+            <b-form-input v-else readonly id="nombre" v-model="nombreVerifP"></b-form-input>
             </b-col>
 
         </b-row>
@@ -205,7 +199,7 @@ export default {
       //////
       programa:{
           index:0,
-          id_programa:null,
+          id_programa:0,
           id_facultad:null,
           nombre:null,
           codigo:null,
@@ -218,11 +212,13 @@ export default {
       coordinadorSeleccionado:null,
       tipoCoord:"",
 
+      //verificar Codigo y nombre de Facultad
       codVerifF: "",
       existeCodF:false,
       nombreVerifF: "",
       existeNomF:false,
 
+      //verificar Codigo y nombre de Programa
       codVerifP: "",
       existeCodP:false,
       nombreVerifP: "",
@@ -298,7 +294,7 @@ export default {
     },
     getExisteCodP: function(){
       axios.create()
-        .post('/programa/verificarCod',this.codVerifP)
+        .post('/programa/verificarCod/'+this.programa.id_programa,this.codVerifP)
           .then( response=>{
             this.existeCodP = response.data.success;
             console.log(this.existeCodP)
@@ -311,10 +307,10 @@ export default {
 
     getExisteNomP: function(){
       axios.create()
-        .post('/programa/verificarNom',this.nombreVerifP)
+        .post('/programa/verificarNom/'+this.programa.id_programa,this.nombreVerifP)
           .then( response=>{
             this.existeNomP = response.data.success;
-            console.log(this.existeNomF)
+            console.log(this.existeNomP)
             console.log(response)
           })
         .catch(e => {
@@ -401,9 +397,7 @@ export default {
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
         }) 
-      }
-      else{
-        
+      }else{
 
         if(this.$store.state.facultadEscogida){
           //modifico la facultad, debo considerar progactualizar, progeliminar, progagregar
@@ -524,52 +518,95 @@ export default {
 
     },
     guardarPrograma(){
+      this.programa.codigo=this.codVerifP;
+      this.programa.nombre=this.nombreVerifP;
+      var  expresion2=/\w+@\w+\.+edu.pe/;
+      var  expresion1=/\w+@\w+\.+pe/;
 
-      console.log(this.programa);
-      var prog= new Object();
-      prog.id_facultad=this.facultad.id_facultad;
-      prog.id_programa=this.programa.id_programa;
-      prog.codigo=this.programa.codigo;
-      prog.usuario_actualizacion=this.programa.usuario_actualizacion,
-      prog.usuario_creacion=this.programa.usuario_creacion,
-      prog.nombre=this.programa.nombre;
-      prog.correo=this.programa.correo;
-      prog.coordinador=this.programa.coordinador;
+      if(this.programa.nombre ==null || this.programa.codigo ==null || this.programa.correo==null){
+         Swal.fire({
+              text:"No ha completado todos los campos obligatorios de un programa",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        }) 
+      }else if(this.existeCodP==true){
+         Swal.fire({
+              text:"El código de programa "+ this.codVerifP+" ya existe",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        }) 
+      }else if(this.existeNomP==true){
+         Swal.fire({
+              text:"El nombre de programa "+ this.nombreVerifP+" ya existe",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        }) 
 
-      if(this.idFacultad){
-        //si estoy modificando una facultad ya existente
-        if(this.nuevoProg==1){
-          this.progagregar.push(prog);
-          this.programas.push(prog);
-          
-        }else if(this.editProg==1){
-          this.progactualizar.push(prog);
-          this.programas[this.programa.index]=prog;
-        }
+      }else if( !expresion2.test(this.programa.correo) &&  !expresion1.test(this.programa.correo)){ //Verificación de correo
+          Swal.fire({
+      
+              text:"No ha escrito una dirección de correo válida. Todos los correos deben contener ser dominio @pucp.edu.pe o @pucp.pe",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+        }) 
       }else{
-        //modifico los programas mientras creo la facultad
-        if(this.nuevoProg==1){
-          this.programas.push(prog);
-        }else if(this.editProg==1){
-          this.programas[this.programa.index]=prog;
+        console.log(this.programa);
+        var prog= new Object();
+        prog.id_facultad=this.facultad.id_facultad;
+        prog.id_programa=this.programa.id_programa;
+        prog.codigo=this.programa.codigo;
+        prog.usuario_actualizacion=this.programa.usuario_actualizacion,
+        prog.usuario_creacion=this.programa.usuario_creacion,
+        prog.nombre=this.programa.nombre;
+        prog.correo=this.programa.correo;
+        prog.coordinador=this.programa.coordinador;
+
+        if(this.idFacultad){
+          //si estoy modificando una facultad ya existente
+          if(this.nuevoProg==1){
+            this.progagregar.push(prog);
+            this.programas.push(prog);
+            
+          }else if(this.editProg==1){
+            this.progactualizar.push(prog);
+            this.programas[this.programa.index]=prog;
+          }
+        }else{
+          //modifico los programas mientras creo la facultad
+          if(this.nuevoProg==1){
+            this.programas.push(prog);
+          }else if(this.editProg==1){
+            this.programas[this.programa.index]=prog;
+          }
         }
+
+        this.programa.id_programa=0;
+        this.programa.id_facultad=null;
+        this.programa.nombre=null;
+        this.programa.descripcion=null;
+        this.programa.correo=null;
+        this.programa.codigo=null;
+        this.programa.coordinador=null;
+        this.nombreVerifP="";
+        this.codVerifP="";
+        this.nuevoProg=0;
+        this.editProg=0;
+        console.log(this.programas);
       }
-
-
-
-      this.programa.id_programa=null;
-      this.programa.id_facultad=null;
-      this.programa.nombre=null;
-      this.programa.descripcion=null;
-      this.programa.correo=null;
-      this.programa.codigo=null;
-      this.programa.coordinador=null;
-      this.nuevoProg=0;
-      this.editProg=0;
-      console.log(this.programas);
     },
     agregarPrograma(){
       this.nuevoProg=1;
+      
+
+
     },
     onChildClickProg (value) {
       this.programa.coordinador=value;
@@ -604,7 +641,11 @@ export default {
       this.programa.index=index;
       this.programa.nombre=item.nombre;
       this.programa.correo=item.correo;
-      
+      this.programa.codigo=item.codigo;
+
+      this.nombreVerifP=this.programa.nombre;
+      this.codVerifP=this.programa.codigo;
+
       if(item.coordinador!=null){
         this.programa.coordinador=item.coordinador;
         this.programa.coordinador.nombCompleto=item.coordinador.nombre+" "+item.coordinador.apellidos;  
@@ -612,7 +653,7 @@ export default {
       
       this.programa.id_facultad=item.id_facultad;
       this.programa.id_programa=item.id_programa;
-      this.programa.codigo=item.codigo;
+      
 
 
       
