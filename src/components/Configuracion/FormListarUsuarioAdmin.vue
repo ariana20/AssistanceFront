@@ -22,8 +22,8 @@
       <table class="table" >
         <thead>
           <tr>
-            <th scope="col">Codigo</th>
-            <th scope="col">Nombre</th>
+            <th scope="col" style="width:120px">Codigo</th>
+            <th scope="col" style="width:200px">Nombre</th>
             <th scope="col">Correo</th>
             <th scope="col">Programa (Tipo de Usuario)</th>
             <!-- <th scope="col">Modif/Elim</th> -->
@@ -40,6 +40,9 @@
                 <span v-if="item.programa">{{item.programa.nombre}}</span>
                 <span v-else> Sin Asignar </span>
                 <span style="margin-left:5px"> ({{item.tipo_usuario.nombre}})</span>
+              </div>  
+              <div v-if="item.usuario_x_programas.length == 0" >
+                <span> Sin Asignar </span>
               </div>  
             </td>
             <!-- <td style="text-align: center">

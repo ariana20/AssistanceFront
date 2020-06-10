@@ -50,7 +50,7 @@ export default new Vuex.Store({
 		icon: 'ion-ios-book'
       },
        {
-        text: 'Usuario',
+        text: 'Usuarios',
 		path: '/ListaUsuarios',
 		icon: 'ion-ios-people'
       },
