@@ -32,9 +32,9 @@
 
       <div id="derecho" class="col-md-4">
        <tr style="text-align:left"><td style="width:150px;">Tipos de usuarios:*</td>   
-          <select v-model="tiposUsuariosselect" class="form-control" >
+          <select v-model="tiposUsuariosselect" class="form-control" @click="listarTT()" >
             <option value="no" hidden selected >Selecciona un tipo de usuario</option>
-            <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index">
+            <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index" >
              {{ tipoU.nombre}}
              </option>
           </select>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="col-sm-6 " v-if="this.tiposUsuariosselect === 5" style="margin-left:-40px;">Condición del alumno:* </div>
                     <select v-if="this.tiposUsuariosselect === 5" class="col-sm-6 form-control"  style="margin-right:20px;margin-left:-10px;top:5px;"
-                     v-model="tipostutoriasselect">
+                     v-model="tipostutoriasselect">  <!--cambiar esto-->
                         <option selected disabled value="no">Selecciona una condición</option>
                         <option v-for="(condi, i) in condiAlumnos"  :key="i"   >
                         {{ condi.nombre }} 
@@ -89,12 +89,12 @@
         <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>  
       
      </div>
-    <div>
+    <!-- <div> -->
        <!-- para mostrar la lista de tt que escoge  -->
       <!-- <li         v-for="(newTT,ttIndex) in listTTId" :key="ttIndex" >
       {{newTT}}
-     </li> -->
-     </div>
+     </li>
+     </div> -->
      <div style="position:fixed;margin-top:120px;bottom:25px">
       * Campos obligatorios   
      </div >
@@ -102,8 +102,15 @@
      <!-- <li         v-for="(newTT,ttIndex) in tipostutorias" :key="ttIndex" >
       {{newTT.id_tipo_tutoria}}  {{newTT.nombre}}
      </li> -->
+
+     <!-- <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
+        Loading... <b-spinner style="margin-left:15px"/>
+      </div>
+    </b-modal> -->
      
     </div>
+    
  
  
 </template>
@@ -127,31 +134,45 @@ export default {
       telefono:"",
       tiposUsuarios:"",
       estado:"act",
-      id_usuario_entrante:parseInt((this.$route.path).substring(9,11),10),
+      id_usuario_entrante:"",
+      //id_usuario_entrante:this.$store.state.usuarioEscogido.id_usuario,
       tiposUsuariosselect:"no",
       tipostutorias:"",
       tipostutoriasselect:"no",
        miprog:this.$store.state.programaActual,
-      usuario_entrante:this.$store.state.usuarioEscogido,
+      //usuario_entrante:this.$store.state.usuarioEscogido,
+      usuario_entrante:null,
       listTT:[],
       newTT:null,
       listTTId:[],
       listTTnoID:[],
       listTTBorrados:[],
       condiAlumnos:[],
+      banderaTT:false,
     }
   },
 
   mounted(){
+    // this.showModal();
+    // this.hideModal();
     if(this.$store.state.usuario==null) this.$router.push('/login');
-     console.log('usuario entrante?: ',this.usuario_entrante);
-    this.listarTUsuarios();
-    this.listarTT();
-    if(this.id_usuario_entrante!=0){
+    //  console.log('usuario entrante?: ',this.usuario_entrante);
+    
+    this.listarTUsuarios();    
+    console.log("numero del path",parseInt((this.$route.path).substring(9,11),10));
+    if(parseInt((this.$route.path).substring(9,11),10) ==0){
+      this.id_usuario_entrante=0;
+      //no hay usuario entrante
+    }
+    else if (parseInt((this.$route.path).substring(9,11),10) !=0) {
+      this.listarTT();
+      this.id_usuario_entrante=this.$store.state.usuarioEscogido.id_usuario;
+      this.usuario_entrante=this.$store.state.usuarioEscogido;
       console.log('Id usuario entrante: ');      
       console.log(this.id_usuario_entrante);
       this.tiposUsuariosselect=this.usuario_entrante.pivot.id_tipo_usuario;
-     Axios.create()
+      
+      Axios.create()
        .post('/usuarios/listar/'+this.id_usuario_entrante).then( response =>{
          document.getElementById("corr").disabled = true;
           // document.getElementById("cod").disabled = true;
@@ -165,17 +186,21 @@ export default {
          }).catch(e => {
                  console.log(e.response);
                  Swal.fire({
-                    text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+                    text:"Estamos teniendo problemas al obtener los datos del usuario que desea modificar. Vuelve a intentar en unos minutos.",
                     icon:"warning",
                     confirmButtonText: 'Sí',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   }); 
                   this.$store.state.usuarios=null;
-                   this.$router.push('/ListaUsuarios');          
+                   //this.$router.push('/ListaUsuarios');          
                 } );
 
     }
+    //Primero verifico que el usuario pertenece a mi programa
+    //Si el tipo de usuario es tutor, cargo sus tipos de tutoras
+    
+    
   },
   methods:{
     
@@ -226,7 +251,7 @@ export default {
           })  
       }
       //Si escogió el tipo de usuario tutor
-      else if( this.tiposUsuariosselect==4 && ( this.tipostutoriasselect=="no" || this.listTTId.length==0 ) ){
+      else if( this.tiposUsuariosselect==4 && ( this.listTTId.length==0 || this.tipostutoriasselect=="no"   ) ){
          //evito que deje en 0 los tipos de tutoria al que pertenece el tutor
          Swal.fire({
               text:"Falta elegir un tipo de tutoria",
@@ -238,6 +263,7 @@ export default {
       }
       else{//está bien y envío
       
+      
       const params = {
         //Parametros insertar de usuario
            codigo:this.codigo.trim().replace(/\s+/g, ' '), 
@@ -245,7 +271,7 @@ export default {
             apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
             correo:this.correo.trim(),
             telefono:this.telefono,
-            password:"1234",
+            password:"12345",
             estado:this.estado,
             id_programaNuevo:this.miprog.id_programa,
             id_tipo_usuario:this.tiposUsuariosselect,  
@@ -277,25 +303,25 @@ export default {
               }
             
             else{
-            Axios.create()
-            .post('/usuarios/insertar',params)
-            .then( response=>{
-
-              console.log('Usuario insertado',response.data);  
               
+              Axios.create()
+              .post('/usuarios/insertar',params)
+              .then( response=>{
 
-              if(response.data["Error capturado:"]=="El codigo o correo ingresados ya existen"){
-                console.log('Entro al if del error');
-
-                 Swal.fire({
-                    text:"Ha ingresado un correo que ya existe en la institución. Por favor, corriga los datos.",
+                console.log('Usuario insertado: ',response.data);  
+                if(response.data["Error capturado:"]=="El codigo o correo ingresados ya existen"){
+                  console.log('Entro al if del error');
+                  console.log('codigo:', params.codigo);
+                  console.log('correo:', params.correo);
+                   Swal.fire({
+                    text:"Ha ingresado un correo o código que ya existe en la institución. Por favor, corriga los datos.",
                     icon:"warning",
                     confirmButtonText: 'Corregir',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });
-              }
-              else{
+                }
+                else{
                   Swal.fire({
                     text:"Se guardaron los datos con éxito",
                     icon:"success",
@@ -309,7 +335,7 @@ export default {
                   this.actualizarTT(idusuarionuevo);
                   //Enviar un correo
                   let direccion = "localhost:8000/login"
-                emailjs.send(
+                  emailjs.send(
                   "gmail",
                   "template_bV7OIjEW",
                   {
@@ -322,16 +348,17 @@ export default {
                   }, (error) => {
                       console.log('FAILED...', error);
                   });
-
+              this.$store.state.usuarioEscogido=null;//
               this.$store.state.usuarios=null;
-              this.$router.push('/ListaUsuarios'); 
+             
+              //this.$router.push('/ListaUsuarios'); //ahora va a estar en el actualizarTT
               }
 
             }).catch(e => {
               console.log('antes del if',e);
               console.log(e);
                  Swal.fire({
-                    text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+                    text:"Estamos teniendo problemas al crear un nuevo usuario. Vuelve a intentar en unos minutos.",
                     icon:"warning",
                     confirmButtonText: 'Corregir',
                     confirmButtonColor:'#0097A7',
@@ -348,14 +375,18 @@ export default {
 
           }
           else if (this.id_usuario_entrante!=0){
+
             Axios.create()
             .post('/usuarios/modificar/'+this.id_usuario_entrante,params2)
             .then( response=>{
               
               console.log(response); //si hay error de =igual codigo salta excepcion
               console.log('data: ',response.data);
-              console.log('data: ',response.data.substring(0,20));
-              if(response.data.substring(0,20)!='Excepción capturada:'){
+              // console.log('data: ',response.data.substring(0,20)); //Saltará error?
+              //Saltaba error si quiero modificar algo normal y la respuesta era un objeto
+              console.log('data.id: ',response.data.id_usuario!=null);
+              if(response.data.id_usuario!=null){ //Entonces pregunto primero si es un objeto con algún atributo al azar
+                  console.log('entro a data.id pq es true');
                   Swal.fire({
                   text:"Se modificaron los datos con éxito",
                   icon:"success",
@@ -363,12 +394,26 @@ export default {
                   confirmButtonColor:'#0097A7',
                   showConfirmButton: true,
                   }) 
-              //Como se guardaron con éxito ahora agrego el titutoria
-               this.actualizarTT(this.id_usuario_entrante);
-              this.$store.state.usuarios=null;
-              this.$router.push('/ListaUsuarios');
+              //Como se guardaron con éxito ahora agrego el titutoria, solo si tiene demonios
+                  console.log('params2 ',params2.id_tipo_usuario_Nuevo);
+                  //Si es tutor actualizo el tt
+              if(this.tiposUsuariosselect==4){
+                   this.actualizarTT();
               }
               else{
+
+                this.$router.push('/ListaUsuarios');
+              }
+                  this.$store.state.usuarios=null;
+                  this.$store.state.usuarioEscogido=null;//
+               
+                
+              //this.$router.push('/ListaUsuarios'); //ahora va a estar en el actualizarTT
+              }
+              else if(response.data.substring(0,20)=='Excepción capturada:'){ //Luego pregunto si es este tipo de excepcion
+                console.log('no entro a data.id y entro a excepcion');
+                   
+                   
                 Swal.fire({
                     text:"Ha ingresado un código que ya existe. Corrígalo,por favor.",
                     icon:"warning",
@@ -379,16 +424,15 @@ export default {
               }
               
             })  .catch(e => {
-                 console.log(e.response);
+              
+                 console.log('error al modif: ',e.response);
                  Swal.fire({
-                    text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+                    text:"Estamos teniendo problemas al modificar al usuario. Vuelve a intentar en unos minutos.",
                     icon:"warning",
                     confirmButtonText: 'Sí',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   })
-                  // this.$store.state.usuarios=null;
-                  // this.$router.push('/ListaUsuarios');
               });
             
           }
@@ -402,17 +446,17 @@ export default {
       //taambién debería ser por programa
       Axios.create().post('/tipoUsuarios/listarTodo')
         .then(res =>{
-          // Ordenadito
-          // let par=res.data;
-          // this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-          this.tiposUsuarios=res.data;
+           //Ordenadito
+           let par=res.data;
+           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+          // this.tiposUsuarios=res.data;
           //console.log(this.tiposUsuarios);        
           
         })
         .catch(e => {
           console.log(e.response);
           Swal.fire({
-              text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+              text:"Estamos teniendo problemas al listar los tipos de usuarios. Vuelve a intentar en unos minutos.",
               icon:"warning",
               confirmButtonText: 'Sí',
               confirmButtonColor:'#0097A7',
@@ -441,18 +485,64 @@ export default {
             if (result.value) {
               //lo redirigo
               this.$store.state.usuarios=null;
+              this.$store.state.usuarioEscogido=null;//
               this.$router.push('/ListaUsuarios');
             } 
           })
         
     },
     listarTT() {
+      if(this.banderaTT==false){
+        this.banderaTT=true;
+      //listo todos los tipos de tutorias de mi programa
       Axios.post('/TipoTutoria/listarTodo/'+ this.miprog.id_programa)
         .then(response=>{
             this.tipostutorias = response.data; //
             console.log('Tipos de tutorias: ',this.tipostutorias);
+            if(this.id_usuario_entrante!=0){
+            //Despues de llenar los tipos de tutorias veo cuales son del tutor 
+
+              for (var t_usu in this.usuario_entrante.tipo_usuario){ //t_usu es el objeto 
+              //aquí verifico si es tutor del programa en el que estoy
+     
+              if(this.usuario_entrante.tipo_usuario[t_usu].id_tipo_usuario==4 && 
+                  this.usuario_entrante.tipo_usuario[t_usu].pivot.id_programa==this.miprog.id_programa ){
+          //como sí es tutor en mi programa, cargo los tt
+              console.log('Es tutor en mi programa y la i es: ', i);       //  this.listTT[0]=4;    
+              for(var i in this.usuario_entrante.tipo_tutorias){
+               console.log('i: ',i);
+               console.log('For nombre: ',' ',this.usuario_entrante.tipo_tutorias[i].nombre); 
+               console.log('For: id',' ',this.usuario_entrante.tipo_tutorias[i].id_tipo_tutoria); 
+               this.listTT.push(this.usuario_entrante.tipo_tutorias[i].nombre);
+               this.listTTId.push(this.usuario_entrante.tipo_tutorias[i].id_tipo_tutoria);
+               this.listTTBorrados.push(this.usuario_entrante.tipo_tutorias[i]);
+              // this.tipostutorias.splice(i,1);
+               this.tipostutoriasselect=this.usuario_entrante.tipo_tutorias[i].id_tipo_tutoria;
+                console.log('For:selected',' ',this.tipostutoriasselect); 
+                console.log('TT antes del for j :',this.tipostutorias);
+               for(var j in this.tipostutorias){
+                if(this.tipostutorias[j].id_tipo_tutoria==this.tipostutoriasselect){
+                    console.log('For:j',' ',this.tipostutorias[j].id_tipo_tutoria); 
+                    this.tipostutorias.splice(j,1);
+                  break; //Si ya es uno igual,salgo
+                 }
+                }
+
+              }
+             }
+            }
+          }
+
+
+
+
+
+
         })
         .catch(e=>console.log(e));
+
+      }
+
     },
     addMTT: function () {
 
@@ -467,7 +557,7 @@ export default {
             }
             
         },
-        deleteTT: function (index) {
+     deleteTT: function (index) {
   
             var i;
             for(i in this.listTTBorrados)
@@ -480,38 +570,63 @@ export default {
          
         },
   
-    actualizarTT(i){
+    actualizarTT(){
       //Si es tutor
+      var i=this.id_usuario_entrante;
       // if (this.tiposUsuariosselect==4 && this.listTTId.length!=0){
-        if (this.tiposUsuariosselect==4){
+        if (this.tiposUsuariosselect==4){  ///Tipo de usuario de tutor
         //Si escogió por lo menos 1 tipo de tutoria
 
-        const paramsTT={
-        //Para actualizar 
-        tutorias_insertar:this.listTTId,//los id tipos de tutorias que sí escoge
-        tutorias_eliminar:this.tipostutorias,
+      //   const paramsTT={
+      //   //Para actualizar 
+      //   tutorias_insertar:this.listTTId,//los id tipos de tutorias que sí escoge
+      //   tutorias_eliminar:this.tipostutorias,
 
-       }
+      //  }
+     //  Ahora el tito tutoria será así
+        const paramsTT={
+          id_programa:this.miprog.id_programa,
+          tutorias_insertar:this.listTTId,
+        }
+       console.log('I de actualizarTT: ',i);
         if(i!=0){
        //actualizo el tipo de tutoria
         Axios.post('/usuarios/updateTipoTutoria/'+i ,paramsTT)
         .then(response=>{
-           console.log('tipo de tutoria insertado',response.data);  
+             console.log('tutorias_insertar',this.listTTId );
+             console.log('tipo de tutoria insertado para modificar',response.data);  
+             this.$store.state.usuarioEscogido=null;//
+             this.$store.state.usuarios=null;//
+             
+             this.$router.push('/ListaUsuarios');
+
         })
-        .catch(e=>console.log(e));
+        .catch(e=>console.log('catch del updateTT modificando usuario:',e)  
+        );
         }
         else if(i==0){
           //como es nuevo capturo la respuesta del id de usuario
-              Axios.post('/usuarios/updateTipoTutoria/'+ i,paramsTT)
-        .then(response=>{
-           console.log('tipo de tutoria insertado',response.data);  
-        })
-        .catch(e=>console.log(e));
+              Axios.post('/usuarios/updateTipoTutoria/'+ this.id_usuario_entrante,paramsTT)
+               .then(response=>{
+                    console.log('tipo de tutoria insertado con usuario nuevo',response.data);  
+                    this.$store.state.usuarioEscogido=null;//
+                    this.$store.state.usuarios=null;//
+                    
+                    this.$router.push('/ListaUsuarios');
+              })
+             .catch(e=>console.log('catch del updateTT creando usuario:',e));
         }
 
       }
         
-    }
+    },
+    //Modal de cargando
+    showModal() {
+      this.$refs['my-modal'].show();
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide();
+    },
     
 
     
