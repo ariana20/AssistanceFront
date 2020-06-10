@@ -12,10 +12,10 @@
 			<table responsive class="table" style="text-align: left">
 				<thead>
 					<tr>
-						<th scope="col">Código</th>
-						<th scope="col">Nombre</th>
-						<th scope="col">Coordinador</th>
-						<th scope="col">Correo</th>
+						<th scope="col" style="width:100px">Código</th>
+						<th scope="col" style="width:200px">Nombre</th>
+						<th scope="col" style="width:200px">Coordinador</th>
+						<th scope="col" style="width:250px">Correo</th>
 						<th scope="col" style="text-align: center">N° Programas</th>
 						<th scope="col" style="text-align: center">Acciones</th>
 					</tr>
@@ -39,18 +39,18 @@
 			<nav aria-label="Page navigation example">
 				<ul class="pagination justify-content-center">
 					<li class="page-item" v-if="paginate.current_page > 1">
-						<a class="page-link" href="#" tabindex="-1" @click.prevent="changePage(paginate.current_page - 1)">
+						<a class="page-link" href="#" tabindex="-1" @click.prevent="changePage(paginate.current_page - 1)" style="color:rgb(0, 152, 146)">
 							<span>Anterior</span>
 						</a>
 					</li>
 					<li class="page-item" v-for="page in pagesNumber" :key="page">
-							<a class="page-link" href="#" @click.prevent="changePage(page)">
+							<a class="page-link" href="#" @click.prevent="changePage(page)" style="color:rgb(0, 152, 146)">
 								<span class="sr-only">(current_page)</span>
 								{{ page }}
 						</a>
 					</li>
 					<li class="page-item" v-if="paginate.current_page < paginate.last_page">
-						<a class="page-link" href="#" @click.prevent="changePage(paginate.current_page + 1)">
+						<a class="page-link" href="#" @click.prevent="changePage(paginate.current_page + 1)" style="color:rgb(0, 152, 146)">
 							<span>Siguiente</span>
 						</a>
 					</li>

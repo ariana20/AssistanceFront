@@ -1,9 +1,9 @@
 <template>
   <div class="FormRoles container" style="margin-top:20px">
-         <!-- <div> <router-link to="agregarNotas"> 
+          <div> <router-link to="agregarNotas"> 
                   <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Notas</button>
         </router-link>
-        </div>  -->
+        </div>  
 
         
         <div class="row top-titulo">

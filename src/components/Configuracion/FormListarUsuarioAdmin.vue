@@ -51,20 +51,30 @@
           </tr>
         </tbody>
       </table>
-      <div class="row" style="text-align:center">
-        <button v-if="usuarios.current_page!=1" v-on:click="Page(usuarios.current_page-1)"> <b-icon icon="arrow-left-circle"/> </button>
-        <button v-else disabled> <b-icon icon="arrow-left-circle"/> </button>
-        <div v-for="n in usuarios.last_page" :key="n" >
-            <button v-if="n != usuarios.current_page" v-on:click="Page(n)">
-              {{n}}
-            </button>
-            <button v-else disabled>
-              {{n}}
-            </button>
-        </div>
-        <button v-if="usuarios.current_page!=usuarios.last_page" v-on:click="Page(usuarios.current_page+1)"> <b-icon icon="arrow-right-circle"/> </button>
-        <button v-else disabled> <b-icon icon="arrow-right-circle"/> </button>
-      </div>
+      <nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+					<li class="page-item" v-if="usuarios.current_page > 1">
+						<a class="page-link" href="#" tabindex="-1" @click.prevent="Page(usuarios.current_page - 1)" style="color:rgb(0, 152, 146)">
+							<span>Anterior</span>
+						</a>
+					</li>
+					<li class="page-item" v-for="page in usuarios.last_page" :key="page">
+						<a  v-if="page != usuarios.current_page" class="page-link" href="#" @click.prevent="Page(page)" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ page }}
+						</a>
+						<a v-else class="page-link" href="#" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ page }}
+						</a>
+					</li>
+					<li class="page-item" v-if="usuarios.current_page < usuarios.last_page">
+						<a class="page-link" href="#" @click.prevent="Page(usuarios.current_page + 1)" style="color:rgb(0, 152, 146)">
+							<span>Siguiente</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
     </div>
   </div>
 </template>
