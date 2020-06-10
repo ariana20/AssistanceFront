@@ -49,8 +49,8 @@ export default new Vuex.Store({
 		path: '/ListaTiposTutorias',
 		icon: 'ion-ios-book'
       },
-       {
-        text: 'Usuario',
+      {
+        text: 'Usuarios',
 		path: '/ListaUsuarios',
 		icon: 'ion-ios-people'
       },
@@ -82,7 +82,7 @@ export default new Vuex.Store({
     {
     text: 'Agregar Notas',
     path: '/agregarNotas',
-    icon: 'ion-android-document'
+    icon: 'ion-ios-document'
     },
     {
       text: 'Tutores',
