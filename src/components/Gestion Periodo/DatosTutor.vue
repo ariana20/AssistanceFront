@@ -2,22 +2,29 @@
     <div style="text-align:left;">
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
-        <figure id="floated" class="image-logo">
-				<img :src="require('@/assets/images/logo.png')" height="110px" width="110px" />		
+        <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo">
+				<img  :src="tutor.imagen" height="110px" width="110px" />		
+		</figure>
+        <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo">	
+                <b-avatar size="7rem" ></b-avatar>		
 		</figure>
         <div class="descripcion-tutor">
-            <div>NOMBRE TUTOR</div>
-            <div>Código: </div>
-            <div>Temas: </div>
-            <div id="botones">
+            <div>{{tutor.nombre + " " + tutor.apellidos}}</div>
+            <div>Código: {{tutor.codigo}}</div>
+            <div>Temas: 
+                <label v-for="(item,index) in tipoTutoria" :key="index">
+                    {{item.nombre}}<label v-if="index<tipoTutoria.length-1" style="margin-right:5px">, </label>
+                </label>
+            </div>
+            <div style="text-align: right" id="botones" >
                 <!--button type="button"
                 class="btn btn-info">Ver disponibilidad</button>
                 <button type="button"
                 class="btn btn-info">Ver Perfil</button> 
                 <button type="button"
                 class="btn btn-info btn-enviar-msg">Enviar Mensaje</button-->
-                <button type="button" style="text-align: right"
-                class="btn btn-info btn-enviar-msg">Enviar Mensaje</button> 
+                <button type="button" style="align: right"
+                class="btn btn-info" v-on:click="solicitarTutor()">Solicitar Tutor</button> 
             </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
@@ -26,13 +33,67 @@
 </template>
 
 <script>
-
+import Swal from 'sweetalert2'
+import axios from 'axios'
 export default {
     props: {
         text: String,
-        event: Object
-    }   
+        tutor: Object,
+        tipoTutoria: Array,
+        
+    },
+    data(){
+        return{
+            iniciales: this.tutor.nombre[0]+this.tutor.apellidos[0],
+        }
+    },
+    methods:{
+        solicitarTutor(){
+            /*
+        Swal.fire({
+              text:"¿Está seguro que desea cancelar?",
+              icon:"warning",
+              confirmButtonText: 'Sí',
+              confirmButtonColor:'#0097A7',
+              cancelButtonText: 'No',
+              cancelButtonColor:'C4C4C4',
+              showCancelButton: true,
+              showConfirmButton: true,
+        }).then((result) => {
+            if (result.value) {
+              //lo redirigo
+              this.$store.state.usuarios=null;
+              this.$router.push('/ListaUsuarios');
+            } 
+          })*/
+
+            const params={
+                idTutor: this.tutor.id_usuario,
+                idAlumno: this.$store.state.usuario.id_usuario
+            }
+            axios.create()
+            .post('/programa/solitarTutor', params)
+            .then( response=>{
+
+                Swal.fire({
+                  text:"Resgistro Exitoso",
+                  icon:"success",
+                  confirmButtonText: 'OK',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+                })
+
+                console.log(this.existeCodF)
+                console.log(response)
+            })
+            .catch(e => {
+            console.log(e.response);
+            })
+        }
+
+    }
 }
+
 </script>
 
 <style scoped>

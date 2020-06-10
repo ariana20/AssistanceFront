@@ -4,7 +4,9 @@
 
 
       <div v-for="(item,index) in tutores" :key="index">
-        <datosTutor/>
+        <datosTutor
+        :tutor="item.tutor"
+        :tipoTutoria="item.tipoTutoria" />
       </div>
 
     </div>
