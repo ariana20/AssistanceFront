@@ -27,7 +27,7 @@ Vue.use(IconsPlugin)
 Vue.config.productionTip = false
 
 axios.defaults.baseURL = 'http://18.232.253.212/Back-end-Software/public/api';
-//axios.defaults.baseURL = 'http://localhost:8000/api';
+//axios.defaults.baseURL = 'http://127.0.0.1:8001/api';
 axios.defaults.withCredentials = false;
 
 new Vue({

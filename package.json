@@ -27,6 +27,7 @@
     "vue-cookies": "^1.7.0",
     "vue-hellojs": "0.0.4",
     "vue-ionicons": "^3.0.4",
+    "vue-paginate": "^3.6.0",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.2.0",
     "vue2-datepicker": "^3.5.0",
