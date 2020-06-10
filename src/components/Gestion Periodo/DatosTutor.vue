@@ -50,26 +50,28 @@ export default {
     methods:{
         solicitarTutor(){
             /*
-        Swal.fire({
-              text:"¿Está seguro que desea cancelar?",
-              icon:"warning",
-              confirmButtonText: 'Sí',
-              confirmButtonColor:'#0097A7',
-              cancelButtonText: 'No',
-              cancelButtonColor:'C4C4C4',
-              showCancelButton: true,
-              showConfirmButton: true,
-        }).then((result) => {
-            if (result.value) {
-              //lo redirigo
-              this.$store.state.usuarios=null;
-              this.$router.push('/ListaUsuarios');
-            } 
-          })*/
+            Swal.fire({
+                text:"¿Está seguro que desea cancelar?",
+                icon:"warning",
+                confirmButtonText: 'Sí',
+                confirmButtonColor:'#0097A7',
+                cancelButtonText: 'No',
+                cancelButtonColor:'C4C4C4',
+                showCancelButton: true,
+                showConfirmButton: true,
+            }).then((result) => {
+                if (result.value) {
+                //lo redirigo
+                this.$store.state.usuarios=null;
+                this.$router.push('/ListaUsuarios');
+                } 
+            })*/
 
             const params={
-                idTutor: this.tutor.id_usuario,
-                idAlumno: this.$store.state.usuario.id_usuario
+                id_tutor: this.tutor.id_usuario,
+                id_solicitante: this.$store.state.usuario.id_usuario,
+                id_programa: this.$store.state.programaActual.id_programa, 
+                motivo: ""
             }
             axios.create()
             .post('/programa/solitarTutor', params)
