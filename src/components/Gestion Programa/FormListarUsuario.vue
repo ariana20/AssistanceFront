@@ -21,7 +21,7 @@
       <table responsive class="table" style="text-align:left" >
         <thead>
           <tr>
-            <th scope="col" style="width:120px">Código</th>
+            <th scope="col" style="width:100px">Código</th>
             <th scope="col" style="width:200px">Nombre</th>
             <th scope="col">Correo</th>
             <th scope="col">Estado</th>
@@ -70,7 +70,7 @@
 					</li>
 				</ul>
 			</nav>
-  </div>  
+  </div>
 </template>
 
 <script>
