@@ -189,7 +189,6 @@ export default new Vuex.Store({
       }
       return state.coordinadoresL;
     },
-<<<<<<< HEAD
     filtrarUsuariosCod(state){
       if(state.filtro.query.length > 0){
         let usuarios = state.usuarios.filter(usu => usu.codigo.toLowerCase().includes(state.filtro.query.toLowerCase()))
@@ -216,9 +215,7 @@ export default new Vuex.Store({
 
     },
 
-=======
     EVENTS: state => state.events
->>>>>>> origin/emmaraq
 
   }
 })
