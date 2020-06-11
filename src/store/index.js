@@ -23,6 +23,7 @@ export default new Vuex.Store({
     usuariosA:null,
     rutas:[],
     usuarioEscogido:null,
+    events: [],
     navLinks: [
       {
         text: 'Institucion',
@@ -89,6 +90,16 @@ export default new Vuex.Store({
       path: '/tutoresDisponibles',
       icon: 'ion-ios-book'
     },
+    {
+      text: 'Gestionar Usuarios Admin',
+      path: '/AListaUsuarios',
+      icon: 'ion-ios-people'
+    },
+    {
+      text: 'Citas',
+      path: '/agendarcita',
+      icon: 'ion-ios-calendar'
+    }
     ],
     filtro:{
       query: '',
@@ -98,6 +109,15 @@ export default new Vuex.Store({
     SET_QUERY (state,query){
       state.filtro.query = query;
     },
+    ADD_EVENT: (state, event) => {
+      state.events.push(event)
+    },
+    UPDATE_EVENT: (state,{id,title,start,end}) => {
+      let index = state.events.findIndex(_event => _event.id == id)
+      state.events[index].title = title;
+      state.events[index].start = start;
+      state.events[index].end = end;      
+    }
   },
   actions: {
   },
@@ -169,6 +189,7 @@ export default new Vuex.Store({
       }
       return state.coordinadoresL;
     },
+<<<<<<< HEAD
     filtrarUsuariosCod(state){
       if(state.filtro.query.length > 0){
         let usuarios = state.usuarios.filter(usu => usu.codigo.toLowerCase().includes(state.filtro.query.toLowerCase()))
@@ -195,6 +216,9 @@ export default new Vuex.Store({
 
     },
 
+=======
+    EVENTS: state => state.events
+>>>>>>> origin/emmaraq
 
   }
 })
