@@ -178,14 +178,14 @@ export default {
                         })
                 }
                 else if(item.tipo_solicitud == 'Tutor'){
-                  mensaje = "Se te asignó "+item.usuario_relacionado+" como tutor en el programa "+this.$store.state.programaActual.nombreñ
+                  mensaje = "Se te asignó "+item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos+" como tutor en el programa "+this.$store.state.programaActual.nombre
                   let obj ={
                     id_alumno:item.id_solicitante, 
-                    id_tutor:item.usuario_relacionado,
+                    id_tutor:item.usuarioRelacionado.id_usuario,
                     id_programa:this.$store.state.programaActual.id_programa,
-                    usuario_actualizacion: this.$store.state.usuario.id_usuario,
+                    usuario_creacion: this.$store.state.usuario.id_usuario,
                   }
-                  this.axios.post('/usuarios/nuevoTutor/'+item.usuarioSolicitante.id_usuario,obj)
+                  this.axios.post('/registros/insertar',obj)
                       .then(response=>{
                           response
                           emailjs.send(
@@ -251,6 +251,7 @@ export default {
                 this.$store.state.solicitudes.splice(index,1);
                 let mensaje;
                 if(item.tipo_solicitud == 'Programa') mensaje = "Se rechazó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
+                if(item.tipo_solicitud == 'Tutor') mensaje = "Se rechazó tu solicitud para asignacion de Tutor en el programa de "+this.$store.state.programaActual.nombre
                 console.log(mensaje)
                 emailjs.send(
                   "gmail",
