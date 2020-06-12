@@ -9,9 +9,10 @@
                 <b-avatar size="7rem" ></b-avatar>		
 		</figure>
         <div class="descripcion-tutor">
-            <div>{{tutor.nombre + " " + tutor.apellidos}}</div>
-            <div>Código: {{tutor.codigo}}</div>
-            <div>Temas: 
+            <div class="font-weight-bolder">{{tutor.nombre + " " + tutor.apellidos}}</div>
+            <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
+            <div class="font-weight-bolder">Temas: </div>
+            <div>
                 <label v-for="(item,index) in tipoTutoria" :key="index">
                     {{item.nombre}}<label v-if="index<tipoTutoria.length-1" style="margin-right:5px">, </label>
                 </label>
