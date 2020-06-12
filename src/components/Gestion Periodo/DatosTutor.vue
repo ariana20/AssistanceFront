@@ -44,52 +44,75 @@ export default {
     },
     data(){
         return{
-            iniciales: this.tutor.nombre[0]+this.tutor.apellidos[0],
+            habilitado:"",
+            mensaje:""
         }
     },
     methods:{
         solicitarTutor(){
-            
-            Swal.fire({
-                text:"¿Está seguro que desea cancelar?",
-                icon:"warning",
-                confirmButtonText: 'Sí',
-                confirmButtonColor:'#0097A7',
-                cancelButtonText: 'No',
-                cancelButtonColor:'C4C4C4',
-                showCancelButton: true,
-                showConfirmButton: true,
-            }).then((result) => {
-                if (result.value) {
-
-
-                } 
-            })
-
-            const params={
-                id_tutor: this.tutor.id_usuario,
-                id_solicitante: this.$store.state.usuario.id_usuario,
+            const params2={
+                id_usuario: this.$store.state.usuario.id_usuario,
                 id_programa: this.$store.state.programaActual.id_programa, 
-                motivo: ""
+                tipo_solicitud: "Tutor"
             }
             axios.create()
-            .post('/solicitudes/solicitudTutor', params)
+            .post('/solicitudes/habilitado', params2)
             .then( response=>{
+                this.habilitado=response.data.habilitado;
+                this.mensaje=response.data.mensaje;
+                if(this.habilitado=="Si"){
+                    Swal.fire({
+                        text:"¿Está seguro que desea solicitar a "+this.tutor.nombre+"?",
+                        icon:"warning",
+                        confirmButtonText: 'Sí',
+                        confirmButtonColor:'#0097A7',
+                        cancelButtonText: 'No',
+                        cancelButtonColor:'C4C4C4',
+                        showCancelButton: true,
+                        showConfirmButton: true,
+                    }).then((result) => {
+                        if (result.value) {
+                            const params={
+                                id_tutor: this.tutor.id_usuario,
+                                id_solicitante: this.$store.state.usuario.id_usuario,
+                                id_programa: this.$store.state.programaActual.id_programa, 
+                                motivo: ""
+                            }
+                            axios.create()
+                            .post('/solicitudes/solicitudTutor', params)
+                            .then( response=>{
 
-                Swal.fire({
-                  text:"Registro Exitoso",
-                  icon:"success",
-                  confirmButtonText: 'OK',
-                  confirmButtonColor:'#0097A7',
-                  showConfirmButton: true,
-                })
+                                Swal.fire({
+                                text:"Registro Exitoso",
+                                icon:"success",
+                                confirmButtonText: 'OK',
+                                confirmButtonColor:'#0097A7',
+                                showConfirmButton: true,
+                                })
+                                console.log(response)
+                            })
+                            .catch(e => {
+                                console.log(e.response);
+                            })
+
+                        } 
+                    })
+                }else if(this.habilitado=="No"){
+                    Swal.fire({
+                        text:this.mensaje,
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    }) 
+                }
                 console.log(response)
             })
             .catch(e => {
-            console.log(e.response);
+                console.log(e.response);
             })
-        }
 
+        }
     }
 }
 

@@ -40,7 +40,6 @@ export default {
   methods:{
 
     listarTutores() {
-     
       const params = {
         id : this.$store.state.programaActual.id_programa
       };
@@ -53,8 +52,15 @@ export default {
         .catch(e => {
           console.log(e.response);
         })
-
     },
+    /*
+    window.onscroll = () => {
+      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+
+      if (bottomOfWindow) {
+        // Do something, anything!
+      }
+    };*/
     
   }
 }
