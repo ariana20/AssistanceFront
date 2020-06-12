@@ -64,8 +64,8 @@
                 </div>
               </fieldset>
               <div class="forms_buttons">
-                <input type="submit" value="Registrarse" class="forms_buttons-action" style="height:4.366vw">
-                <button type="button" v-on:click="registrate('google')" class="btn btn-google" style="margin-top:0px;margin-bottom:0px;padding-top:3%;padding-bottom:3%;font-size:1vw;font-family:'Brandon Bold';margin-left:10%;width:40%">Registrarse con Google</button>
+                <input type="submit" value="Registrarse" class="btn-reg forms_buttons-action">
+                <button type="button" v-on:click="registrate('google')" class="btn btn-google2" style="margin-top:0px;margin-bottom:0px;">Registrarse con Google</button>
               </div>
             </form>
             
@@ -437,6 +437,9 @@ import emailjs from 'emailjs-com';
 </style>
 
 <style scoped>
+  .btn-reg {
+    height:4.5vw;
+  }
   .btn-google {
     color: white;
     background-color: #DD4B39;
@@ -446,6 +449,22 @@ import emailjs from 'emailjs-com';
     margin-left: 0px;
     margin-right: 0px;
   }
+  .btn-google2 {
+    color: white;
+    background-color: #DD4B39;
+    font-size: 1vw;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-top:3%;
+    padding-bottom:3%;
+    padding-right: 2%;
+    padding-left: 2%;
+    font-size:1vw;
+    font-family:'Brandon Bold';
+    margin-left:18%;
+    width:41.01%;
+    overflow: auto;
+  }
   .form-control {
     border-radius: 1.25rem;
     border: 0.5px solid #757575;
@@ -453,10 +472,20 @@ import emailjs from 'emailjs-com';
     margin-top: 10%;
     font-size: 1vw;
   }
-  @media only screen and (max-width: 800px) {
+  @media only screen and (max-width: 900px) {
   .btn-google {
-    padding-top: 5%;
-    padding-bottom: 5%;
+    height:4.5vw;
+  }
+  .btn-google2 {
+    height:4.5vw;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    width:40%;
+    font-size:1vw;
+  }
+  .btn-reg{
+    font-size:4vw;
+    padding-right: 4%;
   }
 }
 </style>

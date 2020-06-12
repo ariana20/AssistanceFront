@@ -136,7 +136,7 @@ input
   left: 30px
 
   width: calc(50% - 30px)
-  min-height: 570px
+  min-height: 70vh
   background-color: $white
   border-radius: $bdrds
   box-shadow: 2px 0 15px rgba($black, .25)
@@ -230,7 +230,9 @@ input
     transform: translate3d(120px, 0, 0)
 
     .forms_buttons
-      justify-content: flex-end
+      justify-content: flex-start
+    .forms_buttons-action
+      margin-left: 0px
 
   .user_forms-login
     transform: translate3d(0, 0, 0)
@@ -255,7 +257,7 @@ input
 
 @media screen and (max-width: 990px)
   .user_options-forms
-    min-height: 120%
+    min-height: 40vh
     
     .forms_buttons
       flex-direction: unset
@@ -270,11 +272,13 @@ input
       width: calc(100% - 20%)
       .forms_buttons-action
         margin-top: 0%
-        font-size:0.5vw
+        font-size:1vw
         font-family:'Brandon Bold'
         widows: 30%
         padding-left: 5%
-        padding-rigth: 2%
+        padding-right: 5%
+        padding-top: 0px
+        padding-bottom: 0px
         
     .user_forms-signup,
     .user_forms-login
