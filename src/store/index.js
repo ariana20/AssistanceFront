@@ -99,7 +99,12 @@ export default new Vuex.Store({
       text: 'Citas',
       path: '/agendarcita',
       icon: 'ion-ios-calendar'
-    }
+    },
+    {
+      text: 'Asignar Tutor',
+      path: '/asignartutor',
+      icon: 'ion-ios-people'
+    },
     ],
     filtro:{
       query: '',

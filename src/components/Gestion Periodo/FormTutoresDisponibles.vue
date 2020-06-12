@@ -2,6 +2,10 @@
   <div name="FormTutoresDisponibles">
     <div class="container" style="left:60px;text-align: left;">
 
+			<div class="top-titulo">
+				<h4 class="col-sm-4 title-container">Nombre: </h4>
+				<input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nomb" placeholder="Ingrese nombre de la facultad">
+			</div>
 
       <div v-for="(item,index) in tutores" :key="index">
         <datosTutor
@@ -31,7 +35,8 @@ export default {
     return{
       tutores:[],
       arreglo:[1,2,3,4,5,6],
-      id:null
+      id:null,
+      nomb:""
     }
   },
   components: {
