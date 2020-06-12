@@ -1,7 +1,13 @@
 <template>
   <div class="CabezeraTitulo jumbotron">
-    <div class="wrap"  style="height:300px;"> 
-        <h1 class="text_over_image">{{msg}}</h1>
+    <div class="wrap"  style="height:100%"> 
+        <div style="position: absolute;margin-top:3%;text-align:center;width:100%">
+          <div style=";display: inline-block;width: 60%;background-color: rgba(255,255,255,0.8);">
+            <section class="content text_over_image">
+              {{msg}}
+            </section>
+          </div>
+        </div>
         <img :src="imagePath"  style="max-height:100%;width:100%">
 
 
@@ -55,15 +61,14 @@ export default {
       position:relative;
     }
     .text_over_image {
-      position: absolute;
-      margin: auto;
-      top: 0;
-      left:0;
-      right:0;
-      bottom:0;
-      width: 30%;
-      height:120px;
+      height:100%;
+      width: 100%;
       padding-top: 20px;
-      background-color: rgba(255,255,255,0.8);
+      padding-bottom: 20px;
+      font-size: 4vw;
+    }
+
+    section.content {
+      flex: 2;
     }
 </style>

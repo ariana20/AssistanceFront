@@ -21,22 +21,22 @@
         <div class="user_options-forms" id="user_options-forms">
           <div class="user_forms-login">
             <h2 class="forms_title">Inicia Sesión</h2>
-            <form v-on:submit.prevent="checkForm" class="forms_form" style="margin-top:60px">
+            <form v-on:submit.prevent="checkForm" class="forms_form">
               <fieldset class="forms_fieldset">
                 <div class="forms_field">
                   <input v-model="state.email" type="email" placeholder="Correo" class="forms_field-input" required autofocus />
                 </div>
-                <div class="forms_field" style="margin-top:50px">
+                <div class="forms_field" style="margin-top:15%">
                   <input v-model="state.password" type="password" placeholder="Contraseña" class="forms_field-input" required />
                 </div>
               </fieldset>
-              <div class="forms_buttons" style="margin-top:60px; font-size:15px;  font-family:'Brandon Bold'">
+              <div class="forms_buttons" style="margin-top:20%; font-size:15px;  font-family:'Brandon Bold'">
                 <!-- <a href="#openModal" type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</a> -->
                 <input type="submit" value="Ingresar" class="forms_buttons-action" style="width:100%">
               </div>
               
             </form>
-              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:60px;font-family:'Brandon Bold'">Ingresar con Google</button>
+              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:15%;font-family:'Brandon Bold'">Ingresar con Google</button>
           </div>
           <div class="user_forms-signup">
             <h2 class="forms_title">Usuario Nuevo</h2>
@@ -64,8 +64,8 @@
                 </div>
               </fieldset>
               <div class="forms_buttons">
-                <input type="submit" value="Registrarse" class="forms_buttons-action" style="font-size:15px;font-family:'Brandon Bold';width:70%;height:45px">
-                <button type="button" v-on:click="registrate('google')" class="btn btn-lg btn-google btn-block" style="font-size:15px;  font-family:'Brandon Bold'width:40%">Registrarse con Google</button>
+                <input type="submit" value="Registrarse" class="forms_buttons-action" style="height:4.366vw">
+                <button type="button" v-on:click="registrate('google')" class="btn btn-google" style="margin-top:0px;margin-bottom:0px;padding-top:3%;padding-bottom:3%;font-size:1vw;font-family:'Brandon Bold';margin-left:10%;width:40%">Registrarse con Google</button>
               </div>
             </form>
             
@@ -440,13 +440,24 @@ import emailjs from 'emailjs-com';
   .btn-google {
     color: white;
     background-color: #DD4B39;
-    height: 45px;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    font-size: 1vw;
+    margin-left: 0px;
+    margin-right: 0px;
   }
   .form-control {
     border-radius: 1.25rem;
     border: 0.5px solid #757575;
-    margin-bottom: 10px;
-    margin-top: 40px;
+    margin-bottom: 5%;
+    margin-top: 10%;
+    font-size: 1vw;
+  }
+  @media only screen and (max-width: 800px) {
+  .btn-google {
+    padding-top: 5%;
+    padding-bottom: 5%;
+  }
 }
 </style>
 

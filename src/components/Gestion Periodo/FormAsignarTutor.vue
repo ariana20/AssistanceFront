@@ -10,7 +10,7 @@
                     v-for="(item, index) in tutores" 
                     :key="index" 
                     :value="item.tutor.id_usuario">
-                    {{ item.tutor.nombre + " " + item.tutor.apellido }}
+                    {{ item.tutor.nombre + " " + item.tutor.apellidos }}
                 </option>
             </select>
 
