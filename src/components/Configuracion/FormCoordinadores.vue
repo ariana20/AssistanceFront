@@ -22,7 +22,6 @@
             <th scope="col">Correo</th>
             <th scope="col">Facultad/Programa</th>
             <th scope="col">Estado</th>
-            <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -39,10 +38,6 @@
             <td style=";font-size:30px">
                 <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
                 <b-icon v-else icon="check" style="color:#757575"/>
-            </td>
-            <td  style="text-align: center">
-                <button v-on:click="Editar(item)" class="btn link"><b-icon icon="pencil"/></button>
-                <button v-on:click="Eliminar(item,index)" class="btn link"><b-icon icon="dash-circle-fill"/></button>
             </td>
           </tr>
         </tbody>

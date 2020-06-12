@@ -78,7 +78,6 @@ export default {
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login');
      console.log('usuario entrante?: ',this.usuario_entrante);
-    this.listarTT();
     if(parseInt((this.id),10)!=0){
       console.log('Id usuario entrante: ');      
       console.log(parseInt((this.id),10));

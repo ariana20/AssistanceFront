@@ -1,21 +1,18 @@
 <template>
-        <!-- <div>Hola</div> -->
     <div class= "container">
          <!-- <div class="row grid-divider "> -->
             <div >
                 <div>
-                  <hr style="width:105%;border:0px;">
+                  <hr style="width:105%;border:0px;"  >
 
                 </div>
              
                 <div class="row " >
                     <div class="col-xs-6 col-sm-2" sytle="padding:50px;padding-top:10px;">
-                        <div class="col-sm-6">
-                            <label  for="formGroupExampleInput" >
-                                <b>Código</b>
-                            </label>
+                        <div class="col-sm-12" style="text-align:center">
+                                <b>Código</b>                            
                         </div>
-                        <hr style="width:458%;border:0px;">
+                        <hr style="width:730%;border:0px;" >
                         <ejs-autocomplete
                             :dataSource='codigos' 
                             :fields='campoCodigo' 
@@ -37,14 +34,14 @@
 
                     </div>
                     <div class="col-md-4">
-                        <div class="col-sm-8" style="text-align:left;padding-bottom:40px;">
+                        <div class="col-sm-12" style="text-align:center;padding-bottom:34px">
                             <b>Nombre y Apellidos</b>
                          
                         </div>
-                        <div type="text" class="col-sm-4 form-control" placeholder="Nombre" style="margin-left:10px;color: white;background:#BEBEBE;" >
+                        <div type="text" class="col-sm-12 form-control" placeholder="Nombre" style="margin-left:10px;color: white;background:#BEBEBE;" >
                             {{alSeleccionado}} </div>
                          
-                        <div class="col-sm-8 form-control list-group-item" 
+                        <div class="col-sm-12 form-control list-group-item" 
                         style="padding: 0.4rem 0.5rem;text-align:center;width:200%;margin-left:10px;padding-right:0px;"
                             v-for="(newAlumno,alIndex) in listAlumnosNom"  
                             :key="alIndex">
@@ -52,9 +49,9 @@
                             <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
                         </div>  
                     </div>
-                    <div class="col-md-4">
-                        <div class="col-sm-4" style="text-align:left;padding-bottom:40px;">
-                            <b>Notas</b>
+                    <div class="col-md-6">
+                        <div class="col-sm-4" style="text-align:center;padding-bottom:33px;">
+                            <b>Archivo</b>
                          
                         </div>
                         <div type="text" class="col-sm-4" placeholder="Nombre" style="top:-5px">
@@ -66,18 +63,40 @@
                         <div class="row" style="margin-left:0px"
                         v-for="(newAlumno,alIndex) in listAlumnosNom"  
                         :key="alIndex">
-                            <input class="col-sm-4 form-control"  style="text-align:center;
+                            <input class="col-sm-8 form-control"  style="text-align:center;
                             width:200%;margin-left:10px;padding-right:0px;text-align:center; ">
-                            <div style="line-height:35px;margin-left:10px">
+                            <b-icon icon="file-earmark-plus" style="color:#757575;width:35px; height:35px;"/>
+                            <b-icon icon="play-fill" style="color:#757575;width:35px; height:35px;"/>
+                            
+                            <!-- <div style="line-height:35px;margin-left:10px">
                                 <b>Archivo</b>
-                            </div> 
+                            </div>  -->
                         </div>  
                     </div>
                 </div>
                 <div style="position:absolute; bottom:30px;">
                 </div>
+                <hr style="width:105%;border:0px;">
+                <div  class="botones" >   
+                    <button type="button" style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnGuardar" v-on:click="guardarNotas()">Guardar</button>
+                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarNotas()"  >Cancelar</button>  
+      
+                </div>
             </div>
+            <!-- pdf -->
+            <!-- <div style="width:100px;text-align:center;margin-top:40px" >
+              <img class="imgP" v-if="this.selectedFile!==null" alt="Vue logo" :src="selectedFile" id='LogoInst'>
+              <img class="imgP" v-else alt="Vue logo" v-bind:src="logo" id='LogoInst'>        -->
+              
+               <!-- <object data="/INF238-2020-1.pdf" type="application/pdf" width="500%"  height="600px" /> -->
+               <!-- <embed src="http://example.com/doc.pdf#page=5" type="application/pdf" width="500%"  height="600px" /> -->
             
+            <!-- </div> -->
+            <!--Estos datos del boton deben ir en mi botoncito de examinar-->
+            <!-- <div style=";text-align:center">
+              <input type="file" v-on:change="onFileSelected" style="margin-top:20px"><br>
+              <button @click="onUpload" type="button" class="btn btn-info" style="margin-left: -280px;margin-top:20px">Subir</button>
+            </div>  -->
         
         <!-- </div> -->
         <!-- <div style="width:100%; border-bottom:0.5px solid #bababa; height:0.5px;padding-top:15px; margin-bottom:15px;"></div> -->
@@ -85,11 +104,10 @@
 </template>
 
 
-<script>
+<script   >
 
 import moment from 'moment'
 import Swal from 'sweetalert2'
-import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import Vue from 'vue'
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
@@ -102,7 +120,7 @@ export default Vue.extend ({
         
             bordes:'borde-textbox',
             sel: '',
-            alSeleccionado: 'Nombre Alumno',
+            alSeleccionado: 'Nombre de alumno',
             codigos:[],
             campoCodigo: {value:'codigo'},    
             selectedTipoTutoria: null,
@@ -118,6 +136,7 @@ export default Vue.extend ({
             listAlumnosId: [],
             unidadesApoyo: [],
             selectedUnidadApoyo: null,
+            selectedFile:null,
         }
     },
     mounted(){
@@ -133,6 +152,9 @@ export default Vue.extend ({
         .catch(e => {
             console.log(e.response);
         });
+
+    //PArte del pdf
+    
    
     },
     methods: {
@@ -288,7 +310,101 @@ export default Vue.extend ({
             console.log(this.listAlumnosId);
             
             
-        }
+        },
+        cancelarNotas(){
+                Swal.fire({
+                   text:"¿Está seguro que desea cancelar?",
+                   icon:"warning",
+                   confirmButtonText: 'Sí',
+                   confirmButtonColor:'#0097A7',
+                   cancelButtonText: 'No',
+                   cancelButtonColor:'C4C4C4',
+                   showCancelButton: true,
+                   showConfirmButton: true,
+                 }).then((result) => {
+                 if (result.value) {
+                //lo redirigo
+                 this.$store.state.usuarios=null;
+                     this.$router.push('/ListaUsuarios');
+                } 
+          })
+        },
+        /*
+        //Copia de jorge de subir logo
+        onFileSelected(e){
+          let files = e.target.files || e.dataTransfer.files;
+          if (!files.length)
+              return;
+          this.createImage(files[0]);
+        },
+        createImage(file) {
+          let reader = new FileReader();
+          let vm = this;
+          reader.onload = (e) => {
+              vm.selectedFile = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        },
+        onUpload(){
+            if(this.selectedFile == null){
+            Swal.fire({
+              text:"No ha seleccionado una imagen",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+            }) 
+          }
+          else{
+            Swal.fire({
+              title: '¿Dese modificar su Logo?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#0097A7',
+              cancelButtonColor: '#757575',
+              confirmButtonText: 'Confirmar'
+            }).then((result) => {
+              this.showModal();
+              if (result.value) {
+                axios.post('/institucion/subirLogo',{image: this.selectedFile})
+                  .then( response=>{
+                console.log(response)
+                let imgIns = response.data.path
+                console.log(imgIns)
+                this.logo = imgIns;
+                let params = {
+                  logo: this.logo,
+                  usuario_actualizacion : this.$store.state.usuario.id_usuario,
+                }
+                axios.post('/institucion/modificar/'+this.id,params)
+                .then( response=>{
+                  response;
+                  this.hideModal();
+                  Swal.fire({
+                    text:"Subida Exitosa",
+                    icon:"success",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  })
+                })
+                .catch(e => {
+                  console.log(e.response);
+                })
+              })
+              .catch(e => {
+                console.log(e.response);
+              })
+          }
+        })
+      }
+      
+    }, */
+    
+
+
+
+
     }
 })
 </script>
@@ -389,8 +505,8 @@ input:focus {outline: none;box-shadow: none;}
 hr {
     height: 0px !important;
     border-width: 0;
-    color: gray;
-    background-color: gray;
+    color: blue;
+    background-color: #e5e5e5;
     border-top: 0.4px solid rgba(0, 0, 0, 0.1) !important;
 }
 </style>

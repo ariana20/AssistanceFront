@@ -23,6 +23,7 @@ export default new Vuex.Store({
     usuariosA:null,
     rutas:[],
     usuarioEscogido:null,
+    events: [],
     navLinks: [
       {
         text: 'Institucion',
@@ -49,8 +50,8 @@ export default new Vuex.Store({
 		path: '/ListaTiposTutorias',
 		icon: 'ion-ios-book'
       },
-       {
-        text: 'Gestionar Usuario',
+      {
+        text: 'Usuarios',
 		path: '/ListaUsuarios',
 		icon: 'ion-ios-people'
       },
@@ -70,7 +71,7 @@ export default new Vuex.Store({
       icon: 'ion-ios-school'
     },
     {
-    text: 'Gestionar Usuarios Admin',
+    text: 'Usuarios Admin',
     path: '/AListaUsuarios',
     icon: 'ion-ios-people'
     },
@@ -82,13 +83,23 @@ export default new Vuex.Store({
     {
     text: 'Agregar Notas',
     path: '/agregarNotas',
-    icon: 'ion-android-document'
+    icon: 'ion-ios-document'
     },
     {
       text: 'Tutores',
       path: '/tutoresDisponibles',
       icon: 'ion-ios-book'
     },
+    {
+      text: 'Gestionar Usuarios Admin',
+      path: '/AListaUsuarios',
+      icon: 'ion-ios-people'
+    },
+    {
+      text: 'Citas',
+      path: '/agendarcita',
+      icon: 'ion-ios-calendar'
+    }
     ],
     filtro:{
       query: '',
@@ -98,6 +109,15 @@ export default new Vuex.Store({
     SET_QUERY (state,query){
       state.filtro.query = query;
     },
+    ADD_EVENT: (state, event) => {
+      state.events.push(event)
+    },
+    UPDATE_EVENT: (state,{id,title,start,end}) => {
+      let index = state.events.findIndex(_event => _event.id == id)
+      state.events[index].title = title;
+      state.events[index].start = start;
+      state.events[index].end = end;      
+    }
   },
   actions: {
   },
@@ -195,6 +215,7 @@ export default new Vuex.Store({
 
     },
 
+    EVENTS: state => state.events
 
   }
 })

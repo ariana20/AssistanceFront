@@ -215,6 +215,15 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "ViewAgregarNotas" */ '../views/Gestion Programa/ViewAgregarNotas.vue')
   },
+  {
+    path: '/agendarcita',
+    name: 'Citas',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewAgendarCita.vue')
+  },  
 ]
 const router = new VueRouter({
   mode: 'history',

@@ -22,15 +22,15 @@
       <table class="table" >
         <thead>
           <tr>
-            <th scope="col">Codigo</th>
-            <th scope="col">Nombre</th>
+            <th scope="col" style="width:120px">Codigo</th>
+            <th scope="col" style="width:200px">Nombre</th>
             <th scope="col">Correo</th>
             <th scope="col">Programa (Tipo de Usuario)</th>
             <!-- <th scope="col">Modif/Elim</th> -->
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="(item, index) in $store.state.usuariosA"  :key="index">
+        <tbody v-if="$store.state.usuariosA!=null">
+          <tr v-for="(item, index) in $store.state.usuariosA.data"  :key="index">
             <th scope="row">{{item.codigo}}</th>
             <td>{{item.nombre}} {{item.apellidos}}</td>
             <td>{{item.correo}}</td>   
@@ -40,6 +40,9 @@
                 <span v-if="item.programa">{{item.programa.nombre}}</span>
                 <span v-else> Sin Asignar </span>
                 <span style="margin-left:5px"> ({{item.tipo_usuario.nombre}})</span>
+              </div>  
+              <div v-if="item.usuario_x_programas.length == 0" >
+                <span> Sin Asignar </span>
               </div>  
             </td>
             <!-- <td style="text-align: center">
@@ -51,19 +54,31 @@
           </tr>
         </tbody>
       </table>
-      <div class="row" style="text-align:center">
-        <button v-if="usuarios.current_page!=1" v-on:click="Page(usuarios.current_page-1)"> <b-icon icon="arrow-left-circle"/> </button>
-        <button v-else disabled> <b-icon icon="arrow-left-circle"/> </button>
-        <div v-for="n in usuarios.last_page" :key="n" >
-            <button v-if="n != usuarios.current_page" v-on:click="Page(n)">
-              {{n}}
-            </button>
-            <button v-else disabled>
-              {{n}}
-            </button>
-        </div>
-        <button v-if="usuarios.current_page!=usuarios.last_page" v-on:click="Page(usuarios.current_page+1)"> <b-icon icon="arrow-right-circle"/> </button>
-        <button v-else disabled> <b-icon icon="arrow-right-circle"/> </button>
+      <div v-if="$store.state.usuariosA!=null">
+      <nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+					<li class="page-item" v-if="$store.state.usuariosA.current_page > 1">
+						<a class="page-link" href="#" tabindex="-1" @click.prevent="Page($store.state.usuariosA.current_page - 1)" style="color:rgb(0, 152, 146)">
+							<span>Anterior</span>
+						</a>
+					</li>
+					<li class="page-item" v-for="page in $store.state.usuariosA.last_page" :key="page">
+						<a  v-if="page != $store.state.usuariosA.current_page" class="page-link" href="#" @click.prevent="Page(page)" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ page }}
+						</a>
+						<a v-else class="page-link" href="#" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ page }}
+						</a>
+					</li>
+					<li class="page-item" v-if="$store.state.usuariosA.current_page < $store.state.usuariosA.last_page">
+						<a class="page-link" href="#" @click.prevent="Page($store.state.usuariosA.current_page + 1)" style="color:rgb(0, 152, 146)">
+							<span>Siguiente</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
       </div>
     </div>
   </div>
@@ -77,14 +92,6 @@ export default {
   data(){
     return{
       nombre:null,
-      usuarios:[],
-      //id_tipoXUsuario:[],
-      cantU:null,
-      TodosarrayTU:[],
-      tipoXUsuario:[],
-      miUsuario:this.$store.state.usuario, //Para sacar el id del programa
-
-      
     }
   },
  
@@ -104,15 +111,13 @@ export default {
   mounted(){
     console.log('Store state usuariosA',this.$store.state.usuariosA);
      if(this.$store.state.usuariosA === null  ) {     
-       this.listarUsuarios(); } //}
-    else this.usuarios = this.$store.state.usuariosA; //
+       this.listarUsuarios(); } 
   },
   methods:{
     listarUsuarios() {
       axios.post('/usuarios/listarTodo')
       .then(res =>{
-        this.$store.state.usuariosA=res.data.data;
-        this.usuarios = res.data
+        this.$store.state.usuariosA=res.data;
       })
       .catch(e => {
         console.log(e.response);
@@ -122,8 +127,7 @@ export default {
       let obj = { busqueda: n}
       axios.post('/usuarios/listarTodo',obj)
       .then(res =>{
-        this.$store.state.usuariosA=res.data.data;
-        this.usuarios = res.data
+        this.$store.state.usuariosA=res.data;
       })
       .catch(e => {
         console.log(e.response);
@@ -135,8 +139,7 @@ export default {
       else obj = { page: n}
       axios.post('/usuarios/listarTodo',obj)
       .then(res =>{
-        this.$store.state.usuariosA=res.data.data;
-        this.usuarios = res.data
+        this.$store.state.usuariosA=res.data;
       })
       .catch(e => {
         console.log(e.response);
