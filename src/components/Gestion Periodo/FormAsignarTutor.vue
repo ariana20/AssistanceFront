@@ -9,11 +9,7 @@
                 <option 
                     v-for="(item, index) in tutores" 
                     :key="index" 
-<<<<<<< HEAD
-                    :value="item.tutor.id_usuario">
-=======
                     :value="item">
->>>>>>> origin/Ariana
                     {{ item.tutor.nombre + " " + item.tutor.apellidos }}
                 </option>
             </select>
