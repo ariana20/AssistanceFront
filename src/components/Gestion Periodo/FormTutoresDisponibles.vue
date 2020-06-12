@@ -14,7 +14,7 @@
       </div>
       <infinite-loading @infinite="infiniteHandler">
         <span slot="no-more">
-          No hay mas datos
+          No hay más tutores
         </span>
       </infinite-loading>
 
@@ -43,32 +43,19 @@ export default {
     datosTutor
   },
   mounted(){
-    this.listarTutores();
+    //this.listarTutores();
   },
   computed:{
 
   },
   methods:{
 
-    listarTutores() {
-      const params = {
-        id : this.$store.state.programaActual.id_programa
-      };
-      axios
-      .post('/programa/tutores', params)
-        .then(res =>{
-          console.log(res.data);
-          this.tutores=res.data.tasks;            
-        })
-        .catch(e => {
-          console.log(e.response);
-        })
-    },
     infiniteHandler: function($state){
         let limit = this.tutores.length / 40 + 1;
         const params = {
           page: limit,
-          id : this.$store.state.programaActual.id_programa
+          id : this.$store.state.programaActual.id_programa,
+          nombre: this.nomb,
         };
         axios
         .post('/programa/tutores', params)
@@ -84,7 +71,9 @@ export default {
       if(res.data.tasks.length){
         this.tutores=this.tutores.concat(res.data.tasks);
         $state.loaded();
-        if(res.data.total==this.tutores.length){
+        console.log(this.tutores.length)
+        if(res.data.paginate.total==this.tutores.length){
+          console.log(this.tutores.length)
           $state.complete();
         }
       }else{
