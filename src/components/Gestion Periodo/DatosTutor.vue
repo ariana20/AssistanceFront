@@ -49,7 +49,7 @@ export default {
     },
     methods:{
         solicitarTutor(){
-            /*
+            
             Swal.fire({
                 text:"¿Está seguro que desea cancelar?",
                 icon:"warning",
@@ -61,11 +61,10 @@ export default {
                 showConfirmButton: true,
             }).then((result) => {
                 if (result.value) {
-                //lo redirigo
-                this.$store.state.usuarios=null;
-                this.$router.push('/ListaUsuarios');
+
+
                 } 
-            })*/
+            })
 
             const params={
                 id_tutor: this.tutor.id_usuario,
