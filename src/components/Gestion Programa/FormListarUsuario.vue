@@ -1,12 +1,20 @@
 <template>
-  <div class="FormListarUsuario container"  style="margin-top:20px">
+  <div class="FormListarUsuario container"  style="margin-top:10px">
     <!-- para que lo vea bien un coordinador -->
     <div class="row top-titulo" style="text-align: left">
-    
-      <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:20px">Nombre o Código:  
-        <input placeholder="Nombre o código" class="input row col-sm-6 form-control" style="left:25px;" type="text"  id="nombres"  v-model="nombre">  
-        
-        </div>
+      <div class="col-sm-6 top-titulo">
+            <h5 class="col-sm-6 "  style="top:13px;" >Nombre o Código: </h5>
+            <input class="col-sm-6 form-control" style="top:13px;" 
+                   v-model="nombre" placeholder="Buscar por nombre"  >
+           
+      </div>
+      <!-- <div class="row col-sm-6"  style="margin:10px;font-size:20px">Nombre o Código:  
+        <input placeholder="Busca por nombre o código" class="input row col-sm-6 form-control" style="left:25px;" type="text"  v-model="nombre">  
+        <router-link to="/Usuario/0"> 
+        <button  type="button" style="border-radius: 10px;margin-right:50px" class="row btn btn-info">Añadir</button>
+      </router-link>
+      </div> -->
+     
         <!-- <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px">Codigo:  
         <input placeholder="Busque por Código" class="row col-sm-8 form-control" style="left:25px;" type="text" id="codigos" v-model="codigo">  
         </div> -->
@@ -34,16 +42,20 @@
             <td v-if="item!=undefined">{{item.codigo}}</td>
             <td v-if="item!=undefined">{{item.nombre}}</td>
             <td v-if="item!=undefined">{{item.correo}}</td>  
-            <td style="font-size:30px">
-                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
-                <b-icon v-else icon="x" style="color:#757575"/>
+            <td >
+                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green;width:35px; height:35px;padding:0px"/>
+                <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;padding:0px"/>
             </td>
               <td>{{item.tipo_usuario[0].nombre}}</td>
-            <td style="text-align:right" >
+            <td  >
                <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
-              <button class="btn link"><b-icon icon="pencil" style="color:#0097A7;margin-left:-120px" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
+              
+                <b-icon icon="pencil" style="color:#0097A7;margin-right:20px;width:20px; height:20px;" v-on:click="llenarUsuarioEscogido(item)"></b-icon>
+                
               </router-link>              
-              <button class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575;margin-left:-100px"  v-on:click="eliminarUsuario(item,index)"></b-icon></button>
+              
+                <b-icon icon="dash-circle-fill" style="color:#757575;width:20px; height:20px;"  v-on:click="eliminarUsuario(item,index)"></b-icon>
+                
               
             </td>
           </tr>
@@ -70,6 +82,14 @@
 					</li>
 				</ul>
 			</nav>
+      <!-- MODAL CARGANDO  -->
+      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
+      </div>
+      </b-modal>
+
   </div>
 </template>
 
@@ -93,7 +113,6 @@ export default {
       usuarios:[],
       //id_tipoXUsuario:[],
       cantU:null,
-      TodosarrayTU:[],
       tipoXUsuario:[],
       miUsuario:this.$store.state.usuario, //Para sacar el id del programa
       state:{
@@ -150,9 +169,11 @@ export default {
         // })
   },
   mounted(){
+    
+    
+    
     if(this.$store.state.usuario==null) this.$router.push('/login');
     
-    this.listarTUsuarios();
     console.log('Store state usuariosA',this.$store.state.usuariosA);
      if(this.$store.state.usuarios == null  ) {     
        this.listarUsuarios(); } //}
@@ -167,36 +188,37 @@ export default {
     //4 es el id del programa de admin
     //1 es el id tipo usuario de admin
     //2 es el id de usuairo admin
-     listarTUsuarios() {
-      axios.post('/tipoUsuarios/listarTodo')
-        .then(res =>{
-          // Ordenadito
-          let par=res.data;
-          this.TodosarrayTU=par;
-          console.log(res.data);
-          
-        })
-        .catch(e => {
-          console.log(e.response);
-        })
-    },
+    
     listarUsuarios(page) {
+    this.showModal();
     console.log(this.$store.state.programaActual.id_programa);
     var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
      if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador
         axios.post(url) //Por ahora dsp será x program
         .then(res =>{
-          console.log('Usuarios ',res.data);    
+          console.log('Usuarios ',res.data.tasks.data);    
           //ordenado por estado
-          let par=res.data.tasks.data;      
-          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado);});
+          let par=res.data.tasks.data;  
+          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});    
+          //this.$store.state.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
           this.paginate=res.data.paginate;
           // this.$store.state.usuarios=res.data;
           console.log(this.$store.state.tipoActual.nombre);
+            this.hideModal();
                    
         })
         .catch(e => {
           console.log(e.response);
+            this.hideModal();
+          //Swal de problema
+           Swal.fire({
+                    text:"Estamos teniendo problemas al listar los uusarios. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+           });
+
         })
       }
      
@@ -259,7 +281,13 @@ export default {
       this.$store.state.usuarioEscogido=item;
       console.log('usuario escogido en store:',this.$store.state.usuarioEscogido);
       this.usuarioEscogido=item;
-   }
+   },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
    
   }
 }
@@ -279,13 +307,16 @@ export default {
     border-radius: 1.25rem;  
     border: 1px solid #757575;
     margin-bottom: 10px;
+    flex: 1;
     /* width: 100%; */
     
 }
 .btn-derecha{
    margin-top: 5px;
 }  
+
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}
 input:focus {outline: none;box-shadow: none;}
+
 </style>

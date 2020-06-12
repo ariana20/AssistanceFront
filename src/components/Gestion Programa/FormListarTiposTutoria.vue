@@ -1,20 +1,16 @@
 <template>
   <div class="FormRoles container" style="margin-top:20px">
-          <!-- <div> <router-link to="agregarNotas"> 
-                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Notas</button>
-        </router-link>
-        </div>   -->
-
-        
+  
         <div class="row top-titulo">
-        <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:20px">Nombre:  
-        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre"  >  
-        </div>
-        <div style="margin-right:500px"></div>
-        <div class="row btn-derecha" >
+          <div class="row col-sm-6 "  style="margin:10px;font-size:20px">Nombre:  
+            <input placeholder="Buscar por nombre" class="row col-sm-6 form-control" style="left:25px;" type="text" v-model="nombre"  >  
+          </div>
+          <!-- <div style="margin-right:500px"></div> -->
+          <div class="row btn-derecha" >
                 <router-link to="tiposdeTutoria/0"> 
                   <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Añadir</button>
-           </router-link></div>    
+           </router-link>
+        </div>    
   <!-- </tr> -->
 
       <table class="table" style="text-align:left" >
@@ -30,25 +26,29 @@
           <tr v-for="(item, index) in tipostutoriasFiltrados" :key="index">
             <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>        
-            <td style=";font-size:30px">
-                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
-                <b-icon v-else icon="x" style="color:#757575"/>
+            <td >
+                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green;width:35px; height:35px;"/>
+                <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;"/>
             </td>     
             <td  style="text-align: center">
-                 <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}"> 
-                <button  class="btn link">         
-                <b-icon style="color:#0097A7" icon="pencil"/></button>
-                       </router-link>  
-                <button v-on:click="eliminarTtutoria(item.id_tipo_tutoria)" class="btn link">
-                  <b-icon style="color:#757575" icon="dash-circle-fill"/>
-                </button>
+                 <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}">                          
+                    <b-icon style="color:#0097A7;width:20px; height:20px;margin-right:20px;" icon="pencil"/>
+                 </router-link>                  
+                  <b-icon v-on:click="eliminarTtutoria(item.id_tipo_tutoria)" style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"/>
+              
             </td>
           
           </tr>
         </tbody>
       </table>
     </div>
-
+        <!-- MODAL CARGANDO  -->
+      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
+      </div>
+      </b-modal>
       
   </div>
 </template>
@@ -87,6 +87,7 @@ computed:{
   methods:{
     
     listarTT() {
+      this.showModal();
     //   this.axios.post('/TipoTutoria/listarTodo/'+this.programas.id) //
       Axios.post('/TipoTutoria/listarTodo/'+ this.miprog.id_programa)
         .then(response=>{
@@ -96,9 +97,21 @@ computed:{
 
             // this.$store.state.tipostutorias = response.data; //
 
-            console.log('Listado de tt: ',this.$store.state.tipostutorias)
+            console.log('Listado de tt: ',this.$store.state.tipostutorias);
+            this.hideModal();
         })
-        .catch(e=>console.log(e));
+        .catch(e=>{
+        console.log(e);
+        this.hideModal();
+        //Swal de problema
+         Swal.fire({
+                    text:"Estamos teniendo problemas al listar los tipos de tutorias. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+           });
+        });
     },
     Editar(id){
       this.$router.push('/tiposdeTutoria/'+id); //
@@ -150,7 +163,14 @@ computed:{
               )
             }
           })
-   } // eliminart
+   }, // eliminart
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
+
 
   }
 }
@@ -170,10 +190,7 @@ computed:{
     margin-bottom: 10px;
     width: 100%;
   }
-    .tutoria-title{
-    margin-top: 30px;
-    margin-bottom: 20px;
-    }
+
 
 .btn-derecha{
    margin-top: 5px;
