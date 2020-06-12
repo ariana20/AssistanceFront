@@ -55,9 +55,9 @@
                   <input v-model="reg.password" type="password" placeholder="Contraseña" class="forms_field-input" required />
                 </div>
                 <div class="forms_field">
-                  <select class= "form-control" style="color:gray" v-model="programaEl">
+                  <select @change="ProgEl" class= "form-control" style="color:gray" v-model="programaElIn">
                     <option selected disabled :value="null">Elige un Programa</option>
-                    <option v-for="options in programasT" v-bind:key="options.id_programa" :value="options">
+                    <option v-for="(options,index) in programasT" v-bind:key="index" :value="options.nombre">
                       {{ options.nombre}}
                     </option>
                   </select>
@@ -112,6 +112,7 @@ import emailjs from 'emailjs-com';
           return {
             programasT: null,
             programaEl:null,
+            programaElIn:null,
             errors: [],
             emailRec:null,
             state: {
@@ -135,6 +136,15 @@ import emailjs from 'emailjs-com';
         },
         saveStorage (item) {
           localStorage.setItem('usuarioActual', JSON.stringify(item))
+        },
+        ProgEl(){
+          let index;
+          for (index = 0; index < this.programasT.length; index++) {
+            if(this.programasT[index].nombre == this.programaElIn){
+              break;
+            }            
+          }
+          this.programaEl = this.programasT[index];
         },
         checkForm() {
           if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined) {
