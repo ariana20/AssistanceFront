@@ -20,7 +20,7 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           
-            <b-nav-item class="optionsnav" href="/login" v-if="this.$store.state.usuario === null || this.$store.state.usuario === undefined">
+            <b-nav-item class="optionsnav" href="/login" v-if="this.$route.path != '/login' && (this.$store.state.usuario === null || this.$store.state.usuario === undefined)">
               <a style="color:#000;font-weight:normal">Ingresar</a>
             </b-nav-item>
             <b-nav-item-dropdown class="buttonnav" right v-if="this.$store.state.usuario !== null && this.$store.state.usuario !== undefined">
