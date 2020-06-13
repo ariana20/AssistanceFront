@@ -473,20 +473,20 @@ import emailjs from 'emailjs-com';
     font-size: 1vw;
   }
   @media only screen and (max-width: 900px) {
-  .btn-google {
-    height:4.5vw;
+    .btn-google {
+      height:4.5vw;
+    }
+    .btn-google2 {
+      height:4.5vw;
+      padding-top: 2%;
+      padding-bottom: 2%;
+      width:40%;
+      font-size:1vw;
+    }
+    .btn-reg{
+      font-size:4vw;
+      padding-right: 4%;
+    }
   }
-  .btn-google2 {
-    height:4.5vw;
-    padding-top: 2%;
-    padding-bottom: 2%;
-    width:40%;
-    font-size:1vw;
-  }
-  .btn-reg{
-    font-size:4vw;
-    padding-right: 4%;
-  }
-}
 </style>
 

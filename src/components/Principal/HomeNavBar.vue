@@ -2,19 +2,9 @@
   <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.1) 0px -3px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
       <!--<b-navbar-brand><router-link to="/">SoftVizcochitos</router-link></b-navbar-brand>-->
         <Tabs/>
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-        <b-collapse id="nav-collapse" is-nav>
-            
-
-            <!-- Right aligned nav items -->
-            <b-navbar-nav class="ml-auto">
-            
-                <figure class="image-logo" style="margin-top:20px">
-                    <img src="@/assets/images/assistance-logo.png" height="60px" width="60px" />			
-                </figure>
-            </b-navbar-nav>
-        </b-collapse>
+        <figure class="image-logo" >
+                <img src="@/assets/images/assistance-logo.png" height="65vh" width="65vw" />			
+        </figure>
     </b-navbar>
 </template>
 
@@ -61,8 +51,17 @@ export default {
   font-size: 36px;
   margin-left: 50px;
   }
-  @media screen and (max-height: 450px) {
+  .image-logo{
+    margin-top:1%;
+    margin-left:5%;
+  }
+  @media screen and (max-height: 800px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
+  .image-logo{
+    margin-top:-10%;
+    height: 1vh;
+    margin-left:-4%;
+  }
   }
 </style>

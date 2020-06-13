@@ -257,7 +257,9 @@ input
 
 @media screen and (max-width: 990px)
   .user_options-forms
-    min-height: 40vh
+    min-height: 35vh
+    width: 33vw
+    margin-left: -10%
     
     .forms_buttons
       flex-direction: unset
@@ -267,6 +269,11 @@ input
     .user_forms-login
       .forms_buttons-action
         margin-top: 0%
+        padding-left: 1%
+        padding-right: 1%
+        padding-top: 1%
+        padding-bottom: 1%
+        height: 3vh
 
     .user_forms-signup
       width: calc(100% - 20%)
@@ -287,3 +294,19 @@ input
   .user_options-registered,
   .user_options-unregistered
     padding: 5% 5%
+  
+  .user_options-unregistered
+    .user_unregistered-title
+      font-size: 3vw
+    .user_unregistered-text
+      font-size: 2vw
+    .button
+      font-size: 3vw
+
+  .user_options-registered
+    .user_registered-title
+      font-size: 3vw
+    .user_registered-text
+      font-size: 2vw
+    .button
+      font-size: 3vw

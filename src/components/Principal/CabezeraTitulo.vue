@@ -1,7 +1,7 @@
 <template>
   <div class="CabezeraTitulo jumbotron">
     <div class="wrap"  style="height:100%"> 
-        <div style="position: absolute;margin-top:3%;text-align:center;width:100%">
+        <div class="margs">
           <div style=";display: inline-block;width: 60%;background-color: rgba(255,255,255,0.8);">
             <section class="content text_over_image">
               {{msg}}
@@ -9,22 +9,6 @@
           </div>
         </div>
         <img :src="imagePath"  style="max-height:100%;width:100%">
-
-
-
-        
-        <!--<div class="">
-            <table>
-            <tbody>
-                <tr style="height:30px"></tr>
-                <tr>
-                    <td style="width:50px"></td>
-                    <td><h1>{{msg}}</h1></td>
-                    <td style="width:50px"></td>
-                </tr>
-                <tr style="height:30px"></tr>
-            </tbody></table>
-        </div>-->
     </div>
   </div>
 </template>
@@ -39,10 +23,11 @@ export default {
 </script>
 <style>
     .jumbotron {
-      height: 300px;
+      height: 30vh;
       padding: 0em;
       margin: 0em;
       font-family: "Brandon Bold";
+      margin-bottom: 2%;
     }
 
     /* Centered text */
@@ -63,12 +48,24 @@ export default {
     .text_over_image {
       height:100%;
       width: 100%;
-      padding-top: 20px;
-      padding-bottom: 20px;
+      padding-top: 4%;
+      padding-bottom: 4%;
       font-size: 4vw;
     }
 
     section.content {
       flex: 2;
     }
+
+    .margs{
+      position: absolute;
+      margin-top:3%;
+      text-align:center;
+      width:100%
+    }
+@media screen and (max-width: 759px){
+  .margs{
+    margin-top: 25%;
+  }
+}
 </style>

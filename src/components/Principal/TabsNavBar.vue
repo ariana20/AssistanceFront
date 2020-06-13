@@ -1,9 +1,9 @@
 <template>
-    <div name="Tabs" style="margin-top:0px">
-        <button v-on:click="infoTutores()" style="margin-left:100px;width:250px" class="btn" type="button" :class="{active: activeBtn === 'btn1' }">Tutores</button>
-        <button v-on:click="infoUnidadesApoyo()" style="margin-left:100px;width:250px" class="btn" type="button" :class="{active: activeBtn === 'btn2' }">Unidades de Apoyo</button>
-        <button v-on:click="infoBeneficios()" style="margin-left:100px;width:250px" class="btn" type="button" :class="{active: activeBtn === 'btn3' }">Beneficios</button>
-        <button v-on:click="login()" style="margin-left:100px;width:250px" class="btn" type="button" :class="{active: activeBtn === 'btn4' }">Ingresar/Registrarse</button>
+    <div name="Tabs" class="tabs">
+        <button v-on:click="infoTutores()" class="btn tama" type="button" :class="{active: activeBtn === 'btn1' }">Tutores</button>
+        <button v-on:click="infoUnidadesApoyo()" class="btn tama" type="button" :class="{active: activeBtn === 'btn2' }">Unidades de Apoyo</button>
+        <button v-on:click="infoBeneficios()" class="btn tama" type="button" :class="{active: activeBtn === 'btn3' }">Beneficios</button>
+        <button v-on:click="login()" class="btn tama" type="button" :class="{active: activeBtn === 'btn4' }">Ingresar / Registrarse</button>
     </div>
 </template>
 
@@ -36,9 +36,28 @@ export default {
 </script>
 
 <style scoped>
-.active{
-  background-color:#7EC2C9;
-}
+    .tabs{
+        margin-top:0px;
+        width:90%;
+    }
+    .active{
+    background-color:#7EC2C9;
+    }
+    .tama{
+        margin-left:5%;
+        width:15%
+    }
 
+    @media screen and (max-height: 800px) {
+        .tabs{
+            margin-left:-7%;
+            width:90%;
+        }
+        .tama{
+            margin-left:3%;
+            width:20%;
+            font-size: 2vw
+        }
+    }
 </style>
 

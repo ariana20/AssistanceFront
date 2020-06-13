@@ -1,7 +1,7 @@
 <template lang="pug">
 <!-- Animacion de Codepen -->
   <div class="HomeForm" style="background:#7EC2C9">
-    <div class ="container" style="margin-left:-50px">
+    <div style="height: 93.8vh;">
         div.main        
             div.human
                 div.human__hair-b
@@ -154,14 +154,14 @@
                 div.brick
                 div.brick
         </div>
-    <div class="gridwrapper" style="position: absolute;top:150px;left:980px;font-size: 30px;">
+    <div class="gridwrapper posth">
         <strong>RECIBE TUTORÍA DE LOS MEJORES </strong><br>
         <strong>  PROFESORES DE TU PROGRAMA </strong><br> 
     </div>
-    <div class="gridwrapper" style="position: absolute;top:270px;left:1020px;font-size: 20px;">Accede a tutorías personalizadas de la mano<br>del equipo de profesores y psicólogos de tu<br>universidad 
+    <div class="gridwrapper post2">Accede a tutorías personalizadas de la mano<br>del equipo de profesores y psicólogos de tu<br>universidad 
     </div>
-    <div class="gridwrapper" style="position: absolute;top:400px;left:1090px">
-        <b-button variant="info" v-on:click="redirect()" style="height:70px;width:250px;font-size: 25px;">Ingresar</b-button>
+    <div class="gridwrapper post3">
+        <b-button variant="info" v-on:click="redirect()" class="btn-home">Ingresar</b-button>
     </div>
   </div>
 </template>
@@ -182,4 +182,56 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
     @import '../../assets/styles/main.scss';
+</style>
+
+<style scoped>
+    .posth{
+        position: absolute;
+        top:20%;
+        left:60%;
+        font-size: 2vw;
+    }
+    .post2{
+        position: absolute;
+        top:35%;
+        left:65%;
+        font-size: 1vw;
+    }
+    .post3{
+        position: absolute;
+        top:50%;
+        left:68%;
+        font-size: 1vw;
+    }
+    .btn-home{
+        height:70px;
+        width:250px;
+        font-size: 1vw;
+    }
+    @media only screen and (max-width: 900px) {
+        .posth{
+            position: absolute;
+            top:50%;
+            left:18%;
+            font-size: 4vw;
+        }
+        .post2{
+            position: absolute;
+            top:60%;
+            left:23%;
+            font-size: 3vw;
+        }
+        .post3{
+            position: absolute;
+            top:72%;
+            left:33%;
+            width: 35%;
+        }
+        .btn-home{
+            height:5%;
+            width: 50%;
+            font-size: 3vw;
+            padding-right: 20%;
+        }
+    }
 </style>
