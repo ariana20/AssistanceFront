@@ -24,6 +24,7 @@ export default new Vuex.Store({
     rutas:[],
     usuarioEscogido:null,
     events: [],
+    reg: false,
     navLinks: [
       {
         text: 'Institucion',

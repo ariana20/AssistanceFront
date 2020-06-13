@@ -107,6 +107,9 @@ import emailjs from 'emailjs-com';
           .then(response=>{
             this.programasT = response.data
           })
+        if(this.$store.state.reg == true){
+          this.signupbtn();
+        }
       },
         data() {
           return {

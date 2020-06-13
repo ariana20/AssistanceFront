@@ -173,6 +173,7 @@ export default {
   },
   methods:{
       redirect(){
+        this.$store.state.reg = false;
         this.$router.push("/login")
       }
   },

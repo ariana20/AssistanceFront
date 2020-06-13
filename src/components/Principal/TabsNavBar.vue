@@ -3,7 +3,7 @@
         <button v-on:click="infoTutores()" class="btn tama" type="button" :class="{active: activeBtn === 'btn1' }">Tutores</button>
         <button v-on:click="infoUnidadesApoyo()" class="btn tama" type="button" :class="{active: activeBtn === 'btn2' }">Unidades de Apoyo</button>
         <button v-on:click="infoBeneficios()" class="btn tama" type="button" :class="{active: activeBtn === 'btn3' }">Beneficios</button>
-        <button v-on:click="login()" class="btn tama" type="button" :class="{active: activeBtn === 'btn4' }">Ingresar / Registrarse</button>
+        <button v-on:click="login()" class="btn tama" type="button" :class="{active: activeBtn === 'btn4' }">Registrarse</button>
     </div>
 </template>
 
@@ -17,6 +17,7 @@ export default {
     methods:{
         login(){
             this.activeBtn = 'btn4'
+            this.$store.state.reg = true;
             this.$router.push('/login');  
         },
         infoTutores(){
