@@ -15,7 +15,7 @@ const HelloJs = require('hellojs/dist/hello.all.min.js');
 const VueHello = require('vue-hellojs');
 
 HelloJs.init({
-  google: "1030578955704-5808ufgrte18i3evradus1eq2jgptrpk.apps.googleusercontent.com",
+  google: "1030578955704-vou87cfl4tm97ajnjmmsvcma2l56ib8s.apps.googleusercontent.com",
 }, {redirect_uri: 'authcallback/',
 scope: ['email','profile']});
 //Instal VueHello
