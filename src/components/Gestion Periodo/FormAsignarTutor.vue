@@ -22,6 +22,7 @@
               </label>
           </div>
         </div>
+
         <div class="font-weight-bolder text-left">Alumnos</div>
         <div class="row">
             <div class="col-md-4 col-sm-4">
@@ -68,14 +69,15 @@
         </div>
 
 
-
     </div>
 
   </div>
 </template>
 
 <script>
-
+import Vue from 'vue'
+import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
+Vue.use(AutoCompletePlugin);
 import axios from 'axios'
 
 export default {
@@ -85,6 +87,13 @@ export default {
       tutorSeleccionado:null,
       tipoTutoria:[],
       alumnos:[],
+      sel:'',
+      alSeleccionado: 'Nombre Alumno',
+      codigos:[],
+      campoCodigo: {value:'codigo'},  
+      listAlumnosCod: [],
+      listAlumnosNom:[],
+      listAlumnosId: [],
     }
   },
   components: {
@@ -92,11 +101,34 @@ export default {
   },
   mounted(){
     this.listarTutores();
+    this.obtenerAlumnos();
   },
   computed:{
 
   },
   methods:{
+    obtenerAlumnos(){
+      axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
+      .then( response => {
+          console.log("listado alumnos: ",response.data)
+          for(var i in response.data){ 
+              this.codigos.push(response.data[i][0]);
+          }
+      })
+      .catch(e => {
+          console.log(e.response);
+      });
+    },
+    onCodigoChange: function () {
+        var i;
+        for(i in this.codigos){
+            if(this.sel==this.codigos[i].codigo){
+                this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
+            }
+            console.log(this.alSeleccionado);
+            //break;   
+        }
+    },
     listarTutores() {
       const params = {
         id : this.$store.state.programaActual.id_programa
@@ -111,15 +143,50 @@ export default {
           console.log(e.response);
         })
     },
+
     listarTT(){
-      this.tipoTutoria=this.tutorSeleccionado.tipoTutoria;
-      console.log(this.tutorSeleccionado);
-      //falta la lista de los alumnos que están asignados a ese tutor
+      if(this.tutorSeleccionado){
+        this.tipoTutoria=this.tutorSeleccionado.tipoTutoria;
+
+        const params = {
+          id_tutor: this.$store.state.usuario.id_usuario,
+          id_programa: this.$store.state.programaActual.id_programa
+        };
+        axios
+        .post('/registros/listarAlumnos', params)
+        .then(res =>{
+          console.log(res);
+          this.alumnos=res.data;            
+        })
+        .catch(e => {
+          console.log(e.response);
+        })
+      }
+
     },
 
-    addAlumno(){
-
+    addAlumno: function () {  
+        var estaAl = false;
+        for( var i in this.listAlumnosCod ){
+                if(this.sel == this.listAlumnosCod[i]){
+                    estaAl = true;
+                    break;
+                }
+        }
+        if(this.alSeleccionado != 'Nombre Alumno' && !estaAl && this.sel.length == 8){ 
+            this.listAlumnosNom.push(this.alSeleccionado);
+            this.listAlumnosCod.push(this.sel);
+            for(var j in this.codigos){
+                if(this.sel == this.codigos[j].codigo)
+                    this.listAlumnosId.push(this.codigos[j].id_usuario);
+            }
+            this.alSeleccionado='Nombre Alumno';
+            this.sel= '';
+        }
+        console.log(this.listAlumnosId);  
+        
     },
+
     deleteAl: function(index) {
       //corregir
       this.listAlumnos.splice(index,1);
@@ -130,14 +197,88 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../../assets/styles/material.css';
+
+.close {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    padding: 12px 16px;
+    transform: translate(0%, -50%);
+}
+
+input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper input.e-input, textarea.e-input, .e-input-group textarea.e-input, .e-input-group.e-control-wrapper textarea.e-input{
+    border-width: 1px !important;
+}
+.input.e-input, .e-input-group input.e-input, .e-input-group input, .e-input-group.e-control-wrapper input.e-input, .e-input-group.e-control-wrapper input, .e-float-input input, .e-float-input.e-input-group input, .e-float-input.e-control-wrapper input, .e-float-input.e-control-wrapper.e-input-group input, .e-input-group, .e-input-group.e-control-wrapper, .e-float-input, .e-float-input.e-control-wrapper {
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
+    text-align: center;
+    font-family: "Brandon Bold",Helvetica,Arial,sans-serif;
+    font-size: 17px;
+    margin-bottom:0px!important;
+}
+.e-control .e-autocomplete .e-lib .e-input .e-keyboard {
+    z-index: -100;
+}
+.borde-textbox {
+    border-radius: 1.25rem;  
+    border: 2px solid #757575;
+}
+.izq {
+    //background-color: cornflowerblue;
+    padding: 20px;
+}
+.der {
+    //background-color: darkgreen;
+    padding: 20px;
+}
+.tutoria-title{
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.font-weight-bolder {
+    color: black;
+    font-size: 24px;
+    font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
+}
+.botones {
+    margin:auto;
+}
+.btn {
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    margin: 5px;
+}
+.top-titulo {
+    display: flex;
+    justify-content: space-between;
+}
+.text-left {
+    margin-bottom: 20px;
+}
+.motivo-dropdown-title {
+    top: 10px;
+    text-align: left;
+}
 
 .form-control {
-    border-radius: 1rem;  
-    border: 1px solid #757575;
-    text-align-last: left;
-    margin-bottom:1.3em;
-
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
+    margin-bottom: 10px;
+}
+.btn:focus {
+    outline:none;
+    box-shadow: none;
+    border: 2.3px solid transparent;
+}
+select:focus {
+    outline:none;
+    box-shadow: none;
 }
 
 </style>
