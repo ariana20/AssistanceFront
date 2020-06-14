@@ -22,7 +22,7 @@
           <td >
           </td>
           </tr>
-          <div class="row col-sm-6 tutoria-title"  > <div>Condiciones:*</div>
+          <div class="row col-sm-6 "  > <div>Condiciones:*</div>
             <b-form-radio-group style="margin-left:20px" v-model="tipotutoria.individual" :options="indgru"></b-form-radio-group></div>
           <div class="row col-sm-6 " style="margin-left:100px;" > 
             <b-form-radio-group v-model="tipotutoria.obligatorio" :options="oblopc">    </b-form-radio-group></div>            
@@ -40,9 +40,16 @@
     </div>      
       <button type="button" class="btn btn-info" style="border-radius: 10px" v-on:click="guardarTipoTutoria()">Guardar</button>
       <button type="button" style="border-radius: 10px;margin-left:50px"  class="btn btn-secondary" v-on:click="Cancelar()">Cancelar</button>
-      <div style="margin-left:180px;position:fixed;margin-top:120px;bottom:25px">
+      <div style="margin-left:10px;margin-top:10px;bottom:25px">
       * Campos obligatorios   
      </div >
+       <!-- MODAL CARGANDO  -->
+      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
+      </div>
+      </b-modal>
   </div>
 
 </template>
@@ -110,27 +117,41 @@ export default Vue.extend( {
        this.tipotutoria.id_tipo_tutoria_entrante=parseInt((this.$route.path).substring(16,18),10);
        console.log('Id entrante en mounted ',this.tipotutoria.id_tipo_tutoria_entrante);
         if(this.tipotutoria.id_tipo_tutoria_entrante!=0 && this.tipotutoria.id_tipo_tutoria_entrante!=undefined ){
+          this.showModal();
            Axios.create()
-          .post('/TipoTutoria/mostrar/'+this.tipotutoria.id_tipo_tutoria_entrante).
-          then( response =>{
-            console.log('Id del tipo tutoria ',response.data.id_tipo_tutoria);
-           this.tipotutoria.nombre= response.data.nombre;
-           this.tipotutoria.descripcion=response.data.descripcion;
-           this.tipotutoria.individual=response.data.individual;
-           this.tipotutoria.obligatorio=response.data.obligatorio;
-           this.tipotutoria.tutorasignado=response.data.tutor_asignado;
-           this.tipotutoria.tutorfijo=response.data.tutor_fijo;
+            .post('/TipoTutoria/mostrar/'+this.tipotutoria.id_tipo_tutoria_entrante).
+            then( response =>{
+             console.log('Id del tipo tutoria ',response.data.id_tipo_tutoria);
+            this.tipotutoria.nombre= response.data.nombre;
+            this.tipotutoria.descripcion=response.data.descripcion;
+            this.tipotutoria.individual=response.data.individual;
+            this.tipotutoria.obligatorio=response.data.obligatorio;
+            this.tipotutoria.tutorasignado=response.data.tutor_asignado;
+            this.tipotutoria.tutorfijo=response.data.tutor_fijo;
             this.tipotutoria.estado=response.data.estado;
-         
-         });
+            this.hideModal();
+            })
+          .catch(e=>{
+            console.log(e);
+            this.hideModal();
+           //Swal de problema
+             Swal.fire({
+                    text:"Estamos teniendo problemas al listar los tipos de tutorias. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+              });
+        });
     }
 
   },
   methods:{
     
     guardarTipoTutoria() {
-    
+      this.showModal();
       if(this.tipotutoria.descripcion =="" || this.tipotutoria.nombre==""   ){
+        this.hideModal();
          Swal.fire({
               text:"No ha completado todos los campos",
               icon:"error",
@@ -140,6 +161,7 @@ export default Vue.extend( {
         })        
       }   
       else if (this.individual=="" ||  this.tipotutoria.obligatorio=="" || this.tipotutoria.tutorasignado=="" || this.tipotutoria.tutorfijo=="" ){
+        this.hideModal();
         console.log('Entro al elseif  de 4 condiciones');
               Swal.fire({
               text:"Debe elegir 1 opción de cada condición.\n",
@@ -154,6 +176,7 @@ export default Vue.extend( {
         if(this.tipotutoria.id_tipo_tutoria_entrante==0){
           //tt nuevo
            if(this.tipotutoria.estado=="ina"){      
+             this.hideModal();
                 Swal.fire({
               text:"No puede crear un tipo de tutoría como inactivo.",
               icon:"warning",
@@ -181,6 +204,7 @@ export default Vue.extend( {
         .post('TipoTutoria/insertar',params)
           .then( response=>{
             console.log(response);
+              this.hideModal();
                Swal.fire({
               text:"El nuevo tipo de tutoria fue guardada con exito",
               icon:'success',
@@ -190,9 +214,11 @@ export default Vue.extend( {
               });
               //push
               this.$router.push('/ListaTiposTutorias');
+               this.$store.state.tipostutorias=null;
           })
            .catch(e => {
                   console.log(e.response);
+                  this.hideModal();
                    Swal.fire({
                     text:"Ocurrió un incoveniente. Vuelva a intentar en unos minutos.",
                     icon:'error',
@@ -221,6 +247,7 @@ export default Vue.extend( {
         .post('TipoTutoria/modificar/'+this.tipotutoria.id_tipo_tutoria_entrante,params)
           .then( response=>{
             console.log(response);
+            this.hideModal();
                Swal.fire({
               text:"El nuevo tipo de tutoria fue guardada con exito",
               icon:'success',
@@ -229,9 +256,12 @@ export default Vue.extend( {
               showConfirmButton: true,
               });
               this.$router.push('/ListaTiposTutorias');
+               this.$store.state.tipostutorias=null;
+              
           })
            .catch(e => {
                   console.log(e.response);
+                  this.hideModal();
                    Swal.fire({
                     text:"Ocurrió un incoveniente al modificar. Vuelva a intentar en unos minutos.",
                     icon:'error',
@@ -269,9 +299,16 @@ export default Vue.extend( {
             if (result.value) {
               //lo redirigo
               this.$router.push('/ListaTiposTutorias');
+              
             } 
           })
-    }
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
     
   }
 })

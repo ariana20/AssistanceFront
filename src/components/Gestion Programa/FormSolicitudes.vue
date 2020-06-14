@@ -135,11 +135,18 @@ export default {
             this.axios.post('/solicitudes/eliminar',param)
               .then(response=>{
                 response
-                let index = this.$store.state.solicitudes.indexOf(
-                  function(element){
-                    return element.id_solicitante === item.id_solicitante && element.id_remitente === item.id_remitente;
-                  })
+                let index;
+                for (index = 0; index < this.$store.state.solicitudes.length; index++) {
+                  if(this.$store.state.solicitudes[index].id_solicitante == item.id_solicitante 
+                  && this.$store.state.solicitudes[index].id_solicitante == item.id_solicitante 
+                  && this.$store.state.solicitudes[index].tipo_solicitud == item.tipo_solicitud){
+                    break;
+                  }
+                }
                 this.$store.state.solicitudes.splice(index,1);
+                console.log(item);
+                console.log(index);
+                this.hideModal();
                 let mensaje;
                 if(item.tipo_solicitud == 'Programa'){
                     mensaje = "Se aceptó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
