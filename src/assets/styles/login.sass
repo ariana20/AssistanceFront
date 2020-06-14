@@ -7,7 +7,7 @@ $salmon: #0097A7
 $smoky-black: rgba(#009688, .85)
 
 $ff: "Brandon Bold"
-$ff-body: 12px
+$ff-body: 4vw
 $ff-light: 300
 $ff-regular: 400
 $ff-medium: 500
@@ -38,7 +38,7 @@ input
     cursor: pointer
     
   &::placeholder
-    font-size: .85rem
+    font-size: .85vw
     font-family: $ff
     font-weight: $ff-light
     letter-spacing: .1rem
@@ -76,7 +76,7 @@ input
   align-items: center
 
   width: 100%
-  height: 100vh
+  height: 95vh
   background: #8CD0D7
   background-size: cover
 
@@ -102,20 +102,21 @@ input
 .user_registered-title,
 .user_unregistered-title
   margin-bottom: 15px
-  font-size: 1.66rem
+  font-size: 1.66vw
   line-height: 1em
 
 .user_unregistered-text,
 .user_registered-text
-  font-size: .83rem
+  font-size: 1vw
   line-height: 1.4em
 
 .user_registered-login,
 .user_unregistered-signup
-  margin-top: 30px
+  margin-top: 5%
   border: 1px solid $white
   border-radius: $bdrds
-  padding: 10px 30px
+  padding: 3% 15%
+  font-size: 1vw
 
   color: $white
   text-transform: uppercase
@@ -135,7 +136,7 @@ input
   left: 30px
 
   width: calc(50% - 30px)
-  min-height: 570px
+  min-height: 70vh
   background-color: $white
   border-radius: $bdrds
   box-shadow: 2px 0 15px rgba($black, .25)
@@ -149,9 +150,9 @@ input
 
   .forms
     &_title
-      margin-bottom: 45px
+      margin-bottom: 15%
 
-      font-size: 1.5rem
+      font-size: 1.5vw
       font-weight: $ff-medium
       line-height: 1em
       text-transform: uppercase
@@ -160,7 +161,7 @@ input
 
     &_field
       &:not(:last-of-type)
-        margin-bottom: 20px
+        margin-bottom: 5%
 
     &_field-input
       width: 100%
@@ -168,7 +169,7 @@ input
       padding: 6px 20px 6px 6px
 
       font-family: $ff
-      font-size: 1rem
+      font-size: 1vw
       font-weight: $ff-light
       color: darken($gray, 30%)
       letter-spacing: .1rem
@@ -183,7 +184,7 @@ input
       justify-content: space-between
       align-items: center
 
-      margin-top: 35px
+      margin-top: 5%
 
       &-forgot
         font-family: $ff
@@ -201,7 +202,7 @@ input
         border-radius: $bdrds
         padding: 10px 35px
 
-        font-size: 1rem
+        font-size: 1vw
         font-family: $ff
         font-weight: $ff-light
         color: $white
@@ -216,10 +217,10 @@ input
   .user_forms-signup,
   .user_forms-login
     position: absolute
-    top: 70px
-    left: 40px
+    top: 7%
+    left: 8%
 
-    width: calc(100% - 80px)
+    width: 80%
 
     opacity: 0
     visibility: hidden
@@ -229,7 +230,9 @@ input
     transform: translate3d(120px, 0, 0)
 
     .forms_buttons
-      justify-content: flex-end
+      justify-content: flex-start
+    .forms_buttons-action
+      margin-left: 0px
 
   .user_forms-login
     transform: translate3d(0, 0, 0)
@@ -254,19 +257,56 @@ input
 
 @media screen and (max-width: 990px)
   .user_options-forms
-    min-height: 350px
+    min-height: 35vh
+    width: 33vw
+    margin-left: -10%
     
     .forms_buttons
-      flex-direction: column
+      flex-direction: unset
+      height: 5%
+      text-align: center
   
     .user_forms-login
       .forms_buttons-action
-        margin-top: 30px
+        margin-top: 0%
+        padding-left: 1%
+        padding-right: 1%
+        padding-top: 1%
+        padding-bottom: 1%
+        height: 3vh
+
+    .user_forms-signup
+      width: calc(100% - 20%)
+      .forms_buttons-action
+        margin-top: 0%
+        font-size:1vw
+        font-family:'Brandon Bold'
+        widows: 30%
+        padding-left: 5%
+        padding-right: 5%
+        padding-top: 0px
+        padding-bottom: 0px
         
     .user_forms-signup,
     .user_forms-login
-      top: 40px
+      top: 5%
       
   .user_options-registered,
   .user_options-unregistered
-    padding: 50px 45px
+    padding: 5% 5%
+  
+  .user_options-unregistered
+    .user_unregistered-title
+      font-size: 3vw
+    .user_unregistered-text
+      font-size: 2vw
+    .button
+      font-size: 3vw
+
+  .user_options-registered
+    .user_registered-title
+      font-size: 3vw
+    .user_registered-text
+      font-size: 2vw
+    .button
+      font-size: 3vw

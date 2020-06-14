@@ -24,6 +24,7 @@ export default new Vuex.Store({
     rutas:[],
     usuarioEscogido:null,
     events: [],
+    reg: false,
     navLinks: [
       {
         text: 'Institucion',
@@ -99,7 +100,12 @@ export default new Vuex.Store({
       text: 'Citas',
       path: '/agendarcita',
       icon: 'ion-ios-calendar'
-    }
+    },
+    {
+      text: 'Asignar Tutor',
+      path: '/asignartutor',
+      icon: 'ion-ios-people'
+    },
     ],
     filtro:{
       query: '',

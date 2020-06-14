@@ -49,12 +49,11 @@
                         {{ tt.nombre }}
                         </option>
                     </select>
-                    <div class="botones" v-if="this.tiposUsuariosselect === 4">
-                    <button type="button"   class="btn btn-info"   
-                  
-                    style="margin-left:100px"
+                    <!-- <div class="col-sm-6" > -->
+                    <button  type="button"  v-if="this.tiposUsuariosselect === 4" class="col-sm-4 btn btn-info"                     
+                            style="margin-left:10px;margin:5px;border-radius: 10px;"
                             @click="addMTT(i)">Seleccionar</button>
-                    </div>
+                    <!-- </div> -->
                     <div class="col-sm-6 " v-if="this.tiposUsuariosselect === 5" style="margin-left:-40px;">Condición del alumno:* </div>
                     <select v-if="this.tiposUsuariosselect === 5" class="col-sm-6 form-control"  style="margin-right:20px;margin-left:-10px;top:5px;"
                      v-model="tipostutoriasselect">  <!--cambiar esto-->
@@ -84,9 +83,9 @@
 
       </div>
     </div>
-    <div  class="botones" style="position:fixed;margin-top:120px;bottom:25px">   
+    <div  class="botones" style="margin-top:0px;bottom:25px">   
         <button type="button" style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnGuardar" v-on:click="guardarUsuario()">Guardar</button>
-        <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>  
+        <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:50px" v-on:click="cancelarUsuario()"  >Cancelar</button>  
       
      </div>
     <!-- <div> -->
@@ -95,7 +94,7 @@
       {{newTT}}
      </li>
      </div> -->
-     <div style="position:fixed;margin-top:120px;bottom:25px">
+     <div style="bottom:5px">
       * Campos obligatorios   
      </div >
      <!-- para mostrar la lista de tt que no escoge  -->
@@ -103,7 +102,12 @@
       {{newTT.id_tipo_tutoria}}  {{newTT.nombre}}
      </li> -->
       <!-- Modal de cargando -->
-  
+      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+        <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+          <b-spinner style="width: 3rem; height: 3rem;"/>
+          <br >Cargando... 
+        </div>
+      </b-modal>
      
     </div>
     
@@ -143,7 +147,7 @@ export default {
       listTTId:[],
       listTTnoID:[],
       listTTBorrados:[],
-      condiAlumnos:[],
+      condiAlumnos:"no",
       banderaTT:false,
     }
   },
@@ -160,6 +164,7 @@ export default {
       //no hay usuario entrante
     }
     else if (parseInt((this.$route.path).substring(9,11),10) !=0) {
+      this.showModal();
       this.listarTT();
       this.id_usuario_entrante=this.$store.state.usuarioEscogido.id_usuario;
       this.usuario_entrante=this.$store.state.usuarioEscogido;
@@ -178,8 +183,10 @@ export default {
            this.correo=response.data.correo;
            this.telefono=response.data.telefono;
            this.estado=response.data.estado;
+           this.hideModal();
          }).catch(e => {
                  console.log(e.response);
+                 this.hideModal();
                  Swal.fire({
                     text:"Estamos teniendo problemas al obtener los datos del usuario que desea modificar. Vuelve a intentar en unos minutos.",
                     icon:"warning",
@@ -200,12 +207,14 @@ export default {
   methods:{
     
     guardarUsuario() {
+      this.showModal();
       var   expresion2=/\w+@\w+\.+edu.pe/;
        var   expresion1=/\w+@\w+\.+pe/;
       // console.log('estado: ',this.estado);
       // if(this.estado==null) console.log('entro al if estado: ',this.estado);
-      if(this.nombre=="" ||this.apellidos=="" || this.codigo=="" || this.correo=="" || this.estado===null   ){
-      
+      console.log('codigo a guardar: ',this.codigo);
+      if(this.nombre=="" ||this.apellidos=="" || this.codigo=="" || this.codigo===null || this.correo=="" || this.estado===null   ){
+          this.hideModal();
       //Cuando está vacio todo
           Swal.fire({
               text:"No ha completado todos los campos",
@@ -216,6 +225,7 @@ export default {
         })        
       }
       else if( !expresion2.test(this.correo) &&  !expresion1.test(this.correo)){ //Verificación de correo
+          this.hideModal();
           Swal.fire({
             
               text:"No ha escrito una dirección de correo válida. Todos los correos deben contener ser dominio @pucp.edu.pe o @pucp.pe",
@@ -227,7 +237,7 @@ export default {
        
       }
       else if(this.telefono<10000000 && this.telefono>0){ //Esto será válido?
-     
+          this.hideModal();
           Swal.fire({
               text:"No ha colocado un número de teléfono válido. Mínimo 7 dígitos",
               icon:"error",
@@ -237,6 +247,7 @@ export default {
           })   
       }
       else if(this.tiposUsuariosselect=="no" || this.tiposUsuariosselect.length==0 ){
+        this.hideModal();
            Swal.fire({
               text:"Falta elegir un tipo de usuario",
               icon:"error",
@@ -246,7 +257,8 @@ export default {
           })  
       }
       //Si escogió el tipo de usuario tutor
-      else if( this.tiposUsuariosselect==4 && ( this.listTTId.length==0 || this.tipostutoriasselect=="no"   ) ){
+      else if( this.tiposUsuariosselect==4 && ( this.listTTId.length==0  ) ){
+        this.hideModal();
          //evito que deje en 0 los tipos de tutoria al que pertenece el tutor
          Swal.fire({
               text:"Falta elegir un tipo de tutoria",
@@ -287,7 +299,7 @@ export default {
           
           if(this.id_usuario_entrante==0){
             if(this.estado=="ina"){
-                   
+                   this.hideModal();
                 Swal.fire({
               text:"No puede crear un nuevo usuario como inactivo.",
               icon:"warning",
@@ -308,6 +320,7 @@ export default {
                   console.log('Entro al if del error');
                   console.log('codigo:', params.codigo);
                   console.log('correo:', params.correo);
+                  this.hideModal();
                    Swal.fire({
                     text:"Ha ingresado un correo o código que ya existe en la institución. Por favor, corriga los datos.",
                     icon:"warning",
@@ -317,6 +330,7 @@ export default {
                   });
                 }
                 else{
+                  this.hideModal();
                   Swal.fire({
                     text:"Se guardaron los datos con éxito",
                     icon:"success",
@@ -352,6 +366,7 @@ export default {
             }).catch(e => {
               console.log('antes del if',e);
               console.log(e);
+              this.hideModal();
                  Swal.fire({
                     text:"Estamos teniendo problemas al crear un nuevo usuario. Vuelve a intentar en unos minutos.",
                     icon:"warning",
@@ -382,6 +397,7 @@ export default {
               console.log('data.id: ',response.data.id_usuario!=null);
               if(response.data.id_usuario!=null){ //Entonces pregunto primero si es un objeto con algún atributo al azar
                   console.log('entro a data.id pq es true');
+                  this.hideModal();
                   Swal.fire({
                   text:"Se modificaron los datos con éxito",
                   icon:"success",
@@ -392,10 +408,10 @@ export default {
               //Como se guardaron con éxito ahora agrego el titutoria, solo si tiene demonios
                   console.log('params2 ',params2.id_tipo_usuario_Nuevo);
                   //Si es tutor actualizo el tt
-              if(this.tiposUsuariosselect==4){
+                if(this.tiposUsuariosselect==4){
                    this.actualizarTT(this.id_usuario_entrante);
-              }
-              else{
+               }
+                else{
 
                 this.$router.push('/ListaUsuarios');
               }
@@ -407,7 +423,7 @@ export default {
               }
               else if(response.data.substring(0,20)=='Excepción capturada:'){ //Luego pregunto si es este tipo de excepcion
                 console.log('no entro a data.id y entro a excepcion');
-                   
+                 this.hideModal();  
                    
                 Swal.fire({
                     text:"Ha ingresado un código que ya existe. Corrígalo,por favor.",
@@ -419,7 +435,7 @@ export default {
               }
               
             })  .catch(e => {
-              
+                this.hideModal();
                  console.log('error al modif: ',e.response);
                  Swal.fire({
                     text:"Estamos teniendo problemas al modificar al usuario. Vuelve a intentar en unos minutos.",
@@ -445,7 +461,11 @@ export default {
            let par=res.data;
            this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
           // this.tiposUsuarios=res.data;
-          //console.log(this.tiposUsuarios);        
+          //console.log(this.tiposUsuarios); 
+          
+          //Cuando ya sea tipousuarioxprog, analizo los tipos de usuarios
+          //Busco en el nombre, Tutor o  Alumno y guardo ese id para tenerlo como variable
+
           
         })
         .catch(e => {
@@ -491,6 +511,7 @@ export default {
         this.banderaTT=true;
       //listo todos los tipos de tutorias de mi programa
       Axios.post('/TipoTutoria/listarTodo/'+ this.miprog.id_programa)
+      // Axios.post('/TipoTutoria/listarActivos/'+ this.miprog.id_programa)  //falta que esté en el servidor
         .then(response=>{
             this.tipostutorias = response.data; //
             console.log('Tipos de tutorias: ',this.tipostutorias);
@@ -522,7 +543,7 @@ export default {
                   break; //Si ya es uno igual,salgo
                  }
                 }
-
+                this.tipostutoriasselect="no";
               }
              }
             }
@@ -547,7 +568,7 @@ export default {
               this.listTTId.push(this.tipostutorias[i].id_tipo_tutoria);
               this.listTTBorrados.push(this.tipostutorias[i]);
               this.tipostutorias.splice(i,1);
-              
+              this.tipostutoriasselect="no";
 
             }
             
@@ -617,7 +638,12 @@ export default {
         
     },
     //Modal de cargando
-  
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
 
     
   }

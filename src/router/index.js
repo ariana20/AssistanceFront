@@ -114,7 +114,7 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/Configuracion/ViewPermisos.vue')
+    component: () => import(/* webpackChunkName: "ViewPermisos" */ '../views/Configuracion/ViewPermisos.vue')
   },
   {
     path: '/seleccion',
@@ -123,7 +123,7 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/Principal/ViewSeleccionPrograma.vue')
+    component: () => import(/* webpackChunkName: "ViewSeleccionPrograma" */ '../views/Principal/ViewSeleccionPrograma.vue')
   },
   { path: "/404",
     name: 'Error 404',
@@ -161,7 +161,7 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ViewListarUsuarios" */ '../views/Configuracion/ViewListarUsuariosAdmin.vue')
+    component: () => import(/* webpackChunkName: "ViewListarUsuariosAdmin" */ '../views/Configuracion/ViewListarUsuariosAdmin.vue')
   },
   {
     path: '/AUsuario/:id',
@@ -169,7 +169,7 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/Configuracion/ViewUsuarioAdmin.vue')
+    component: () => import(/* webpackChunkName: "ViewUsuarioAdmin" */ '../views/Configuracion/ViewUsuarioAdmin.vue')
   },
   {
     path: '/coordinadores',
@@ -177,7 +177,7 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/Configuracion/ViewCoordinadores.vue')
+    component: () => import(/* webpackChunkName: "ViewCoordinadores" */ '../views/Configuracion/ViewCoordinadores.vue')
   },
   {
     path: '/coordinador/:id?',
@@ -186,7 +186,7 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/Configuracion/ViewCoordinador.vue')
+    component: () => import(/* webpackChunkName: "ViewCoordinador" */ '../views/Configuracion/ViewCoordinador.vue')
   },
   {
     path: '/solicitudes',
@@ -195,7 +195,7 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/Gestion Programa/ViewSolicitudes.vue')
+    component: () => import(/* webpackChunkName: "ViewSolicitudes" */ '../views/Gestion Programa/ViewSolicitudes.vue')
   },
   {
     path: '/tutoresDisponibles',
@@ -204,7 +204,7 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/Gestion Periodo/ViewTutoresDisponibles.vue')
+    component: () => import(/* webpackChunkName: "ViewTutoresDisponibles" */ '../views/Gestion Periodo/ViewTutoresDisponibles.vue')
   },
   {
     path: '/agregarNotas',
@@ -222,8 +222,17 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/ViewAgendarCita.vue')
+    component: () => import(/* webpackChunkName: "ViewAgendarCita" */ '../views/ViewAgendarCita.vue')
   },  
+  {
+    path: '/asignartutor',
+    name: 'Asignar Tutor',
+    props: true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewAsignarTutor" */ '../views/Gestion Periodo/ViewAsignarTutor.vue')
+  }, 
 ]
 const router = new VueRouter({
   mode: 'history',
