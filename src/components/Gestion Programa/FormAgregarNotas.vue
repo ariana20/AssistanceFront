@@ -2,11 +2,22 @@
     <div class= "container">
          <!-- <div class="row grid-divider "> -->
             <div >
+                <section class="text-center" style="padding-top:20px">
+                    <input type="file" id="archivoInput" class="col-md-offset-4 col-md-4" @click="validarExt()" />
+                    <br><br>
+                    <div id="visorArchivo">
+                    <!--Aqui se desplegará el fichero-->
+                    </div>
+                </section>
+
+
+
+                
                 <div>
                   <hr style="width:105%;border:0px;"  >
 
                 </div>
-             
+
                 <div class="row " >
                     <div class="col-xs-6 col-sm-2" sytle="padding:50px;padding-top:10px;">
                         <div class="col-sm-12" style="text-align:center">
@@ -329,6 +340,34 @@ export default Vue.extend ({
                 } 
           })
         },
+        //codigo de jquery para validar la extensiónd eun archivo pdf
+/*
+        validarExt () {
+            var archivoInput = document.getElementById('archivoInput');
+            var archivoRuta = archivoInput.value;
+            var extPermitidas = /(.pdf)$/i;
+            if(!extPermitidas.exec(archivoRuta)){
+                alert('Asegurese de haber seleccionado un PDF');
+                archivoInput.value = '';
+                return false;
+            }
+
+            else
+            {
+                //PRevio del PDF
+                if (archivoInput.files && archivoInput.files[0]) 
+                {
+                    var visor = new FileReader();
+                    visor.onload = function(e) 
+                    {
+                        document.getElementById('visorArchivo').innerHTML = 
+                        '<embed src="'+e.target.result+'" width="500" height="375" />';
+                    };
+                    visor.readAsDataURL(archivoInput.files[0]);
+                }
+            }
+
+        },*/
         /*
         //Copia de jorge de subir logo
         onFileSelected(e){
