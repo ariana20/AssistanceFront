@@ -26,7 +26,7 @@ Vue.use(VueAxios, axios)
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
-
+//Vue.component('infinite-loading', require('vue-infinite-loading').default);
 Vue.config.productionTip = false
 
 Vue.use(modal, {dialog:true, dynamic: true});
