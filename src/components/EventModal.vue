@@ -1,89 +1,153 @@
 <template>
   <div style="margin-top:15px;">
-    <fieldset>
+    <!--<fieldset v-if="this.event.extendedProps.usuario_actualizacion!=this.$store.state.usuario.id_usuario">-->
+    <fieldset v-if="this.event.backgroundColor!='#009892' && !isTutor">
       <legend>Registrar Cita</legend>
-      <b>Nombre Alumno:</b>  {{ nombre }} <br/>
+      <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
       <!--<b>Fecha:</b>  {{ event.start }} <br/>-->
        <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
       <div id="botones">
-        <button @click="updateEvent">Aceptar</button>
-        <button @click="$emit('close')">Cancelar</button>
+        <button type="button" class="btn btn-info" @click="updateEvent">Aceptar</button>
+        <button type="button" class="btn btn-secondary" @click="$emit('close')">Cerrar</button>
       </div>
       <div style="margin-bottom: 20px;"></div>
     </fieldset>
 
-    <!--<fieldset>
-        <legend>Edit event</legend>
-        <input type="text" v-model="title">
-        <input type="date" v-model="start">
-        <button @click="updateEvent">Save</button>
+    <fieldset v-if="this.event.backgroundColor=='#009892' && !isTutor">
+      <legend>Cita Registrada</legend>
+      <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
+      <!--<b>Fecha:</b>  {{ event.start }} <br/>-->
+       <b>Fecha:</b>{{event.start | formatDate}} <br/>
+      <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
+      <div id="botones">
+        <button type="button" class="btn btn-info" @click="$emit('close')">Cerrar</button>
+      </div>
+      <div style="margin-bottom: 20px;"></div>
+    </fieldset>
+
+
+    <fieldset v-if="isTutor">
+      <div v-if="this.event.backgroundColor!='#B2EBF2'">
+        <legend>Cancelar Cita</legend>
+        <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
+        <!--<b>Fecha:</b>  {{ event.start }} <br/>-->
+        <b>Fecha:</b>{{event.start | formatDate}} <br/>
+        <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
+        <div id="botones">
+          <router-link :to="{ name: 'Cita Agendada'}">
+            <button id="button" class="btn btn-info">Detalle</button>
+          </router-link>
+          <button id="button" class="btn btn-info" @click="removeEvent">Cancelar Cita</button>
+          <button id="button" class="btn btn-secondary" @click="$emit('close')">Cerrar</button>
+        </div>
         <div style="margin-bottom: 20px;"></div>
-    </fieldset>-->
+      </div>
+    </fieldset>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
 import Vue from 'vue'
+import axios from 'axios'
+import Swal from 'sweetalert2'
+
 export default {
     data () { 
         return {
             title: "",
             start: {},
             end: {},
-            nombre: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
         }
     },
     methods: {
+        removeEvent() {
+          axios.post('citas/cancelarCita',{
+            idDisponibilidad:this.event.id,
+            usuario_actualizacion:this.$store.state.usuario.id_usuario})
+          .then((response) => {
+            console.log(response.data);
+            this.$store.commit("UPDATE_EVENT", {
+              id: this.event.id,
+              title: 'Libre',
+              start: this.event.start,
+              color:'#B2EBF2',
+            });
+            Swal.fire({
+              text:"La cita ha sido cancelada",
+              icon:"success",
+              confirmButtonText: 'Aceptar',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+            });
+            return response
+          }).catch(e => {
+            console.log(e.response);
+          });
+          this.$emit('close');
+        },
         updateEvent () {
-            console.log(this.event);
-
+          //console.log(this.event.extendedProps);
             this.$store.commit("UPDATE_EVENT", {
                 id: this.event.id,
                 title: this.nombre,
                 start: this.event.start,
-                end: this.event.end,
+                color:'#009892',
             });
-        },
-        /*saveEvent (arg) {
-            console.log(arg);
-            this.$store.commit("ADD_EVENT", {
-                id: (new Date()).getTime(),
-                title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
-                start: arg.start,
-                end: arg.end,
+            //var fecha_e= moment(this.event.start).format('MM/DD/YYYY')
+            //var hora_e=  moment(this.event.start).format('hh:mm a')
+            //REGISTRAR LA CITA
+            axios.post('citas/registrarCitaAlumno' ,{
+              id_tipo_tutoria: 4,
+              id_disponibilidad: this.event.id,
+              usuario_creacion: this.event.extendedProps.usuario_creacion,
+              usuario_actualizacion: this.$store.state.usuario.id_usuario,
+              idUsuario: this.$store.state.usuario.id_usuario,
+            }).then(response => {
+              Swal.fire({
+                      text:"Registro Exitoso",
+                      icon:"success",
+                      confirmButtonText: 'Continuar',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                    });
+                    this.$emit('close');
+                    console.log(response.data);
+            }).catch(e => {
+                console.log(e.response);
             });
-        },*/
+            
+        }
     },
+
   props: {
     text: String,
-    event: Object
+    event: Object,
+    isTutor: Boolean,
+    nombre_usuario: String,
   },mounted() {
-      this.start = formatDate(this.event.start);
-      this.end = formatDate(this.event.end);
+    console.log(this.event.extendedProps);
+    console.log(this.event.extendedProps.usuario_actualizacion);
+    console.log(this.event.backgroundColor);
   }
 };
+
 Vue.filter('formatDate', function(value) {
   if (value) {
-    return moment(String(value)).format('MM/DD/YYYY')
+    return moment(value).format('MM/DD/YYYY')
   }
 });
 Vue.filter('formatHour', function(value) {
   if (value) {
-    return moment(String(value)).format('hh:mm a')
+    return moment(value).format('hh:mm a')
   }
 });
 
-function formatDate(date) {
-    // YYYY-MM-DD 
-    var options = {year: "numeric", month: '2-digit', day: "2-digit"};
-    let string = date.toLocaleDateString("ko-KR", options).replace(/\. /g, "-")
-    return string.substr(0, string.length - 1)
-}
 </script>
 
 <style>
+@import './../assets/styles/main.css';
 div {
     color: black !important;
 }
@@ -106,9 +170,20 @@ fieldset legend {
 b, input {
     margin: 10px;
 }
+.boton {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+  color: #fff;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 10px;
+  margin: 5px;
+}
 #botones {
     display: flex;
     flex-direction: row;
     margin-top: 10px;
+    justify-content: flex-end;
+    margin-right: 20px;
 }
 </style>

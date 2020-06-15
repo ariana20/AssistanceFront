@@ -233,6 +233,17 @@ Vue.use(VueRouter)
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "ViewAsignarTutor" */ '../views/Gestion Periodo/ViewAsignarTutor.vue')
   }, 
+  {
+    path: '/calendariocitas',
+    name: 'Calendario',
+    props: true,
+    component: () => import(/* webpackChunkName: "ViewCalendarioCitas" */ '../views/Citas/ViewCalendarioCitas.vue'),
+  }, 
+  {
+    path: '/calendariocitas/cita-agendada',
+    name: 'Cita Agendada',
+    component: () => import(/* webpackChunkName: "ViewCitaAgendada" */ '../views/Citas/ViewCitaAgendada.vue')
+  }
 ]
 const router = new VueRouter({
   mode: 'history',
