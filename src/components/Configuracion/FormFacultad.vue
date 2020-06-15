@@ -190,15 +190,16 @@ export default {
 										return element.id_facultad === item.id_facultad;
 									})
 								this.$store.state.facultades.splice(index, 1);
+								Swal.fire({
+									text:"Eliminación Exitosa",
+									icon:"success",
+									confirmButtonText: 'OK',
+									confirmButtonColor:'#0097A7',
+									showConfirmButton: true,
+								})
 							})
 							.catch(e=>console.log(e));
-						Swal.fire({
-							text:"Eliminación Exitosa",
-							icon:"success",
-							confirmButtonText: 'OK',
-							confirmButtonColor:'#0097A7',
-							showConfirmButton: true,
-						})
+
 					}
 				})			
 		}
