@@ -23,16 +23,6 @@
                           defaultView = "timeGridWeek"
                           :locales= "locales"
                           locale="es"
-<<<<<<< HEAD
-                          :header ="{
-                              left: 'prev',
-                              center: 'title',
-                              right: 'next'
-                          }"
-                          :businessHours="businessHours"
-                          :columnHeaderFormat="columnFormat"
-                          :titleFormat="titleFormat"
-=======
                           :header = "{
                               left: 'title',
                               center: 'dayGridMonth, timeGridWeek, timeGridDay, listWeek',
@@ -40,7 +30,6 @@
                           }"
                           :businessHours= "businessHours"
                           :columnHeaderFormat= "columnFormat"
->>>>>>> c4739749ac13a4fa340be5050c34ebb5ad198a3c
                           hiddenDays= [0]
                           :selectable="true"
                           minTime= "08:00:00"
@@ -75,46 +64,6 @@ import EventModal from './EventModal'
 export default {
     name: 'formAgendarCita',
     components: {Fullcalendar},
-<<<<<<< HEAD
-    data () {
-        return {
-            calendarPlugins: [
-                DayGridPlugin,
-                TimeGridPlugin,
-                InteractionPlugin,
-                ListPlugin,
-                momentPlugin
-            ],
-            columnFormat: 'ddd M/D',
-            titleFormat: 'MMMM YYYY',
-            calendar: null,
-            locales: [esLocale],
-            dispSemanalVistaAl: null,
-            businessHours: {
-                daysOfWeek: [ 1, 2, 3, 4, 5, 6],
-                startTime: '08:00', 
-                endTime: '22:00', 
-            },
-            customButtons: {
-                    prev: {
-                        text: 'custom prev !',
-                        click: () => {
-                            let calendar = this.$refs.fullCalendar.getApi();
-                            calendar.prev();
-                            this.getReminders();
-                        }
-                    },
-                    next: {
-                        text: 'custom next!',
-                        click: () => {
-                            let calendar = this.$refs.fullCalendar.getApi();
-                            calendar.next();
-                            this.getReminders();
-                        }
-                    },
-            },
-            nombre_usuario: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos
-=======
     data: () => ({
         calendarPlugins: [
             DayGridPlugin,
@@ -130,95 +79,12 @@ export default {
             daysOfWeek: [ 1, 2, 3, 4, 5, 6],
             startTime: '08:00', 
             endTime: '22:00', 
->>>>>>> c4739749ac13a4fa340be5050c34ebb5ad198a3c
         }
     }),
     computed: {
         ...mapGetters(["EVENTS"])
     },
     methods: {
-<<<<<<< HEAD
-        handleClick (arg) {
-            if(arg.event.backgroundColor!='gray') {
-                this.$modal.show(EventModal,{
-                    text: "This is from the component",
-                    event: arg.event,
-                    nombre_usuario: this.nombre_usuario,
-                    isTutor: false,
-                });
-            } else { 
-                return false
-            }
-        },
-        getReminders: function() {
-                this.calendar = this.$refs.fullCalendar.getApi();
-                this.$store.state.events = [];
-                axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:54,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
-                .then((response) => {
-                    //console.log('disp: ',response.data[0]);
-                    var rd = response.data[0];
-                    var rd2 = response.data[1];
-                    for(var i in rd) {
-                        console.log('usuario_actualizacion',rd[i])
-                        var start_hour = rd[i].hora_inicio;
-                        //this.events.push({
-                            if(rd2[i]=='o'){
-                                if(rd[i].usuario_actualizacion == this.$store.state.usuario.id_usuario){
-                                    this.$store.commit("ADD_EVENT", {
-                                        id: rd[i].id_disponibilidad,
-                                        title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
-                                        start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                        tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                        color: '#009892',
-                                        usuario_creacion: rd[i].usuario_creacion,
-                                        id_usuario_tutor: rd[i].id_usuario,
-                                        usuario_actualizacion: rd[i].usuario_actualizacion
-                                    });
-                                } else {
-                                    this.$store.commit("ADD_EVENT", {
-                                        id: rd[i].id_disponibilidad,
-                                        title: 'Ocupado',
-                                        start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                        tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                        color: 'gray',
-                                        usuario_creacion: rd[i].usuario_creacion,
-                                        id_usuario_tutor: rd[i].id_usuario,
-                                        usuario_actualizacion: rd[i].usuario_actualizacion
-                                    });
-                                }
-                            } else {
-                                this.$store.commit("ADD_EVENT", {
-                                    id: rd[i].id_disponibilidad,
-                                    title: 'Libre',
-                                    start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                    end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                    tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                    usuario_creacion: rd[i].usuario_creacion,
-                                    id_usuario_tutor: rd[i].id_usuario,
-                                    usuario_actualizacion: rd[i].usuario_actualizacion
-                                });
-                            }
-
-                        //});
-                    }
-                }).catch(e => {
-                    console.log(e.response);
-                });
-                this.calendar.render();
-            },
-    },
-    watch: {    
-        eventFilter() {
-        this.$refs.calendar.fireMethod("rerenderEvents");
-        }
-    },
-    mounted() {
-        console.log(this.$store.state.usuario);
-        this.getReminders();
-        //this.calendar = this.$refs.fullCalendar.getApi();
-=======
         handleSelect (arg) {
             console.log(arg);
             this.$store.commit("ADD_EVENT", {
@@ -237,7 +103,6 @@ export default {
     },
     mounted() {
         this.calendar = this.$refs.fullCalendar.getApi();
->>>>>>> c4739749ac13a4fa340be5050c34ebb5ad198a3c
         //idUsuario: this.$store.state.usuario.id_usuario
         axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
         .then(response => {
@@ -250,46 +115,6 @@ export default {
     }
     
 }
-<<<<<<< HEAD
-function addTimes (startTime, endTime) {
-  var times = [ 0, 0, 0 ]
-  var max = times.length
-
-  var a = (startTime || '').split(':')
-  var b = (endTime || '').split(':')
-
-  // normalize time values
-  for (var i = 0; i < max; i++) {
-    a[i] = isNaN(parseInt(a[i])) ? 0 : parseInt(a[i])
-    b[i] = isNaN(parseInt(b[i])) ? 0 : parseInt(b[i])
-  }
-
-  // store time values
-  for (var j = 0; j < max; j++) {
-    times[j] = a[j] + b[j]
-  }
-
-  var hours = times[0]
-  var minutes = times[1]
-  var seconds = times[2]
-
-  if (seconds >= 60) {
-    var m = (seconds / 60) << 0
-    minutes += m
-    seconds -= 60 * m
-  }
-
-  if (minutes >= 60) {
-    var h = (minutes / 60) << 0
-    hours += h
-    minutes -= 60 * h
-  }
-
-  return ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
-}
-
-=======
->>>>>>> c4739749ac13a4fa340be5050c34ebb5ad198a3c
 </script>
 
 <style lang='scss'>
@@ -331,24 +156,4 @@ function addTimes (startTime, endTime) {
     background-color: #B2EBF2;
     border-color: #B2EBF2;
 }
-<<<<<<< HEAD
-.vm--modal {
-    border-radius: 25px;
-    margin: 30px;
-    height: 240px !important;
-}
-@media screen and (max-width: 759px) {
-    .form-control { 
-        left: -100px;
-    }
-}
-@media screen and (max-width: 1024px) {
-    .form-control { 
-        left: 0px;
-    }
-}
-
-
-=======
->>>>>>> c4739749ac13a4fa340be5050c34ebb5ad198a3c
 </style>
