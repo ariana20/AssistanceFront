@@ -15,7 +15,7 @@ const HelloJs = require('hellojs/dist/hello.all.min.js');
 const VueHello = require('vue-hellojs');
 
 HelloJs.init({
-  google: "1030578955704-5808ufgrte18i3evradus1eq2jgptrpk.apps.googleusercontent.com",
+  google: "1030578955704-vou87cfl4tm97ajnjmmsvcma2l56ib8s.apps.googleusercontent.com",
 }, {redirect_uri: 'authcallback/',
 scope: ['email','profile']});
 //Instal VueHello
@@ -33,6 +33,7 @@ Vue.use(modal, {dialog:true, dynamic: true});
 
 //axios.defaults.baseURL = 'http://18.232.253.212/Back-end-Software/public/api';
 axios.defaults.baseURL = 'https://vizbackend.assisstance.cloudns.cl/api';
+//axios.defaults.baseURL = 'http://127.0.0.1:8001/api';
 axios.defaults.withCredentials = false;
 
 new Vue({

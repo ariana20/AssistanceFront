@@ -2,11 +2,11 @@
   <div class="FormRoles container" >
     <div class="row top-titulo" style="text-align: left" >
       <div class="col-sm-6 top-titulo">
-            <h5 class="col-sm-6 " style="margin-top: 30px;margin-bottom: 30px;" >Nombre: </h5>
-            <input class="col-sm-6 form-control" style="top:26px;" v-model="nombre" placeholder="Buscar por nombre"  >
-            <!-- <div class="botones">
-            <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:280px" >Añadir</button>
-            </div> -->
+        <h5 class="col-sm-6 " style="margin-top: 30px;margin-bottom: 30px;" >Nombre: </h5>
+        <input class="col-sm-6 form-control" style="top:26px;" v-model="nombre" placeholder="Buscar por nombre"  >
+        <!-- <div class="botones">
+        <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:280px" >Añadir</button>
+        </div> -->
       </div>
         <!--<div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px;font-weight:bold">Buscar:  
         <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
@@ -14,10 +14,9 @@
         <div style="margin-right:100px"></div>                   
                  <button  type="button"  style="text-align:right" class="btn btn-info">Añadir</button> 
                   <b-button v-on:click="nuevo()" style="height:40px;border-color:transparent;margin-left:25%;background: #0097A7">Añadir</b-button>-->
-       <div class="botones" >
-             <button  type="button" style="border-radius: 10px;margin-right:50px" @click="nuevo()" class="row btn btn-info">Añadir</button>
-          
-        </div>      
+      <div class="botones" >
+        <button  type="button" style="border-radius: 10px;margin-right:50px" @click="nuevo()" class="row btn btn-info">Añadir</button>
+      </div>      
       </div>
       <table class="table"  style="text-align:left">
         <thead>
@@ -28,7 +27,6 @@
           </tr>
         </thead>
         <tbody>
-          
           <tr v-for="(item, index) in rolesFiltrados" :key="index">
             <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>
@@ -46,9 +44,7 @@
         <br >Cargando... 
       </div>
       </b-modal>
-
-      
-  </div>
+    </div>
 </template>
 
 <script>
