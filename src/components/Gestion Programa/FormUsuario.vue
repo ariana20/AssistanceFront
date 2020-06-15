@@ -206,7 +206,7 @@ export default {
                  Swal.fire({
                     text:"Estamos teniendo problemas al obtener los datos del usuario que desea modificar. Vuelve a intentar en unos minutos.",
                     icon:"warning",
-                    confirmButtonText: 'Sí',
+                    confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   }); 
@@ -446,7 +446,7 @@ export default {
           Swal.fire({
               text:"Estamos teniendo problemas al listar los tipos de usuarios. Vuelve a intentar en unos minutos.",
               icon:"warning",
-              confirmButtonText: 'Sí',
+              confirmButtonText: 'OK',
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
         }).then((result) => {
@@ -781,7 +781,7 @@ export default {
                  Swal.fire({
                     text:"Estamos teniendo problemas al crear un nuevo usuario. Vuelve a intentar en unos minutos.",
                     icon:"warning",
-                    confirmButtonText: 'Corregir',
+                    confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });  
@@ -851,7 +851,7 @@ export default {
                  Swal.fire({
                     text:"Estamos teniendo problemas al modificar al usuario. Vuelve a intentar en unos minutos.",
                     icon:"warning",
-                    confirmButtonText: 'Sí',
+                    confirmButtonText: 'Ok',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   })
@@ -903,7 +903,7 @@ export default {
                  Swal.fire({
                     text:"Estamos teniendo problemas al insertar este usuario a su programa. Vuelve a intentar en unos minutos.",
                     icon:"warning",
-                    confirmButtonText: 'Corregir',
+                    confirmButtonText: 'Ok',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });  
@@ -936,7 +936,7 @@ export default {
                  Swal.fire({
                     text:"Estamos teniendo problemas al listar las condiciones del alumno. Vuelve a intentar en unos minutos.",
                     icon:"warning",
-                    confirmButtonText: 'Corregir',
+                    confirmButtonText: 'Ok',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });                  

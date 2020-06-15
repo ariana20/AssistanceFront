@@ -3,7 +3,7 @@
          <!-- <div class="row grid-divider "> -->
             <div >
                 <section class="text-center" style="padding-top:20px">
-                    <input type="file" id="archivoInput" class="col-md-offset-4 col-md-4" @click="validarExt()" />
+                    <input type="file" id="archivoInput" ref="file" multiple class="col-md-offset-4 col-md-4" v-on:change="handleFileUpload" />
                     <br><br>
                     <div id="visorArchivo">
                     <!--Aqui se desplegará el fichero-->
@@ -74,10 +74,13 @@
                         <div class="row" style="margin-left:0px"
                         v-for="(newAlumno,alIndex) in listAlumnosNom"  
                         :key="alIndex">
-                            <input class="col-sm-8 form-control"  style="text-align:center;
-                            width:200%;margin-left:10px;padding-right:0px;text-align:center; ">
-                            <b-icon icon="file-earmark-plus" style="color:#757575;width:35px; height:35px;"/>
-                            <b-icon icon="play-fill" style="color:#757575;width:35px; height:35px;"/>
+                            <!-- <input class="col-sm-8 form-control"  style="text-align:center;
+                            width:200%;margin-left:10px;padding-right:0px;text-align:center; "> -->
+                            <!-- <b-icon  icon="file-earmark-plus" style="color:#757575;width:35px; height:35px;"/> -->
+                            <input type="file" id="archivoInput" ref="file" class="col-md-offset-4 col-md-4"  />
+                            <!-- v-on:change="handleFileUpload" -->
+                    
+                            <!-- <b-icon icon="play-fill" style="color:#757575;width:35px; height:35px;"/> -->
                             
                             <!-- <div style="line-height:35px;margin-left:10px">
                                 <b>Archivo</b>
@@ -117,9 +120,9 @@
 
 <script   >
 
-import moment from 'moment'
+
 import Swal from 'sweetalert2'
-import axios from 'axios';
+import Axios from 'axios';
 import Vue from 'vue'
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
@@ -153,7 +156,7 @@ export default Vue.extend ({
     mounted(){
        
     
-    axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
+    Axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
         .then( response => {
             console.log("listado alumnos: ",response.data)
             for(var i in response.data){ 
@@ -169,104 +172,7 @@ export default Vue.extend ({
    
     },
     methods: {
-        guardar: function () {
-            const sesion_params = {
-                id_usuario: this.$store.state.usuario.id_usuario,
-                fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
-                hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
-                usuario_creacion: this.$store.state.usuario.id_usuario,
-                usuario_actualizacion: this.$store.state.usuario.id_usuario,
-                id_tipo_tutoria: this.selectedTipoTutoria,
-                id_motivo_consulta: this.listMotivosId[0],
-                resultado: this.descripcion,
-                idAlumnos: this.listAlumnosId,
-                idMotivos: this.listMotivosId,
-            };
-            if(this.selectedTipoTutoria != null) {
-                if(this.listMotivos.length > 0) {
-                    if(this.listAlumnosCod.length > 0) {
-                        if(this.datetime != null) {
-                            if(this.descripcion!=null) {
-                                axios.post('/sesiones/asistencia',sesion_params)
-                                    .then( response=>{
-                                        console.log(response);
-                                        Swal.fire({
-                                            text:"Se ha registrado la sesión con éxito",
-                                            icon:"success",
-                                            confirmButtonText: 'OK',
-                                            confirmButtonColor:'#0097A7',
-                                            showConfirmButton: true,
-                                        }) 
-                                    })  .catch(e => {
-                                        console.log(e.response);
-                                    });
-                                }
-                                else {
-                                    Swal.fire({
-                                        text:"Debe llenar el campo descripción",
-                                        icon:"error",
-                                        confirmButtonText: 'OK',
-                                        confirmButtonColor:'#0097A7',
-                                        showConfirmButton: true,
-                                    })
-                                }
-                            }
-                        else {
-                            Swal.fire({
-                                text:"Debe seleccionar una hora y fecha",
-                                icon:"error",
-                                confirmButtonText: 'OK',
-                                confirmButtonColor:'#0097A7',
-                                showConfirmButton: true,
-                            })
-                        }
-                    }
-                    else {
-                        Swal.fire({
-                            text:"Debe agregar por lo menos un alumno",
-                            icon:"error",
-                            confirmButtonText: 'OK',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                        })
-                    }
-                }
-                else {
-                    Swal.fire({
-                        text:"Debe seleccionar por lo menos un motivo",
-                        icon:"error",
-                        confirmButtonText: 'OK',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                    })
-                }
-            }
-            else {
-                Swal.fire({
-                    text:"Debe seleccionar el tipo de tutoría",
-                    icon:"error",
-                    confirmButtonText: 'OK',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                })
-            }
-        },
-        cancelar: function () {
-            this.datetime= '';
-            this.descripcion= null;
-            this.motivo= null;
-            this.sel= '';
-            this.alSeleccionado= 'Nombre Alumno';
-            this.selectedTipoTutoria= null;
-            this.selectedMotivo= '';
-            this.newMotivo= null;
-            this.listMotivosId= [];
-            this.motivosBorrados=[];
-            this.listAlumnosNom= [];
-            this.listAlumnosCod= [];
-            this.listAlumnosId= [];
-            this.selectedUnidadApoyo= null;
-        },
+    
         onCodigoChange: function () {
             var i;
             for(i in this.codigos){
@@ -340,106 +246,56 @@ export default Vue.extend ({
                 } 
           })
         },
-        //codigo de jquery para validar la extensiónd eun archivo pdf
-/*
-        validarExt () {
-            var archivoInput = document.getElementById('archivoInput');
-            var archivoRuta = archivoInput.value;
-            var extPermitidas = /(.pdf)$/i;
-            if(!extPermitidas.exec(archivoRuta)){
-                alert('Asegurese de haber seleccionado un PDF');
-                archivoInput.value = '';
-                return false;
-            }
-
-            else
-            {
-                //PRevio del PDF
-                if (archivoInput.files && archivoInput.files[0]) 
-                {
-                    var visor = new FileReader();
-                    visor.onload = function(e) 
-                    {
-                        document.getElementById('visorArchivo').innerHTML = 
-                        '<embed src="'+e.target.result+'" width="500" height="375" />';
-                    };
-                    visor.readAsDataURL(archivoInput.files[0]);
-                }
-            }
-
-        },*/
-        /*
-        //Copia de jorge de subir logo
-        onFileSelected(e){
-          let files = e.target.files || e.dataTransfer.files;
-          if (!files.length)
-              return;
-          this.createImage(files[0]);
-        },
-        createImage(file) {
-          let reader = new FileReader();
-          let vm = this;
-          reader.onload = (e) => {
-              vm.selectedFile = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        },
-        onUpload(){
-            if(this.selectedFile == null){
-            Swal.fire({
-              text:"No ha seleccionado una imagen",
-              icon:"error",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
-            }) 
-          }
-          else{
-            Swal.fire({
-              title: '¿Dese modificar su Logo?',
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#0097A7',
-              cancelButtonColor: '#757575',
-              confirmButtonText: 'Confirmar'
-            }).then((result) => {
-              this.showModal();
-              if (result.value) {
-                axios.post('/institucion/subirLogo',{image: this.selectedFile})
-                  .then( response=>{
-                console.log(response)
-                let imgIns = response.data.path
-                console.log(imgIns)
-                this.logo = imgIns;
-                let params = {
-                  logo: this.logo,
-                  usuario_actualizacion : this.$store.state.usuario.id_usuario,
-                }
-                axios.post('/institucion/modificar/'+this.id,params)
-                .then( response=>{
-                  response;
-                  this.hideModal();
-                  Swal.fire({
-                    text:"Subida Exitosa",
+    
+    handleFileUpload(event){
+        console.log('handle',event);
+        let files=[];
+        files=this.$refs.file.files;
+        console.log(files);   
+   
+           var files2=[];
+           for(let i=0;i<files.length;i++){
+               files2[i]=files[i].file;
+                //puedo iterar 
+           }
+  
+             Axios
+              .post('/usuarios/masivo',files)
+              .then( response=>{
+                console.log('masivo: ',response);
+                if(response.status=='Subida terminada'){
+                Swal.fire({
+                    text:"Se guardaron los datos con éxito",
                     icon:"success",
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   })
-                })
-                .catch(e => {
-                  console.log(e.response);
-                })
-              })
-              .catch(e => {
-                console.log(e.response);
-              })
-          }
-        })
-      }
-      
-    }, */
-    
+                }
+                else{
+                    Swal.fire({
+                    text:"Algo pasó",
+                    icon:"warning",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  })
+                }
+
+            }).catch(e => {
+              console.log('catch masivo',e);
+              console.log(e);
+              // this.hideModal();
+                 Swal.fire({
+                    text:"Estamos teniendo problemas al cargar las notas de los alumnos. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  });                  
+               }
+            );
+    },
 
 
 
