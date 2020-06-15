@@ -136,6 +136,8 @@ export default {
       axios.post('/usuarios/listarTodo',obj)
       .then(res =>{
         this.$store.state.usuariosA=res.data;
+        console.log('usuarios: ',res.data.data);
+        
       })
       .catch(e => {
         console.log(e.response);
