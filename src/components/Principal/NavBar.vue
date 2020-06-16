@@ -211,7 +211,7 @@ export default {
   font-size: 36px;
   margin-left: 50px;
 }
-@media screen and (max-height: 800px) {
+@media screen and (max-height: 600px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
   .btn-navs{

@@ -26,17 +26,15 @@ Vue.use(VueAxios, axios)
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
-
+//Vue.component('infinite-loading', require('vue-infinite-loading').default);
 Vue.config.productionTip = false
 
 Vue.use(modal, {dialog:true, dynamic: true});
 
 //axios.defaults.baseURL = 'http://18.232.253.212/Back-end-Software/public/api';
-axios.defaults.baseURL = 'http://ec2-34-231-173-107.compute-1.amazonaws.com/api/';
-
-
 //axios.defaults.baseURL = 'https://vizbackend.assisstance.cloudns.cl/api';
-//axios.defaults.baseURL = 'http://127.0.0.1:8001/api';
+//axios.defaults.baseURL = 'http://127.0.0.1:8000/api';
+axios.defaults.baseURL = 'http://ec2-34-231-173-107.compute-1.amazonaws.com/api';
 axios.defaults.withCredentials = false;
 
 new Vue({

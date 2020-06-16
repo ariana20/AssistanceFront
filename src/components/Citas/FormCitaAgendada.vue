@@ -1,73 +1,20 @@
 <template>
-    <div class= "formSesionTutoria container">
-        <div class="top-titulo" style="text-align:left;">
-            <h4 class="col-sm-4 tutoria-title">Tipo de Tutoría: </h4>
-            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="selectedTipoTutoria">
-                <option disabled selected :value="null" focusable="false">Selecciona un tipo de tutoría</option>
-                <option 
-                    v-for="(tipoTutoria, index) in tiposTutoria" 
-                    :key="index" 
-                    :value="tipoTutoria.id_tipo_tutoria">
-                    {{ tipoTutoria.nombre }}
-                </option>
-            </select>
-            <date-picker class="col-sm-3 " style="left:-160px;top:26px" v-model="datetime" lang="es" type="datetime" format="YYYY-MM-DD HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
-            <div class="botones col-sm-4" style="margin-left: -150px;margin-bottom:10px">
-            <button type="button" class="btn btn-info" @click="guardar()" >Guardar</button>
-            <button type="button" class="btn btn-info" @click="cancelar()" style="border-color:gray;background-color:gray;">Cancelar</button>
-            </div>
+    <div class="formcitaagendada container">
+        <div class="top-info">
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
-        <div class="row grid-divider">
+                <div class="row grid-divider">
             <div class="izq col-lg-6 col-xm-2 col-md-12">
                 <div class="font-weight-bolder text-left">Alumno</div>
                 <div class="row">
                     <div class="col-md-4 col-sm-4">
-                        <div class="col-sm-6"><label for="formGroupExampleInput">Código</label></div>
-                        <hr style="width:335%;">
-                        <ejs-autocomplete
-                            :dataSource='codigos' 
-                            :fields='campoCodigo' 
-                            placeholder="Código" 
-                            :change='onCodigoChange'
-                            v-model="sel"
-                            class="form-control"
-                            style="margin-bottom: 10px;"
-                            :showClearButton="false">
-                        </ejs-autocomplete>
-
-                        <ul class="col-sm-12 col-md-12" style="text-align:left;margin-left:-8px;">
-                            <li class="form-control" style="width:120%;text-align:center;margin-top:8px;"
-                                v-for="(newAlumnoCod,alcIndex) in listAlumnosCod"  
-                                :key="alcIndex">
-                                {{newAlumnoCod}}           
-                            </li>
-                        </ul>
-
+                     
                     </div>
                     <div class="col">
-                        <div class="col" style="text-align:left;padding-bottom:30px;">
-                            <label for="formGroupExampleInput" style="margin-right:50px">Nombre y Apellidos</label>
-                            <button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:-3px;"
-                                    @click="addAlumno">Agregar
-                            </button>
-                        </div>
-                        <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{alSeleccionado}}</div>
-                        <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
-                            <li class="form-control list-group-item" style="padding: 0.4rem 0.5rem;"
-                                v-for="(newAlumno,alIndex) in listAlumnosNom"  
-                                :key="alIndex">
-                                {{newAlumno}}    
-                                <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
-                            </li>
-                        </ul>
-                    </div>
                     
+                    </div>
                 </div>
-                <div style="position:absolute; bottom:30px;">
-                    <!--<date-picker v-model="datetime" lang="es" type="datetime" format="YYYY-MM-DD HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
-                    <date-picker v-model="datetime" type="datetime" :time-picker-options="timePickerOptions" placeholder="Selecciona Hora y Fecha"></date-picker> -->
-                </div>
+                <div style="position:absolute; bottom:30px;">               </div>
             </div>
             
             <div class="der col-lg-6 col-xm col-md-12">
@@ -75,7 +22,7 @@
                  <div class="top-titulo" style="margin-bottom:20px;">
                     <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
                     <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="selectedMotivo">
-                        <option disabled selected value=null>Selecciona un motivo</option>
+                        <option selected disabled :value="null" >Selecciona un motivo</option>
                         <option
                         v-for="(motivo, i) in motivos" 
                         :key="i" 
@@ -110,7 +57,7 @@
                     <div class="top-titulo" style="text-align:left;">
                     <div class="col-sm-4 derivar-dropdown-title">Derivar: </div>
                     <select class="col-sm form-control" style="left:-40px;" v-model="selectedUnidadApoyo">
-                        <option selected disabled :value="null">Seleccionar</option>
+                        <option selected disabled :value="null" >Seleccionar</option>
                         <option
                         v-for="(unidadApoyo, i) in unidadesApoyo" 
                         :key="i" 
@@ -119,16 +66,16 @@
                         </option>
                     </select>
                     </div>
-                </div>
-                
+                </div>                
             </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
     </div>
 </template>
 
+
 <script>
-import DatePicker from 'vue2-datepicker'
+//import DatePicker from 'vue2-datepicker'
 import moment from 'moment'
 import Swal from 'sweetalert2'
 import 'vue2-datepicker/index.css'
@@ -139,7 +86,7 @@ Vue.use(AutoCompletePlugin);
 export default Vue.extend ({
     name: 'formSesionTutoria',
     components:{
-        DatePicker
+        //DatePicker
     },
     data: function () {
         return {
@@ -192,7 +139,6 @@ export default Vue.extend ({
             for(var i in response.data){ 
                 this.codigos.push(response.data[i][0]);
             }
-            console.log(this.codigos);
         })
         .catch(e => {
             console.log(e.response);

@@ -1,5 +1,22 @@
 <template>
     <div class="formagendarcita container">
+        <div class="top-titulo " style="text-align:left;">
+            <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
+            <select class="col-md-4 col-xs-2 form-control" style="margin-top:20px" >
+                <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
+                <!--<option 
+                    v-for="(tipoTutoria, index) in tiposTutoria" 
+                    :key="index" 
+                    :value="tipoTutoria.id_tipo_tutoria">
+                    {{ tipoTutoria.nombre }}
+                </option>-->
+            </select>
+            <ul class="legend">
+                <li><span class="ocupado"></span> Ocupado </li>
+                <li><span class="disponible"></span> Disponible </li>
+                <li><span class="citareservada"></span> Cita Resevada </li>
+            </ul>
+        </div>
         <div class="top-titulo" style="text-align:left;">
             <Fullcalendar ref="fullCalendar"
                           :plugins = "calendarPlugins"
@@ -25,6 +42,7 @@
                           />
             <modals-container/>
         </div>
+        
     </div>
 </template>
 
@@ -100,6 +118,7 @@ export default {
 </script>
 
 <style lang='scss'>
+@import './../assets/styles/main.css';
 
 @import '~@fullcalendar/core/main.css';
 @import '~@fullcalendar/daygrid/main.css';
@@ -110,7 +129,7 @@ export default {
     justify-content: space-between;
 }
 .fc-header-toolbar {
-    margin-top: 30px;
+    margin-top: 10px;
 }
 .fc-button {
     background-color: #17a2b8;

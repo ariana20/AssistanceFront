@@ -62,3 +62,14 @@
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}
 input:focus {outline: none;box-shadow: none;}
+
+.fc-toolbar { text-transform: capitalize; }
+.fc-day-header { text-transform: capitalize; }
+
+.legend { list-style: none; display: contents;}
+.legend li { float: left; margin-right: 10px;margin-top: 30px; }
+.legend span { border-radius: 4px; border: 1px solid #ccc; float: left; width: 20px; height: 20px; margin: 2px; }
+/* your colors */
+.legend .ocupado { background-color: gray; }
+.legend .disponible { background-color: #B2EBF2; }
+.legend .citareservada { background-color: #009892; }

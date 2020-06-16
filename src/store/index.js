@@ -106,6 +106,11 @@ export default new Vuex.Store({
       path: '/asignartutor',
       icon: 'ion-ios-people'
     },
+    {
+      text: 'Calendario',
+      path: '/calendariocitas',
+      icon: 'ion-ios-calendar'
+    },
     ],
     filtro:{
       query: '',
@@ -118,11 +123,18 @@ export default new Vuex.Store({
     ADD_EVENT: (state, event) => {
       state.events.push(event)
     },
-    UPDATE_EVENT: (state,{id,title,start,end}) => {
+    UPDATE_EVENT: (state,{id,title,start,color}) => {
       let index = state.events.findIndex(_event => _event.id == id)
       state.events[index].title = title;
       state.events[index].start = start;
-      state.events[index].end = end;      
+      state.events[index].color = color;      
+    },
+    REMOVE_EVENT: (state,{id}) => {
+      let index = state.events.findIndex(_event => _event.id == id)
+      if (index > -1) {
+        state.events[index].title = 'Libre'
+        state.events[index].color = '#B2EBF2';
+      } 
     }
   },
   actions: {
