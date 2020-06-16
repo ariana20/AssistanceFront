@@ -77,7 +77,7 @@
                             <!-- <input class="col-sm-8 form-control"  style="text-align:center;
                             width:200%;margin-left:10px;padding-right:0px;text-align:center; "> -->
                             <!-- <b-icon  icon="file-earmark-plus" style="color:#757575;width:35px; height:35px;"/> -->
-                            <input type="file" id="archivoInput" ref="file" class="col-md-offset-4 col-md-4"  />
+                            <input type="file" id="archivoInput"  ref="file" class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
                             <!-- v-on:change="handleFileUpload" -->
                     
                             <!-- <b-icon icon="play-fill" style="color:#757575;width:35px; height:35px;"/> -->
@@ -158,9 +158,10 @@ export default Vue.extend ({
     
     Axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
         .then( response => {
-            console.log("listado alumnos: ",response.data)
+            //console.log("listado alumnos: ",response.data)
             for(var i in response.data){ 
                 this.codigos.push(response.data[i][0]);
+                
             }
         })
         .catch(e => {
@@ -179,7 +180,7 @@ export default Vue.extend ({
                 if(this.sel==this.codigos[i].codigo){
                     this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
                 }
-                console.log(this.alSeleccionado);
+                //console.log(this.alSeleccionado);
                 //break;   
             }
         },
@@ -214,17 +215,17 @@ export default Vue.extend ({
                         break;
                     }
             }
-            if(this.alSeleccionado != 'Nombre Alumno' && !estaAl && this.sel.length == 8){ 
+            if(this.alSeleccionado != 'Nombre del alumno' && !estaAl && this.sel.length == 8){ 
                 this.listAlumnosNom.push(this.alSeleccionado);
                 this.listAlumnosCod.push(this.sel);
                 for(var j in this.codigos){
                     if(this.sel == this.codigos[j].codigo)
                         this.listAlumnosId.push(this.codigos[j].id_usuario);
                 }
-                this.alSeleccionado='Nombre Alumno';
+                this.alSeleccionado='Nombre del alumno';
                 this.sel= '';
             }
-            console.log(this.listAlumnosId);
+            console.log(this.listAlumnosCod);
             
             
         },
@@ -247,20 +248,26 @@ export default Vue.extend ({
           })
         },
     
-    handleFileUpload(event){
-        console.log('handle',event);
+    handleFileUpload(){
         let files=[];
         files=this.$refs.file.files;
         console.log(files);   
-   
-           var files2=[];
-           for(let i=0;i<files.length;i++){
-               files2[i]=files[i].file;
-                //puedo iterar 
-           }
-  
+        //console.log('cods',this.listAlumnosCod);
+        let formData= new FormData();
+        let headers={'Content-Type':'multipart/form-data'};
+        for(let i=0;i<files.length;i++){
+            
+            formData.append('file['+i+']',files[i]);
+        }
+        formData.append('_hidden','solojoh');
+         const params={
+            files:formData,
+            headers:headers,
+        }
+        console.log('fD',formData);
+        
              Axios
-              .post('/usuarios/masivo',files)
+              .post('/usuarios/masivo',params)
               .then( response=>{
                 console.log('masivo: ',response);
                 if(response.status=='Subida terminada'){
@@ -296,8 +303,57 @@ export default Vue.extend ({
                }
             );
     },
+    FileUpload(){
+        let file=this.$refs.file.files[0];
+        console.log('archivo',file);
+        //console.log('cods',this.listAlumnosCod);
+        let formData= new FormData();
+        let headers={'Content-Type':'multipart/form-data'};
+        formData.append('file',file);       
+        formData.append('_hidden','solojoh');
+        //
+        const params={
+            codigos:this.listAlumnosCod,
+            files:formData,
+            headers:headers,
+        }
+        Axios
+              .post('/usuarios/masivo',params)
+              .then( response=>{
+                console.log('masivo: ',response);
+                if(response.status=='Subida terminada'){
+                Swal.fire({
+                    text:"Se guardaron los datos con éxito",
+                    icon:"success",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  })
+                }
+                else{
+                    Swal.fire({
+                    text:"Algo pasó",
+                    icon:"warning",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  })
+                }
 
-
+            }).catch(e => {
+              console.log('catch grupal',e);
+              console.log(e);
+              // this.hideModal();
+                 Swal.fire({
+                    text:"Estamos teniendo problemas al cargar las notas de los alumnos. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  });                  
+               }
+            );
+    },
 
 
     }
