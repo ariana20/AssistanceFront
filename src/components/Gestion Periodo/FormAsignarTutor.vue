@@ -10,7 +10,7 @@
                     v-for="(item, index) in tutores" 
                     :key="index" 
                     :value="item">
-                    {{ item.tutor.nombre + " " + item.tutor.apellidos }}
+                    {{ item.usuario.nombre + " " + item.usuario.apellidos }}
                 </option>
             </select>
         </div>
@@ -47,6 +47,7 @@
                 <tr>
                     <td scope="col" style="width:150px">
                         <ejs-autocomplete
+                            :enabled="this.tutorSeleccionado"
                             :dataSource='codigos' 
                             :fields='campoCodigo' 
                             placeholder="Código" 
@@ -112,6 +113,7 @@ export default {
   },
   mounted(){
     this.listarTutores();
+    //usuarios/condAlumno 
     this.obtenerAlumnos();
   },
   computed:{
@@ -119,13 +121,13 @@ export default {
   },
   methods:{
     obtenerAlumnos(){
-      axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
+      axios.post('programa/alumnosProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
       .then( response => {
           console.log("listado alumnos: ",response.data)
-          //this.alumnos=response.data;
-          for(var i in response.data){ 
-              this.codigos.push(response.data[i][0]);
-          }
+          this.codigos=response.data;
+          //for(var i in response.data){ 
+            //  this.codigos.push(response.data[i][0]);
+          //}
           console.log(this.codigos);
       })
       .catch(e => {
@@ -144,13 +146,15 @@ export default {
     },
     listarTutores() {
       const params = {
-        id : this.$store.state.programaActual.id_programa
+        id_programa : this.$store.state.programaActual.id_programa,
+        nomFacu:this.$store.state.programaActual.facultad.nombre,
+        nombre: "",
       };
       axios
-      .post('/programa/tutores', params)
+      .post('/programa/tutoresListar', params)
         .then(res =>{
-          console.log(res.data);
-          this.tutores=res.data.tasks;            
+          console.log(res);
+          this.tutores=res.data;            
         })
         .catch(e => {
           console.log(e.response);
@@ -159,10 +163,10 @@ export default {
 
     listarTT(){
       if(this.tutorSeleccionado){
-        this.tipoTutoria=this.tutorSeleccionado.tipoTutoria;
+        this.tipoTutoria=this.tutorSeleccionado.usuario.tipo_tutorias;
         console.log(this.tutorSeleccionado);
         const params = {
-          id_tutor: this.tutorSeleccionado.tutor.id_usuario,
+          id_tutor: this.tutorSeleccionado.usuario.id_usuario,
           id_programa: this.$store.state.programaActual.id_programa
         };
         //Falta corregir por caro!!!
@@ -184,7 +188,7 @@ export default {
         console.log(this.alumnosAsig);
 
         const params = {
-        id_tutor: this.tutorSeleccionado.tutor.id_usuario,
+        id_tutor: this.tutorSeleccionado.usuario.id_usuario,
         id_programa: this.$store.state.programaActual.id_programa,
         id_alumno: this.alSeleccionado.id_usuario,
         id_usuario_creacion: this.$store.state.usuario.id_usuario,
@@ -242,8 +246,9 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                 }) 
-                this.enviarCorreo();
+                
                 this.alumnosAsig.push(this.alSeleccionado);
+                this.enviarCorreo();
                 this.alSeleccionado=null;
                 this.sel='';  
                 
@@ -259,7 +264,7 @@ export default {
     },
 
     enviarCorreo(){
-        var mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.tutor.nombre+" "+this.tutorSeleccionado.tutor.apellidos+" como tutor o tutora.";
+        var mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.usuario.nombre+" "+this.tutorSeleccionado.usuario.apellidos+" como tutor o tutora.";
         emailjs.send(
             "gmail",
             "template_bV7OIjEW",
@@ -286,7 +291,7 @@ export default {
         }).then((result) => {
             if (result.value) {
                 const params = {
-                id_tutor: this.tutorSeleccionado.tutor.id_usuario,
+                id_tutor: this.tutorSeleccionado.usuario.id_usuario,
                 id_programa: this.$store.state.programaActual.id_programa,
                 id_alumno: item.id_usuario,
                 };

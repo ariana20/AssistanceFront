@@ -13,8 +13,8 @@
 
       <div v-for="(item,index) in tutores" :key="index">
         <datosTutor
-        :tutor="item.tutor"
-        :tipoTutoria="item.tipoTutoria" />
+        :tutor="item.usuario"
+        :tipoTutoria="item.usuario.tipo_tutorias" />
       </div>
       <infinite-loading spinner="spiral" :identifier="infiniteId" @infinite="infiniteHandler">
         <div slot="no-more">No hay más tutores</div>
@@ -37,7 +37,6 @@ export default {
     return{
       page:1,
       tutores:[],
-      arreglo:[1,2,3,4,5,6],
       id:null,
       nomb:"", 
       infiniteId: 1,
@@ -55,10 +54,11 @@ export default {
     },
     infiniteHandler: function($state){
       //$state.reset();
-        let limit = this.tutores.length / 40 + 1;
+        let limit = this.tutores.length / 10 + 1;
         const params = {
           page: limit,
-          id : this.$store.state.programaActual.id_programa,
+          id_programa : this.$store.state.programaActual.id_programa,
+          nomFacu:this.$store.state.programaActual.facultad.nombre,
           nombre: this.nomb,
         };
         axios
@@ -72,8 +72,8 @@ export default {
           })
     },
     loadMore: function($state, res){
-      if(res.data.tasks.length){
-        this.tutores=this.tutores.concat(res.data.tasks);
+      if(res.data.tasks.data.length){
+        this.tutores=this.tutores.concat(res.data.tasks.data);
         $state.loaded();
         console.log(this.tutores.length)
         if(res.data.paginate.total==this.tutores.length){
@@ -100,5 +100,5 @@ export default {
     margin-bottom:1.3em;
 
 }
-
+input:focus {outline: none;box-shadow: none;}
 </style>
