@@ -218,10 +218,12 @@ export default {
                                 confirmButtonColor:'#0097A7',
                                 showConfirmButton: true,
                             }) 
+                            this.enviarCorreo(); 
                             this.alumnosAsig.push(this.alSeleccionado);
                             this.alSeleccionado=null;
                             this.sel='';
-                            this.cambiar=false;  
+                            this.cambiar=false; 
+                            
 
                         }).catch(e => {
                         console.log(e.response);
@@ -239,9 +241,11 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                 }) 
+                this.enviarCorreo();
                 this.alumnosAsig.push(this.alSeleccionado);
                 this.alSeleccionado=null;
                 this.sel='';  
+                
             }
             
      
@@ -251,6 +255,23 @@ export default {
         })
 
             
+    },
+
+    enviarCorreo(){
+        mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.nombre+" "+this.tutorSeleccionado.apellidos+" como tutor o tutora.";
+        emailjs.send(
+            "gmail",
+            "template_bV7OIjEW",
+            {
+            "nombre":this.alSeleccionado.nombre+" "+this.alSeleccionado.apellidos,
+            "mensaje":mensaje,
+            "correo": this.alSeleccionado.correo
+            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+        .then((result) => {
+            console.log('SUCCESS!', result.status, result.text);
+        }, (error) => {
+            console.log('FAILED...', error);
+        });
     },
 
     Eliminar: function(item, index) {
