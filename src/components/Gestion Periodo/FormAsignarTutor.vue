@@ -206,7 +206,7 @@ export default {
                     showConfirmButton: true,
                 }).then((result) => {
                     if (result.value) {
-                        this.cambiar=true;
+                        params.cambiar=true;
                         axios
                         .post('/registros/insertar', params)
                         .then(rr =>{
@@ -218,7 +218,7 @@ export default {
                                 confirmButtonColor:'#0097A7',
                                 showConfirmButton: true,
                             }) 
-                            this.enviarCorreo(); 
+                            //this.enviarCorreo(); 
                             this.alumnosAsig.push(this.alSeleccionado);
                             this.alSeleccionado=null;
                             this.sel='';
@@ -241,7 +241,7 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                 }) 
-                this.enviarCorreo();
+                //this.enviarCorreo();
                 this.alumnosAsig.push(this.alSeleccionado);
                 this.alSeleccionado=null;
                 this.sel='';  
@@ -256,7 +256,7 @@ export default {
 
             
     },
-
+/*
     enviarCorreo(){
         mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.nombre+" "+this.tutorSeleccionado.apellidos+" como tutor o tutora.";
         emailjs.send(
@@ -273,7 +273,7 @@ export default {
             console.log('FAILED...', error);
         });
     },
-
+*/
     Eliminar: function(item, index) {
         Swal.fire({
             title: '¿Dese eliminar la asignación de '+item.nombre+'?',
