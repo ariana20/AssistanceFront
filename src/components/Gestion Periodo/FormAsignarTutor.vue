@@ -86,6 +86,7 @@
 <script>
 import Swal from 'sweetalert2'
 import Vue from 'vue'
+import emailjs from 'emailjs-com';
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
 import axios from 'axios'
@@ -241,7 +242,7 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                 }) 
-                //this.enviarCorreo();
+                this.enviarCorreo();
                 this.alumnosAsig.push(this.alSeleccionado);
                 this.alSeleccionado=null;
                 this.sel='';  
@@ -256,9 +257,9 @@ export default {
 
             
     },
-/*
+
     enviarCorreo(){
-        mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.nombre+" "+this.tutorSeleccionado.apellidos+" como tutor o tutora.";
+        var mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.tutor.nombre+" "+this.tutorSeleccionado.tutor.apellidos+" como tutor o tutora.";
         emailjs.send(
             "gmail",
             "template_bV7OIjEW",
@@ -273,7 +274,7 @@ export default {
             console.log('FAILED...', error);
         });
     },
-*/
+
     Eliminar: function(item, index) {
         Swal.fire({
             title: '¿Dese eliminar la asignación de '+item.nombre+'?',
