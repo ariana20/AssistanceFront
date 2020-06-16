@@ -55,7 +55,7 @@ export default {
     margin-top:1%;
     margin-left:5%;
   }
-  @media screen and (max-height: 800px) {
+  @media screen and (max-height: 600px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
   .image-logo{
