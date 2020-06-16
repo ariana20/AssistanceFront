@@ -11,7 +11,6 @@
                         <th scope="col">Código</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Correo</th>
-                        <th scope="col">Estado</th>
                     </tr>
                     </thead>
                     <tbody href="#close">
@@ -19,7 +18,6 @@
                         <th scope="row"><a href="#close">{{item.codigo}}</a></th>
                         <td><a href="#close">{{item.nombre+" "+item.apellidos}}</a></td>
                         <td><a href="#close">{{item.correo}}</a></td>
-                        <td><a href="#close">{{item.estado}}</a></td>
                     </tr>
                     </tbody>
                 </table>
