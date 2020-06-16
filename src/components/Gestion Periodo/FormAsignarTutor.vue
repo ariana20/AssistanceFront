@@ -70,7 +70,7 @@
                     </td>
                 </tr>
                 <tr v-for="(item,index) in alumnosAsig" :key="index">
-                    <td v-if="item!=undefined">{{item.id_alumno}}</td>
+                    <td v-if="item!=undefined">{{item.codigo}}</td>
                     <td v-if="item!=undefined">{{item.nombre+" "+item.apellidos}}</td>
                     <td v-if="item!=undefined">{{item.condicion_alumno}}</td>
                     <td v-if="item!=undefined"><button class="btn link" v-on:click="Eliminar(item, index)"><b-icon icon="dash-circle-fill"></b-icon></button></td>
@@ -86,6 +86,7 @@
 <script>
 import Swal from 'sweetalert2'
 import Vue from 'vue'
+import emailjs from 'emailjs-com';
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
 import axios from 'axios'
@@ -93,16 +94,16 @@ import axios from 'axios'
 export default {
   data(){
     return{
-      tutores:[],
-      tutorSeleccionado:null,
-      tipoTutoria:[],
-      alumnos:[],
-      alumnosAsig:[],
-      sel:'',
-      alSeleccionado: null,
-      codigos:[],
-      campoCodigo: {value:'codigo'},  
-
+        tutores:[],
+        tutorSeleccionado:null,
+        tipoTutoria:[],
+        alumnos:[],
+        alumnosAsig:[],
+        sel:'',
+        alSeleccionado: null,
+        codigos:[],
+        campoCodigo: {value:'codigo'},  
+        cambiar: false,
 
     }
   },
@@ -182,26 +183,58 @@ export default {
         console.log(this.alSeleccionado);
         console.log(this.alumnosAsig);
 
-        if(this.alumnosAsig.indexOf(this.alSeleccionado)>-1){
-            Swal.fire({
-                text:"El alumno ya está asignado con este tutor",
-                icon:"error",
-                confirmButtonText: 'OK',
-                confirmButtonColor:'#0097A7',
-                showConfirmButton: true,
-            })
-        }else{
-            const params = {
-            id_tutor: this.tutorSeleccionado.tutor.id_usuario,
-            id_programa: this.$store.state.programaActual.id_programa,
-            id_alumno: this.alSeleccionado.id_usuario,
-            id_usuario_creacion: this.$store.state.usuario.id_usuario,
-            };
-            //IDEALMENTE DEBERÍA VERIFICAR QUE EL ALUMNO NO TENGA ASIGNADO OTRO TUTOR
-            axios
-            .post('/registros/insertar', params)
-            .then(res =>{
-                console.log(res);
+        const params = {
+        id_tutor: this.tutorSeleccionado.tutor.id_usuario,
+        id_programa: this.$store.state.programaActual.id_programa,
+        id_alumno: this.alSeleccionado.id_usuario,
+        id_usuario_creacion: this.$store.state.usuario.id_usuario,
+        cambiar:this.cambiar,
+        };
+        
+        axios
+        .post('/registros/insertar', params)
+        .then(res =>{
+            console.log(res);
+            if(res.data.status=="error"){
+                //console.log(res.data.mensaje);
+                Swal.fire({
+                    text:res.data.mensaje+", ¿desea asignar de todos modos?",
+                    icon:"warning",
+                    confirmButtonText: 'Si',
+                    showCancelButton: true,
+                    cancelButtonText: 'No',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                }).then((result) => {
+                    if (result.value) {
+                        params.cambiar=true;
+                        axios
+                        .post('/registros/insertar', params)
+                        .then(rr =>{
+                            console.log(rr);
+                            Swal.fire({
+                                text:"Se ha realizado correctamente la asignación",
+                                icon:"success",
+                                confirmButtonText: 'OK',
+                                confirmButtonColor:'#0097A7',
+                                showConfirmButton: true,
+                            }) 
+                            //this.enviarCorreo(); 
+                            this.alumnosAsig.push(this.alSeleccionado);
+                            this.alSeleccionado=null;
+                            this.sel='';
+                            this.cambiar=false; 
+                            
+
+                        }).catch(e => {
+                        console.log(e.response);
+                        })
+
+
+                    } 
+                })
+                
+            }else if (res.data.status=="success"){
                 Swal.fire({
                     text:"Se ha realizado correctamente la asignación",
                     icon:"success",
@@ -209,15 +242,37 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                 }) 
+                this.enviarCorreo();
                 this.alumnosAsig.push(this.alSeleccionado);
                 this.alSeleccionado=null;
-                this.sel='';          
-            })
-            .catch(e => {
-            console.log(e.response);
-            })
+                this.sel='';  
+                
+            }
+            
+     
+        })
+        .catch(e => {
+        console.log(e.response);
+        })
 
-        }        
+            
+    },
+
+    enviarCorreo(){
+        var mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.tutor.nombre+" "+this.tutorSeleccionado.tutor.apellidos+" como tutor o tutora.";
+        emailjs.send(
+            "gmail",
+            "template_bV7OIjEW",
+            {
+            "nombre":this.alSeleccionado.nombre+" "+this.alSeleccionado.apellidos,
+            "mensaje":mensaje,
+            "correo": this.alSeleccionado.correo
+            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+        .then((result) => {
+            console.log('SUCCESS!', result.status, result.text);
+        }, (error) => {
+            console.log('FAILED...', error);
+        });
     },
 
     Eliminar: function(item, index) {
