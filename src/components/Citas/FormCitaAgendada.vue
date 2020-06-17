@@ -25,7 +25,7 @@
                         <figure id="floated" class="image-logo">
                             <img :src='this.event.extendedProps.alumno.imagen' height="110px" width="110px" alt="imagen usuario" style="border-color:gray;border-radius: 25%;"/><br>	
                         </figure>
-                        <button type="button" class="btn btn-info">Ver Perfil</button>
+                        <button v-on:click="Perfil" type="button" class="btn btn-info">Ver Perfil</button>
                     </div>
                 </div>
                 <div style="bottom:30px;">
@@ -40,7 +40,6 @@
                 </div>
                 <div style="position:absolute; bottom:30px;">
                     <input type="checkbox" v-model="asistencia"/>Asistencia
-                    <button v-on:click="Perfil">Ver Perfil</button>  
                 </div>
             </div>
             <div class="der col-lg-6 col-xm col-md-12">
@@ -353,7 +352,7 @@ export default Vue.extend ({
                   });
         },
         Perfil(){
-            this.$router.push('/perfil/1')
+            this.$router.push('/perfil/'+this.event.extendedProps.alumno.id_usuario)
         }
     }
 })
