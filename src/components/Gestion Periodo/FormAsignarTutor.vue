@@ -63,7 +63,7 @@
                         <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >Nombre Alumno</div>
                     </td>
                     <td scope="col" style="width:400px">
-                        <div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >{{alSeleccionado.condicion_alumno}}</div>
+                        <div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >{{alSeleccionado.condicion}}</div>
                         <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Condición Alumno</div>
                     </td>
                     <td scope="col">
@@ -73,7 +73,7 @@
                 <tr v-for="(item,index) in alumnosAsig" :key="index">
                     <td v-if="item!=undefined">{{item.codigo}}</td>
                     <td v-if="item!=undefined">{{item.nombre+" "+item.apellidos}}</td>
-                    <td v-if="item!=undefined">{{item.condicion_alumno}}</td>
+                    <td v-if="item!=undefined">{{item.condicion}}</td>
                     <td v-if="item!=undefined"><button class="btn link" v-on:click="Eliminar(item, index)"><b-icon icon="dash-circle-fill"></b-icon></button></td>
                 </tr>
             </tbody>
