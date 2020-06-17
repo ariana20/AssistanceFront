@@ -2,23 +2,29 @@
     <div class= "container">
          <!-- <div class="row grid-divider "> -->
             <div >
-                <section class="text-center" style="padding-top:20px">
-                    <input type="file" id="archivoInput" ref="file" multiple class="col-md-offset-4 col-md-4" v-on:change="handleFileUpload" />
-                    <br><br>
-                    <div id="visorArchivo">
-                    <!--Aqui se desplegará el fichero-->
-                    </div>
+                <section class="text-left" style="padding-top:0px">
+                    <h5 style="font-weight: bold;">Carga masiva</h5>
+                    <h6 >El formato permitido para los archivos es el siguiente: PDF</h6>
+                    <h6 >El formato de nombre permitido para los archivos es el siguiente: codigo_notas</h6>
+                    <h6 >Ejemplo: 20152354_notas</h6>
+
+                    <input type="file" id="get-files" ref="file" name="client-file" 
+                    multiple class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
+                    <button style="margin:5px;border-radius: 10px;" class="btn btn-info" v-on:click="subirPDFs">Subir</button>
+                    
                 </section>
 
 
 
                 
                 <div>
+                    <h5 style="font-weight: bold;" class="text-left">Carga grupal</h5>
                   <hr style="width:105%;border:0px;"  >
 
                 </div>
-
+                
                 <div class="row " >
+                    
                     <div class="col-xs-6 col-sm-2" sytle="padding:50px;padding-top:10px;">
                         <div class="col-sm-12" style="text-align:center">
                                 <b>Código</b>                            
@@ -49,7 +55,7 @@
                             <b>Nombre y Apellidos</b>
                          
                         </div>
-                        <div type="text" class="col-sm-12 form-control" placeholder="Nombre" style="margin-left:10px;color: white;background:#BEBEBE;" >
+                        <div type="text" class="col-sm-12 form-control" placeholder="Nombre"  style="margin-left:10px;color: white;background:#BEBEBE;" >
                             {{alSeleccionado}} </div>
                          
                         <div class="col-sm-12 form-control list-group-item" 
@@ -62,11 +68,11 @@
                     </div>
                     <div class="col-md-6">
                         <div class="col-sm-4" style="text-align:center;padding-bottom:33px;">
-                            <b>Archivo</b>
+                            <b>Archivo PDF</b>
                          
                         </div>
-                        <div type="text" class="col-sm-4" placeholder="Nombre" style="top:-5px">
-                            <button  :disabled="!this.sel" type="button" class="btn btn-info" 
+                        <div type="text" class="col-sm-4" placeholder="Nombre" style="top:-5px;padding-bottom:5px">
+                            <button  :disabled="!this.sel" type="button" class="btn btn-info"
                                     @click="addAlumno">Agregar
                             </button>          
                         </div>
@@ -77,7 +83,9 @@
                             <!-- <input class="col-sm-8 form-control"  style="text-align:center;
                             width:200%;margin-left:10px;padding-right:0px;text-align:center; "> -->
                             <!-- <b-icon  icon="file-earmark-plus" style="color:#757575;width:35px; height:35px;"/> -->
-                            <input type="file" id="archivoInput"  ref="file" class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
+                            <!-- <input type="file" id="archivoInput"  ref="file" class="col-md-offset-4 col-md-4" v-on:change="FileUpload" /> -->
+                            <input type="file" id="get-files" ref="file" name="client-file"
+                                     style="padding-bottom:17px"   class="col-md-offset-4 col-md-4" v-on:change="onFileSelected" />
                             <!-- v-on:change="handleFileUpload" -->
                     
                             <!-- <b-icon icon="play-fill" style="color:#757575;width:35px; height:35px;"/> -->
@@ -97,24 +105,15 @@
       
                 </div>
             </div>
-            <!-- pdf -->
-            <!-- <div style="width:100px;text-align:center;margin-top:40px" >
-              <img class="imgP" v-if="this.selectedFile!==null" alt="Vue logo" :src="selectedFile" id='LogoInst'>
-              <img class="imgP" v-else alt="Vue logo" v-bind:src="logo" id='LogoInst'>        -->
-              
-               <!-- <object data="/INF238-2020-1.pdf" type="application/pdf" width="500%"  height="600px" /> -->
-               <!-- <embed src="http://example.com/doc.pdf#page=5" type="application/pdf" width="500%"  height="600px" /> -->
-            
-            <!-- </div> -->
-            <!--Estos datos del boton deben ir en mi botoncito de examinar-->
-            <!-- <div style=";text-align:center">
-              <input type="file" v-on:change="onFileSelected" style="margin-top:20px"><br>
-              <button @click="onUpload" type="button" class="btn btn-info" style="margin-left: -280px;margin-top:20px">Subir</button>
-            </div>  -->
-        
-        <!-- </div> -->
-        <!-- <div style="width:100%; border-bottom:0.5px solid #bababa; height:0.5px;padding-top:15px; margin-bottom:15px;"></div> -->
+              <!-- Modal de cargando -->
+      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+        <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+          <b-spinner style="width: 3rem; height: 3rem;"/>
+          <br >Subiendo archivos... 
+        </div>
+      </b-modal>
     </div> 
+    
 </template>
 
 
@@ -151,6 +150,10 @@ export default Vue.extend ({
             unidadesApoyo: [],
             selectedUnidadApoyo: null,
             selectedFile:null,
+            selectedFiles:[],
+            formData:null,
+            formData2:null,
+            file1x1:null,
         }
     },
     mounted(){
@@ -248,29 +251,39 @@ export default Vue.extend ({
           })
         },
     
-    handleFileUpload(){
-        let files=[];
-        files=this.$refs.file.files;
-        console.log(files);   
+   
+    FileUpload(){
+        //Para masivo
+        let files=this.$refs.file.files;
+        console.log('archivoS',files);
         //console.log('cods',this.listAlumnosCod);
-        let formData= new FormData();
-        let headers={'Content-Type':'multipart/form-data'};
-        for(let i=0;i<files.length;i++){
-            
-            formData.append('file['+i+']',files[i]);
-        }
-        formData.append('_hidden','solojoh');
-         const params={
-            files:formData,
-            headers:headers,
-        }
-        console.log('fD',formData);
+        this.formData= new FormData();
+           
+        this.formData.append('_hidden','solojoh');
+        //
+         for( var i = 0; i < files.length; i++ ){
+          let file = files[i];
+
+          this.formData.append('files[' + i + ']', file);
+         
+        }       
         
-             Axios
-              .post('/usuarios/masivo',params)
+    },
+
+    
+    subirPDFs(){ //Para masivo
+
+        this.showModal();
+        
+       Axios
+              .post('/usuarios/masivo',this.formData,  {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }})
               .then( response=>{
                 console.log('masivo: ',response);
-                if(response.status=='Subida terminada'){
+                if(response.statusText=='OK'){ //Va a cambiar
+                this.hideModal();
                 Swal.fire({
                     text:"Se guardaron los datos con éxito",
                     icon:"success",
@@ -278,10 +291,17 @@ export default Vue.extend ({
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   })
+                  //listar usuairos
+                  
+                  this.$router.push('/ListaUsuarios'); 
+                  this.$store.state.usuarioEscogido=null;//
+                  this.$store.state.usuarios=null;
+
                 }
                 else{
+                    this.hideModal();
                     Swal.fire({
-                    text:"Algo pasó",
+                    text:"Estamos teniendo problemas al cargar los archivos.",
                     icon:"warning",
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
@@ -292,69 +312,81 @@ export default Vue.extend ({
             }).catch(e => {
               console.log('catch masivo',e);
               console.log(e);
-              // this.hideModal();
+               this.hideModal();
                  Swal.fire({
                     text:"Estamos teniendo problemas al cargar las notas de los alumnos. Vuelve a intentar en unos minutos.",
                     icon:"warning",
                     confirmButtonText: 'Ok',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
-                  });                  
+                  }); 
+                                 
                }
             );
+
     },
-    FileUpload(){
-        let file=this.$refs.file.files[0];
-        console.log('archivo',file);
-        //console.log('cods',this.listAlumnosCod);
-        let formData= new FormData();
-        let headers={'Content-Type':'multipart/form-data'};
-        formData.append('file',file);       
-        formData.append('_hidden','solojoh');
-        //
-        const params={
+    //Modal de cargando
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
+    onFileSelected(e){//para 1 x 1
+        
+      let files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      for (let index = 0; index < files.length; index++) {
+        this.createFile(files[index]);
+      }
+      console.log(this.selectedFiles);
+    },
+    createFile(file) {
+      let reader = new FileReader();
+      let vm = this;
+      reader.onload = (e) => {
+          vm.selectedFile = e.target.result;
+          vm.selectedFiles.push(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    },
+    guardarNotas(){ //Para 1 x 1
+       //Le tengo que enviar form data?
+      let obj = {
+            files:this.selectedFiles,
             codigos:this.listAlumnosCod,
-            files:formData,
-            headers:headers,
-        }
-        Axios
-              .post('/usuarios/masivo',params)
-              .then( response=>{
-                console.log('masivo: ',response);
-                if(response.status=='Subida terminada'){
-                Swal.fire({
+          }
+      Axios.post('/usuarios/subirNotas',obj)
+          .then(res =>{
+            //this.$store.state.usuarios=res.data;
+            //res.data=='Subido'
+            Swal.fire({
                     text:"Se guardaron los datos con éxito",
                     icon:"success",
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
-                  })
-                }
-                else{
-                    Swal.fire({
-                    text:"Algo pasó",
-                    icon:"warning",
-                    confirmButtonText: 'OK',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                  })
-                }
-
-            }).catch(e => {
-              console.log('catch grupal',e);
-              console.log(e);
-              // this.hideModal();
-                 Swal.fire({
-                    text:"Estamos teniendo problemas al cargar las notas de los alumnos. Vuelve a intentar en unos minutos.",
-                    icon:"warning",
-                    confirmButtonText: 'Ok',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                  });                  
-               }
-            );
+                  });
+                  console.log('grupal:',res);
+                  this.$router.push('/ListaUsuarios'); 
+                  this.$store.state.usuarioEscogido=null;//
+                  this.$store.state.usuarios=null;
+            
+          })
+          .catch(e => {
+            console.log(e.response.data);
+           })
+       
     },
-
+    /*
+    File1by1(){
+        console.log('1x1');
+        this.file1x1=this.$refs.file.files;
+        console.log('archivos',this.file1x1);
+        //console.log('cods',this.listAlumnosCod);
+        this.files[0]=this.file1x1;
+    },*/
 
     }
 })
@@ -448,7 +480,8 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
 .form-control {
     border-radius: 1.25rem;  
     border: 0.5px solid #757575;
-    margin-bottom: 10px;
+    margin-bottom: 13px;
+    height: 33px;
 }
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}
@@ -459,5 +492,9 @@ hr {
     color: blue;
     background-color: #e5e5e5;
     border-top: 0.4px solid rgba(0, 0, 0, 0.1) !important;
+}
+.btn-info{
+    height: 33px;
+    text-align: center;
 }
 </style>
