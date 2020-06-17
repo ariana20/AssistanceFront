@@ -70,23 +70,6 @@ import EventModal from './EventModal'
 export default {
     name: 'formAgendarCita',
     components: {Fullcalendar},
-<<<<<<< HEAD
-    data: () => ({
-        calendarPlugins: [
-            DayGridPlugin,
-            TimeGridPlugin,
-            InteractionPlugin,
-            ListPlugin,
-            momentPlugin
-        ],
-        calendar: null,
-        locales: [esLocale],
-        dispSemanalVistaAl: null,
-        businessHours: {
-            daysOfWeek: [ 1, 2, 3, 4, 5, 6],
-            startTime: '08:00', 
-            endTime: '22:00', 
-=======
     data () {
         return {
             calendarPlugins: [
@@ -125,33 +108,12 @@ export default {
                     },
             },
             nombre_usuario: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos
->>>>>>> origin/emmaraq
         }
     },
     computed: {
         ...mapGetters(["EVENTS"])
     },
     methods: {
-<<<<<<< HEAD
-        handleSelect (arg) {
-            console.log(arg);
-            this.$store.commit("ADD_EVENT", {
-                id: (new Date()).getTime(),
-                title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
-                start: arg.start,
-                end: arg.end,
-            });
-        },
-        handleClick (arg) {
-            this.$modal.show(EventModal,{
-                text: "This is from the component",
-                event: arg.event
-            })
-        }
-    },
-    mounted() {
-        this.calendar = this.$refs.fullCalendar.getApi();
-=======
         handleClick (arg) {
             if(arg.event.backgroundColor!='gray') {
                 this.$modal.show(EventModal,{
@@ -232,7 +194,6 @@ export default {
         console.log(this.$store.state.usuario);
         this.getReminders();
         //this.calendar = this.$refs.fullCalendar.getApi();
->>>>>>> origin/emmaraq
         //idUsuario: this.$store.state.usuario.id_usuario
         axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
         .then(response => {
@@ -245,8 +206,6 @@ export default {
     }
     
 }
-<<<<<<< HEAD
-=======
 function addTimes (startTime, endTime) {
   var times = [ 0, 0, 0 ]
   var max = times.length
@@ -284,7 +243,6 @@ function addTimes (startTime, endTime) {
   return ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
 }
 
->>>>>>> origin/emmaraq
 </script>
 
 <style lang='scss'>
@@ -326,8 +284,6 @@ function addTimes (startTime, endTime) {
     background-color: #B2EBF2;
     border-color: #B2EBF2;
 }
-<<<<<<< HEAD
-=======
 .vm--modal {
     border-radius: 25px;
     margin: 30px;
@@ -345,5 +301,4 @@ function addTimes (startTime, endTime) {
 }
 
 
->>>>>>> origin/emmaraq
 </style>
