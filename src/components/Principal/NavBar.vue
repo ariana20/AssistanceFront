@@ -83,7 +83,7 @@ export default {
       }
     }
     else{
-      if (this.$route.path !== '/login' ) this.$router.push('login')
+      if (this.$route.path !== '/login' ) this.$router.push('/login')
     }
     
   },
@@ -110,7 +110,7 @@ export default {
               localStorage.setItem('usuarioActual', null)
               localStorage.setItem('programaSel', null)
               this.$store.state.programaActual = null;
-              if (this.$route.path !== '/login') this.$router.go('login');
+              if (this.$route.path !== '/login') this.$router.go('/login');
             }
             )
             

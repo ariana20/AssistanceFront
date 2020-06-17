@@ -14,7 +14,10 @@
                     
                     </div>
                 </div>
-                <div style="position:absolute; bottom:30px;">      <input type="checkbox" v-model="asistencia"/>Asistencia         </div>
+                <div style="position:absolute; bottom:30px;">
+                    <input type="checkbox" v-model="asistencia"/>Asistencia
+                    <button v-on:click="Perfil">Ver Perfil</button>  
+                </div>
             </div>
             
             <div class="der col-lg-6 col-xm col-md-12">
@@ -332,6 +335,9 @@ export default Vue.extend ({
                   }, (error) => {
                       console.log('FAILED...', error);
                   });
+        },
+        Perfil(){
+            this.$router.push('/perfil/1')
         }
     }
 })
