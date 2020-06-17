@@ -223,7 +223,7 @@ export default {
                                 confirmButtonColor:'#0097A7',
                                 showConfirmButton: true,
                             }) 
-                            //this.enviarCorreo(); 
+                            this.enviarCorreo(); 
                             this.alumnosAsig.push(this.alSeleccionado);
                             this.alSeleccionado=null;
                             this.sel='';

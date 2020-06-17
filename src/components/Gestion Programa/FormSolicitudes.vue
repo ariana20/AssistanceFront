@@ -18,9 +18,7 @@
           <tr>
             <th scope="col">Código</th>
             <th scope="col">Nombre</th>
-            <th scope="col">Tipo de Solicitud</th>
-            <th scope="col">Descripción</th>
-            <th scope="col">Motivo</th>
+            <th scope="col">Descripcion</th>
             <th scope="col">Usuario Relacionado</th>
             <th scope="col">Fecha Solicitud</th>
             <th scope="col">Responder</th>
@@ -32,25 +30,22 @@
           <tr v-for="(item, index) in solicitudesFiltrados" :key="index">
             <td scope="row">{{item.usuarioSolicitante.codigo}}</td>
             <td>{{item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos}}</td>
-            <td>{{item.tipo_solicitud}}</td>
             <td>{{item.descripcion}}</td>
-            <td v-if="item.motivo">{{item.motivo}}</td>
-            <td v-else>-</td>
             <td v-if="item.usuarioRelacionado">{{item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos}}</td>
-            <td v-else style="text-align:center">-</td>
+            <td v-else style="text-align:center">Ninguno</td>
             <td>{{item.fecha_creacion}}</td>
             <td >
-                <button style="padding-left: 5px;padding-right: 5px;width:25px;margin-left:5px" v-on:click="Aceptar(item)" class="btn link">
-                    <b-icon icon="check-circle-fill" style="color:#0097A7"/>
-                </button>
-                <button style="padding-left: 5px;padding-right: 5px;margin-left:5px;width:25px" v-on:click="Rechazar" class="btn link">
-                    <b-icon icon="x-circle-fill" style="color:#757575"/>
-                </button>
+              <button style="padding-left: 5px;padding-right: 5px;width:25px;margin-left:5px" v-on:click="Aceptar(item)" class="btn link">
+                  <b-icon icon="check-circle-fill" style="color:#0097A7"/>
+              </button>
+              <button style="padding-left: 5px;padding-right: 5px;margin-left:5px;width:25px" v-on:click="Rechazar" class="btn link">
+                  <b-icon icon="x-circle-fill" style="color:#757575"/>
+              </button>
             </td>
             <td >
-                <button v-on:click="Elegir(item)" style="padding-left: 5px;padding-right: 5px;width:50px" class="btn link">
-                    <modalJ2 v-on:childToParentFacu="Detalle" :solicitud="item"/>      
-                </button>
+              <button v-on:click="Elegir(item)" style="padding-left: 5px;padding-right: 5px;width:50px" class="btn link">
+                  <modalJ2 v-on:childToParentFacu="Detalle" :solicitud="item"/>      
+              </button>
             </td>
           </tr>
         </tbody>
@@ -88,26 +83,25 @@ export default {
     else this.solicitudes = this.$store.state.solicitudes;
   },
   computed:{
-        nombre:{
-          get(){
-              return this.$store.state.filtro.query;
-          },
-          set(val){
-              this.$store.commit('SET_QUERY',val);
-          }
-        },
-        ...mapGetters({
-          solicitudesFiltrados: 'filtrarSolicitudes'
-        })
+    nombre:{
+      get(){
+        return this.$store.state.filtro.query;
+      },
+      set(val){
+        this.$store.commit('SET_QUERY',val);
+      }
+    },
+    ...mapGetters({
+      solicitudesFiltrados: 'filtrarSolicitudes'
+    })
   },
   methods:{
     listarSolicitudes() {
-        this.axios.post('/solicitudes/listarSol',{id: this.$store.state.usuario.id_usuario, id_programa: this.$store.state.programaActual.id_programa})
-        .then(response=>{
-            this.$store.state.solicitudes = response.data;
-        })
-        .catch(e=>console.log(e));
-      
+      this.axios.post('/solicitudes/listarSol',{id: this.$store.state.usuario.id_usuario, id_programa: this.$store.state.programaActual.id_programa})
+      .then(response=>{
+          this.$store.state.solicitudes = response.data;
+      })
+      .catch(e=>console.log(e))
     },
     Elegir(item){
         this.solEl = item;

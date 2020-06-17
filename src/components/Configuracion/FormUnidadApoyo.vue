@@ -102,9 +102,9 @@ export default {
   },
   created(){
       if(this.$store.state.tipoActual.nombre == 'Admin' || this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
-          axios.post('/facultad/listarTodo')
+          axios.post('/facultad/listTodo')
             .then(response=>{
-                this.facultadesT = response.data
+                this.facultadesT = response.data.facultades
                 if(this.idUnidad){
                     this.axios.post('/unidadesApoyo/listar/'+this.idUnidad).then( response =>{
                         this.unidad= response.data;

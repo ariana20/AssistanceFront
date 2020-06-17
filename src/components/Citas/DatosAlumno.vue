@@ -12,7 +12,6 @@
             <div class="font-weight-bolder">Correo: {{tutor.correo}}</div>
             <div class="font-weight-bolder">Telefono: {{tutor.telefono}}</div>
             <div class="font-weight-bolder">Programa: {{this.$store.state.programaActual.nombre}}</div>
-            <div class="font-weight-bolder">Ciclo de Ingreso: 2016-1</div>
             <div class="font-weight-bolder">Condicion: {{tutor.condicion_alumno}}</div>
         </div>
                           

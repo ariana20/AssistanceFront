@@ -52,7 +52,7 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         <div name="VisorPdf" v-if="verPdf">
             <div class="container" style="width:100%">
-                <object :data="usuario.notas" width="1000" height="1000"></object>
+                <embed class="toolb" :src="usuario.notas+'#toolbar=0&navpanes=0&scroll=0'" width="1000" height="1000"/>
             </div>
         </div>
     </div>
@@ -203,5 +203,11 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
 select:focus {
     outline:none;
     box-shadow: none;
+}
+
+.toolb{
+    .toolbar{
+        visibility: hidden;
+    }
 }
 </style>
