@@ -23,24 +23,19 @@
                           defaultView = "timeGridWeek"
                           :locales= "locales"
                           locale="es"
-<<<<<<< HEAD
                           :header ="{
                               left: 'prev',
                               center: 'title',
                               right: 'next'
                           }"
+                          :footer ="{
+                              left: 'today',
+                              center: '',
+                              right: ''
+                          }"
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
-=======
-                          :header = "{
-                              left: 'title',
-                              center: 'dayGridMonth, timeGridWeek, timeGridDay, listWeek',
-                              right: 'prev today next'
-                          }"
-                          :businessHours= "businessHours"
-                          :columnHeaderFormat= "columnFormat"
->>>>>>> c4739749ac13a4fa340be5050c34ebb5ad198a3c
                           hiddenDays= [0]
                           :selectable="true"
                           minTime= "08:00:00"
@@ -75,7 +70,6 @@ import EventModal from './EventModal'
 export default {
     name: 'formAgendarCita',
     components: {Fullcalendar},
-<<<<<<< HEAD
     data () {
         return {
             calendarPlugins: [
@@ -114,30 +108,12 @@ export default {
                     },
             },
             nombre_usuario: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos
-=======
-    data: () => ({
-        calendarPlugins: [
-            DayGridPlugin,
-            TimeGridPlugin,
-            InteractionPlugin,
-            ListPlugin,
-            momentPlugin
-        ],
-        calendar: null,
-        locales: [esLocale],
-        dispSemanalVistaAl: null,
-        businessHours: {
-            daysOfWeek: [ 1, 2, 3, 4, 5, 6],
-            startTime: '08:00', 
-            endTime: '22:00', 
->>>>>>> c4739749ac13a4fa340be5050c34ebb5ad198a3c
         }
-    }),
+    },
     computed: {
         ...mapGetters(["EVENTS"])
     },
     methods: {
-<<<<<<< HEAD
         handleClick (arg) {
             if(arg.event.backgroundColor!='gray') {
                 this.$modal.show(EventModal,{
@@ -218,26 +194,6 @@ export default {
         console.log(this.$store.state.usuario);
         this.getReminders();
         //this.calendar = this.$refs.fullCalendar.getApi();
-=======
-        handleSelect (arg) {
-            console.log(arg);
-            this.$store.commit("ADD_EVENT", {
-                id: (new Date()).getTime(),
-                title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
-                start: arg.start,
-                end: arg.end,
-            });
-        },
-        handleClick (arg) {
-            this.$modal.show(EventModal,{
-                text: "This is from the component",
-                event: arg.event
-            })
-        }
-    },
-    mounted() {
-        this.calendar = this.$refs.fullCalendar.getApi();
->>>>>>> c4739749ac13a4fa340be5050c34ebb5ad198a3c
         //idUsuario: this.$store.state.usuario.id_usuario
         axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
         .then(response => {
@@ -250,7 +206,6 @@ export default {
     }
     
 }
-<<<<<<< HEAD
 function addTimes (startTime, endTime) {
   var times = [ 0, 0, 0 ]
   var max = times.length
@@ -288,8 +243,6 @@ function addTimes (startTime, endTime) {
   return ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
 }
 
-=======
->>>>>>> c4739749ac13a4fa340be5050c34ebb5ad198a3c
 </script>
 
 <style lang='scss'>
@@ -331,7 +284,6 @@ function addTimes (startTime, endTime) {
     background-color: #B2EBF2;
     border-color: #B2EBF2;
 }
-<<<<<<< HEAD
 .vm--modal {
     border-radius: 25px;
     margin: 30px;
@@ -349,6 +301,4 @@ function addTimes (startTime, endTime) {
 }
 
 
-=======
->>>>>>> c4739749ac13a4fa340be5050c34ebb5ad198a3c
 </style>
