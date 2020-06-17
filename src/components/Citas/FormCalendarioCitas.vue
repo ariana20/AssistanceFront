@@ -131,7 +131,8 @@ export default {
                             if(rd2[i]=='o'){
                                 axios.post('usuarios/listar/'+ rd[i].usuario_actualizacion)
                                 .then((response) => {
-                                    this.nombre = response.data.nombre + " " + response.data.apellidos;
+                                    this.title = response.data.nombre + " " + response.data.apellidos;
+                                    console.log(this.nombre);
                                 }).catch(e => {
                                     console.log(e.response);
                                 });
