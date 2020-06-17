@@ -1,11 +1,9 @@
 <template>
   <div style="margin-top:15px;">
-    <!--<fieldset v-if="this.event.extendedProps.usuario_actualizacion!=this.$store.state.usuario.id_usuario">-->
     <fieldset v-if="this.event.backgroundColor!='#009892' && !isTutor">
       <legend>Registrar Cita</legend>
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
-      <!--<b>Fecha:</b>  {{ event.start }} <br/>-->
-       <b>Fecha:</b>{{event.start | formatDate}} <br/>
+      <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
       <div id="botones">
         <button type="button" class="btn btn-info" @click="updateEvent">Aceptar</button>
@@ -17,9 +15,9 @@
     <fieldset v-if="this.event.backgroundColor=='#009892' && !isTutor">
       <legend>Cita Registrada</legend>
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
-      <!--<b>Fecha:</b>  {{ event.start }} <br/>-->
-       <b>Fecha:</b>{{event.start | formatDate}} <br/>
+      <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
+      <b>Tipo Tutoría:</b>  {{ event.description }} <br/>
       <div id="botones">
         <button type="button" class="btn btn-info" @click="$emit('close')">Cerrar</button>
       </div>
@@ -31,7 +29,6 @@
       <div v-if="this.event.backgroundColor!='#B2EBF2'">
         <legend>Cancelar Cita</legend>
         <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
-        <!--<b>Fecha:</b>  {{ event.start }} <br/>-->
         <b>Fecha:</b>{{event.start | formatDate}} <br/>
         <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
         <div id="botones">
@@ -61,7 +58,11 @@ export default {
     },
     methods: {
         rutaEvent () {
-          this.$router.push('/calendariocitas/cita-agendada');
+          /*this.$router.push({
+            name: 'Cita Agendada',
+            props: {event:this.event }
+          });*/
+          this.$router.push({name:'Cita Agendada', params: {event:this.event }});
 
         },
         removeEvent() {
@@ -129,6 +130,7 @@ export default {
     isTutor: Boolean,
     nombre_usuario: String,
   },mounted() {
+    this.$store.state.curEvent = this.event;
     console.log(this.event.extendedProps);
     console.log(this.event.extendedProps.usuario_actualizacion);
     console.log(this.event.backgroundColor);

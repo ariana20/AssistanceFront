@@ -59,6 +59,13 @@
 .botones {
     margin:auto;
 }
+#botones {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    justify-content: flex-end;
+    margin-right: 20px;
+}
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}
 input:focus {outline: none;box-shadow: none;}
@@ -73,3 +80,11 @@ input:focus {outline: none;box-shadow: none;}
 .legend .ocupado { background-color: gray; }
 .legend .disponible { background-color: #B2EBF2; }
 .legend .citareservada { background-color: #009892; }
+
+/*Para alinear las fotos de los usuarios*/
+#floated{
+    float: left;
+    width: 150px;
+    margin-top:15px;
+    text-align:center;
+}

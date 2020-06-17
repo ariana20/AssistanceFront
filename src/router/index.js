@@ -67,6 +67,15 @@ Vue.use(VueRouter)
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/Configuracion/ViewUnidadApoyo.vue')
     },
+    {
+      path: '/perfil/:id?',
+      name: 'Perfil',
+      props: true,
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "ViewUsuario" */ '../views/Citas/ViewPerfil.vue')
+    },
   {
     path: '/login',
     name: 'Login',
@@ -242,6 +251,7 @@ Vue.use(VueRouter)
   {
     path: '/calendariocitas/cita-agendada',
     name: 'Cita Agendada',
+    props: true,
     component: () => import(/* webpackChunkName: "ViewCitaAgendada" */ '../views/Citas/ViewCitaAgendada.vue')
   }
 ]

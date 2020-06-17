@@ -5,7 +5,7 @@
       <div class="col-sm-6 top-titulo">
             <h5 class="col-sm-6 "  style="top:13px;" >Nombre o Código: </h5>
             <input class="col-sm-6 form-control" style="top:13px;" 
-                   v-model="nombre" placeholder="Buscar por nombre"  >
+                   v-model="nomb" v-on:keyup.enter="buscarUsuario(nomb)" placeholder="Buscar por nombre o código"  >
            
       </div>
       <!-- <div class="row col-sm-6"  style="margin:10px;font-size:20px">Nombre o Código:  
@@ -38,7 +38,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in usuariosFiltrados"  :key="index">
+          <tr v-for="(item, index) in usuarios"  :key="index">
             <td v-if="item!=undefined">{{item.codigo}}</td>
             <td v-if="item!=undefined">{{item.nombre}}</td>
             <td v-if="item!=undefined">{{item.correo}}</td>  
@@ -76,7 +76,8 @@
 						</a>
 					</li>
 					<li class="page-item" v-if="paginate.current_page < paginate.last_page">
-						<a class="page-link" href="#" @click.prevent="changePage(paginate.current_page + 1)" style="color:rgb(0, 152, 146)">
+						<a class="page-link" href="#" @click.prevent="changePage(paginate.current_page + 1)" 
+            style="color:rgb(0, 152, 146)">
 							<span>Siguiente</span>
 						</a>
 					</li>
@@ -115,6 +116,7 @@ export default {
       cantU:null,
       tipoXUsuario:[],
       miUsuario:this.$store.state.usuario, //Para sacar el id del programa
+      nomb:"",
       state:{
         usuarioEscogido:null,}
       
@@ -174,10 +176,10 @@ export default {
     
     if(this.$store.state.usuario==null) this.$router.push('/login');
     
-    console.log('Store state usuariosA',this.$store.state.usuariosA);
-     if(this.$store.state.usuarios == null  ) {     
-       this.listarUsuarios(); } //}
-    else this.usuarios = this.$store.state.usuarios; //
+    //console.log('Store state usuariosA',this.$store.state.usuariosA);
+    this.nomb="";
+    this.listarUsuarios(); 
+    //this.usuarios = this.$store.state.usuarios; //
   },
   methods:{
 		changePage: function(page){
@@ -193,14 +195,17 @@ export default {
     this.showModal();
     console.log(this.$store.state.programaActual.id_programa);
     var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
-     if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador
+    
+     if(this.$store.state.tipoActual.nombre!="Admin"){ console.log('196',page);//Para coordinador   
+
         axios.post(url) //Por ahora dsp será x program
         .then(res =>{
-          console.log('Usuarios ',res.data.tasks.data);    
+         // console.log('Usuarios ',res.data.tasks.data);    
           //ordenado por estado
-          let par=res.data.tasks.data;  
-          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});    
+          let par=res.data.tasks.data; 
+          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});  console.log('202');  
           //this.$store.state.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+          this.usuarios=this.$store.state.usuarios;
           this.paginate=res.data.paginate;
           // this.$store.state.usuarios=res.data;
           console.log(this.$store.state.tipoActual.nombre);
@@ -212,7 +217,7 @@ export default {
             this.hideModal();
           //Swal de problema
            Swal.fire({
-                    text:"Estamos teniendo problemas al listar los uusarios. Vuelve a intentar en unos minutos.",
+                    text:"Estamos teniendo problemas al listar los usuarios. Vuelve a intentar en unos minutos.",
                     icon:"warning",
                     confirmButtonText: 'Sí',
                     confirmButtonColor:'#0097A7',
@@ -225,6 +230,46 @@ export default {
      
       
        
+    },
+    buscarUsuario(page){
+      
+      console.log('Entro a buscar',this.nomb);
+      var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
+      const paramsB={
+        criterio:this.nomb,
+      }
+           if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador   
+
+        axios.post(url,paramsB) //Por ahora dsp será x program
+        .then(res =>{  
+          //ordenado por estado
+          let par=res.data.tasks.data; 
+          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});   
+          
+          this.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});   
+          this.paginate=res.data.paginate;
+          console.log('res',res);
+          console.log(this.$store.state.usuarios);
+          this.hideModal();
+                   
+        })
+        .catch(e => {
+          console.log(e);
+            this.hideModal();
+          //Swal de problema
+           Swal.fire({
+                    text:"Estamos teniendo problemas al bucsar los usuarios. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+           });
+
+        })
+      }
+
+
+    
     },
     eliminarUsuario(item,index){
       Swal.fire({

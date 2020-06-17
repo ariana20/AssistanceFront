@@ -182,7 +182,9 @@ export default Vue.extend ({
   
     axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {
-            this.unidadesApoyo = response.data[0];
+            for(var i in response.data) {
+                this.unidadesApoyo.push(response.data[i][0]);
+            }
         }).catch(e => {
             console.log(e.response);
         });

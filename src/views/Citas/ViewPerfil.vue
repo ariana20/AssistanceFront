@@ -1,8 +1,8 @@
 <template>
-  <div class="viewcitaagendada">
-    <CabezeraTitulo msg="Cita Agendada"
+  <div class="viewPerfil">
+    <CabezeraTitulo msg="Perfil"
     :image-path="require('@/assets/images/coffe-cream.jpg')"/>
-    <FormCitaAgendada/>
+    <FormPerfil :idUsuario="id"/>
   </div>
   
   
@@ -10,13 +10,15 @@
 
 <script>
 import CabezeraTitulo from '@/components/Principal/CabezeraTitulo.vue'
-import FormCitaAgendada from '@/components/Citas/FormCitaAgendada.vue'
+import FormPerfil from '@/components/Citas/FormPerfil.vue'
 export default {
-  name: 'ViewCitaAgendada',
-  props: ['evento'],
+  name: 'ViewPerfil',
+  props: {
+      id: String,
+  },
   components: {
     CabezeraTitulo,
-    FormCitaAgendada
+    FormPerfil
   }
 }
 </script>

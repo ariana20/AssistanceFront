@@ -398,15 +398,12 @@ export default {
                      id_usuario:this.id_usuario_entrante,
                      id_tipo_usuario:this.tiposUsuariosselect,
                      id_programaNuevo:this.miprog.id_programa,
-
-                       //como es alumno inserto las condicioes
-                       condicion_alumno:this.condiAlumnosselect,//le doy el value
-
-                        };
+                    //como es alumno inserto las condicioes
+                     condicion_alumno:this.condiAlumnosselect,//le doy el value
+                    };
                         this.insertarUsuario(params3); //Insertar un usuario existente en el programa
                  }
-                  else{
-            
+                  else{            
                        const params3={
                           id_usuario:this.id_usuario_entrante,
                            id_tipo_usuario:this.tiposUsuariosselect,
@@ -472,7 +469,7 @@ export default {
         }).then((result) => {
             if (result.value) {
               //lo redirigo
-              this.$store.state.usuarios=null;
+              //this.$store.state.usuarios=null;
               this.$store.state.usuarioEscogido=null;//
               this.$router.push('/ListaUsuarios');
             } 

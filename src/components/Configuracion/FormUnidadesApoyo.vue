@@ -120,6 +120,7 @@ export default {
   mounted(){
     if(this.$store.state.unidades == null) this.listarUnidades();
     else this.unidades = this.$store.state.unidades;
+    this.nombre="";
   },
   computed:{
         nombre:{
@@ -243,7 +244,9 @@ export default {
 .botones {
     margin:auto;
 }
-
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
 @media only screen and (min-width: 800px) {
   .popa {
     margin-left: 28%;
@@ -255,4 +258,5 @@ export default {
     margin-left: 0%;
   }
 }
+
 </style>
