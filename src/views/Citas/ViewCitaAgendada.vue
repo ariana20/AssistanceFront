@@ -13,6 +13,7 @@ import CabezeraTitulo from '@/components/Principal/CabezeraTitulo.vue'
 import FormCitaAgendada from '@/components/Citas/FormCitaAgendada.vue'
 export default {
   name: 'ViewCitaAgendada',
+  props: ['evento'],
   components: {
     CabezeraTitulo,
     FormCitaAgendada

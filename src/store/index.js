@@ -24,6 +24,7 @@ export default new Vuex.Store({
     rutas:[],
     usuarioEscogido:null,
     events: [],
+    curEvent: null,
     reg: false,
     navLinks: [
       {
@@ -128,13 +129,6 @@ export default new Vuex.Store({
       state.events[index].title = title;
       state.events[index].start = start;
       state.events[index].color = color;      
-    },
-    REMOVE_EVENT: (state,{id}) => {
-      let index = state.events.findIndex(_event => _event.id == id)
-      if (index > -1) {
-        state.events[index].title = 'Libre'
-        state.events[index].color = '#B2EBF2';
-      } 
     }
   },
   actions: {

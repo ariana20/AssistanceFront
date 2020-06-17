@@ -26,13 +26,15 @@
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
                           hiddenDays= [0]
-                          :selectable="true"
+                          :selectable="false"
                           minTime="08:00:00"
                           maxTime="22:00:00"
                           :allDaySlot="false"
                           :events ="EVENTS"
                           @eventClick="handleClick"
                           :customButtons="customButtons"
+                          :eventOverlap="false"
+                          :displayEventTime="false"
                           />
             <modals-container/>
         
@@ -97,6 +99,7 @@ export default {
             },
             isTutor: true,
             nombre: '',
+            response: null,
         }
 
     },
@@ -121,36 +124,38 @@ export default {
                 this.$store.state.events = [];
                 axios.post('disponibilidades/dispSemanalVistaTu',{idUsuario:this.$store.state.usuario.id_usuario,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
-                    //console.log('disp: ',response.data[0]);
+                    console.log('disp: ',response.data);
                     var rd = response.data[0];
                     var rd2 = response.data[1];
-                    console.log('usuario_actualizacion',response.data);
+                    var rd3 = response.data[2];
+                    var rd4 = response.data[3];
                     for(var i in rd) {
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
+                            console.log(rd3[i].nombre);
                             if(rd2[i]=='o'){
-                                axios.post('usuarios/listar/'+ rd[i].usuario_actualizacion)
-                                .then((response) => {
-                                    this.title = response.data.nombre + " " + response.data.apellidos;
-                                    console.log(this.nombre);
-                                }).catch(e => {
-                                    console.log(e.response);
-                                });
                                 this.$store.commit("ADD_EVENT", {
                                     id: rd[i].id_disponibilidad,
-                                    title: this.nombre,
+                                    title: rd4[i][0].nombre + ' ' + rd4[i][0].apellidos,
+                                    description: rd3[i].nombre,
+                                    alumno: rd4[i][0],
                                     start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                    fecha: rd[i].fecha,
+                                    horaIni: rd[i].hora_inicio, 
                                     end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
                                     tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                     color: 'gray',
                                     usuario_creacion: rd[i].usuario_creacion,
                                     id_usuario_tutor: rd[i].id_usuario,
-                                    usuario_actualizacion: rd[i].usuario_actualizacion
-                                });                                
+                                    usuario_actualizacion: rd[i].usuario_actualizacion,
+
+
+                                });                              
                             } else {
                                 this.$store.commit("ADD_EVENT", {
                                     id: rd[i].id_disponibilidad,
                                     title: 'Libre',
+                                    description:'',
                                     start: rd[i].fecha + " " + rd[i].hora_inicio,
                                     end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
                                     tipo_disponibilidad: rd[i].tipo_disponibilidad,
@@ -166,8 +171,7 @@ export default {
                 }).catch(e => {
                     console.log(e.response);
                 });
-                this.calendar.render();
-                console.log(this.$store.state.events);
+                //this.calendar.render();
             },
     },
     watch: {    
@@ -180,14 +184,6 @@ export default {
         //this.calendar = this.$refs.fullCalendar.getApi();
         //idUsuario: this.$store.state.usuario.id_usuario
         //this.calendar.render();
-
-        /*axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:54,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
-        .then(response => {
-            this.dispSemanalVistaAl = response.data;
-            console.log(response.data);
-        }).catch(e => {
-            console.log(e.response);
-        });*/
     }
     
 }
@@ -272,7 +268,7 @@ function addTimes (startTime, endTime) {
 .vm--modal {
     border-radius: 25px;
     margin: 30px;
-    height: 240px !important;
+    height: 227px !important;
 }
 @media screen and (max-width: 759px) {
     .form-control { 
@@ -283,6 +279,9 @@ function addTimes (startTime, endTime) {
     .form-control { 
         left: 0px;
     }
+}
+.fc-time-grid .fc-slats td {
+    height: 2.5em;
 }
 
 

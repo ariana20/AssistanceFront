@@ -1,22 +1,44 @@
 <template>
     <div class="formcitaagendada container">
-        <div class="top-info">
+        <div class="top-info" style="text-align:left;">
+            <div id="botones">
+                <button type="button" class="btn btn-info" @click="guardar">Guardar</button>
+                <button type="button" class="btn btn-secondary" @click="cancelar">Cancelar</button>
+            </div>
+                <div class="list-data"><div id="left">Día:          </div> <div id="right"> {{ this.event.extendedProps.fecha }} </div></div>
+                <div class="list-data"><div id="left">Hora Inicio:  </div> <div id="right"> {{ this.event.start | formatHour}} </div></div>
+                <div class="list-data"><div id="left">Hora Fin:     </div> <div id="right"> {{ this.event.end | formatHour }} </div></div>
+                <div class="list-data"><div id="left">Tipo Tutoría: </div> <div id="right"> {{ this.event.extendedProps.description }} </div></div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
-                <div class="row grid-divider">
-            <div class="izq col-lg-6 col-xm-2 col-md-12">
+            <div class="row grid-divider">
+            <div class="izq col-lg-6 col-xm-2 col-md-12" style="text-align:left;">
                 <div class="font-weight-bolder text-left">Alumno</div>
                 <div class="row">
-                    <div class="col-md-4 col-sm-4">
-                     
+                    <div class="col center-block">
+                        <div class="list-data"><div id="left">Código:          </div> <div id="right"> {{ this.event.extendedProps.alumno.codigo }} </div></div>
+                        <div class="list-data"><div id="left">Nombre:  </div> <div id="right"> {{ this.event.extendedProps.alumno.nombre }} </div></div>
+                        <div class="list-data"><div id="left">Apellidos:     </div> <div id="right"> {{ this.event.extendedProps.alumno.apellidos }} </div></div>
+                        <div class="list-data"><div id="left">Condición: </div> <div id="right"> {{ this.condicion_alumno }} </div></div>
                     </div>
-                    <div class="col">
-                    
+                    <div class="col center-block text-center">
+                        <figure id="floated" class="image-logo">
+                            <img :src='this.event.extendedProps.alumno.imagen' height="110px" width="110px" alt="imagen usuario" style="border-color:gray;border-radius: 25%;"/><br>	
+                        </figure>
+                        <button type="button" class="btn btn-info">Ver Perfil</button>
                     </div>
                 </div>
-                <div style="position:absolute; bottom:30px;">               </div>
+                <div style="bottom:30px;">
+                    <div>
+                        <div class="font-weight-bolder text-left">Información Adicional</div>
+                        <div id="botones">
+                            <button type="button" class="btn btn-info" >Historico de Citas</button>
+                            <button type="button" class="btn btn-info" >Historico de Notas</button>
+                            <button type="button" class="btn btn-info" >Plan de acción</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
             <div class="der col-lg-6 col-xm col-md-12">
                 <div class="font-weight-bolder text-left">Resultado</div>
                  <div class="top-titulo" style="margin-bottom:20px;">
@@ -83,21 +105,31 @@ import axios from 'axios';
 import Vue from 'vue'
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
+
+Vue.filter('formatHour', function(value) {
+  if (value) {
+    return moment(value).format('hh:mm a')
+  }
+});
+
 export default Vue.extend ({
-    name: 'formSesionTutoria',
+    name: 'formCitaAgendada',
     components:{
         //DatePicker
     },
+    /*props: {
+        fecha: String,
+        horaIni: String,
+        horaFin: String,
+        tipoTutoria: String,
+        alumno: Object,
+    },*/
+    //props: ['evento'],
     data: function () {
         return {
-            date: '',
-            time: '',
-            timePickerOptions:{
-                start: '07:00',
-                step: '00:30',
-                end: '21:00'
-            },
-            datetime: '',
+            event: this.$store.state.curEvent,
+            condicion_alumno: this.$store.state.curEvent.extendedProps.alumno.condicion_alumno.toUpperCase(),
+            fechIni: this.fecha,
             descripcion: null,
             motivo: null,
             bordes:'borde-textbox',
@@ -121,34 +153,16 @@ export default Vue.extend ({
         }
     },
     mounted(){
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.borderRadius = "1.25rem"; 
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.border= "0.5px solid #757575";    
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontWeight = "400";
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontSize = "1rem";
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.height = "2.4em";
-  
+        console.log(this.event);
+        //console.log('evento actual: ', this.$store.state.programaActual);
+
     axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {
-            this.unidadesApoyo = response.data[0];
+            for(var i in response.data) {
+                this.unidadesApoyo.push(response.data[i][0]);
+            }
         }).catch(e => {
             console.log(e.response);
-        });
-    axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
-        .then( response => {
-            console.log("listado alumnos: ",response.data)
-            for(var i in response.data){ 
-                this.codigos.push(response.data[i][0]);
-            }
-        })
-        .catch(e => {
-            console.log(e.response);
-        });
-    axios.post('TipoTutoria/listarTodo/' + this.$store.state.programaActual.id_programa)
-        .then( response => {
-            this.tiposTutoria = response.data;
-        })
-        .catch(e => {
-          console.log(e.response);
         });
     axios.post('motivosConsulta/listarTodo')
         .then( response => {
@@ -157,9 +171,26 @@ export default Vue.extend ({
         .catch(e => {
           console.log(e.response);
         });
-        console.log("datetime es: ",this.datetime);
     },
     methods: {
+        cancelar: function(){
+            Swal.fire({
+                    text:"¿Está seguro que desea cancelar?",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    cancelButtonText: 'No',
+                    cancelButtonColor:'C4C4C4',
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                }).then((result) => {
+                    if (result.value) {
+                    //lo redirigo
+                    this.$router.push('/calendariocitas');
+                    
+                    } 
+                })
+        },
         guardar: function () {
             const sesion_params = {
                 id_usuario: this.$store.state.usuario.id_usuario,
@@ -178,7 +209,7 @@ export default Vue.extend ({
                     if(this.listAlumnosCod.length > 0) {
                         if(this.datetime != null) {
                             if(this.descripcion!=null) {
-                                axios.post('/sesiones/asistencia',sesion_params)
+                                axios.post('/sesiones/asistenciaFormal',sesion_params)
                                     .then( response=>{
                                         console.log(response);
                                         Swal.fire({
@@ -242,22 +273,6 @@ export default Vue.extend ({
                 })
             }
         },
-        cancelar: function () {
-            this.datetime= '';
-            this.descripcion= null;
-            this.motivo= null;
-            this.sel= '';
-            this.alSeleccionado= 'Nombre Alumno';
-            this.selectedTipoTutoria= null;
-            this.selectedMotivo= '';
-            this.newMotivo= null;
-            this.listMotivosId= [];
-            this.motivosBorrados=[];
-            this.listAlumnosNom= [];
-            this.listAlumnosCod= [];
-            this.listAlumnosId= [];
-            this.selectedUnidadApoyo= null;
-        },
         onCodigoChange: function () {
             var i;
             for(i in this.codigos){
@@ -319,7 +334,26 @@ export default Vue.extend ({
 
 <style lang="scss" scoped>
 @import '../../assets/styles/material.css';
+@import '../../assets/styles/main.css';
+@import 'https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css';
+#left {
+    float: left;
+    margin-right: 27px;
+}
 
+#right {
+    text-align: right;
+}
+#floated {
+    margin-right: 50px;
+    float: right;
+    height: 100px;
+}
+.list-data { 
+    display: flex;
+    width: 100%;
+    height: 40px;
+}
 .close {
     cursor: pointer;
     position: absolute;

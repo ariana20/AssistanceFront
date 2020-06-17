@@ -242,6 +242,7 @@ Vue.use(VueRouter)
   {
     path: '/calendariocitas/cita-agendada',
     name: 'Cita Agendada',
+    props: true,
     component: () => import(/* webpackChunkName: "ViewCitaAgendada" */ '../views/Citas/ViewCitaAgendada.vue')
   }
 ]

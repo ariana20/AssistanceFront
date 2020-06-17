@@ -41,9 +41,8 @@
                           minTime= "08:00:00"
                           maxTime= "22:00:00"
                           :allDaySlot= "false"
-                          :editable= "true"
+                          :editable= "false"
                           :events = "EVENTS"
-                          @select = "handleSelect"
                           @eventClick= "handleClick"
                           />
             <modals-container/>
@@ -131,7 +130,7 @@ export default {
                 this.$store.state.events = [];
                 axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:54,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
-                    //console.log('disp: ',response.data[0]);
+                    console.log('disp: ',response.data);
                     var rd = response.data[0];
                     var rd2 = response.data[1];
                     for(var i in rd) {
