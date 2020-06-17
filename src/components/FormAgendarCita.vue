@@ -36,6 +36,7 @@
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
+                          :customButtons="customButtons"
                           hiddenDays= [0]
                           :selectable="true"
                           minTime= "08:00:00"
@@ -130,11 +131,10 @@ export default {
                 this.$store.state.events = [];
                 axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:54,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
-                    console.log('disp: ',response.data);
                     var rd = response.data[0];
                     var rd2 = response.data[1];
                     for(var i in rd) {
-                        console.log('usuario_actualizacion',rd[i])
+                        //console.log('usuario_actualizacion',rd[i])
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
                             if(rd2[i]=='o'){
@@ -148,7 +148,8 @@ export default {
                                         color: '#009892',
                                         usuario_creacion: rd[i].usuario_creacion,
                                         id_usuario_tutor: rd[i].id_usuario,
-                                        usuario_actualizacion: rd[i].usuario_actualizacion
+                                        usuario_actualizacion: rd[i].usuario_actualizacion,
+                                        id_cita: '',
                                     });
                                 } else {
                                     this.$store.commit("ADD_EVENT", {
@@ -160,7 +161,8 @@ export default {
                                         color: 'gray',
                                         usuario_creacion: rd[i].usuario_creacion,
                                         id_usuario_tutor: rd[i].id_usuario,
-                                        usuario_actualizacion: rd[i].usuario_actualizacion
+                                        usuario_actualizacion: rd[i].usuario_actualizacion,
+                                        id_cita: '',
                                     });
                                 }
                             } else {
@@ -172,7 +174,8 @@ export default {
                                     tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                     usuario_creacion: rd[i].usuario_creacion,
                                     id_usuario_tutor: rd[i].id_usuario,
-                                    usuario_actualizacion: rd[i].usuario_actualizacion
+                                    usuario_actualizacion: rd[i].usuario_actualizacion,
+                                    id_cita: '',
                                 });
                             }
 
@@ -181,7 +184,7 @@ export default {
                 }).catch(e => {
                     console.log(e.response);
                 });
-                this.calendar.render();
+                //this.calendar.render();
             },
     },
     watch: {    
@@ -190,18 +193,18 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$store.state.usuario);
+        //console.log(this.$store.state.usuario);
         this.getReminders();
         //this.calendar = this.$refs.fullCalendar.getApi();
         //idUsuario: this.$store.state.usuario.id_usuario
-        axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
+        /*axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
         .then(response => {
             this.dispSemanalVistaAl = response.data;
 
             console.log(response.data);
         }).catch(e => {
             console.log(e.response);
-        });
+        });*/
     }
     
 }
@@ -298,6 +301,8 @@ function addTimes (startTime, endTime) {
         left: 0px;
     }
 }
-
+.fc-time-grid .fc-slats td {
+    height: 2.5em;
+}
 
 </style>

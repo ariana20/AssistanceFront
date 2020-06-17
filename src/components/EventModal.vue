@@ -66,11 +66,16 @@ export default {
 
         },
         removeEvent() {
+          console.log('idDisponibilidad: ',this.event.id);
+          console.log('usuario actualizando: ', this.$store.state.usuario.id_usuario);
+          
           axios.post('citas/cancelarCita',{
+            idCita: this.event.extendedProps.id_cita,
             idDisponibilidad:this.event.id,
             usuario_actualizacion:this.$store.state.usuario.id_usuario})
           .then((response) => {
             console.log(response.data);
+            this.event.
             this.$store.commit("UPDATE_EVENT", {
               id: this.event.id,
               title: 'Libre',
@@ -108,6 +113,9 @@ export default {
               usuario_actualizacion: this.$store.state.usuario.id_usuario,
               idUsuario: this.$store.state.usuario.id_usuario,
             }).then(response => {
+              //console.log('registrarCitaAl response: ',response.data);
+              this.event.extendedProps.id_cita = response.data.id_cita;
+              console.log('event idCita: ',this.event.extendedProp);
               Swal.fire({
                       text:"Registro Exitoso",
                       icon:"success",
@@ -116,7 +124,7 @@ export default {
                       showConfirmButton: true,
                     });
                     this.$emit('close');
-                    console.log(response.data);
+                    
             }).catch(e => {
                 console.log(e.response);
             });
@@ -131,9 +139,6 @@ export default {
     nombre_usuario: String,
   },mounted() {
     this.$store.state.curEvent = this.event;
-    console.log(this.event.extendedProps);
-    console.log(this.event.extendedProps.usuario_actualizacion);
-    console.log(this.event.backgroundColor);
   }
 };
 
