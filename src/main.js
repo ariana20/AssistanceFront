@@ -42,7 +42,3 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
-
-// make sure the surge.sh page go to https
-if (window.location.href.indexOf('http://localhost') == -1 && window.location.href.indexOf('http://') > -1) 
-  window.location.href = window.location.href.replace('http://', 'https://');

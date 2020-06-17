@@ -14,7 +14,7 @@
                     
                     </div>
                 </div>
-                <div style="position:absolute; bottom:30px;">               </div>
+                <div style="position:absolute; bottom:30px;">      <input type="checkbox" v-model="asistencia"/>Asistencia         </div>
             </div>
             
             <div class="der col-lg-6 col-xm col-md-12">
@@ -81,6 +81,7 @@ import Swal from 'sweetalert2'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import Vue from 'vue'
+import emailjs from 'emailjs-com';
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
 export default Vue.extend ({
@@ -110,6 +111,7 @@ export default Vue.extend ({
             selectedMotivo: '',
             motivos: [],
             newMotivo: null,
+            asistencia:false,
             listMotivos:[],
             listMotivosId: [],
             motivosBorrados:[],
@@ -312,6 +314,24 @@ export default Vue.extend ({
             console.log(this.listAlumnosId);
             
             
+        },
+        enviarCorreo(unidad){
+            let mensaje = "Se te ha derivado a "+unidad.nombre+":<br>"
+                            +"Nombre Contacto: "+unidad.nombre_contacto+"<br>"
+                            +"Correo Contacto: "+unidad.correo_contacto+"<br>"
+            emailjs.send(
+                  "gmail",
+                  "template_bV7OIjEW",
+                  {
+                  "nombre":this.$store.state.usuario.nombre+" "+this.$store.state.usuario.apellidos,
+                  "mensaje":mensaje,
+                  "correo": this.$store.state.usuario.correo
+                  }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                  .then((result) => {
+                      console.log('SUCCESS!', result.status, result.text);
+                  }, (error) => {
+                      console.log('FAILED...', error);
+                  });
         }
     }
 })

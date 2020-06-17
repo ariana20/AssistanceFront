@@ -24,7 +24,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Código de la Facultad:</label>
+            <label>Código de la Facultad:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input v-if="idFacultad" id="codigoF" v-model="codVerifF"></b-form-input>
@@ -35,7 +35,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Nombre de la Facultad:</label>
+            <label>Nombre de la Facultad:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input v-if="idFacultad" id="nombreF" v-model="nombreVerifF"></b-form-input>
@@ -46,7 +46,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Correo Electrónico:</label>
+            <label>Correo Electrónico:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input id="correoF" v-model="facultad.correo"></b-form-input>
@@ -84,7 +84,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Código del Programa:</label>
+            <label>Código del Programa:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="codVerifP"></b-form-input>
@@ -94,7 +94,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Nombre del Programa:</label>
+            <label>Nombre del Programa:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="nombreVerifP"></b-form-input>
@@ -104,7 +104,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Correo Electrónico:</label>
+            <label>Correo Electrónico:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input v-if="nuevoProg==1 || editProg==1" id="correo" v-model="programa.correo"></b-form-input>
@@ -679,5 +679,8 @@ export default {
     border-radius: 10px;
     margin: 5px;
 }
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
 
 </style>
