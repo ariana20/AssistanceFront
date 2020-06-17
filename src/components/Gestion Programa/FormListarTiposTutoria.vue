@@ -70,6 +70,7 @@ export default {
     console.log('mi programa actual: ',this.$store.state.programaActual);
     if(this.$store.state.tipostutorias === null) this.listarTT(); //
     else this.tipostutorias = this.$store.state.tipostutorias; //
+    this.nombre="";
   },
 computed:{
         nombre:{

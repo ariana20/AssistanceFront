@@ -469,7 +469,7 @@ export default {
         }).then((result) => {
             if (result.value) {
               //lo redirigo
-              this.$store.state.usuarios=null;
+              //this.$store.state.usuarios=null;
               this.$store.state.usuarioEscogido=null;//
               this.$router.push('/ListaUsuarios');
             } 
