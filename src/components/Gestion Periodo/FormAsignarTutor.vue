@@ -10,7 +10,7 @@
                     v-for="(item, index) in tutores" 
                     :key="index" 
                     :value="item">
-                    {{ item.tutor.nombre + " " + item.tutor.apellidos }}
+                    {{ item.usuario.nombre + " " + item.usuario.apellidos }}
                 </option>
             </select>
         </div>
@@ -22,52 +22,62 @@
               </label>
           </div>
         </div>
-
-        <div class="font-weight-bolder text-left">Alumnos</div>
         <div class="row">
-            <div class="col-md-4 col-sm-4">
-                <div class="col-sm-6"><label for="formGroupExampleInput">Código</label></div>
-                <hr style="width:335%;">
-                <ejs-autocomplete
-                    :dataSource='codigos' 
-                    :fields='campoCodigo' 
-                    placeholder="Código" 
-                    :change='onCodigoChange'
-                    v-model="sel"
-                    class="form-control"
-                    style="margin-bottom: 10px;"
-                    :showClearButton="false">
-                </ejs-autocomplete>
-
-                <ul class="col-sm-12 col-md-12" style="text-align:left;margin-left:-8px;">
-                    <li class="form-control" style="width:120%;text-align:center;margin-top:8px;"
-                        v-for="(newAlumnoCod,alcIndex) in listAlumnosCod"  
-                        :key="alcIndex">
-                        {{newAlumnoCod}}           
-                    </li>
-                </ul>
-
+            <div class="font-weight-bolder col-sm-2" style="text-align:center;">Alumnos</div>
+            <div class="font-weight-bolder col-sm-10" style="text-align:right;"><button  :disabled="!this.sel" type="button" class="btn btn-info" style="text-align:right;" @click="addAlumno">
+                Asignar
+            </button>
             </div>
-            <div class="col">
-                <div class="col" style="text-align:left;padding-bottom:30px;">
-                    <label for="formGroupExampleInput" style="margin-right:50px">Nombre y Apellidos</label>
-                    <button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:-3px;"
-                            @click="addAlumno">Agregar
-                    </button>
-                </div>
-                <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{alSeleccionado}}</div>
-                <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
-                    <li class="form-control list-group-item" style="padding: 0.4rem 0.5rem;"
-                        v-for="(newAlumno,alIndex) in listAlumnosNom"  
-                        :key="alIndex">
-                        {{newAlumno}}    
-                        <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
-                    </li>
-                </ul>
-            </div>
-            
         </div>
-
+        <table class="table" style="text-align: left">
+            <thead>
+                <tr>
+                    <th scope="col" style="width:150px">Código</th>
+                    <th scope="col" style="width:500px">Nombre y Apellidos</th>
+                    <th scope="col" style="width:400px">Condición</th>
+                    <th scope="col" >    
+                    <!--button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:-3px;" @click="addAlumno">
+                        Agregar
+                    </button-->
+                    </th>
+                </tr>
+            </thead>
+   
+            <tbody>
+                <tr>
+                    <td scope="col" style="width:150px">
+                        <ejs-autocomplete
+                            :enabled="this.tutorSeleccionado"
+                            :dataSource='codigos' 
+                            :fields='campoCodigo' 
+                            placeholder="Código" 
+                            :change='onCodigoChange'
+                            v-model="sel"
+                            class="form-control"
+                            style="margin-bottom: 5px;"
+                            :showClearButton="false">
+                        </ejs-autocomplete>
+                    </td>
+                    <td scope="col" style="width:500px">
+                        <div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{alSeleccionado.nombre+" "+alSeleccionado.apellidos}}</div>
+                        <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >Nombre Alumno</div>
+                    </td>
+                    <td scope="col" style="width:400px">
+                        <div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >{{alSeleccionado.condicion_alumno}}</div>
+                        <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Condición Alumno</div>
+                    </td>
+                    <td scope="col">
+                        <button class="btn link" v-on:click="Cancelar"><b-icon icon="x-circle-fill"></b-icon></button>
+                    </td>
+                </tr>
+                <tr v-for="(item,index) in alumnosAsig" :key="index">
+                    <td v-if="item!=undefined">{{item.codigo}}</td>
+                    <td v-if="item!=undefined">{{item.nombre+" "+item.apellidos}}</td>
+                    <td v-if="item!=undefined">{{item.condicion_alumno}}</td>
+                    <td v-if="item!=undefined"><button class="btn link" v-on:click="Eliminar(item, index)"><b-icon icon="dash-circle-fill"></b-icon></button></td>
+                </tr>
+            </tbody>
+        </table>
 
     </div>
 
@@ -75,7 +85,9 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import Vue from 'vue'
+import emailjs from 'emailjs-com';
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
 import axios from 'axios'
@@ -83,17 +95,17 @@ import axios from 'axios'
 export default {
   data(){
     return{
-      tutores:[],
-      tutorSeleccionado:null,
-      tipoTutoria:[],
-      alumnos:[],
-      sel:'',
-      alSeleccionado: 'Nombre Alumno',
-      codigos:[],
-      campoCodigo: {value:'codigo'},  
-      listAlumnosCod: [],
-      listAlumnosNom:[],
-      listAlumnosId: [],
+        tutores:[],
+        tutorSeleccionado:null,
+        tipoTutoria:[],
+        alumnos:[],
+        alumnosAsig:[],
+        sel:'',
+        alSeleccionado: null,
+        codigos:[],
+        campoCodigo: {value:'codigo'},  
+        cambiar: false,
+
     }
   },
   components: {
@@ -101,6 +113,7 @@ export default {
   },
   mounted(){
     this.listarTutores();
+    //usuarios/condAlumno 
     this.obtenerAlumnos();
   },
   computed:{
@@ -108,12 +121,14 @@ export default {
   },
   methods:{
     obtenerAlumnos(){
-      axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
+      axios.post('programa/alumnosProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
       .then( response => {
           console.log("listado alumnos: ",response.data)
-          for(var i in response.data){ 
-              this.codigos.push(response.data[i][0]);
-          }
+          this.codigos=response.data;
+          //for(var i in response.data){ 
+            //  this.codigos.push(response.data[i][0]);
+          //}
+          console.log(this.codigos);
       })
       .catch(e => {
           console.log(e.response);
@@ -123,21 +138,23 @@ export default {
         var i;
         for(i in this.codigos){
             if(this.sel==this.codigos[i].codigo){
-                this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
+                this.alSeleccionado=this.codigos[i];
+                
             }
-            console.log(this.alSeleccionado);
-            //break;   
+            
         }
     },
     listarTutores() {
       const params = {
-        id : this.$store.state.programaActual.id_programa
+        id_programa : this.$store.state.programaActual.id_programa,
+        nomFacu:this.$store.state.programaActual.facultad.nombre,
+        nombre: "",
       };
       axios
-      .post('/programa/tutores', params)
+      .post('/programa/tutoresListar', params)
         .then(res =>{
-          console.log(res.data);
-          this.tutores=res.data.tasks;            
+          console.log(res);
+          this.tutores=res.data;            
         })
         .catch(e => {
           console.log(e.response);
@@ -146,17 +163,18 @@ export default {
 
     listarTT(){
       if(this.tutorSeleccionado){
-        this.tipoTutoria=this.tutorSeleccionado.tipoTutoria;
-
+        this.tipoTutoria=this.tutorSeleccionado.usuario.tipo_tutorias;
+        console.log(this.tutorSeleccionado);
         const params = {
-          id_tutor: this.$store.state.usuario.id_usuario,
+          id_tutor: this.tutorSeleccionado.usuario.id_usuario,
           id_programa: this.$store.state.programaActual.id_programa
         };
+        //Falta corregir por caro!!!
         axios
         .post('/registros/listarAlumnos', params)
         .then(res =>{
           console.log(res);
-          this.alumnos=res.data;            
+          this.alumnosAsig=res.data;            
         })
         .catch(e => {
           console.log(e.response);
@@ -166,32 +184,142 @@ export default {
     },
 
     addAlumno: function () {  
-        var estaAl = false;
-        for( var i in this.listAlumnosCod ){
-                if(this.sel == this.listAlumnosCod[i]){
-                    estaAl = true;
-                    break;
-                }
-        }
-        if(this.alSeleccionado != 'Nombre Alumno' && !estaAl && this.sel.length == 8){ 
-            this.listAlumnosNom.push(this.alSeleccionado);
-            this.listAlumnosCod.push(this.sel);
-            for(var j in this.codigos){
-                if(this.sel == this.codigos[j].codigo)
-                    this.listAlumnosId.push(this.codigos[j].id_usuario);
-            }
-            this.alSeleccionado='Nombre Alumno';
-            this.sel= '';
-        }
-        console.log(this.listAlumnosId);  
+        console.log(this.alSeleccionado);
+        console.log(this.alumnosAsig);
+
+        const params = {
+        id_tutor: this.tutorSeleccionado.usuario.id_usuario,
+        id_programa: this.$store.state.programaActual.id_programa,
+        id_alumno: this.alSeleccionado.id_usuario,
+        id_usuario_creacion: this.$store.state.usuario.id_usuario,
+        cambiar:this.cambiar,
+        };
         
+        axios
+        .post('/registros/insertar', params)
+        .then(res =>{
+            console.log(res);
+            if(res.data.status=="error"){
+                //console.log(res.data.mensaje);
+                Swal.fire({
+                    text:res.data.mensaje+", ¿desea asignar de todos modos?",
+                    icon:"warning",
+                    confirmButtonText: 'Si',
+                    showCancelButton: true,
+                    cancelButtonText: 'No',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                }).then((result) => {
+                    if (result.value) {
+                        params.cambiar=true;
+                        axios
+                        .post('/registros/insertar', params)
+                        .then(rr =>{
+                            console.log(rr);
+                            Swal.fire({
+                                text:"Se ha realizado correctamente la asignación",
+                                icon:"success",
+                                confirmButtonText: 'OK',
+                                confirmButtonColor:'#0097A7',
+                                showConfirmButton: true,
+                            }) 
+                            //this.enviarCorreo(); 
+                            this.alumnosAsig.push(this.alSeleccionado);
+                            this.alSeleccionado=null;
+                            this.sel='';
+                            this.cambiar=false; 
+                            
+
+                        }).catch(e => {
+                        console.log(e.response);
+                        })
+
+
+                    } 
+                })
+                
+            }else if (res.data.status=="success"){
+                Swal.fire({
+                    text:"Se ha realizado correctamente la asignación",
+                    icon:"success",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                }) 
+                
+                this.alumnosAsig.push(this.alSeleccionado);
+                this.enviarCorreo();
+                this.alSeleccionado=null;
+                this.sel='';  
+                
+            }
+            
+     
+        })
+        .catch(e => {
+        console.log(e.response);
+        })
+
+            
     },
 
-    deleteAl: function(index) {
-      //corregir
-      this.listAlumnos.splice(index,1);
-      //eliminar asignación de BD
+    enviarCorreo(){
+        var mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.usuario.nombre+" "+this.tutorSeleccionado.usuario.apellidos+" como tutor o tutora.";
+        emailjs.send(
+            "gmail",
+            "template_bV7OIjEW",
+            {
+            "nombre":this.alSeleccionado.nombre+" "+this.alSeleccionado.apellidos,
+            "mensaje":mensaje,
+            "correo": this.alSeleccionado.correo
+            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+        .then((result) => {
+            console.log('SUCCESS!', result.status, result.text);
+        }, (error) => {
+            console.log('FAILED...', error);
+        });
     },
+
+    Eliminar: function(item, index) {
+        Swal.fire({
+            title: '¿Dese eliminar la asignación de '+item.nombre+'?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0097A7',
+            cancelButtonColor: '#757575',
+            confirmButtonText: 'Confirmar'
+        }).then((result) => {
+            if (result.value) {
+                const params = {
+                id_tutor: this.tutorSeleccionado.usuario.id_usuario,
+                id_programa: this.$store.state.programaActual.id_programa,
+                id_alumno: item.id_usuario,
+                };
+                axios
+                .post('/registros/eliminar',params)
+                .then(response=>{
+                    console.log(response)
+                    this.alumnosAsig.splice(index,1);
+                    Swal.fire({
+                        text:"Eliminación Exitosa",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                })
+                .catch(e => {
+                console.log(e.response);
+                })
+            }
+        })	
+
+    },
+
+    Cancelar(){
+        this.alSeleccionado=null;
+        this.sel='';
+    }
     
   }
 }

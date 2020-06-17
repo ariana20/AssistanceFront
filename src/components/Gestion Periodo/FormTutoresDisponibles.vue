@@ -2,22 +2,24 @@
   <div name="FormTutoresDisponibles">
     <div class="container" style="left:60px;text-align: left;">
 
-			<div class="top-titulo">
-				<h4 class="col-sm-4 title-container">Nombre: </h4>
-				<input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nomb" placeholder="Ingrese nombre de la facultad">
-			</div>
+			<div class="row">
+        <div class="col-2">
+				<h3 >Nombre: </h3>
+				</div>
+        <div class="col-4">
+        <input class="form-control" v-model="nomb" v-on:keyup.enter="buscarTutor" placeholder="Ingrese nombre del tutor">
+        </div>
+      </div>
 
       <div v-for="(item,index) in tutores" :key="index">
         <datosTutor
-        :tutor="item.tutor"
-        :tipoTutoria="item.tipoTutoria" />
+        :tutor="item.usuario"
+        :tipoTutoria="item.usuario.tipo_tutorias" />
       </div>
-      <infinite-loading @infinite="infiniteHandler">
-        <span slot="no-more">
-          No hay más tutores
-        </span>
+      <infinite-loading spinner="spiral" :identifier="infiniteId" @infinite="infiniteHandler">
+        <div slot="no-more">No hay más tutores</div>
+        <div slot="no-results">No hay tutores con ese nombre</div>
       </infinite-loading>
-
     </div>
 
   </div>
@@ -26,35 +28,37 @@
 <script>
 
 import axios from 'axios'
-//import Swal from 'sweetalert2'
-//import InfiniteLoading from 'vue-infinite-loading'
 import datosTutor from '@/components/Gestion Periodo/DatosTutor.vue'
+import InfiniteLoading from 'vue-infinite-loading';
+
 
 export default {
   data(){
     return{
+      page:1,
       tutores:[],
-      arreglo:[1,2,3,4,5,6],
       id:null,
-      nomb:""
+      nomb:"", 
+      infiniteId: 1,
     }
   },
   components: {
-    datosTutor
-  },
-  mounted(){
-    //this.listarTutores();
-  },
-  computed:{
-
+    datosTutor,
+    InfiniteLoading,
   },
   methods:{
-
+    buscarTutor(){
+      this.page = 1;
+      this.tutores = [];
+      this.infiniteId += 1;
+    },
     infiniteHandler: function($state){
-        let limit = this.tutores.length / 40 + 1;
+      //$state.reset();
+        let limit = this.tutores.length / 10 + 1;
         const params = {
           page: limit,
-          id : this.$store.state.programaActual.id_programa,
+          id_programa : this.$store.state.programaActual.id_programa,
+          nomFacu:this.$store.state.programaActual.facultad.nombre,
           nombre: this.nomb,
         };
         axios
@@ -68,8 +72,8 @@ export default {
           })
     },
     loadMore: function($state, res){
-      if(res.data.tasks.length){
-        this.tutores=this.tutores.concat(res.data.tasks);
+      if(res.data.tasks.data.length){
+        this.tutores=this.tutores.concat(res.data.tasks.data);
         $state.loaded();
         console.log(this.tutores.length)
         if(res.data.paginate.total==this.tutores.length){
@@ -77,6 +81,7 @@ export default {
           $state.complete();
         }
       }else{
+        this.id=1;
         $state.complete();
       }
 
@@ -95,5 +100,5 @@ export default {
     margin-bottom:1.3em;
 
 }
-
+input:focus {outline: none;box-shadow: none;}
 </style>

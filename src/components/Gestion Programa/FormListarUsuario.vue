@@ -174,7 +174,7 @@ export default {
     
     if(this.$store.state.usuario==null) this.$router.push('/login');
     
-    console.log('Store state usuariosA',this.$store.state.usuariosA);
+    //console.log('Store state usuariosA',this.$store.state.usuariosA);
      if(this.$store.state.usuarios == null  ) {     
        this.listarUsuarios(); } //}
     else this.usuarios = this.$store.state.usuarios; //
@@ -193,17 +193,19 @@ export default {
     this.showModal();
     console.log(this.$store.state.programaActual.id_programa);
     var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
-     if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador
+    //var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa;
+     if(this.$store.state.tipoActual.nombre!="Admin"){ console.log('196',page);//Para coordinador 
+
         axios.post(url) //Por ahora dsp será x program
         .then(res =>{
-          console.log('Usuarios ',res.data.tasks.data);    
+         // console.log('Usuarios ',res.data.tasks.data);    
           //ordenado por estado
-          let par=res.data.tasks.data;  
-          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});    
+          let par=res.data.tasks.data;  console.log('201');
+          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});  console.log('202');  
           //this.$store.state.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-          this.paginate=res.data.paginate;
+          this.paginate=res.data.paginate;console.log('204');
           // this.$store.state.usuarios=res.data;
-          console.log(this.$store.state.tipoActual.nombre);
+          console.log(this.$store.state.tipoActual.nombre);console.log('205');
             this.hideModal();
                    
         })
@@ -212,7 +214,7 @@ export default {
             this.hideModal();
           //Swal de problema
            Swal.fire({
-                    text:"Estamos teniendo problemas al listar los uusarios. Vuelve a intentar en unos minutos.",
+                    text:"Estamos teniendo problemas al listar los usuarios. Vuelve a intentar en unos minutos.",
                     icon:"warning",
                     confirmButtonText: 'Sí',
                     confirmButtonColor:'#0097A7',

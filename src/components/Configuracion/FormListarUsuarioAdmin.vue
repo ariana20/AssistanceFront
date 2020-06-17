@@ -7,9 +7,13 @@
         </div>
         <div style="float: left;width:40vw">
           <input v-on:change="Buscar(nombre)" class="col-sm-6 form-control" style="top:26px" v-model="nombre" placeholder="Ingrese un nombre">
+          <button v-on:click="subirPDFs">Subir</button>
         </div>
       </div>
       <br>
+      <div>
+        <input type="file" v-on:change="onFileSelected" name="client-file" id="get-files" multiple/>
+      </div>
       <div style="margin-top:7%;width:100%;display:block ruby">
       <div style="overflow: auto;width:100%;">
         <table class="table" style="width:99%">
@@ -77,6 +81,13 @@
 			</nav>
       </div>
     </div>
+    
+    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
+        Loading... <b-spinner style="margin-left:15px"/>
+      </div>
+    </b-modal>
+
   </div>
 </template>
 
@@ -88,24 +99,11 @@ export default {
   data(){
     return{
       nombre:null,
+      selectedFile:null,
+      selectedFiles:[],
     }
   },
- 
-  // computed:{
-  //       nombre:{
-  //         get(){
-  //             return this.$store.state.filtro.query;
-  //         },
-  //         set(val){
-  //             this.$store.commit('SET_QUERY',val);
-  //         }
-  //       },
-  //       ...mapGetters({
-  //         usuariosFiltrados: 'filtrarUsuariosAdmin'
-  //       })
-  // },
   mounted(){
-    console.log('Store state usuariosA',this.$store.state.usuariosA);
      if(this.$store.state.usuariosA === null  ) {     
        this.listarUsuarios(); } 
   },
@@ -136,6 +134,8 @@ export default {
       axios.post('/usuarios/listarTodo',obj)
       .then(res =>{
         this.$store.state.usuariosA=res.data;
+        console.log('usuarios: ',res.data.data);
+        
       })
       .catch(e => {
         console.log(e.response);
@@ -189,8 +189,41 @@ export default {
               )
             }
           })
-   } // eliminart
-   
+   }, // eliminart
+   onFileSelected(e){
+      let files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      for (let index = 0; index < files.length; index++) {
+        this.createFile(files[index]);
+      }
+      console.log(this.selectedFiles);
+    },
+    createFile(file) {
+      let reader = new FileReader();
+      let vm = this;
+      reader.onload = (e) => {
+          vm.selectedFile = e.target.result;
+          vm.selectedFiles.push(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    },
+    subirPDFs(){
+      let obj = {files:this.selectedFiles}
+      axios.post('/usuarios/notas',obj)
+          .then(res =>{
+            this.$store.state.usuariosA=res.data;
+          })
+          .catch(e => {
+            console.log(e.response);
+           })
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
   }
 }
 </script>

@@ -194,6 +194,7 @@ export default Vue.extend ({
             for(var i in response.data){ 
                 this.codigos.push(response.data[i][0]);
             }
+            console.log(this.codigos);
         })
         .catch(e => {
             console.log(e.response);

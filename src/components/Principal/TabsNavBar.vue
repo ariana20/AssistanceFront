@@ -49,7 +49,7 @@ export default {
         width:15%
     }
 
-    @media screen and (max-height: 800px) {
+    @media screen and (max-height: 600px) {
         .tabs{
             margin-left:-7%;
             width:90%;

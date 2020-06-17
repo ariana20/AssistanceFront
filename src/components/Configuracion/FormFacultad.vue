@@ -29,8 +29,8 @@
 						<td>{{item.correo}}</td>
 						<td style="text-align: center">{{item.cantidad-1}}</td>
 						<td style="text-align: center">
-							<button class="btn link" v-on:click="Editar(item)"><b-icon icon="pencil"></b-icon></button>
-							<button class="btn link" v-on:click="Eliminar(item)"><b-icon icon="dash-circle-fill"></b-icon></button>
+							<button class="btn link" v-on:click="Editar(item)"><b-icon icon="pencil" style="color:#0097A7"></b-icon></button>
+							<button class="btn link" v-on:click="Eliminar(item)"><b-icon icon="dash-circle-fill" style="color:#757575"></b-icon></button>
 						</td>
 					</tr>
 				</tbody>
@@ -190,15 +190,16 @@ export default {
 										return element.id_facultad === item.id_facultad;
 									})
 								this.$store.state.facultades.splice(index, 1);
+								Swal.fire({
+									text:"Eliminación Exitosa",
+									icon:"success",
+									confirmButtonText: 'OK',
+									confirmButtonColor:'#0097A7',
+									showConfirmButton: true,
+								})
 							})
 							.catch(e=>console.log(e));
-						Swal.fire({
-							text:"Eliminación Exitosa",
-							icon:"success",
-							confirmButtonText: 'OK',
-							confirmButtonColor:'#0097A7',
-							showConfirmButton: true,
-						})
+
 					}
 				})			
 		}
@@ -215,5 +216,8 @@ export default {
 		margin-bottom:1.3em;
 
 }
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
 
 </style>

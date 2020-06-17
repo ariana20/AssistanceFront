@@ -83,7 +83,7 @@ export default {
       }
     }
     else{
-      if (this.$route.path !== '/login' ) this.$router.push('login')
+      if (this.$route.path !== '/login' ) this.$router.push('/login')
     }
     
   },
@@ -110,7 +110,7 @@ export default {
               localStorage.setItem('usuarioActual', null)
               localStorage.setItem('programaSel', null)
               this.$store.state.programaActual = null;
-              if (this.$route.path !== '/login') this.$router.go('login');
+              if (this.$route.path !== '/login') this.$router.go('/login');
             }
             )
             
@@ -211,7 +211,7 @@ export default {
   font-size: 36px;
   margin-left: 50px;
 }
-@media screen and (max-height: 800px) {
+@media screen and (max-height: 600px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
   .btn-navs{
