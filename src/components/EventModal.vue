@@ -55,6 +55,7 @@ export default {
             start: {},
             end: {},
             isDisabled: false,
+            idCita: null,
         }
     },
     methods: {
@@ -67,20 +68,19 @@ export default {
 
         },
         removeEvent() {
+          
           console.log('idDisponibilidad: ',this.event.id);
           console.log('usuario actualizando: ', this.$store.state.usuario.id_usuario);
-          
-          
+          console.log(this.idCita);
           axios.post('citas/cancelarCita',{
-            idCita: this.event.extendedProps.id_cita,
+            idCita: this.idCita,
             idDisponibilidad:this.event.id,
             usuario_actualizacion:this.$store.state.usuario.id_usuario})
           .then((response) => {
-            console.log(response.data);
-            this.event.
+            console.log('cancelar cita: ',response);
             this.$store.commit("UPDATE_EVENT", {
               id: this.event.id,
-              title: 'Libre',
+              title: 'Disponible',
               start: this.event.start,
               color:'#B2EBF2',
             });
@@ -132,14 +132,17 @@ export default {
             
         },
         getIdCita () {
-          axios.post('disponibilidades/mostrarCita/' + this.event.id)
+          axios.post('disponibilidades/mostrarCita2', {idDisponibilidad:this.event.id})
           .then((response) => {
-            console.log(response.data);
-            console.log(response.data.cita[0].id_cita);
+            this.idCita = response.data.id_cita;
+            //this.idCita = response.data.cita[0].id_cita
+            //console.log(response.data);
+            //console.log(response.data.cita[0].id_cita);
           }).catch(e => {
             console.log(e.response);
           });
-        }
+        },
+        
     },
 
   props: {

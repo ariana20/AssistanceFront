@@ -154,7 +154,7 @@ export default {
                             } else {
                                 this.$store.commit("ADD_EVENT", {
                                     id: rd[i].id_disponibilidad,
-                                    title: 'Libre',
+                                    title: 'Disponible',
                                     description:'',
                                     start: rd[i].fecha + " " + rd[i].hora_inicio,
                                     end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
