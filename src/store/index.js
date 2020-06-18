@@ -27,6 +27,7 @@ export default new Vuex.Store({
     curEvent: null,
     tutorDisponibilidad:null,
     reg: false,
+    idCita: null,
     navLinks: [
       {
         text: 'Institucion',

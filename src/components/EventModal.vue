@@ -135,6 +135,7 @@ export default {
           axios.post('disponibilidades/mostrarCita2', {idDisponibilidad:this.event.id})
           .then((response) => {
             this.idCita = response.data.id_cita;
+            this.$store.state.idCita = response.data.id_cita;
             //this.idCita = response.data.cita[0].id_cita
             //console.log(response.data);
             //console.log(response.data.cita[0].id_cita);

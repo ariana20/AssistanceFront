@@ -9,7 +9,7 @@
                 <div class="list-data"><div id="left">Hora Inicio:  </div> <div id="right"> {{ this.event.start | formatHour}} </div></div>
                 <div class="list-data"><div id="left">Hora Fin:     </div> <div id="right"> {{ this.event.end | formatHour }} </div></div>
                 <div class="list-data"><div id="left">Tipo Tutoría: </div> <div id="right"> {{ this.event.extendedProps.description }} </div></div>
-                <div style="float:right;"><input type="checkbox" v-model="asistencia"/>Asistencia</div>
+                
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
             <div class="row grid-divider">
@@ -29,7 +29,7 @@
                         <figure v-if="this.event.extendedProps.alumno.imagen=='' || this.event.extendedProps.alumno.imagen==null" id="floated" class="image-logo">	
                                 <b-avatar size="7rem" ></b-avatar>		
                         </figure>
-                        <button type="button" class="btn btn-info" @click="Perfil">Ver Perfil</button>
+                        <button type="button" class="btn btn-info" style="margin-left: 4%;" @click="Perfil">Ver Perfil</button>
                     </div>
                 </div>
                 <div style="bottom:30px;">
@@ -52,7 +52,10 @@
                             <button type="button" class="btn btn-info" >Plan de acción</button>
                         </div>
                     </div>
+                    <div style="margin-top:10%;float:left;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>
                 </div>
+                
+                
                 <!--<div style="position:absolute; bottom:30px;">
                     <input type="checkbox" v-model="asistencia"/>Asistencia
                 </div>-->
@@ -106,9 +109,13 @@
                         </option>
                     </select>
                     </div>
-                </div>                
+                    
+                </div> 
+                               
             </div>
+            
         </div>
+        
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
     </div>
 </template>
@@ -212,23 +219,23 @@ export default Vue.extend ({
                 })
         },
         guardar: function () {
+            let array = []
+            array.push(this.event.extendedProps.alumno.id_usuario);
+            console.log(array);
             const sesion_params = {
-                id_usuario: this.$store.state.usuario.id_usuario,
-                fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
-                hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
-                usuario_creacion: this.$store.state.usuario.id_usuario,
-                usuario_actualizacion: this.$store.state.usuario.id_usuario,
-                id_tipo_tutoria: this.selectedTipoTutoria,
-                id_motivo_consulta: this.listMotivosId[0],
                 resultado: this.descripcion,
-                idAlumnos: this.listAlumnosId,
+                idAlumnos: array,
+                id_cita: this.$store.state.idCita, 
+                asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
             };
-            if(this.selectedTipoTutoria != null) {
                 if(this.listMotivos.length > 0) {
                         
                             if(this.descripcion!=null) {
-                                axios.post('/sesiones/asistenciaFormal',sesion_params)
+                                if(this.selectedUnidadApoyo) {
+                                    this.enviarCorreo(this.selectedUnidadApoyo)
+                                }
+                                axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
                                         console.log(response);
                                         Swal.fire({
@@ -251,8 +258,6 @@ export default Vue.extend ({
                                         showConfirmButton: true,
                                     })
                                 }
-                        
-                    
                 }
                 else {
                     Swal.fire({
@@ -263,16 +268,7 @@ export default Vue.extend ({
                         showConfirmButton: true,
                     })
                 }
-            }
-            else {
-                Swal.fire({
-                    text:"Debe seleccionar el tipo de tutoría",
-                    icon:"error",
-                    confirmButtonText: 'OK',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                })
-            }
+            
         },
         onCodigoChange: function () {
             var i;
@@ -337,9 +333,9 @@ export default Vue.extend ({
                   "gmail",
                   "template_bV7OIjEW",
                   {
-                  "nombre":this.$store.state.usuario.nombre+" "+this.$store.state.usuario.apellidos,
+                  "nombre":this.event.extendedProps.alumno.nombre+" "+ this.event.extendedProps.alumno.apellidos,
                   "mensaje":mensaje,
-                  "correo": this.$store.state.usuario.correo
+                  "correo": this.event.extendedProps.alumno.correo
                   }, 'user_ySzIMrq3LRmXhtVkmpXAA')
                   .then((result) => {
                       console.log('SUCCESS!', result.status, result.text);
