@@ -53,7 +53,8 @@
         <div name="VisorPdf" v-if="verPdf">
             <div class="container" style="width:100%">
                 <div v-if="usuario.notas!=null">
-                    <embed class="toolb" :src="usuario.notas+'#toolbar=0&navpanes=0&scroll=0'" width="1000" height="1000"/>
+                    {{usuario.notas}}
+                    <!-- <embed class="toolb" :src="usuario.notas+'#toolbar=0&navpanes=0&scroll=0'" width="1000" height="1000"/> -->
                 </div>
                 <div v-else>
                     <h2>No tiene notas registradas actualmente</h2>
