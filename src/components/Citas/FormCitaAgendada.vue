@@ -238,13 +238,13 @@ export default Vue.extend ({
             let array = []
             array.push(this.event.extendedProps.alumno.id_usuario);
             console.log(array);
-            // const sesion_params = {
-            //     resultado: this.descripcion,
-            //     idAlumnos: array,
-            //     id_cita: this.$store.state.idCita, 
-            //     asistencia: this.asistencia,
-            //     idMotivos: this.listMotivosId,
-            // };
+            const sesion_params = {
+                resultado: this.descripcion,
+                idAlumnos: array,
+                id_cita: this.$store.state.idCita, 
+                asistencia: this.asistencia,
+                idMotivos: this.listMotivosId,
+            };
                 if(this.listMotivos.length > 0) {
                         
                             if(this.descripcion!=null) {
@@ -252,12 +252,8 @@ export default Vue.extend ({
                                     //console.log('asdfasdf',this.selectedUnidadApoyo);
                                     this.enviarCorreo(this.selectedUnidadApoyo)
                                 }
-<<<<<<< HEAD
                                 this.showModal()
                                 axios.post('/sesiones/regSesionFormal',sesion_params)
-=======
-                                /*axios.post('/sesiones/regSesionFormal',sesion_params)
->>>>>>> origin/emmaraq
                                     .then( response=>{
                                         console.log(response);
                                         this.hideModal()
@@ -271,12 +267,8 @@ export default Vue.extend ({
                                     })  
                                     .catch(e => {
                                         console.log(e.response);
-<<<<<<< HEAD
                                         this.hideModal()
                                     });
-=======
-                                    });*/
->>>>>>> origin/emmaraq
                                 }
                                 else {
                                     Swal.fire({
