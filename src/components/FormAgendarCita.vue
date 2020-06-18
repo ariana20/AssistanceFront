@@ -129,7 +129,7 @@ export default {
         getReminders: function() {
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
-                axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:54,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
+                axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.$store.state.tutorDisponibilidad.id_usuario,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
                     var rd = response.data[0];
                     var rd2 = response.data[1];
