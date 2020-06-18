@@ -6,7 +6,7 @@
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
       <div id="botones">
-        <button type="button" class="btn btn-info" @click="updateEvent">Aceptar</button>
+        <button type="button" class="btn btn-info" :disabled='isDisabled'  @click="updateEvent">Aceptar</button>
         <button type="button" class="btn btn-secondary" @click="$emit('close')">Cerrar</button>
       </div>
       <div style="margin-bottom: 20px;"></div>
@@ -27,7 +27,7 @@
 
     <fieldset v-if="isTutor">
       <div v-if="this.event.backgroundColor!='#B2EBF2'">
-        <legend>Cancelar Cita</legend>
+        <legend>Cita Agendada</legend>
         <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
         <b>Fecha:</b>{{event.start | formatDate}} <br/>
         <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
@@ -54,6 +54,8 @@ export default {
             title: "",
             start: {},
             end: {},
+            isDisabled: false,
+            idCita: null,
         }
     },
     methods: {
@@ -66,19 +68,19 @@ export default {
 
         },
         removeEvent() {
+          
           console.log('idDisponibilidad: ',this.event.id);
           console.log('usuario actualizando: ', this.$store.state.usuario.id_usuario);
-          
+          console.log(this.idCita);
           axios.post('citas/cancelarCita',{
-            idCita: this.event.extendedProps.id_cita,
+            idCita: this.idCita,
             idDisponibilidad:this.event.id,
             usuario_actualizacion:this.$store.state.usuario.id_usuario})
           .then((response) => {
-            console.log(response.data);
-            this.event.
+            console.log('cancelar cita: ',response);
             this.$store.commit("UPDATE_EVENT", {
               id: this.event.id,
-              title: 'Libre',
+              title: 'Disponible',
               start: this.event.start,
               color:'#B2EBF2',
             });
@@ -89,20 +91,22 @@ export default {
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
             });
-            return response
+            
           }).catch(e => {
             console.log(e.response);
           });
           this.$emit('close');
         },
         updateEvent () {
+          this.isDisabled = true;
           //console.log(this.event.extendedProps);
             this.$store.commit("UPDATE_EVENT", {
                 id: this.event.id,
-                title: this.nombre,
+                title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
                 start: this.event.start,
                 color:'#009892',
             });
+            
             //var fecha_e= moment(this.event.start).format('MM/DD/YYYY')
             //var hora_e=  moment(this.event.start).format('hh:mm a')
             //REGISTRAR LA CITA
@@ -113,9 +117,7 @@ export default {
               usuario_actualizacion: this.$store.state.usuario.id_usuario,
               idUsuario: this.$store.state.usuario.id_usuario,
             }).then(response => {
-              //console.log('registrarCitaAl response: ',response.data);
-              this.event.extendedProps.id_cita = response.data.id_cita;
-              console.log('event idCita: ',this.event.extendedProp);
+              console.log('registrarCitaAl response: ', response.data);
               Swal.fire({
                       text:"Registro Exitoso",
                       icon:"success",
@@ -124,12 +126,24 @@ export default {
                       showConfirmButton: true,
                     });
                     this.$emit('close');
-                    
             }).catch(e => {
                 console.log(e.response);
             });
             
-        }
+        },
+        getIdCita () {
+          axios.post('disponibilidades/mostrarCita2', {idDisponibilidad:this.event.id})
+          .then((response) => {
+            this.idCita = response.data.id_cita;
+            this.$store.state.idCita = response.data.id_cita;
+            //this.idCita = response.data.cita[0].id_cita
+            //console.log(response.data);
+            //console.log(response.data.cita[0].id_cita);
+          }).catch(e => {
+            console.log(e.response);
+          });
+        },
+        
     },
 
   props: {
@@ -138,7 +152,10 @@ export default {
     isTutor: Boolean,
     nombre_usuario: String,
   },mounted() {
+    
     this.$store.state.curEvent = this.event;
+    console.log(this.event.id);
+    this.getIdCita();
   }
 };
 

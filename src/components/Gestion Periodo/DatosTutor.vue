@@ -18,9 +18,9 @@
                 </label>
             </div>
             <div style="text-align: right" id="botones" >
-                <!--button type="button"
-                class="btn btn-info">Ver disponibilidad</button>
                 <button type="button"
+                class="btn btn-info" v-on:click="verDisponibilidad()">Ver disponibilidad</button>
+                <!--button type="button"
                 class="btn btn-info">Ver Perfil</button> 
                 <button type="button"
                 class="btn btn-info btn-enviar-msg">Enviar Mensaje</button-->
@@ -50,6 +50,10 @@ export default {
         }
     },
     methods:{
+        verDisponibilidad(){
+            this.$store.state.tutorDisponibilidad=this.tutor;
+            this.$router.push('/agendarcita');
+        },
         solicitarTutor(){
             Swal.fire({
                 text:"¿Desea solicitar a "+this.tutor.nombre+" como tutor o tutora?",
