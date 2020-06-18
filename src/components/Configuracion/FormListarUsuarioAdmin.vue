@@ -7,13 +7,9 @@
         </div>
         <div style="float: left;width:40vw">
           <input v-on:change="Buscar(nombre)" class="col-sm-6 form-control" style="top:26px" v-model="nombre" placeholder="Ingrese un nombre">
-          <button v-on:click="subirPDFs">Subir</button>
         </div>
       </div>
       <br>
-      <div>
-        <input type="file" v-on:change="onFileSelected" name="client-file" id="get-files" multiple/>
-      </div>
       <div style="margin-top:7%;width:100%;display:block ruby">
       <div style="overflow: auto;width:100%;">
         <table class="table" style="width:99%">
@@ -82,9 +78,10 @@
       </div>
     </div>
     
-    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-        Loading... <b-spinner style="margin-left:15px"/>
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
       </div>
     </b-modal>
 
@@ -104,93 +101,101 @@ export default {
     }
   },
   mounted(){
-     if(this.$store.state.usuariosA === null  ) {     
-       this.listarUsuarios(); } 
+    if(this.$store.state.usuario==null) this.$router.push('/login')
+    if(this.$store.state.usuariosA === null  ) { 
+      this.showModal();    
+      this.listarUsuarios(); 
+    } 
   },
   methods:{
     listarUsuarios() {
+      this.showModal()
       axios.post('/usuarios/listarTodo')
       .then(res =>{
         this.$store.state.usuariosA=res.data;
+        this.hideModal()
       })
       .catch(e => {
         console.log(e.response);
+        this.hideModal()
       })
     },
     Buscar(n) {
+      this.showModal()
       let obj = { busqueda: n}
       axios.post('/usuarios/listarTodo',obj)
       .then(res =>{
         this.$store.state.usuariosA=res.data;
+        this.hideModal()
       })
       .catch(e => {
         console.log(e.response);
+        this.hideModal()
       })
     },
     Page(n) {
       let obj;
+      this.showModal()
       if(this.nombre!='') obj = {page: n, busqueda: this.nombre}
       else obj = { page: n}
       axios.post('/usuarios/listarTodo',obj)
       .then(res =>{
         this.$store.state.usuariosA=res.data;
-        console.log('usuarios: ',res.data.data);
-        
+        this.hideModal()
       })
       .catch(e => {
         console.log(e.response);
+        this.hideModal()
       })
     },
     eliminarUsuario(id){
-      Swal.fire({
-            text:'¿Desea eliminar?',
-            icon:'warning',
-            confirmButtonText: 'Eliminar',
-             confirmButtonColor:'#0097A7',
-            cancelButtonText: 'Cancelar',
-            cancelButtonColor:'C4C4C4',
-            showCancelButton: true,
-            showConfirmButton: true,
-            //html:' <div >Hello</div>',
+        Swal.fire({
+              text:'¿Desea eliminar?',
+              icon:'warning',
+              confirmButtonText: 'Eliminar',
+              confirmButtonColor:'#0097A7',
+              cancelButtonText: 'Cancelar',
+              cancelButtonColor:'C4C4C4',
+              showCancelButton: true,
+              showConfirmButton: true,
+              //html:' <div >Hello</div>',
 
-        }).then((result) => {
-            if (result.value) {
-              Swal.fire({
-                icon:'success',
-                text:'El usuario ha sido eliminado',
-                confirmButtonText:'Confirmo' ,
-                confirmButtonColor:'#0097A7'
-                }
-              )
-              //aqui iriía el eliminar
-              //ESte eliminar no debería estar.Debería ser un eliminar del programa
-              axios.post('/usuarios/eliminar/'+id)
-              .then(res =>{
-              // Ordenadito
-                    console.log(res);
-                     let index = this.$store.state.usuarios.indexOf( //
-                    function(element){
-                      return element.id_tipo_tutoria === id; //
-                    })
-                  this.$store.state.usuarios.splice(index, 1); //
-          
+          }).then((result) => {
+              if (result.value) {
+                this.showModal()
+                //aqui iriía el eliminar
+                //ESte eliminar no debería estar.Debería ser un eliminar del programa
+                axios.post('/usuarios/eliminar/'+id)
+                .then(res =>{
+                  res
+                  let index = this.$store.state.usuarios.indexOf(
+                  function(element){
+                    return element.id_tipo_tutoria === id; 
+                  })
+                  this.$store.state.usuarios.splice(index, 1);
+                  this.hideModal()
+                  Swal.fire({
+                    icon:'success',
+                    text:'El usuario ha sido eliminado',
+                    confirmButtonText:'Confirmo' ,
+                    confirmButtonColor:'#0097A7'
+                    }
+                  )
                 })
                 .catch(e => {
                   console.log(e.response);
+                  this.hideModal()
                 })
-
-            } else if (
-              /* Read more about handling dismissals below */
-              result.dismiss === Swal.DismissReason.cancel
-            ) {
-              Swal.fire({
-                text:'Se ha cancelado la eliminación',
-                confirmButtonColor:'#0097A7',}
-              )
-            }
-          })
-   }, // eliminart
-   onFileSelected(e){
+              } 
+              else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                  text:'Se ha cancelado la eliminación',
+                  confirmButtonColor:'#0097A7',}
+                )
+              }
+            })
+    }, 
+    onFileSelected(e){
       let files = e.target.files || e.dataTransfer.files;
       if (!files.length)
         return;
@@ -209,14 +214,17 @@ export default {
       reader.readAsDataURL(file);
     },
     subirPDFs(){
+      this.showModal()
       let obj = {files:this.selectedFiles}
       axios.post('/usuarios/notas',obj)
-          .then(res =>{
-            this.$store.state.usuariosA=res.data;
-          })
-          .catch(e => {
-            console.log(e.response);
-           })
+        .then(res =>{
+          this.$store.state.usuariosA=res.data;
+          this.hideModal()
+        })
+        .catch(e => {
+          console.log(e.response);
+          this.hideModal()
+        })
     },
     showModal() {
       this.$refs['my-modal'].show()

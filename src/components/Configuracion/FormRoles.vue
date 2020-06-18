@@ -59,41 +59,48 @@ export default {
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
-    if(this.$store.state.roles === null) this.listarRoles();
+    if(this.$store.state.roles === null) {
+      this.showModal()
+      this.listarRoles();
+    }
     else this.roles = this.$store.state.roles;
     this.nombre="";
   },
   computed:{
-        nombre:{
-          get(){
-              return this.$store.state.filtro.query;
-          },
-          set(val){
-              this.$store.commit('SET_QUERY',val);
-          }
-        },
-        ...mapGetters({
-          rolesFiltrados: 'filtrarRoles'
-        })
+    nombre:{
+      get(){
+        return this.$store.state.filtro.query;
+      },
+      set(val){
+        this.$store.commit('SET_QUERY',val);
+      }
+    },
+    ...mapGetters({
+      rolesFiltrados: 'filtrarRoles'
+    })
   },
   methods:{
     listarRoles() {
-        this.axios.post('/tipoUsuarios/listarTodo')
-        .then(response=>{
-          if(this.$store.state.tipoActual.nombre == 'Admin'){
-            this.$store.state.roles = response.data;
+      this.showModal()
+      this.axios.post('/tipoUsuarios/listarTodo')
+      .then(response=>{
+        if(this.$store.state.tipoActual.nombre == 'Admin'){
+          this.$store.state.roles = response.data;
+        }
+        else{
+          this.$store.state.roles = response.data;
+          let index;
+          for (index = 0; index < this.$store.state.roles.length; index++) {
+            if(this.$store.state.roles[index].nombre == "Admin") break;              
           }
-          else{
-            this.$store.state.roles = response.data;
-            let index;
-            for (index = 0; index < this.$store.state.roles.length; index++) {
-              if(this.$store.state.roles[index].nombre == "Admin") break;              
-            }
-            this.$store.state.roles.splice(index, 1);
-          }
-        })
-        .catch(e=>console.log(e));
-      
+          this.$store.state.roles.splice(index, 1);
+        }
+        this.hideModal()
+      })
+      .catch(e=>{
+        console.log(e)
+        this.hideModal()
+      });
     },
     Editar(id){
       this.$router.push('/permisos/'+id);
@@ -133,10 +140,8 @@ export default {
                 console.log(e)
                 this.hideModal();
               });
-
           }
         })
-      
     },
     showModal() {
       this.$refs['my-modal'].show()

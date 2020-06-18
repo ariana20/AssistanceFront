@@ -110,6 +110,12 @@
             </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
+        <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+            <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+                <b-spinner style="width: 3rem; height: 3rem;"/>
+                <br >Cargando... 
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -173,24 +179,27 @@ export default Vue.extend ({
         }
     },
     mounted(){
+        if(this.$store.state.usuario==null) this.$router.push('/login')
         console.log(this.event);
         //console.log('evento actual: ', this.$store.state.programaActual);
-
-    axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
-        .then(response => {
-            for(var i in response.data) {
-                this.unidadesApoyo.push(response.data[i][0]);
-            }
-        }).catch(e => {
-            console.log(e.response);
-        });
-    axios.post('motivosConsulta/listarTodo')
-        .then( response => {
-            this.motivos = response.data;
-        })
-        .catch(e => {
-          console.log(e.response);
-        });
+        this.showModal()
+        axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
+            .then(response => {
+                for(var i in response.data) {
+                    this.unidadesApoyo.push(response.data[i][0]);
+                }
+            }).catch(e => {
+                console.log(e.response);
+            });
+        axios.post('motivosConsulta/listarTodo')
+            .then( response => {
+                this.motivos = response.data;
+                this.hideModal()
+            })
+            .catch(e => {
+                console.log(e.response);
+                this.hideModal()
+            });
     },
     methods: {
         cancelar: function(){
@@ -228,9 +237,11 @@ export default Vue.extend ({
                 if(this.listMotivos.length > 0) {
                         
                             if(this.descripcion!=null) {
+                                this.showModal()
                                 axios.post('/sesiones/asistenciaFormal',sesion_params)
                                     .then( response=>{
                                         console.log(response);
+                                        this.hideModal()
                                         Swal.fire({
                                             text:"Se ha registrado la sesión con éxito",
                                             icon:"success",
@@ -238,8 +249,10 @@ export default Vue.extend ({
                                             confirmButtonColor:'#0097A7',
                                             showConfirmButton: true,
                                         }) 
-                                    })  .catch(e => {
+                                    })  
+                                    .catch(e => {
                                         console.log(e.response);
+                                        this.hideModal()
                                     });
                                 }
                                 else {
@@ -349,7 +362,13 @@ export default Vue.extend ({
         },
         Perfil(){
             this.$router.push('/perfil/'+this.event.extendedProps.alumno.id_usuario)
-        }
+        },
+        showModal() {
+            this.$refs['my-modal'].show()
+        },
+        hideModal() {
+            this.$refs['my-modal'].hide()
+        },
     }
 })
 </script>

@@ -39,6 +39,12 @@
             <modals-container/>
         
         </div>
+        <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+            <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+                <b-spinner style="width: 3rem; height: 3rem;"/>
+                <br >Cargando... 
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -120,59 +126,70 @@ export default {
             }
         },
         getReminders: function() {
-                this.calendar = this.$refs.fullCalendar.getApi();
-                this.$store.state.events = [];
-                axios.post('disponibilidades/dispSemanalVistaTu',{idUsuario:this.$store.state.usuario.id_usuario,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
-                .then((response) => {
-                    console.log('disp: ',response.data);
-                    var rd = response.data[0];
-                    var rd2 = response.data[1];
-                    var rd3 = response.data[2];
-                    var rd4 = response.data[3];
-                    for(var i in rd) {
-                        var start_hour = rd[i].hora_inicio;
-                        //this.events.push({
-                            console.log(rd3[i].nombre);
-                            if(rd2[i]=='o'){
-                                this.$store.commit("ADD_EVENT", {
-                                    id: rd[i].id_disponibilidad,
-                                    title: rd4[i][0].nombre + ' ' + rd4[i][0].apellidos,
-                                    description: rd3[i].nombre,
-                                    alumno: rd4[i][0],
-                                    start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                    fecha: rd[i].fecha,
-                                    horaIni: rd[i].hora_inicio, 
-                                    end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                    tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                    color: 'gray',
-                                    usuario_creacion: rd[i].usuario_creacion,
-                                    id_usuario_tutor: rd[i].id_usuario,
-                                    usuario_actualizacion: rd[i].usuario_actualizacion,
+            this.calendar = this.$refs.fullCalendar.getApi();
+            this.$store.state.events = [];
+            this.showModal()
+            axios.post('disponibilidades/dispSemanalVistaTu',{idUsuario:this.$store.state.usuario.id_usuario,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
+            .then((response) => {
+                console.log('disp: ',response.data);
+                var rd = response.data[0];
+                var rd2 = response.data[1];
+                var rd3 = response.data[2];
+                var rd4 = response.data[3];
+                for(var i in rd) {
+                    var start_hour = rd[i].hora_inicio;
+                    //this.events.push({
+                        console.log(rd3[i].nombre);
+                        if(rd2[i]=='o'){
+                            this.$store.commit("ADD_EVENT", {
+                                id: rd[i].id_disponibilidad,
+                                title: rd4[i][0].nombre + ' ' + rd4[i][0].apellidos,
+                                description: rd3[i].nombre,
+                                alumno: rd4[i][0],
+                                start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                fecha: rd[i].fecha,
+                                horaIni: rd[i].hora_inicio, 
+                                end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                color: 'gray',
+                                usuario_creacion: rd[i].usuario_creacion,
+                                id_usuario_tutor: rd[i].id_usuario,
+                                usuario_actualizacion: rd[i].usuario_actualizacion,
 
 
-                                });                              
-                            } else {
-                                this.$store.commit("ADD_EVENT", {
-                                    id: rd[i].id_disponibilidad,
-                                    title: 'Libre',
-                                    description:'',
-                                    start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                    end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                    tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                    color: '#B2EBF2',
-                                    editable:false,
-                                    usuario_creacion: rd[i].usuario_creacion,
-                                    id_usuario_tutor: rd[i].id_usuario,
-                                    usuario_actualizacion: rd[i].usuario_actualizacion
-                                });
-                            }
-                        //});
-                    }
-                }).catch(e => {
-                    console.log(e.response);
-                });
-                //this.calendar.render();
-            },
+                            });                              
+                        } else {
+                            this.$store.commit("ADD_EVENT", {
+                                id: rd[i].id_disponibilidad,
+                                title: 'Libre',
+                                description:'',
+                                start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                color: '#B2EBF2',
+                                editable:false,
+                                usuario_creacion: rd[i].usuario_creacion,
+                                id_usuario_tutor: rd[i].id_usuario,
+                                usuario_actualizacion: rd[i].usuario_actualizacion
+                            });
+                        }
+                    //});
+                }
+                this.hideModal()
+            }).catch(e => {
+                console.log(e.response);
+                this.hideModal()
+            });
+            //this.calendar.render();
+        },
+        showModal() {
+        this.$refs['my-modal'].show()
+        },
+        hideModal() {
+        this.$refs['my-modal'].hide()
+        },
+    
+    
     },
     watch: {    
         eventFilter() {
@@ -180,6 +197,8 @@ export default {
         }
     },
     mounted() {
+        if(this.$store.state.usuario==null) this.$router.push('/login')
+        this.showModal()
         this.getReminders();
         //this.calendar = this.$refs.fullCalendar.getApi();
         //idUsuario: this.$store.state.usuario.id_usuario

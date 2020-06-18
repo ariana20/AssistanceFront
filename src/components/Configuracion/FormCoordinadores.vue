@@ -44,9 +44,10 @@
       </table>
     </div>
 
-    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-        Loading... <b-spinner style="margin-left:15px"/>
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
       </div>
     </b-modal>
       
@@ -64,32 +65,39 @@ export default {
     }
   },
   created(){
-    if(this.$store.state.coordinadoresL == null) this.listarCoordinadores();
+    if(this.$store.state.usuario==null) this.$router.push('/login')
+    if(this.$store.state.coordinadoresL == null) {
+      this.showModal();
+      this.listarCoordinadores();
+    }
     else this.coordinadores = this.$store.state.coordinadoresL;
+    console.log('a',this.$refs)
   },
   computed:{
-        nombre:{
-            get(){
-                return this.$store.state.filtro.query;
-            },
-            set(val){
-                this.$store.commit('SET_QUERY',val);
-            }
-        },
-        ...mapGetters({
-            coordinadoresFiltrados: 'filtrarCoordinadoresL'
-        })
+    nombre:{
+      get(){
+          return this.$store.state.filtro.query;
+      },
+      set(val){
+          this.$store.commit('SET_QUERY',val);
+      }
+    },
+    ...mapGetters({
+      coordinadoresFiltrados: 'filtrarCoordinadoresL'
+    })
   },
   methods:{
-    
     listarCoordinadores() {
+      this.showModal()
       this.axios.post('/facultad/coordinadoresPyF')
         .then(res =>{
-            this.$store.state.coordinadoresL = res.data;
-            this.coordinadores = res.data;
+          this.$store.state.coordinadoresL = res.data;
+          this.coordinadores = res.data;
+          this.hideModal()
         })
         .catch(e => {
           console.log(e.response);
+          this.hideModal()
         })
     },
     Editar(item){
@@ -110,8 +118,8 @@ export default {
             this.axios.post('/usuarios/eliminar/'+item.id_usuario)
               .then(response=>{
                 response
-                this.hideModal();
                 this.$store.state.roles.splice(index, 1);
+                this.hideModal();
                 Swal.fire({
                   text:"Eliminación Exitosa",
                   icon:"success",
@@ -127,16 +135,15 @@ export default {
 
           }
         })
-      
     },
     nuevo(){
       this.$router.push('/coordinador/'+0);
     },
     showModal() {
-      this.$refs['my-modal'].show()
+      //this.$refs['my-modal'].show()
     },
     hideModal() {
-      this.$refs['my-modal'].hide()
+      //this.$refs['my-modal'].hide()
     },
   }
 }

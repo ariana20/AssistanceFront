@@ -124,6 +124,12 @@
             </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
+        <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+            <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+                <b-spinner style="width: 3rem; height: 3rem;"/>
+                <br >Cargando... 
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -174,46 +180,49 @@ export default Vue.extend ({
         }
     },
     mounted(){
+        if(this.$store.state.usuario==null) this.$router.push('/login')
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.borderRadius = "1.25rem"; 
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.border= "0.5px solid #757575";    
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontWeight = "400";
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.height = "2.4em";
   
-    axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
-        .then(response => {
-            for(var i in response.data) {
-                this.unidadesApoyo.push(response.data[i][0]);
-            }
-        }).catch(e => {
+        axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
+            .then(response => {
+                for(var i in response.data) {
+                    this.unidadesApoyo.push(response.data[i][0]);
+                }
+            }).catch(e => {
+                console.log(e.response);
+            });
+        axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
+            .then( response => {
+                console.log("listado alumnos: ",response.data)
+                for(var i in response.data){ 
+                    this.codigos.push(response.data[i][0]);
+                }
+                console.log(this.codigos);
+            })
+            .catch(e => {
+                console.log(e.response);
+            });
+        axios.post('TipoTutoria/listarTodo/' + this.$store.state.programaActual.id_programa)
+            .then( response => {
+                this.tiposTutoria = response.data;
+            })
+            .catch(e => {
             console.log(e.response);
-        });
-    axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
-        .then( response => {
-            console.log("listado alumnos: ",response.data)
-            for(var i in response.data){ 
-                this.codigos.push(response.data[i][0]);
-            }
-            console.log(this.codigos);
-        })
-        .catch(e => {
-            console.log(e.response);
-        });
-    axios.post('TipoTutoria/listarTodo/' + this.$store.state.programaActual.id_programa)
-        .then( response => {
-            this.tiposTutoria = response.data;
-        })
-        .catch(e => {
-          console.log(e.response);
-        });
-    axios.post('motivosConsulta/listarTodo')
-        .then( response => {
-            this.motivos = response.data;
-        })
-        .catch(e => {
-          console.log(e.response);
-        });
-        console.log("datetime es: ",this.datetime);
+            });
+        axios.post('motivosConsulta/listarTodo')
+            .then( response => {
+                this.motivos = response.data;
+                this.hideModal()
+            })
+            .catch(e => {
+                console.log(e.response);
+                this.hideModal()
+            });
+            console.log("datetime es: ",this.datetime);
     },
     methods: {
         guardar: function () {
@@ -234,9 +243,11 @@ export default Vue.extend ({
                     if(this.listAlumnosCod.length > 0) {
                         if(this.datetime != null) {
                             if(this.descripcion!=null) {
+                                this.showModal()
                                 axios.post('/sesiones/asistencia',sesion_params)
                                     .then( response=>{
                                         console.log(response);
+                                        this.hideModal()
                                         Swal.fire({
                                             text:"Se ha registrado la sesión con éxito",
                                             icon:"success",
@@ -244,20 +255,22 @@ export default Vue.extend ({
                                             confirmButtonColor:'#0097A7',
                                             showConfirmButton: true,
                                         }) 
-                                    })  .catch(e => {
+                                    })  
+                                    .catch(e => {
                                         console.log(e.response);
+                                        this.hideModal()
                                     });
                                 }
-                                else {
-                                    Swal.fire({
-                                        text:"Debe llenar el campo descripción",
-                                        icon:"error",
-                                        confirmButtonText: 'OK',
-                                        confirmButtonColor:'#0097A7',
-                                        showConfirmButton: true,
-                                    })
-                                }
+                            else {
+                                Swal.fire({
+                                    text:"Debe llenar el campo descripción",
+                                    icon:"error",
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor:'#0097A7',
+                                    showConfirmButton: true,
+                                })
                             }
+                        }
                         else {
                             Swal.fire({
                                 text:"Debe seleccionar una hora y fecha",
@@ -368,7 +381,13 @@ export default Vue.extend ({
             console.log(this.listAlumnosId);
             
             
-        }
+        },
+        showModal() {
+            this.$refs['my-modal'].show()
+        },
+        hideModal() {
+            this.$refs['my-modal'].hide()
+        },
     }
 })
 </script>

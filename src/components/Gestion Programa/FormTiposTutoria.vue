@@ -149,7 +149,7 @@ export default Vue.extend( {
   methods:{
     
     guardarTipoTutoria() {
-      this.showModal();
+        //aqui inicia
       if(this.tipotutoria.descripcion =="" || this.tipotutoria.nombre==""   ){
         this.hideModal();
          Swal.fire({
@@ -197,11 +197,12 @@ export default Vue.extend( {
               tutor_fijo:this.tipotutoria.tutorfijo,
               estado:this.tipotutoria.estado,   
               id_programa:this.tipotutoria.miprog.id_programa, 
-              // id_programa:4,         
-           };
+              // id_programa:4,
+              };
+              this.showModal();
          Axios.create()
-      // http://18.232.253.212/Back-end-Software/public/api/      
-        .post('TipoTutoria/insertar',params)
+         // http://18.232.253.212/Back-end-Software/public/api/      
+          .post('TipoTutoria/insertar',params)
           .then( response=>{
             console.log(response);
               this.hideModal();
@@ -243,6 +244,7 @@ export default Vue.extend( {
               id_programa:this.tipotutoria.miprog.id_programa, 
               // id_programa:4,           
            };
+           this.showModal();
           Axios.create()   
         .post('TipoTutoria/modificar/'+this.tipotutoria.id_tipo_tutoria_entrante,params)
           .then( response=>{
@@ -271,17 +273,9 @@ export default Vue.extend( {
               });
               //No lo redirigo porque perdería sus cambios
                 });
-
-
-
-
-        }
-         
-            
+        }      
       
-      }
-      
-      
+      }    
       console.log('salio del if');
 
     },
