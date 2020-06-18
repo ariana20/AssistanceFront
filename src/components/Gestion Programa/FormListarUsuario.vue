@@ -3,9 +3,9 @@
     <!-- para que lo vea bien un coordinador -->
     <div class="row top-titulo" style="text-align: left">
       <div class="col-sm-6 top-titulo">
-            <h5 class="col-sm-6 "  style="top:13px;" >Nombre o Código: </h5>
+            <h5 class="col-sm-6 "  style="top:13px;" >Nombre: </h5>
             <input class="col-sm-6 form-control" style="top:8px;" 
-                   v-model="nomb" v-on:keyup.enter="buscarUsuario(nomb)" placeholder="Buscar por nombre o código"  >
+                   v-model="nomb" v-on:keyup.enter="buscarUsuario(nomb)" placeholder="Buscar por nombre"  >
            
       </div>
       <!-- <div class="row col-sm-6"  style="margin:10px;font-size:20px">Nombre o Código:  
