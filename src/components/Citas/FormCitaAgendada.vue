@@ -104,7 +104,7 @@
                         <option
                         v-for="(unidadApoyo, i) in unidadesApoyo" 
                         :key="i" 
-                        :value="unidadApoyo.id_unidad_apoyo">
+                        :value="unidadApoyo">
                         {{ unidadApoyo.nombre }}
                         </option>
                     </select>
@@ -181,8 +181,16 @@ export default Vue.extend ({
     },
     mounted(){
         console.log(this.event);
+        
         //console.log('evento actual: ', this.$store.state.programaActual);
-
+        axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
+        .then(response => {
+            for(var i in response.data) {
+                this.unidadesApoyo.push(response.data[i][0]);
+            }
+        }).catch(e => {
+            console.log(e.response);
+        });
     axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {
             for(var i in response.data) {
@@ -222,20 +230,21 @@ export default Vue.extend ({
             let array = []
             array.push(this.event.extendedProps.alumno.id_usuario);
             console.log(array);
-            const sesion_params = {
-                resultado: this.descripcion,
-                idAlumnos: array,
-                id_cita: this.$store.state.idCita, 
-                asistencia: this.asistencia,
-                idMotivos: this.listMotivosId,
-            };
+            // const sesion_params = {
+            //     resultado: this.descripcion,
+            //     idAlumnos: array,
+            //     id_cita: this.$store.state.idCita, 
+            //     asistencia: this.asistencia,
+            //     idMotivos: this.listMotivosId,
+            // };
                 if(this.listMotivos.length > 0) {
                         
                             if(this.descripcion!=null) {
                                 if(this.selectedUnidadApoyo) {
+                                    //console.log('asdfasdf',this.selectedUnidadApoyo);
                                     this.enviarCorreo(this.selectedUnidadApoyo)
                                 }
-                                axios.post('/sesiones/regSesionFormal',sesion_params)
+                                /*axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
                                         console.log(response);
                                         Swal.fire({
@@ -247,7 +256,7 @@ export default Vue.extend ({
                                         }) 
                                     })  .catch(e => {
                                         console.log(e.response);
-                                    });
+                                    });*/
                                 }
                                 else {
                                     Swal.fire({
@@ -357,6 +366,7 @@ export default Vue.extend ({
 #left {
     float: left;
     margin-right: 27px;
+    width: 100px;
 }
 
 #right {
