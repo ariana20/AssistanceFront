@@ -331,7 +331,7 @@ export default Vue.extend ({
                     showConfirmButton: true,
                   })*/
                     Swal.fire({
-                        text:"Se guardaron algunos archivos con éxito. Revise el Reporte de Carga. ",
+                        text:"Revise el Reporte de Carga. Se encontraron archivos con problemas ",
                         icon:"success",
                         confirmButtonText: 'OK',
                         confirmButtonColor:'#0097A7',
