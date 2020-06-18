@@ -273,7 +273,6 @@ export default {
 
   methods:{
     getExisteCodF: function(){
-      this.showModal();
       axios.create()
         .post('/facultad/verificarCod/'+this.idFacultad,this.codVerifF)
           .then( response=>{
@@ -282,27 +281,22 @@ export default {
           })
           .catch(e => {
             console.log(e.response);
-            this.hideModal();
           })
     },
 
     getExisteNomF: function(){
-      this.showModal();
       axios.create()
         .post('/facultad/verificarNom/'+this.idFacultad,this.nombreVerifF)
           .then( response=>{
             this.existeNomF = response.data.success;
             console.log(this.existeNomF)
             console.log(response)
-            this.hideModal();
           })
           .catch(e => {
             console.log(e.response);
-            this.hideModal();
           })
     },
     getExisteCodP: function(){
-      this.showModal();
       axios.create()
         .post('/programa/verificarCod/'+this.programa.id_programa,this.codVerifP)
           .then( response=>{
@@ -311,12 +305,10 @@ export default {
           })
         .catch(e => {
           console.log(e.response);
-          this.hideModal();
         })
     },
 
     getExisteNomP: function(){
-      this.showModal();
       axios.create()
         .post('/programa/verificarNom/'+this.programa.id_programa,this.nombreVerifP)
           .then( response=>{
@@ -325,7 +317,6 @@ export default {
           })
         .catch(e => {
           console.log(e.response);
-          this.hideModal();
         })
     },
 

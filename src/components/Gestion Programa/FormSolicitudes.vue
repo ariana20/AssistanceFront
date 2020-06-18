@@ -28,7 +28,8 @@
         <tbody>
           
           <tr v-for="(item, index) in solicitudesFiltrados" :key="index">
-            <td scope="row">{{item.usuarioSolicitante.codigo}}</td>
+            <td scope="row" v-if="item.usuarioSolicitante.codigo">{{item.usuarioSolicitante.codigo}}</td>
+            <td scope="row" v-else>Pendiente</td>
             <td>{{item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos}}</td>
             <td>{{item.descripcion}}</td>
             <td v-if="item.usuarioRelacionado">{{item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos}}</td>
@@ -58,8 +59,6 @@
           <br >Cargando... 
         </div>
       </b-modal>
-
-      antes del último div
   </div>
 </template>
 

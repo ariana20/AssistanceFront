@@ -187,33 +187,39 @@ export default Vue.extend ({
     },
     mounted(){
         if(this.$store.state.usuario==null) this.$router.push('/login')
+        else this.showModal()
         console.log(this.event);
         
         //console.log('evento actual: ', this.$store.state.programaActual);
-        this.showModal()
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {
             for(var i in response.data) {
                 this.unidadesApoyo.push(response.data[i][0]);
             }
+            this.hideModal()
         }).catch(e => {
             console.log(e.response);
+            this.hideModal()
         });
-    axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
-        .then(response => {
-            for(var i in response.data) {
-                this.unidadesApoyo.push(response.data[i][0]);
-            }
-        }).catch(e => {
+        axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
+            .then(response => {
+                for(var i in response.data) {
+                    this.unidadesApoyo.push(response.data[i][0]);
+                }
+                this.hideModal()
+            }).catch(e => {
+                console.log(e.response);
+                this.hideModal()
+            });
+        axios.post('motivosConsulta/listarTodo')
+            .then( response => {
+                this.motivos = response.data;
+                this.hideModal()
+            })
+            .catch(e => {
             console.log(e.response);
-        });
-    axios.post('motivosConsulta/listarTodo')
-        .then( response => {
-            this.motivos = response.data;
-        })
-        .catch(e => {
-          console.log(e.response);
-        });
+                this.hideModal()
+            });
     },
     methods: {
         cancelar: function(){
