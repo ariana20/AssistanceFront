@@ -23,10 +23,10 @@
                         <div class="list-data"><div id="left">Condición: </div> <div id="right"> {{ this.condicion_alumno }} </div></div>
                     </div>
                     <div class="col center-block text-center">
-                        <figure v-if="this.event.extendedProps.alumno.imagen!='' && this.event.extendedProps.alumno.imagen!=null" id="floated" class="image-logo">
+                        <figure v-if="this.event.extendedProps.alumno.imagen!='' && this.event.extendedProps.alumno.imagen!=null" id="floated" class="image-logo" style="margin-bottom:15%">
                                 <img  :src="this.event.extendedProps.alumno.imagen" height="110px" width="110px" />		
                         </figure>
-                        <figure v-if="this.event.extendedProps.alumno.imagen=='' || this.event.extendedProps.alumno.imagen==null" id="floated" class="image-logo">	
+                        <figure v-if="this.event.extendedProps.alumno.imagen=='' || this.event.extendedProps.alumno.imagen==null" id="floated" class="image-logo" style="margin-bottom:15%">	
                                 <b-avatar size="7rem" ></b-avatar>		
                         </figure>
                         <button type="button" class="btn btn-info" style="margin-left: 4%;" @click="Perfil">Ver Perfil</button>
