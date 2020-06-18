@@ -4,7 +4,7 @@
     <div class="row top-titulo" style="text-align: left">
       <div class="col-sm-6 top-titulo">
             <h5 class="col-sm-6 "  style="top:13px;" >Nombre o Código: </h5>
-            <input class="col-sm-6 form-control" style="top:13px;" 
+            <input class="col-sm-6 form-control" style="top:8px;" 
                    v-model="nomb" v-on:keyup.enter="buscarUsuario(nomb)" placeholder="Buscar por nombre o código"  >
            
       </div>
@@ -30,7 +30,8 @@
         <thead>
           <tr>
             <th scope="col" style="width:100px">Código</th>
-            <th scope="col" style="width:200px">Nombre</th>
+            <th scope="col" style="width:150px">Nombre</th>
+            <th scope="col" style="width:200px">Apellidos</th>
             <th scope="col">Correo</th>
             <th scope="col">Estado</th>
             <th scope="col">Tipo de Usuario</th>
@@ -40,7 +41,9 @@
         <tbody>
           <tr v-for="(item, index) in usuarios"  :key="index">
             <td v-if="item!=undefined">{{item.codigo}}</td>
-            <td v-if="item!=undefined">{{item.nombre}}</td>
+            <!-- <td v-if="item!=undefined">{{item.nombre}} {{item.apellidos}}</td> -->
+            <td v-if="item!=undefined">{{item.nombre}}</td> 
+           <td v-if="item!=undefined"> {{item.apellidos}}</td> 
             <td v-if="item!=undefined">{{item.correo}}</td>  
             <td >
                 <b-icon v-if="item.estado == 'act'" icon="check" style="color:green;width:35px; height:35px;padding:0px"/>
@@ -351,7 +354,7 @@ export default {
   .form-control {
     border-radius: 1.25rem;  
     border: 1px solid #757575;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
     flex: 1;
     /* width: 100%; */
     

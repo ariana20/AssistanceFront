@@ -7,7 +7,6 @@
             <td >
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) ||( event.charCode== 239) || (event.charCode== 130) || (event.charCod==144 ) || (event.charCod==181) || (event.charCod==214) || (event.charCod==233) || (event.charCod==224))"   -->
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) || event.charCode== 130 || event.charCod==144 ||event.charCod==181 || event.charCod==214 || event.charCod==233 || event.charCod==224)" -->
-              <tr v-if="this.IsmsgUsuario==true" style="text-align:left"><td style="width:90px;"></td> <td>{{msgUsuario}}</td> </tr> 
               <tr style="text-align:left"><td style="width:90px;">Codigo:*</td>   <td> <input class="form-control" type="text" maxlength="8"    id="cod" v-on:keyup="verificarUsuariosCod();"   v-model="codigo"></td></tr> 
               <tr style="text-align:left"><td style="width:90px;">Nombre:*</td>   <td> <input class="form-control" type="text"    maxlength="100"   v-model="nombre"></td></tr>
               <tr style="text-align:left"><td style="width:90px;">Apellidos:*</td>   <td> <input class="form-control" type="text"    maxlength="100"   v-model="apellidos"></td></tr>
@@ -17,7 +16,17 @@
                
               <tr class="" style="bottom:0px;margin-left:0px;" > 
                 <b-form-checkbox v-model="estado" value="act" unchecked-value="ina" > Activo</b-form-checkbox>
-                </tr>
+                 </tr>
+                <tr>
+                  <td ></td>
+                  <h5  v-if="this.IsmsgUsuario==false"   style="color:white;text-align:right;margin-left:50px">{{msgUsuario}}</h5>               
+                  <h5  v-else  style="color:#009892;text-align:right;margin-left:50px">
+                     {{msgUsuario}}
+                   
+                    </h5>
+                  
+                </tr> 
+              
  
             </td> 
           </tbody>
@@ -29,6 +38,8 @@
         <!-- <tr style="text-align:right;margin:600px"  > </tr>   -->
               <!-- <div class="" style="padding:220px; bottom:0px;margin-left:40px;" > 
                 <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div> -->
+  
+               
       </div>
 
       <div id="derecho" class="col-md-4">
@@ -42,8 +53,8 @@
 
         </tr>
           <div class="top-titulo" style="margin-bottom:20px;" >
-                    <div class="col-sm-6" v-if="this.tiposUsuariosselect === 4" style="margin-left:-25px;">Tipos de tutorias:*     </div>
-                    <select v-if="this.tiposUsuariosselect === 4" class="col-sm-6 form-control"  style="margin-left:8px;top:5px;"
+                    <div class="col-sm-6" v-if="this.tiposUsuariosselect === 4" style="margin-left:-25px;padding-top:10px">Tipos de tutorias:*     </div>
+                    <select v-if="this.tiposUsuariosselect === 4" class="col-sm-9 form-control"  style="margin-left:0px;top:5px;"
                      v-model="tipostutoriasselect">
                         <option selected disabled value="no">Selecciona un tipo de tutoria</option>
                         <option v-for="(tt, i) in tipostutorias"  :key="i"   :value="tt.id_tipo_tutoria">
@@ -55,8 +66,9 @@
                             style="margin-left:10px;margin:5px;border-radius: 10px;"
                             @click="addMTT(i)">Seleccionar</button>
                     <!-- </div> -->
-                    <div class="col-sm-6 " v-if="this.tiposUsuariosselect === 5" style="margin-left:-40px;">Condición del alumno:* </div>
-                    <select v-if="this.tiposUsuariosselect === 5" class="col-sm-6 form-control"  style="margin-right:20px;margin-left:-10px;top:5px;"
+                   
+                    <div class="col-sm-6 " v-if="this.tiposUsuariosselect === 5" style="margin-left:-40px;">Condición del alumno: </div>
+                    <select v-if="this.tiposUsuariosselect === 5" class="col-sm-10 form-control"  style="margin-right:-95px;margin-left:-10px;top:5px;"
                      v-model="condiAlumnosselect">  <!--aqui guardo-->
                         <option selected disabled value="no">Selecciona una condición</option>
                         <option v-for="(condi, i) in condiAlumnos"  :key="i" :value="condi.abreviatura"  > <!--falta agregar value, creo que abreviatura le mando-->
@@ -84,9 +96,9 @@
 
       </div>
     </div>
-    <div  class="botones" style="margin-top:0px;bottom:25px">   
-        <button type="button" style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnGuardar" v-on:click="guardarUsuario()">Guardar</button>
-        <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:50px" v-on:click="cancelarUsuario()"  >Cancelar</button>  
+    <div  class="botones" style="margin-top:0px;bottom:25px;padding-top:10px">   
+        <button type="button" style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnGuarda" v-on:click="guardarUsuario()">Guardar</button>
+        <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:50px" id="btnCancela" v-on:click="cancelarUsuario()"  >Cancelar</button>  
       
      </div>
     <!-- <div> -->
@@ -165,7 +177,8 @@ export default {
     
     if(this.$store.state.usuario==null) this.$router.push('/login');
     //  console.log('usuario entrante?: ',this.usuario_entrante);
-    
+    this.IsmsgUsuario=false;
+    this.msgUsuario="Assistance"
     this.listarTUsuarios();    
     this.listarCA();  
     console.log("numero del path",parseInt((this.$route.path).substring(9,11),10));
@@ -224,6 +237,9 @@ export default {
     
     guardarUsuario() { //Para usuarios nuevecitos más que nada, si no, se van a una función
       // this.showModal();console.log('show1');
+      document.getElementById("btnGuarda").disabled = true; //inhabilita
+      document.getElementById("btnCancela").disabled = true; //inhabilita
+
       var   expresion2=/\w+@\w+\.+edu.pe/;
        var   expresion1=/\w+@\w+\.+pe/;
       // console.log('estado: ',this.estado);
@@ -420,6 +436,8 @@ export default {
       }
       // this.hideModal();console.log('Hide1');
       }
+      document.getElementById("btnGuarda").disabled = false; //habilita
+      document.getElementById("btnCancela").disabled = false; //habilita
     },
 
     listarTUsuarios() {
@@ -1006,5 +1024,8 @@ input:focus {outline: none;box-shadow: none;}
 .motivo-dropdown-title {
     top: 10px;
     text-align: left;
+}
+.top-titulo{
+  width: 100%;
 }
 </style>

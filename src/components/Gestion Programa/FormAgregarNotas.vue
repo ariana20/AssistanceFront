@@ -11,7 +11,7 @@
 
                     <input type="file" id="get-files" ref="file" name="client-file" 
                     multiple class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
-                    <button style="margin:5px;border-radius: 10px;" class="btn btn-info" v-on:click="subirPDFs">Subir</button>
+                    <button style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnsubir" v-on:click="subirPDFs">Subir</button>
                     
                 </section>
                 <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
@@ -275,6 +275,8 @@ export default Vue.extend ({
    
     FileUpload(){
         //Para masivo
+        this.reporte=null;
+        this.banderaReporte=false;
         let files=this.$refs.file.files;
         console.log('archivoS',files);
         //console.log('cods',this.listAlumnosCod);
@@ -284,6 +286,7 @@ export default Vue.extend ({
          for( var i = 0; i < files.length; i++ ){
           let file = files[i];
           if(file.size>=2000000){
+              this.formData=null;
               Swal.fire({
                     text:"No puede subir el conjunto de archivos debido al siguiente archivo: "+file.name+", ya que es mayor de 2 MB.",
                     icon:"warning",
@@ -303,7 +306,8 @@ export default Vue.extend ({
 
     
     subirPDFs(){ //Para masivo
-
+        //desahilitar btn subir
+        document.getElementById("btnsubir").disabled = true; //inhabilita
         this.showModal();
         
        Axios
@@ -316,20 +320,7 @@ export default Vue.extend ({
                 
                 if(response.data.status=="Se han encontrado errores"){
                     this.hideModal();
-                    /*
-                    let msg="";
-
-                    for(let i in response.data.reporte){
-                        msg=msg+response.data.reporte[i].error+': '+response.data.reporte[i].file+'. ';
-                    }
-                    
-                    Swal.fire({
-                    text:"El reporte es el siguiente: "+msg,
-                    icon:"warning",
-                    confirmButtonText: 'OK',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                  })*/
+             
                     Swal.fire({
                         text:"Revise el Reporte de Carga. Se encontraron archivos con problemas ",
                         icon:"success",
@@ -339,7 +330,7 @@ export default Vue.extend ({
                     })
                     this.banderaReporte=true;                   
                     this.reporte=response.data.reporte;
-                    
+                    document.getElementById("btnsubir").disabled = false;
                 }
                 else if(response.data.status=="Subida terminada"){ 
                     console.log(response);
@@ -354,6 +345,7 @@ export default Vue.extend ({
                     // this.$router.push('/ListaUsuarios'); 
                     // this.$store.state.usuarioEscogido=null;//
                     // this.$store.state.usuarios=null;
+                    document.getElementById("btnsubir").disabled = false;
                 }
                 else if(response.data.indexOf("Excepción capturada:")!=-1){ 
                    
@@ -364,7 +356,8 @@ export default Vue.extend ({
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
-                  })
+                  });
+                  document.getElementById("btnsubir").disabled = false;
                 }
                 /*
                 else{
@@ -383,6 +376,7 @@ export default Vue.extend ({
               console.log('catch masivo',e);
               //console.log(e);
                this.hideModal();
+               document.getElementById("btnsubir").disabled = false;
                  Swal.fire({
                     text:"Estamos teniendo problemas al cargar las notas de los alumnos. Vuelve a intentar en unos minutos.",
                     icon:"warning",
