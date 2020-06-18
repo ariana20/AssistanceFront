@@ -2,14 +2,14 @@
     <div class="formagendarcita container">
         <div class="top-titulo " style="text-align:left;">
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select class="col-md-4 col-xs-2 form-control" style="margin-top:20px" >
+            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @click="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
-                <!--<option 
-                    v-for="(tipoTutoria, index) in tiposTutoria" 
+                <option 
+                    v-for="(item, index) in tutores" 
                     :key="index" 
-                    :value="tipoTutoria.id_tipo_tutoria">
-                    {{ tipoTutoria.nombre }}
-                </option>-->
+                    :value="item">
+                    {{ item.usuario.nombre + " " + item.usuario.apellidos }}
+                </option>
             </select>
             <ul class="legend">
                 <li><span class="ocupado"></span> Ocupado </li>
@@ -107,13 +107,36 @@ export default {
                         }
                     },
             },
-            nombre_usuario: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos
+            nombre_usuario: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
+            tutorSel: this.$store.state.tutorDisponibilidad,
+            tutores: [],
         }
     },
     computed: {
         ...mapGetters(["EVENTS"])
     },
     methods: {
+        showCalendar() {
+            if(this.tutorSel) {
+                this.getReminders();
+            }
+        },
+        listarTutores() {
+        const params = {
+            id_programa : this.$store.state.programaActual.id_programa,
+            nomFacu:this.$store.state.programaActual.facultad.nombre,
+            nombre: "",
+        };
+        axios
+        .post('/programa/tutoresListar', params)
+            .then(res =>{
+            console.log(res);
+            this.tutores=res.data;            
+            })
+            .catch(e => {
+            console.log(e.response);
+            })
+        },
         handleClick (arg) {
             if(arg.event.backgroundColor!='gray') {
                 this.$modal.show(EventModal,{
@@ -129,7 +152,7 @@ export default {
         getReminders: function() {
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
-                axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.$store.state.tutorDisponibilidad.id_usuario,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
+                axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
                     var rd = response.data[0];
                     var rd2 = response.data[1];
@@ -149,7 +172,7 @@ export default {
                                         usuario_creacion: rd[i].usuario_creacion,
                                         id_usuario_tutor: rd[i].id_usuario,
                                         usuario_actualizacion: rd[i].usuario_actualizacion,
-                                        id_cita: '',
+                                        
                                     });
                                 } else {
                                     this.$store.commit("ADD_EVENT", {
@@ -162,20 +185,20 @@ export default {
                                         usuario_creacion: rd[i].usuario_creacion,
                                         id_usuario_tutor: rd[i].id_usuario,
                                         usuario_actualizacion: rd[i].usuario_actualizacion,
-                                        id_cita: '',
+                                       
                                     });
                                 }
                             } else {
                                 this.$store.commit("ADD_EVENT", {
                                     id: rd[i].id_disponibilidad,
-                                    title: 'Libre',
+                                    title: 'Disponible',
                                     start: rd[i].fecha + " " + rd[i].hora_inicio,
                                     end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
                                     tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                     usuario_creacion: rd[i].usuario_creacion,
                                     id_usuario_tutor: rd[i].id_usuario,
                                     usuario_actualizacion: rd[i].usuario_actualizacion,
-                                    id_cita: '',
+                                    
                                 });
                             }
 
@@ -194,7 +217,7 @@ export default {
     },
     mounted() {
         //console.log(this.$store.state.usuario);
-        this.getReminders();
+        this.listarTutores();
         //this.calendar = this.$refs.fullCalendar.getApi();
         //idUsuario: this.$store.state.usuario.id_usuario
         /*axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })

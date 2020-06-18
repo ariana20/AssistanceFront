@@ -132,7 +132,7 @@ export default {
                     for(var i in rd) {
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
-                            console.log(rd3[i].nombre);
+                            console.log('alumno:',rd3);
                             if(rd2[i]=='o'){
                                 this.$store.commit("ADD_EVENT", {
                                     id: rd[i].id_disponibilidad,
