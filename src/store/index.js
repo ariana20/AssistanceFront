@@ -90,6 +90,11 @@ export default new Vuex.Store({
     icon: 'ion-ios-document'
     },
     {
+      text: 'Agregar Alumnos',
+      path: '/agregarAlumnos',
+      icon: 'ion-ios-document'
+      },
+    {
       text: 'Tutores',
       path: '/tutoresDisponibles',
       icon: 'ion-ios-book'

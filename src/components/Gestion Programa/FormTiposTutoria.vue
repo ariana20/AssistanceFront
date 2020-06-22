@@ -22,14 +22,25 @@
           <td >
           </td>
           </tr>
-          <div class="row col-sm-6 "  > <div>Condiciones:*</div>
-            <b-form-radio-group style="margin-left:20px" v-model="tipotutoria.individual" :options="indgru"></b-form-radio-group></div>
-          <div class="row col-sm-6 " style="margin-left:100px;" > 
-            <b-form-radio-group v-model="tipotutoria.obligatorio" :options="oblopc">    </b-form-radio-group></div>            
-            <div class="row col-sm-6 " style="margin-left:100px;"> 
-            <b-form-radio-group v-model="tipotutoria.tutorasignado" :options="asigsol">    </b-form-radio-group></div>
-            <div class="row col-sm-6 " style="margin-left:100px;"> 
-            <b-form-radio-group v-model="tipotutoria.tutorfijo" :options="fijvar">    </b-form-radio-group></div>
+            <div class="row col-sm-6 "  > <div>Condiciones:*</div>
+                <b-form-radio-group style="margin-left:20px" v-model="tipotutoria.individual" :options="indgru"></b-form-radio-group>
+            </div>
+
+           
+            <div class="col-sm-6 " style="margin-left:100px;" > 
+                <b-form-radio-group v-model="tipotutoria.obligatorio" :options="oblopc">    </b-form-radio-group>
+                <div style="margin-left:100px;" />
+            </div>  
+           
+
+            <div class="col-sm-6 " style="margin-left:100px;"> 
+                <b-form-radio-group v-model="tipotutoria.tutorasignado" :options="asigsol">    </b-form-radio-group>
+            </div>
+            <div class="col-sm-6 " style="margin-left:100px;"> 
+                <b-form-radio-group v-model="tipotutoria.tutorfijo" :options="fijvar">    </b-form-radio-group>
+                </div>
+
+
 
            <br>
             <div class="row col-sm-6 " style="margin-left:80px;" > 
@@ -43,6 +54,10 @@
       <div style="margin-left:10px;margin-top:10px;bottom:25px">
       * Campos obligatorios   
      </div >
+
+     <!-- listado de los tutores -->
+
+     
        <!-- MODAL CARGANDO  -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
@@ -95,12 +110,12 @@ export default Vue.extend( {
         {value: '0',text: 'Opcional'},
       ],
       asigsol:[
-        {value: '1',text: 'Con tutor asignado'},
-        {value: '0',text: 'Con tutor solicitado'},
+        {value: '1',text: 'Tutor asignado'},
+        {value: '0',text: 'Tutor solicitado'},
       ],
       fijvar:[
-        {value: '1',text: 'Con tutor fijo'},
-        {value: '0',text: 'Con tutor variable'},
+        {value: '1',text: 'Tutor fijo'},
+        {value: '0',text: 'Tutor variable'},
       ],
     
     }
@@ -150,7 +165,7 @@ export default Vue.extend( {
     
     guardarTipoTutoria() {
         //aqui inicia
-      if(this.tipotutoria.descripcion =="" || this.tipotutoria.nombre==""   ){
+      if( this.tipotutoria.nombre==""   ){
         this.hideModal();
          Swal.fire({
               text:"No ha completado todos los campos",

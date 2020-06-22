@@ -1,13 +1,25 @@
 <template>
-  <div class="FormListarUsuario container"  style="margin-top:10px">
+  <div class="FormListarUsuario container"  >
     <!-- para que lo vea bien un coordinador -->
-    <div class="row top-titulo" style="text-align: left">
+    <!-- <div class="row top-titulo" style="text-align: left">
       <div class="col-sm-6 top-titulo">
             <h5 class="col-sm-6 "  style="top:13px;" >Nombre: </h5>
             <input class="col-sm-6 form-control" style="top:8px;" 
                    v-model="nomb" v-on:keyup.enter="buscarUsuario(nomb)" placeholder="Buscar por nombre"  >
-           
+          
+      </div> -->
+    <div class="row top-titulo" style="text-align: left" >
+      <div class="col-sm-6 top-titulo">
+        <h5 class="col-sm-6 " style="top:13px;" >Nombre o Código: </h5>
+        <input class="col-sm-6 form-control" style="top:8px;" 
+                  v-model="nombre" v-on:keyup.enter="buscarUsuario(nomb)" placeholder="Buscar por nombre o código"  >
       </div>
+
+      <div class="botones" >
+        <button  type="button" style="border-radius: 10px;margin-right:50px" @click="nuevo()" class="row btn btn-info">Añadir</button>
+      </div>    
+
+
       <!-- <div class="row col-sm-6"  style="margin:10px;font-size:20px">Nombre o Código:  
         <input placeholder="Busca por nombre o código" class="input row col-sm-6 form-control" style="left:25px;" type="text"  v-model="nombre">  
         <router-link to="/Usuario/0"> 
@@ -19,11 +31,11 @@
         <input placeholder="Busque por Código" class="row col-sm-8 form-control" style="left:25px;" type="text" id="codigos" v-model="codigo">  
         </div> -->
         
-      <div class="row btn-derecha" >
+      <!-- <div class="row btn-derecha" >
       <router-link to="/Usuario/0"> 
         <button  type="button" style="border-radius: 10px;margin-right:50px" class="row btn btn-info">Añadir</button>
       </router-link>
-      </div>  
+      </div>   -->
          
 
       <table responsive class="table" style="text-align:left" >
@@ -336,7 +348,9 @@ export default {
     hideModal() {
       this.$refs['my-modal'].hide()
     },
-   
+    nuevo(){
+      this.$router.push('/Usuario/0');
+    }
   }
 }
 </script>
@@ -355,7 +369,7 @@ export default {
     border-radius: 1.25rem;  
     border: 1px solid #757575;
     margin-bottom: 1px;
-    flex: 1;
+    /* flex: 1; */
     /* width: 100%; */
     
 }

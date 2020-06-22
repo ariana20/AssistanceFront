@@ -7,12 +7,12 @@
             <td >
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) ||( event.charCode== 239) || (event.charCode== 130) || (event.charCod==144 ) || (event.charCod==181) || (event.charCod==214) || (event.charCod==233) || (event.charCod==224))"   -->
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) || event.charCode== 130 || event.charCod==144 ||event.charCod==181 || event.charCod==214 || event.charCod==233 || event.charCod==224)" -->
-              <tr style="text-align:left"><td style="width:90px;">Codigo:*</td>   <td> <input class="form-control" type="text" maxlength="8"    id="cod" v-on:keyup="verificarUsuariosCod();"   v-model="codigo"></td></tr> 
-              <tr style="text-align:left"><td style="width:90px;">Nombre:*</td>   <td> <input class="form-control" type="text"    maxlength="100"   v-model="nombre"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Apellidos:*</td>   <td> <input class="form-control" type="text"    maxlength="100"   v-model="apellidos"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Correo:*</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo" v-on:keyup="verificarUsuariosCorreo();" ></td></tr>
-              <tr style="text-align:left"><td style="width:90px;"></td></tr>
+              <tr style="text-align:left"><td style="width:80px;">Codigo:*</td>   <td> <input class="form-control" style="width: 180%;" type="text" maxlength="8"    id="cod" v-on:keyup="verificarUsuariosCod();"   v-model="codigo"></td></tr> 
+              <tr style="text-align:left"><td style="width:80px;">Nombre:*</td>   <td> <input class="form-control" style="width: 180%;" type="text"    maxlength="100"   v-model="nombre"></td></tr>
+              <tr style="text-align:left"><td style="width:80px;">Apellidos:*</td>   <td> <input class="form-control" style="width: 180%;" type="text"    maxlength="100"   v-model="apellidos"></td></tr>
+              <tr style="text-align:left"><td style="width:80px;">Celular:</td>   <td>   <input  type="text" class="form-control" style="width: 180%;"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
+              <tr style="text-align:left"><td style="width:80px;">Correo:*</td>   <td> <input id="corr" class="form-control" style="width: 180%;"  type="text" v-model="correo" v-on:keyup="verificarUsuariosCorreo();" ></td></tr>
+              <tr style="text-align:left"><td style="width:80px;"></td></tr>
                
               <tr class="" style="bottom:0px;margin-left:0px;" > 
                 <b-form-checkbox v-model="estado" value="act" unchecked-value="ina" > Activo</b-form-checkbox>
@@ -42,9 +42,9 @@
                
       </div>
 
-      <div id="derecho" class="col-md-4">
+      <div id="derecho" class="col-md-6">
        <tr style="text-align:left"><td style="width:150px;">Tipos de usuarios:*</td>   
-          <select v-model="tiposUsuariosselect" class="form-control" @click="listarTT()" >
+          <select v-model="tiposUsuariosselect" class="col sm-6 form-control" @click="listarTT()" >
             <option value="no" hidden selected >Selecciona un tipo de usuario</option>
             <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index" >
              {{ tipoU.nombre}}
@@ -52,23 +52,24 @@
           </select>
 
         </tr>
-          <div class="top-titulo" style="margin-bottom:20px;" >
-                    <div class="col-sm-6" v-if="this.tiposUsuariosselect === 4" style="margin-left:-25px;padding-top:10px">Tipos de tutorias:*     </div>
-                    <select v-if="this.tiposUsuariosselect === 4" class="col-sm-9 form-control"  style="margin-left:0px;top:5px;"
-                     v-model="tipostutoriasselect">
+          <div style="margin-bottom:20px;" >
+            <tr style="text-align:left">  
+                    <td style="width:150px;"  v-if="this.tiposUsuariosselect === 4" >Tipos de tutorias:*     </td>
+                    <select v-if="this.tiposUsuariosselect === 4" class="col-sm-12 form-control"    v-model="tipostutoriasselect">
                         <option selected disabled value="no">Selecciona un tipo de tutoria</option>
                         <option v-for="(tt, i) in tipostutorias"  :key="i"   :value="tt.id_tipo_tutoria">
                         {{ tt.nombre }}
                         </option>
                     </select>
+                  </tr>
                     <!-- <div class="col-sm-6" > -->
                     <button  type="button"  v-if="this.tiposUsuariosselect === 4" class="col-sm-4 btn btn-info"                     
                             style="margin-left:10px;margin:5px;border-radius: 10px;"
                             @click="addMTT(i)">Seleccionar</button>
                     <!-- </div> -->
-                   
-                    <div class="col-sm-6 " v-if="this.tiposUsuariosselect === 5" style="margin-left:-40px;">Condición del alumno: </div>
-                    <select v-if="this.tiposUsuariosselect === 5" class="col-sm-10 form-control"  style="margin-right:-95px;margin-left:-10px;top:5px;"
+             <tr>      
+                    <td style="width:110px;" v-if="this.tiposUsuariosselect === 5" >Condición del alumno: </td>
+                    <select v-if="this.tiposUsuariosselect === 5" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
                      v-model="condiAlumnosselect">  <!--aqui guardo-->
                         <option selected disabled value="no">Selecciona una condición</option>
                         <option v-for="(condi, i) in condiAlumnos"  :key="i" :value="condi.abreviatura"  > <!--falta agregar value, creo que abreviatura le mando-->
@@ -77,19 +78,19 @@
                         </option>
                     </select>
                    
-
-
+              </tr>
+          
           </div>
                  <div class="left-content" v-if="this.tiposUsuariosselect === 4" >
                     <h6 style="color:black;font-weight:900;text-align:left;" v-if="this.tiposUsuariosselect === 4">Tipos de tutoria seleccionados</h6>
-                    <hr>
+                    <!-- <hr >  -->
                     <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
                         <div v-if="listTT.length == 0">No tiene tipos de tutorias seleccionados</div>
                         <li class="motivos-seleccionados list-group-item" style="text-align:left;"
                             v-for="(newTT,ttIndex) in listTT"  
                             :key="ttIndex">
                             {{newTT}}
-                            <span name="remove" class="close" @click="deleteTT(ttIndex)" style="margin-right : 20px;float:right;">&times;</span>           
+                            <span name="remove" class="close" @click="deleteTT(ttIndex)" style="margin-right:20px;float:right;">&times;</span>           
                         </li>
                     </ul>
                     </div>
@@ -748,8 +749,8 @@ export default {
                   });
                 }
                 else{
-                   //Enviar un correo a localhost, debería cambiarse cuando ya tengamos la ruta
-                  let direccion = "localhost:8000/login"
+                   
+                  let direccion = "https://proyectosoftware20201front.vizcochitos.cloudns.cl/login"
                   emailjs.send(
                   "gmail",
                   "template_bV7OIjEW",
@@ -1005,7 +1006,7 @@ body{
   border-radius: 1.25rem;  
   border: 0.5px solid #757575;
   margin-bottom: 10px;
-  width: 200%;
+  /* width: 180%; */
 }
 td { 
   margin-bottom:10px;
