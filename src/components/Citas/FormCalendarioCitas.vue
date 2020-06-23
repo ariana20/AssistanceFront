@@ -244,7 +244,7 @@ function addTimes (startTime, endTime) {
 
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 @import './../../assets/styles/main.css';
 
 @import '~@fullcalendar/core/main.css';

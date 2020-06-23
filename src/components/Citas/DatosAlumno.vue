@@ -7,12 +7,12 @@
         <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo">	
                 <b-avatar size="7rem" ></b-avatar>		
 		</figure>
-        <div class="descripcion-tutor">
+        <div class="descripcion-tutor" style="margin-top:10%">
             <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
             <div class="font-weight-bolder">Correo: {{tutor.correo}}</div>
             <div class="font-weight-bolder">Telefono: {{tutor.telefono}}</div>
             <div class="font-weight-bolder">Programa: {{this.$store.state.programaActual.nombre}}</div>
-            <div class="font-weight-bolder">Condicion: {{tutor.condicion_alumno}}</div>
+            <div class="font-weight-bolder">Condicion: {{tutor.cond}}</div>
         </div>
                           
     </div>

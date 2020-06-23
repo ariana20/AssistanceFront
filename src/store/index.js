@@ -28,6 +28,9 @@ export default new Vuex.Store({
     tutorDisponibilidad:null,
     reg: false,
     idCita: null,
+    verPdf:false,
+    verCitas:false,
+    verPlan:false,
     navLinks: [
       {
         text: 'Institucion',
