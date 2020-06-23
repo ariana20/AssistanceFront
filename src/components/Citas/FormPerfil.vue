@@ -90,11 +90,7 @@
         </div>
         
         <div name="VisorPlan" v-if="verPlan">
-            <div class="container" style="width:100%">
-                <div>
-                    <h2>Estamos trabajando para brindarte esta funcionalidad</h2>
-                </div>
-            </div>
+            <PlanAccion :usr="usuario"/>
         </div>
 
         <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
@@ -103,6 +99,8 @@
                 <br>Cargando... 
             </div>
         </b-modal>
+
+        <div style="margin-top:5%"></div>
     </div>
 </template>
 
@@ -110,11 +108,13 @@
 <script>
 import Swal from 'sweetalert2'
 import datosAlumnos from '@/components/Citas/DatosAlumno.vue'
+import PlanAccion from '@/components/Citas/FormPlanDeAccion.vue'
 
 export default ({
     name: 'formSesionTutoria',
     components:{
         datosAlumnos,
+        PlanAccion,
     },
     props: {
         idUsuario: String,
