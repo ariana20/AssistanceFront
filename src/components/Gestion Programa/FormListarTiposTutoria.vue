@@ -1,10 +1,10 @@
 <template>
-  <div class="FormRoles container" style="margin-top:20px">  
+  <div class="FormRoles container" style="margin-top:5px">  
     <!-- titulo de busqueda ya es responsive -->
     <div class="row top-titulo" style="text-align: left" >
       <div class="col-sm-6 top-titulo">
-        <h5 class="col-sm-6 " style="margin-top: 30px;margin-bottom: 30px;" >Nombre: </h5>
-        <input class="col-sm-6 form-control" style="top:26px;" v-model="nombre" placeholder="Buscar por nombre"  >
+        <h5 class="col-sm-6 " style="margin-top:10px;margin-bottom: 30px;" >Nombre: </h5>
+        <input class="col-sm-6 form-control" style="top:0px;" v-model="nombre" placeholder="Buscar por nombre"  >
       </div>
 
       <div class="botones" >

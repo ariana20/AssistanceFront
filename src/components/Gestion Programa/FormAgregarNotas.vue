@@ -2,13 +2,13 @@
     <div class= "container">
          <!-- <div class="row grid-divider "> -->
             <div >
-                <router-link to="agregarAlumnos"> 
+                <!-- <router-link to="agregarAlumnos"> 
                   <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Alumnos</button>
-                 </router-link>
+                 </router-link> -->
 
 
                 <section class="text-left" style="padding-top:0px">
-                    <h5 style="font-weight: bold;">Carga masiva</h5>
+                    <h5 style="font-weight: bold;">Carga masiva de notas de alumnos</h5>
                     <h6 >El formato permitido para los archivos es el siguiente: PDF</h6>
                     <h6 >El formato de nombre permitido para los archivos es el siguiente: Codigo</h6>
                     <h6 >El tamaño máximo permitido para los archivos es el siguiente: 2MB </h6>
@@ -16,8 +16,9 @@
 
                     <input type="file" id="get-files" ref="file" name="client-file" 
                     multiple class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
-                    <button style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnsubir" v-on:click="subirPDFs">Subir</button>
-                    
+                    <button style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnsubir" v-on:click="subirPDFs">Subir archivos</button>
+                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:50px" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
+      
                 </section>
                 <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
                     <h5 style="font-weight: bold;">Reporte de errores</h5>
@@ -181,6 +182,7 @@ export default Vue.extend ({
             banderaReporte:false,
             reporte:[],
             isWrong:false,
+            miprog:this.$store.state.programaActual, //this.miprog.id_programa;
         }
     },
     mounted(){

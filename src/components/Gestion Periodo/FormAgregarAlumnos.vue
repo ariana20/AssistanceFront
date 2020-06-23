@@ -3,28 +3,36 @@
          <!-- <div class="row grid-divider "> -->
             <div >
                 <section class="text-left" style="padding-top:0px">
-                    <h5 style="font-weight: bold;">Carga masiva</h5>
-                    <h6 >El formato permitido para los archivos es el siguiente: CSV</h6>
-                    <h6 >El tamaño máximo permitido para los archivos es el siguiente: ?MB </h6>
-                    <h6 >El orden de las columnas permitidas para los archivos es el siguiente:</h6>
-
-                    <input type="file" id="get-files" ref="file" name="client-file" 
-                    multiple class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
-                    <button style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnsubir" v-on:click="subirPDFs">Subir</button>
-                    
+                    <h5 style="font-weight: bold;">Carga masiva de alumnos</h5>
+                    <h6 >El formato permitido para el archivo es el siguiente: CSV</h6>
+                    <h6 >El tamaño máximo permitido para el archivo es el siguiente: 2MB </h6>
+                    <h6 >El orden de las columnas permitidas para el archivo es el siguiente:</h6>                    
                     <table class="table" style="text-align:left" >
                      <thead>
-                       <tr>
-                            <th scope="col">Codigo*</th>
-                            <th scope="col">Nombres*</th>
-                            <th scope="col">Apellido Materno*</th>
-                            <th scope="col">Apellido Paterno*</th>
+                       <tr >
+                            <th scope="col">Código*</th>
                             <th scope="col">Correo*</th>
+                            <th scope="col">Nombres*</th>
+                            <!-- <th scope="col">Apellido Materno*</th>
+                            <th scope="col">Apellido Paterno*</th> -->
+                            <th scope="col">Apellidos</th>
+
                             <th scope="col">Celular</th>
                             <th scope="col">Condición</th>                            
                         </tr>
-                    </thead>
+                        
+                      </thead>
                     </table>
+                    <h6 >Las condiciones de los alumnos válidas son las siguientes:</h6>
+                    <tr>
+                      <td  style="text-indent: 1.5cm;" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.nombre}}</td>
+                    </tr>
+
+                    <input type="file" id="get-files" ref="file" name="client-file"  class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
+                    <button type="button" style="margin:5px;border-radius: 10px;" id="btnsubir" class="btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
+                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:50px" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
+      
+                    <h6 >* Campos obligatorios</h6>
 
 
 
@@ -78,15 +86,12 @@
 import Swal from 'sweetalert2'
 import Axios from 'axios';
 import Vue from 'vue'
-import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
-Vue.use(AutoCompletePlugin);
+
 export default Vue.extend ({
     name: 'formNotas',
     
     data: function () {
-        return {
-        
-            bordes:'borde-textbox',
+        return {        
             sel: '',
             alSeleccionado: 'Nombre de alumno',
             codigos:[],
@@ -111,14 +116,42 @@ export default Vue.extend ({
             file1x1:null,
             banderaReporte:false,
             reporte:[],
+            condiAlumnos:[],
         }
     },
     mounted(){   
     //
+    this.listarCA();
     },
     methods: {
+      listarCA(){
+          this.showModal();
+        Axios.create()
+              .post('/usuarios/condAlumno')
+              .then( response=>{
+                console.log('condA: ',response.data);
+                this.condiAlumnos=response.data;    
+                this.hideModal();        
+
+            }).catch(e => {
+              console.log('catch condAlumno',e);
+              console.log(e);
+              // this.hideModal();
+                 Swal.fire({
+                    text:"Estamos teniendo problemas al listar las condiciones del alumno. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  });        
+                  this.hideModal();             
+               }
+            );
+
+      
+      },
     
-        cancelarAlumnos(){
+       cancelarAlumnos(){
                 Swal.fire({
                    text:"¿Está seguro que desea cancelar?",
                    icon:"warning",

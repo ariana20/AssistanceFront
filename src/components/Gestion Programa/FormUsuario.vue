@@ -67,7 +67,7 @@
                             style="margin-left:10px;margin:5px;border-radius: 10px;"
                             @click="addMTT(i)">Seleccionar</button>
                     <!-- </div> -->
-             <tr>      
+                <tr>      
                     <td style="width:110px;" v-if="this.tiposUsuariosselect === 5" >Condición del alumno: </td>
                     <select v-if="this.tiposUsuariosselect === 5" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
                      v-model="condiAlumnosselect">  <!--aqui guardo-->
@@ -78,7 +78,7 @@
                         </option>
                     </select>
                    
-              </tr>
+                </tr>
           
           </div>
                  <div class="left-content" v-if="this.tiposUsuariosselect === 4" >
@@ -182,7 +182,7 @@ export default {
     this.msgUsuario="Assistance"
     this.listarTUsuarios();    
     this.listarCA();  
-    console.log("numero del path",parseInt((this.$route.path).substring(9,11),10));
+    // console.log("numero del path",parseInt((this.$route.path).substring(9,11),10));
     if(parseInt((this.$route.path).substring(9,11),10) ==0){
       this.id_usuario_entrante=0;
       //no hay usuario entrante, pero puede que aparezca 
@@ -194,13 +194,13 @@ export default {
       
       this.id_usuario_entrante=this.$store.state.usuarioEscogido.id_usuario;
       this.usuario_entrante=this.$store.state.usuarioEscogido;
-      console.log('Id usuario entrante: ',this.id_usuario_entrante);     
+      // console.log('Id usuario entrante: ',this.id_usuario_entrante);     
       this.tiposUsuariosselect=this.usuario_entrante.pivot.id_tipo_usuario;      
       Axios.create()
        .post('/usuarios/listar/'+this.id_usuario_entrante).then( response =>{
          document.getElementById("corr").disabled = true;
           // document.getElementById("cod").disabled = true;
-         console.log('usuario listado para modificar',response);
+        //  console.log('usuario listado para modificar',response);
 
            this.codigo=response.data.codigo;
            this.nombre= response.data.nombre;
@@ -245,7 +245,7 @@ export default {
        var   expresion1=/\w+@\w+\.+pe/;
       // console.log('estado: ',this.estado);
       // if(this.estado==null) console.log('entro al if estado: ',this.estado);
-      console.log('codigo a guardar: ',this.codigo);
+      // console.log('codigo a guardar: ',this.codigo);
       if(this.nombre=="" ||this.apellidos=="" || this.codigo=="" || this.codigo===null || this.correo=="" || this.estado===null   ){
           // this.hideModal();console.log('hide2');
       //Cuando está vacio todo
@@ -336,7 +336,7 @@ export default {
             condicion_alumno:this.condiAlumnosselect,//le doy el value
              
             };
-            console.log(params);
+            // console.log(params);
              this.usuarioNuevo(params);
             }
             else{
@@ -354,7 +354,7 @@ export default {
             id_tipo_usuario:this.tiposUsuariosselect,  
             //ahora, si es tipo usuario 4 de tutor debe insertar el tipo de tutoria
             };
-            console.log(params);
+            // console.log(params);
             this.usuarioNuevo(params);
             }
               
@@ -447,7 +447,7 @@ export default {
         .then(res =>{
            //Ordenadito
            let par=res.data;
-           console.log('TUsu:',res.data);
+          //  console.log('TUsu:',res.data);
            this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
           // this.tiposUsuarios=res.data;
           //console.log(this.tiposUsuarios); 
@@ -499,11 +499,11 @@ export default {
       if(this.banderaTT==false){
         this.banderaTT=true;
       //listo todos los tipos de tutorias de mi programa
-      Axios.post('/TipoTutoria/listarTodo/'+ this.miprog.id_programa)
+      Axios.post('/TipoTutoria/listarActivos/'+ this.miprog.id_programa)
       // Axios.post('/TipoTutoria/listarActivos/'+ this.miprog.id_programa)  //falta que esté en el servidor
         .then(response=>{
             this.tipostutorias = response.data; //
-            console.log('Tipos de tutorias: ',this.tipostutorias);
+            // console.log('Tipos de tutorias: ',this.tipostutorias);
             if(this.id_usuario_entrante!=0){
             //Despues de llenar los tipos de tutorias veo cuales son del tutor 
 
@@ -523,7 +523,7 @@ export default {
             
                for(var j in this.tipostutorias){
                 if(this.tipostutorias[j].id_tipo_tutoria==this.tipostutoriasselect){
-                    console.log('For:j',' ',this.tipostutorias[j].id_tipo_tutoria); 
+                    // console.log('For:j',' ',this.tipostutorias[j].id_tipo_tutoria); 
                     this.tipostutorias.splice(j,1);
                   break; //Si ya es uno igual,salgo
                  }
@@ -581,12 +581,11 @@ export default {
             id_programa:this.miprog.id_programa,
             tutorias_insertar:this.listTTId,
           }
-          console.log('I de actualizarTT: ',i);
      
        //actualizo el tipo de tutoria
           Axios.post('/usuarios/updateTipoTutoria/'+i ,paramsTT)
           .then(response=>{
-             console.log('tutorias_insertar',this.listTTId );
+            //  console.log('tutorias_insertar',this.listTTId );
              console.log('tipo de tutoria insertado para modificar',response.data);  
              this.$store.state.usuarioEscogido=null;//
              this.$store.state.usuarios=null;//             
@@ -614,7 +613,6 @@ export default {
         
         if(this.codigo.length==8 && this.banderaUsuProg==false){
           // this.showModal();console.log('show2');
-          console.log('Codigo con 8 digitos listo para verificar');
           
             const paramsV={
               criterio:this.codigo,
@@ -623,7 +621,7 @@ export default {
             Axios.post('/usuarios/verificarUsuario' ,paramsV)
             .then(response=>{
              //Si es código ya existe
-              console.log('respuesta verif cod: ',response);
+              // console.log('respuesta verif cod: ',response);
              if(response.data.status=='El codigo ingresado ya existe'){
                
                //Le aviso al usuario y lleno los campos
@@ -638,7 +636,7 @@ export default {
                 this.apellidos=response.data.usuario[0].apellidos;               
                 this.telefono=response.data.usuario[0].telefono;
                 this.estado=response.data.usuario[0].estado; 
-                console.log('existente: ',this.usuario_entrante);
+                // console.log('existente: ',this.usuario_entrante);
                 //Su tipo de usuario falta llenar
                 
                 this.msgUsuario="Usuario existente";
@@ -650,7 +648,7 @@ export default {
               //  debería poder continuar con mi vida sin decirle nada al usuario
               //o pongo un texto debajo del código que diga que el usuario es nuevo...con un v-if y una bandera
               // this.hideModal();
-              console.log(response.data.status);
+               console.log(response.data.status);
              }
            
 
@@ -665,7 +663,7 @@ export default {
 
         }
         else{
-          console.log('Menos o más 8 digitos');
+          // console.log('Menos o más 8 digitos');
         
           // this.hideModal();
         }
@@ -679,7 +677,7 @@ export default {
         
         // this.showModal();console.log('show3');
         //es un correo "válido",entonces llamo para verificar si existe o no
-        console.log('Verif correo');
+        // console.log('Verif correo');
         const paramsV={
               criterio:this.correo,
         }
@@ -690,11 +688,11 @@ export default {
              if(response.data.status=='El correo ingresado ya existe'){
                //Le aviso al usuario y lleno los campos
                 //el id tambien llenaría
-                console.log(response.data.usuario[0].codigo);//sí sale el codigo
-                console.log('entre a if de verf correo');
+                // console.log(response.data.usuario[0].codigo);//sí sale el codigo
+                // console.log('entre a if de verf correo');
                 document.getElementById("corr").disabled = true;
               //console.log(this.usuario_entrante.codigo); //No existe,ni idea
-                console.log(response.data.usuario[0].codigo);
+                // console.log(response.data.usuario[0].codigo);
                 document.getElementById("cod").disabled = true;                
                 //No puedo agregar un usuario con código  - o null
                 this.id_usuario_entrante=response.data.usuario[0].id_usuario;                
@@ -704,7 +702,7 @@ export default {
                 this.apellidos=response.data.usuario[0].apellidos;               
                 this.telefono=response.data.usuario[0].telefono;
                 this.estado=response.data.usuario[0].estado; 
-                console.log('existente: ',this.usuario_entrante);
+                // console.log('existente: ',this.usuario_entrante);
                 //tipo de usuarip
                  this.msgUsuario="Usuario existente";
                 this.IsmsgUsuario=true;
@@ -736,9 +734,7 @@ export default {
 
                 console.log('Usuario insertado: ',response.data);  
                 if(response.data["Error capturado:"]=="El codigo o correo ingresados ya existen"){
-                  console.log('Entro al if del error');
-                  console.log('codigo:', params.codigo);
-                  console.log('correo:', params.correo);
+
                   // this.hideModal();
                    Swal.fire({
                     text:"Ha ingresado un correo o código que ya existe en la institución. Por favor, corriga los datos.",
@@ -775,7 +771,7 @@ export default {
                    //Como se guardaron con éxito ahora agrego el titutoria
                   if(this.tiposUsuariosselect==4){
                         var idusuarionuevo=response.data["user"].id_usuario;
-                        console.log('id del usuario nuevo: ',response.data["user"].id_usuario);
+                        // console.log('id del usuario nuevo: ',response.data["user"].id_usuario);
                         this.actualizarTT(idusuarionuevo);//tiene hide?
                   }
                   else{
@@ -792,8 +788,7 @@ export default {
 
             }).catch(e => {
               console.log('catch insertar usuario nuevo',e);
-              console.log(e);
-              // this.hideModal();
+                      // this.hideModal();
                  Swal.fire({
                     text:"Estamos teniendo problemas al crear un nuevo usuario. Vuelve a intentar en unos minutos.",
                     icon:"warning",
@@ -818,11 +813,11 @@ export default {
             .then( response=>{
               
               console.log(response); //si hay error de =igual codigo salta excepcion
-              console.log('data: ',response.data);
+              // console.log('data: ',response.data);
               //Saltaba error si quiero modificar algo normal y la respuesta era un objeto
              
               if(response.data.id_usuario!=null){ //Entonces pregunto primero si es un objeto con algún atributo al azar
-                  console.log('entro a data.id pq es true');
+                  // console.log('entro a data.id pq es true');
                   // this.hideModal();
                   Swal.fire({
                   text:"Se modificaron los datos con éxito",
@@ -832,7 +827,7 @@ export default {
                   showConfirmButton: true,
                   }) 
               //Como se guardaron con éxito ahora agrego el titutoria, solo si tiene demonios
-                  console.log('params2 ',params2.id_tipo_usuario_Nuevo);
+                  // console.log('params2 ',params2.id_tipo_usuario_Nuevo);
                   //Si es tutor actualizo el tt
                 if(this.tiposUsuariosselect==4){
                    this.actualizarTT(this.id_usuario_entrante);
@@ -849,7 +844,7 @@ export default {
               //this.$router.push('/ListaUsuarios'); //ahora va a estar en el actualizarTT
               }
               else if(response.data.substring(0,20)=='Excepción capturada:'){ //Luego pregunto si es este tipo de excepcion
-                console.log('no entro a data.id y entro a excepcion');
+                // console.log('no entro a data.id y entro a excepcion');
                 //  this.hideModal();  
                    
                 Swal.fire({
@@ -914,7 +909,7 @@ export default {
 
             }).catch(e => {
               console.log('catch usuario existente',e);
-              console.log(e);
+              // console.log(e);
               // this.hideModal();
                  Swal.fire({
                     text:"Estamos teniendo problemas al insertar este usuario a su programa. Vuelve a intentar en unos minutos.",

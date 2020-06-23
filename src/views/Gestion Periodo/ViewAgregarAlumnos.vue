@@ -8,7 +8,7 @@
 </template>
 <script>
 import CabezeraTitulo from '@/components/Principal/CabezeraTitulo.vue'
-import FormAgregarAlumnos    from '@/components/Gestion Programa/FormAgregarAlumnos.vue'
+import FormAgregarAlumnos    from '@/components/Gestion Periodo/FormAgregarAlumnos.vue'
 export default {
   name: 'ViewAgregarAlumnos',
   components: {
