@@ -20,7 +20,7 @@
                         <div class="list-data"><div id="left">Código:          </div> <div id="right"> {{ this.event.extendedProps.alumno.codigo }} </div></div>
                         <div class="list-data"><div id="left">Nombre:  </div> <div id="right"> {{ this.event.extendedProps.alumno.nombre }} </div></div>
                         <div class="list-data"><div id="left">Apellidos:     </div> <div id="right"> {{ this.event.extendedProps.alumno.apellidos }} </div></div>
-                        <div class="list-data"><div id="left">Condición: </div> <div id="right"> {{ this.condicion_alumno }} </div></div>
+                        <div class="list-data"><div id="left">Condición: </div> <div v-if="us" id="right"> {{ us.cond }} </div></div>
                     </div>
                     <div class="col center-block text-center">
                         <figure v-if="this.event.extendedProps.alumno.imagen!='' && this.event.extendedProps.alumno.imagen!=null" id="floated" class="image-logo" style="margin-bottom:15%">
@@ -29,7 +29,7 @@
                         <figure v-if="this.event.extendedProps.alumno.imagen=='' || this.event.extendedProps.alumno.imagen==null" id="floated" class="image-logo" style="margin-bottom:15%">	
                                 <b-avatar size="7rem" ></b-avatar>		
                         </figure>
-                        <button type="button" class="btn btn-info" style="margin-left: 4%;" @click="Perfil">Ver Perfil</button>
+                        <button type="button" class="btn btn-info" style="margin-left: 4%;" @click="Perfil(3)">Ver Perfil</button>
                     </div>
                 </div>
                 <div style="bottom:30px;">
@@ -47,9 +47,9 @@
                             </svg>
                         </div>
                         <div id="botones">
-                            <button type="button" class="btn btn-info" height="20px" >Historico de Citas</button>
-                            <button type="button" class="btn btn-info" >Historico de Notas</button>
-                            <button type="button" class="btn btn-info" >Plan de acción</button>
+                            <button type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Historico de Citas</button>
+                            <button type="button" class="btn btn-info" @click="Perfil(2)">Historico de Notas</button>
+                            <button type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
                         </div>
                     </div>
                     <div style="margin-top:10%;float:left;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>
@@ -171,7 +171,7 @@ export default Vue.extend ({
             campoCodigo: {value:'codigo'},    
             selectedTipoTutoria: null,
             tiposTutoria: [],
-            selectedMotivo: '',
+            selectedMotivo: null,
             motivos: [],
             newMotivo: null,
             asistencia:false,
@@ -183,6 +183,7 @@ export default Vue.extend ({
             listAlumnosId: [],
             unidadesApoyo: [],
             selectedUnidadApoyo: null,
+            us:null,
         }
     },
     mounted(){
@@ -190,17 +191,13 @@ export default Vue.extend ({
         else this.showModal()
         console.log(this.event);
         
-        //console.log('evento actual: ', this.$store.state.programaActual);
-        axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
+        axios.post('usuarios/listar/'+this.event.extendedProps.alumno.id_usuario)
         .then(response => {
-            for(var i in response.data) {
-                this.unidadesApoyo.push(response.data[i][0]);
-            }
-            this.hideModal()
+            this.us = response.data
         }).catch(e => {
             console.log(e.response);
-            this.hideModal()
         });
+        //console.log('evento actual: ', this.$store.state.programaActual);
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
             .then(response => {
                 for(var i in response.data) {
@@ -370,7 +367,16 @@ export default Vue.extend ({
                       console.log('FAILED...', error);
                   });
         },
-        Perfil(){
+        Perfil(tipo){
+            if(tipo == 1){
+                this.$store.state.verPdf=false;this.$store.state.verCitas=true;this.$store.state.verPlan=false;
+            }
+            if(tipo == 2){
+                this.$store.state.verPdf=true;this.$store.state.verCitas=false;this.$store.state.verPlan=false;
+            }
+            if(tipo == 3){
+                this.$store.state.verPdf=false;this.$store.state.verCitas=false;this.$store.state.verPlan=true;
+            }
             this.$router.push('/perfil/'+this.event.extendedProps.alumno.id_usuario)
         },
         showModal() {

@@ -143,6 +143,7 @@ export default {
                     text: "This is from the component",
                     event: arg.event,
                     nombre_usuario: this.nombre_usuario,
+                    id_tutor: this.tutorSel.id_usuario,
                     isTutor: false,
                 });
             } else { 
@@ -161,7 +162,7 @@ export default {
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
                             if(rd2[i]=='o'){
-                                if(rd[i].usuario_actualizacion == this.$store.state.usuario.id_usuario){
+                                if(rd[i].alumno[0].id_usuario == this.$store.state.usuario.id_usuario){
                                     this.$store.commit("ADD_EVENT", {
                                         id: rd[i].id_disponibilidad,
                                         title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
@@ -270,7 +271,7 @@ function addTimes (startTime, endTime) {
 
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 @import './../assets/styles/main.css';
 
 @import '~@fullcalendar/core/main.css';

@@ -19,6 +19,7 @@
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
       <b>Tipo Tutoría:</b>  {{ event.description }} <br/>
       <div id="botones">
+        <button type="button" class="btn btn-info" @click="SolCancelar();$emit('close')">Solicitar Cancelacion</button>
         <button type="button" class="btn btn-info" @click="$emit('close')">Cerrar</button>
       </div>
       <div style="margin-bottom: 20px;"></div>
@@ -143,7 +144,49 @@ export default {
             console.log(e.response);
           });
         },
-        
+        SolCancelar(){
+          console.log('Cancelar Cita')
+          Swal.fire({
+                text:"¿Desea solicitar la cancelacion de esta cita?",
+                icon:"warning",
+                confirmButtonText: 'Sí',
+                confirmButtonColor:'#0097A7',
+                cancelButtonText: 'No',
+                cancelButtonColor:'C4C4C4',
+                showCancelButton: true,
+                showConfirmButton: true,
+            }).then((result) => {
+                if (result.value) {
+                    const params={
+                      id_remitente: this.id_tutor,
+                      id_solicitante: this.$store.state.usuario.id_usuario,
+                      tipo_solicitud: 'Cita',
+                      descripcion: 'Solicitud para la cancelacion de una cita',
+                      id_programa: this.$store.state.programaActual.id_programa, 
+                      motivo: "Deseo cancelar mi cita con el tutor ",
+                      usuario_creacion: this.$store.state.usuario.id_usuario,
+                      id_usuario_relacionado: this.id_tutor,
+                    }
+                    axios.create()
+                    .post('/solicitudes/insertar', params)
+                    .then( response=>{
+                      Swal.fire({
+                      text:"Solicitud Enviada Exitosamente",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                      })
+                      console.log(response)
+                    })
+                    .catch(e => {
+                        console.log(e.response);
+                    })
+
+                } 
+            })
+
+        },
     },
 
   props: {
@@ -151,6 +194,7 @@ export default {
     event: Object,
     isTutor: Boolean,
     nombre_usuario: String,
+    id_tutor: Number
   },mounted() {
     
     this.$store.state.curEvent = this.event;

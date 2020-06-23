@@ -15,6 +15,7 @@
       <router-view/>
     </div>
     <router-view v-else/>
+
   </div>
 </template>
 
@@ -78,7 +79,7 @@ export default {
     openStorage (nombre) {
       return JSON.parse(localStorage.getItem(nombre))
     },
-  }
+  },
 }
 </script>
 

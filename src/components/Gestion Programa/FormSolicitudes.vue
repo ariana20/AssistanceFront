@@ -139,45 +139,43 @@ export default {
                   }
                 }
                 this.$store.state.solicitudes.splice(index,1);
-                console.log(item);
-                console.log(index);
                 this.hideModal();
                 let mensaje;
                 if(item.tipo_solicitud == 'Programa'){
-                    mensaje = "Se aceptó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
-                    let obj ={
-                        id_tipo_usuario:5, 
-                        id_programa:this.$store.state.programaActual.id_programa,
-                    }
-                    this.axios.post('/usuarios/nuevoPrograma/'+item.usuarioSolicitante.id_usuario,obj)
-                        .then(response=>{
-                            response
-                            emailjs.send(
-                                "gmail",
-                                "template_bV7OIjEW",
-                                {
-                                "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
-                                "mensaje":mensaje,
-                                "correo": item.usuarioSolicitante.correo
-                                }, 'user_ySzIMrq3LRmXhtVkmpXAA')
-                            .then((result) => {
-                                console.log('SUCCESS!', result.status, result.text);
-                            }, (error) => {
-                                console.log('FAILED...', error);
-                            });
-                            this.hideModal();
-                            Swal.fire({
-                            text:"Aceptado exitosamente",
-                            icon:"success",
-                            confirmButtonText: 'OK',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                            })
-                        })
-                        .catch(e=>{
-                          console.log(e)
+                  mensaje = "Se aceptó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
+                  let obj ={
+                      id_tipo_usuario:5, 
+                      id_programa:this.$store.state.programaActual.id_programa,
+                  }
+                  this.axios.post('/usuarios/nuevoPrograma/'+item.usuarioSolicitante.id_usuario,obj)
+                      .then(response=>{
+                          response
+                          emailjs.send(
+                              "gmail",
+                              "template_bV7OIjEW",
+                              {
+                              "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                              "mensaje":mensaje,
+                              "correo": item.usuarioSolicitante.correo
+                              }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                          .then((result) => {
+                              console.log('SUCCESS!', result.status, result.text);
+                          }, (error) => {
+                              console.log('FAILED...', error);
+                          });
                           this.hideModal();
-                        })
+                          Swal.fire({
+                          text:"Aceptado exitosamente",
+                          icon:"success",
+                          confirmButtonText: 'OK',
+                          confirmButtonColor:'#0097A7',
+                          showConfirmButton: true,
+                          })
+                      })
+                      .catch(e=>{
+                        console.log(e)
+                        this.hideModal();
+                      })
                 }
                 else if(item.tipo_solicitud == 'Tutor'){
                   mensaje = "Se te asignó "+item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos+" como tutor en el programa "+this.$store.state.programaActual.nombre
@@ -216,6 +214,47 @@ export default {
                         console.log(e)
                         this.hideModal();
                       })
+                }
+                else if(item.tipo_solicitud == 'Cita'){
+                  mensaje = "Se acepto tu cancelacion de la cita con el tutor "
+                    +item.usuarioRelacionado.nombre+" "
+                    +item.usuarioRelacionado.apellidos
+                    +" del día "+this.$store.state.programaActual.nombre
+                  let obj ={
+                    id_alumno:item.id_solicitante, 
+                    id_tutor:item.usuarioRelacionado.id_usuario,
+                    id_programa:this.$store.state.programaActual.id_programa,
+                    usuario_creacion: this.$store.state.usuario.id_usuario,
+                  }
+                  this.axios.post('/citas/eliminar',obj)
+                    .then(response=>{
+                        response
+                        emailjs.send(
+                            "gmail",
+                            "template_bV7OIjEW",
+                            {
+                            "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                            "mensaje":mensaje,
+                            "correo": item.usuarioSolicitante.correo
+                            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                        .then((result) => {
+                            console.log('SUCCESS!', result.status, result.text);
+                        }, (error) => {
+                            console.log('FAILED...', error);
+                        });
+                        this.hideModal();
+                        Swal.fire({
+                        text:"Cancelación de cita aceptada exitosamente",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                        })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
                 }
               })
               .catch(e=>{
