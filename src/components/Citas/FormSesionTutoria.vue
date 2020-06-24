@@ -228,6 +228,7 @@ export default Vue.extend ({
         guardar: function () {
             const sesion_params = {
                 id_usuario: this.$store.state.usuario.id_usuario,
+                id_programa: this.$store.state.programaActual.id_programa,
                 fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
                 hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
                 usuario_creacion: this.$store.state.usuario.id_usuario,
