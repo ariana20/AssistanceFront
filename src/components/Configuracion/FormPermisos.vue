@@ -141,9 +141,16 @@ export default {
             confirmButtonText: 'Confirmar'
           }).then((result) => {
             if (result.value) {
+              let prog;
+              if(this.$store.state.tipoActual.nombre == 'Admin'){
+                prog = 1;
+              }
+              else{
+                prog = this.$store.state.programaActual.id_programa
+              }
               this.showModal();
               if(this.idRol=== null || this.idRol === undefined) this.nombreRol = this.nombre;
-              axios.post('tipoUsuarios/modPermisos',{nombre: this.nombreRol, cambios: this.cambios,usuario_actualizacion: this.$store.state.usuario.id_usuario})
+              axios.post('tipoUsuarios/modPermisos',{nombre: this.nombreRol, cambios: this.cambios,usuario_actualizacion: this.$store.state.usuario.id_usuario, id_programa: prog})
                 .then(response=>{
                   response
                   this.hideModal();

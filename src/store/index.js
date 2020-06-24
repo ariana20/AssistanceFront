@@ -15,6 +15,7 @@ export default new Vuex.Store({
     coordinadores:null,
     coordinadoresL:null,
     permisos:null,
+    permisosUsuario:null,
     roles:null, //Filtrar Tipos de Usuario
     solicitudes:null, //Filtrar Permisos
     unidades:null, //Filtrar Unidades de Apoyo
