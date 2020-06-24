@@ -6,7 +6,9 @@
                 <li><span class="disponible"></span> Disponible </li>
             </ul></div>
             <div style="text-align:right;">
-                <button type="button" class="btn btn-info" @click="modificarDisp">Modificar Disponibilidad</button>
+                <input @click="modificarDisp" type="button" class="btn btn-info" value="Modificar Disponibilidad" id="modDisp">
+                <!--<button type="button" id="modificarDisp" class="btn btn-info" @click="modificarDisp">Modificar Disponibilidad</button>
+                <button type="button" id="actualizarDisp" class="btn btn-info" style="display:none;" @click="modificarDisp">Actualizar Disponibilidades</button>-->
             </div>
         </div>
         <div style="text-align:left;">
@@ -29,7 +31,6 @@
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
                           hiddenDays= [0]
-                          :selectable="true"
                           @select="handleSelect"
                           minTime="08:00:00"
                           maxTime="22:00:00"
@@ -54,6 +55,8 @@ import TimeGridPlugin from '@fullcalendar/timegrid'
 import InteractionPlugin from '@fullcalendar/interaction'
 import ListPlugin from '@fullcalendar/list'
 import momentPlugin from '@fullcalendar/moment'
+import moment from 'moment'
+import Swal from 'sweetalert2'
 
 import esLocale from '@fullcalendar/core/locales/es'
 import axios from 'axios'
@@ -73,11 +76,6 @@ export default {
                 ListPlugin,
                 momentPlugin
             ],
-            selectable: {
-                modificarDisp () {
-                    return !this.selectable
-                }
-            },
             columnFormat: 'ddd M/D',
             titleFormat: 'MMMM YYYY',
             calendar: null,
@@ -116,17 +114,81 @@ export default {
         ...mapGetters(["EVENTS"])
     },
     methods: {
-        handleSelect (arg) { 
-            this.$store.commit("ADD_EVENT", {
-                title: "Disponible",
-                start: arg.start,
-                end: arg.end,
-            })
+        handleSelect (arg) {
+            console.log(arg)
+            axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(arg.start).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
+            .then((response) => {
+                console.log(response.data)
+                if(response.data == 'l') {
+                    Swal.fire({
+                        html:'Se registrará una nueva disponibilidad el día <br> ' +  moment(arg.start).format("YYYY-MM-DD") + ' a las ' + moment(arg.start).format(" hh:mm a"),
+                        icon:"warning",
+                        confirmButtonText: 'Continuar',
+                        showCancelButton: true,
+                        cancelButtonText: 'Cancelar',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    }).then((result) => {
+                        if(result.value) {
+                            axios.post('disponibilidades/insertar',{
+                                id_usuario:this.$store.state.usuario.id_usuario,
+                                id_programa: this.$store.state.programaActual.id_programa,
+                                fecha:moment(arg.start).format("YYYY-MM-DD"),
+                                usuario_creacion: this.$store.state.usuario.id_usuario,
+                                usuario_actualizacion: this.$store.state.usuario.id_usuario,
+                                tipo_disponibilidad: 'fij',
+                                hora_inicio:moment(arg.start).format('HH:mm:ss')
+                            })
+                            .then((response) => {
+                                console.log(response.data)
+                                if(response.data){
+                                    this.$store.commit("ADD_EVENT", {
+                                        title: "Disponible",
+                                        start: arg.start,
+                                        end: arg.end,
+                                    })
+                                    Swal.fire({
+                                        text:"Se registró una nueva disponibilidad",
+                                        icon:"success",
+                                        confirmButtonText: 'Continuar',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+                                    });
+                                }
+                                this.getReminders();   
+                            }).catch(e => {
+                            console.log(e.response);
+                            });
+                        }
+                    })
+                }
+            }).catch(e => {
+                    console.log(e.response);
+                });
+                //this.calendar.render();
+            
         },
         modificarDisp () {
-            this.calendar.optionsManager.computed.selectable = false;
-            this.calendar.render();
-            console.log(this.calendar.optionsManager.computed);
+
+            //this.calendar = this.$refs.fullCalendar.getApi()
+            var elem = document.getElementById("modDisp");
+            if (this.calendar.getOption('selectable')) {
+                location.reload();
+                /*let calendar = this.$refs.fullCalendar.getApi();
+                calendar.setOption('selectable','false')
+                elem.value = "Modificar Disponibilidad"
+                elem.style.backgroundColor ="#17a2b8"
+                console.log('calendarApi: ',calendar.getOption('selectable'))*/
+            }
+            else { 
+                let calendar = this.$refs.fullCalendar.getApi();
+                calendar.setOption('selectable','true')
+                elem.value = "Terminar";
+                elem.style.backgroundColor ="gray"
+                console.log('calendarApi: ',calendar.getOption('selectable'))
+            } 
+            
+            console.log(this.calendar);
         },
         handleClick (arg) {
             if(arg.event.backgroundColor!='#B2EBF2') {
