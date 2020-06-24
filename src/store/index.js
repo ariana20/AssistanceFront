@@ -56,7 +56,7 @@ export default new Vuex.Store({
       {
         text: 'Tipos de Tutoria',
 		path: '/ListaTiposTutorias',
-		icon: 'ion-ios-book'
+		icon: 'ion-ios-bookmarks'
       },
       {
         text: 'Usuarios',
@@ -66,7 +66,7 @@ export default new Vuex.Store({
       {
        text: 'Tipos de Usuario',
        path: '/tiposUsuario',
-       icon: 'ion-ios-people'
+       icon: 'ion-md-people'
      },
      {
        text: 'Unidades de Apoyo',
@@ -89,10 +89,16 @@ export default new Vuex.Store({
     icon: 'ion-ios-book'
       },
     {
+        text: 'Agregar Alumnos',
+        path: '/agregarAlumnos',
+        icon: 'ion-ios-person-add'
+      },
+    {
     text: 'Agregar Notas',
     path: '/agregarNotas',
     icon: 'ion-ios-document'
     },
+   
     {
       text: 'Tutores',
       path: '/tutoresDisponibles',
@@ -111,7 +117,7 @@ export default new Vuex.Store({
     {
       text: 'Asignar Tutor',
       path: '/asignartutor',
-      icon: 'ion-ios-people'
+      icon: 'ion-ios-contacts'
     },
     {
       text: 'Calendario',

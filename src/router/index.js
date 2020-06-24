@@ -253,6 +253,11 @@ Vue.use(VueRouter)
     name: 'Cita Agendada',
     props: true,
     component: () => import(/* webpackChunkName: "ViewCitaAgendada" */ '../views/Citas/ViewCitaAgendada.vue')
+  },
+  {
+    path: '/agregarAlumnos',
+    name: 'Agregar Alumnos',
+    component: () => import(/* webpackChunkName: "ViewAgregarAlumnos" */ '../views/Gestion Periodo/ViewAgregarAlumnos.vue')
   }
 ]
 const router = new VueRouter({

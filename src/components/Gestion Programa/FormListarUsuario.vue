@@ -1,13 +1,25 @@
 <template>
-  <div class="FormListarUsuario container"  style="margin-top:10px">
+  <div class="FormListarUsuario container"  >
     <!-- para que lo vea bien un coordinador -->
-    <div class="row top-titulo" style="text-align: left">
+    <!-- <div class="row top-titulo" style="text-align: left">
       <div class="col-sm-6 top-titulo">
             <h5 class="col-sm-6 "  style="top:13px;" >Nombre: </h5>
             <input class="col-sm-6 form-control" style="top:8px;" 
                    v-model="nomb" v-on:keyup.enter="buscarUsuario(nomb)" placeholder="Buscar por nombre"  >
-           
+          
+      </div> -->
+    <div class="row top-titulo" style="text-align: left" >
+      <div class="col-sm-6 top-titulo">
+        <h5 class="col-sm-6 " style="top:5px;" >Nombre o Código: </h5>
+        <input class="col-sm-6 form-control" style="top:-5px;margin-bottom:10px" 
+                  v-model="criterio" v-on:keyup.enter="buscarUsuario(criterio)" placeholder="Buscar por nombre o código"  >
       </div>
+
+      <div class="botones" >
+        <button  type="button" style="border-radius: 10px;margin-right:50px" @click="nuevo()" class="row btn btn-info">Añadir</button>
+      </div>    
+
+
       <!-- <div class="row col-sm-6"  style="margin:10px;font-size:20px">Nombre o Código:  
         <input placeholder="Busca por nombre o código" class="input row col-sm-6 form-control" style="left:25px;" type="text"  v-model="nombre">  
         <router-link to="/Usuario/0"> 
@@ -19,11 +31,11 @@
         <input placeholder="Busque por Código" class="row col-sm-8 form-control" style="left:25px;" type="text" id="codigos" v-model="codigo">  
         </div> -->
         
-      <div class="row btn-derecha" >
+      <!-- <div class="row btn-derecha" >
       <router-link to="/Usuario/0"> 
         <button  type="button" style="border-radius: 10px;margin-right:50px" class="row btn btn-info">Añadir</button>
       </router-link>
-      </div>  
+      </div>   -->
          
 
       <table responsive class="table" style="text-align:left" >
@@ -119,10 +131,10 @@ export default {
       cantU:null,
       tipoXUsuario:[],
       miUsuario:this.$store.state.usuario, //Para sacar el id del programa
-      nomb:"",
+      criterio:"",
       state:{
-        usuarioEscogido:null,}
-      
+        usuarioEscogido:null,},
+      banderaVacio:false,
     }
   },
  
@@ -180,7 +192,8 @@ export default {
     if(this.$store.state.usuario==null) this.$router.push('/login');
     
     //console.log('Store state usuariosA',this.$store.state.usuariosA);
-    this.nomb="";
+    this.criterio="";
+    this.banderaVacio=false;
     this.listarUsuarios(); 
     //this.usuarios = this.$store.state.usuarios; //
   },
@@ -235,18 +248,38 @@ export default {
        
     },
     buscarUsuario(page){
-      
-      console.log('Entro a buscar',this.nomb);
-      var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
-      const paramsB={
-        criterio:this.nomb,
+      this.showModal();
+      let paramsB;
+      // if(isNaN(this.criterio)){
+      //   //es código
+      //   this.criterio=parseInt(this.criterio);
+      //   console.log('es un numero');
+      // }
+      paramsB={
+        criterio:this.criterio,
       }
-           if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador   
-
+      console.log('Entro a buscar',this.criterio);
+      var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
+      
+       if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador   
+        console.log('entro al if ');
         axios.post(url,paramsB) //Por ahora dsp será x program
         .then(res =>{  
           //ordenado por estado
-          let par=res.data.tasks.data; 
+           console.log('res',res);
+           if(res.data==""){
+             this.hideModal();
+             //No encontró al usuario
+                Swal.fire({
+                    text:"No se ha encontrado ningún usuario "+this.criterio+".Intente nuevamente",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                });
+           }
+           else{
+          let par=res.data.tasks.data;
           this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});   
           
           this.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});   
@@ -254,14 +287,15 @@ export default {
           console.log('res',res);
           console.log(this.$store.state.usuarios);
           this.hideModal();
+          }
                    
         })
         .catch(e => {
-          console.log(e);
+          console.log('catc buscar',e);
             this.hideModal();
           //Swal de problema
            Swal.fire({
-                    text:"Estamos teniendo problemas al bucsar los usuarios. Vuelve a intentar en unos minutos.",
+                    text:"Estamos teniendo problemas al buscar los usuarios. Vuelve a intentar en unos minutos.",
                     icon:"warning",
                     confirmButtonText: 'Sí',
                     confirmButtonColor:'#0097A7',
@@ -336,7 +370,9 @@ export default {
     hideModal() {
       this.$refs['my-modal'].hide()
     },
-   
+    nuevo(){
+      this.$router.push('/Usuario/0');
+    }
   }
 }
 </script>
@@ -355,7 +391,7 @@ export default {
     border-radius: 1.25rem;  
     border: 1px solid #757575;
     margin-bottom: 1px;
-    flex: 1;
+    /* flex: 1; */
     /* width: 100%; */
     
 }

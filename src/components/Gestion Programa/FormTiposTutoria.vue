@@ -3,33 +3,49 @@
     <div class="container" >
       <table>
       <tbody  align="left">
-        <p style="white-space: pre-line;"></p>
-        <br>
+        
         <td style="width:1062px">
           <tr style="text-align:left"></tr>
           <tr style="text-align:left" ><td>Nombre:*</td>   
-            <td> <input class="input col-sm-10 form-control" type="text" v-model="tipotutoria.nombre"> </td>
+            <td> <input class="input col-sm-10 form-control" style="margin-left:13px" type="text" v-model="tipotutoria.nombre"> </td>
           </tr>
        
-          <tr style="text-align:left" ><td>Descripcion:</td> 
-          <textarea rows =3 cols=49  class="col-sm-10 form-control" type="text" v-model="tipotutoria.descripcion"  >    
+          <tr style="text-align:left"><td>Descripción:</td> 
+          <textarea style="margin-left:13px" rows =3 cols=40 class="col-sm-10 form-control" type="text" v-model="tipotutoria.descripcion"  >    
           </textarea> 
           <!-- Textarea tiene que tener un número menos de largo -->
           </tr>
-        
+                 
+            <div class="col-sm-6 "  style="margin-right:-14px">
+              <label style="margin-left:-13px;margin-right:16px">Condiciones:*</label>
+              <input type="radio" style="font-size: 22px;" id="yes" value="1" v-model="tipotutoria.individual">
+              <label style="text-indent:5px" >{{indgru[0].text}}</label>
+              <label style="text-indent: 34px;color:white;"> -</label>              
+              <input  type="radio" id="no" value="0" v-model="tipotutoria.individual">
+              <label style="text-indent:5px" >{{indgru[1].text}}</label>
+            </div>
+            <div class="col-sm-6 " style="margin-left:100px;"> 
+              <input type="radio" id="yes" value="1" v-model="tipotutoria.obligatorio">
+              <label style="text-indent:5px" >{{oblopc[0].text}}</label>
+              <label style="text-indent:20px;color:white;"> -</label>              
+              <input  type="radio" id="no" value="0" v-model="tipotutoria.obligatorio">
+              <label style="text-indent:5px" >{{oblopc[1].text}}</label>
+            </div>
+            <div class="col-sm-6 " style="margin-left:100px;"> 
+              <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorasignado">
+              <label style="text-indent:5px" >{{asigsol[0].text}}</label>
+              <label style="text-indent: 0cm;color:white;"> -</label>              
+              <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorasignado">
+              <label style="text-indent:5px" >{{asigsol[1].text}}</label>
+            </div>
+           <div class="col-sm-6 " style="margin-left:100px;"> 
+              <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorfijo">
+              <label style="text-indent:5px" >{{fijvar[0].text}}</label>
+              <label style="text-indent:40px;color:white;"> -</label>              
+              <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorfijo">
+              <label style="text-indent:5px" >{{fijvar[1].text}}</label>
+            </div>
 
-          <tr> 
-          <td >
-          </td>
-          </tr>
-          <div class="row col-sm-6 "  > <div>Condiciones:*</div>
-            <b-form-radio-group style="margin-left:20px" v-model="tipotutoria.individual" :options="indgru"></b-form-radio-group></div>
-          <div class="row col-sm-6 " style="margin-left:100px;" > 
-            <b-form-radio-group v-model="tipotutoria.obligatorio" :options="oblopc">    </b-form-radio-group></div>            
-            <div class="row col-sm-6 " style="margin-left:100px;"> 
-            <b-form-radio-group v-model="tipotutoria.tutorasignado" :options="asigsol">    </b-form-radio-group></div>
-            <div class="row col-sm-6 " style="margin-left:100px;"> 
-            <b-form-radio-group v-model="tipotutoria.tutorfijo" :options="fijvar">    </b-form-radio-group></div>
 
            <br>
             <div class="row col-sm-6 " style="margin-left:80px;" > 
@@ -43,6 +59,10 @@
       <div style="margin-left:10px;margin-top:10px;bottom:25px">
       * Campos obligatorios   
      </div >
+
+     <!-- listado de los tutores -->
+
+     
        <!-- MODAL CARGANDO  -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
@@ -87,20 +107,20 @@ export default Vue.extend( {
 
       },
       indgru:[
-        {value: '1',text: 'Individual'}, //guardo el value
-        {value: '0',text: 'Grupal'},
+        {value: '1',text: "Individual"+"\t"+" "+" "+" "+" "+" "}, //guardo el value
+        {value: '0',text: "Grupal"},
       ],
       oblopc:[
-        {value: '1',text: 'Obligatorio'},
-        {value: '0',text: 'Opcional'},
+        {value: '1',text: "Obligatorio \t\t"},
+        {value: '0',text: "Opcional"},
       ],
       asigsol:[
-        {value: '1',text: 'Con tutor asignado'},
-        {value: '0',text: 'Con tutor solicitado'},
+        {value: '1',text: "Tutor asignado"},
+        {value: '0',text: "Tutor solicitado"},
       ],
       fijvar:[
-        {value: '1',text: 'Con tutor fijo'},
-        {value: '0',text: 'Con tutor variable'},
+        {value: '1',text: "Tutor fijo \t\t"},
+        {value: '0',text: "Tutor variable"},
       ],
     
     }
@@ -150,7 +170,7 @@ export default Vue.extend( {
     
     guardarTipoTutoria() {
         //aqui inicia
-      if(this.tipotutoria.descripcion =="" || this.tipotutoria.nombre==""   ){
+      if( this.tipotutoria.nombre==""   ){
         this.hideModal();
          Swal.fire({
               text:"No ha completado todos los campos",
