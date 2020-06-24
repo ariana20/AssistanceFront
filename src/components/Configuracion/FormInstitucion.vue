@@ -110,12 +110,13 @@ export default {
       }
       else{
         Swal.fire({
-          title: '¿Dese modificar su Logo?',
+          text: '¿Dese modificar su Logo?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
           cancelButtonColor: '#757575',
-          confirmButtonText: 'Confirmar'
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar'
         }).then((result) => {
           if (result.value) {
             this.showModal()
@@ -181,12 +182,13 @@ export default {
           })        
         }else{
           Swal.fire({
-            title: '¿Dese modificar su Institución?',
+            text: '¿Dese modificar su Institución?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',
             cancelButtonColor: '#757575',
-            confirmButtonText: 'Confirmar'
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
           }).then((result) => {
             if (result.value) {
               this.showModal();

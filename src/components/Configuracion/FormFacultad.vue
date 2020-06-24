@@ -1,13 +1,24 @@
 <template>
-	<div name="FormFacultad">
-		<div class="container" style="left:60px;text-align: left;">
-			<div class="top-titulo">
+	<div name="FormFacultad container">
+		<div   class="row top-titulo container" style="left:60px;text-align: left;">
+			<!-- <div class="top-titulo">
 				<h4 class="col-sm-4 title-container">Nombre: </h4>
 				<input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nomb" v-on:keyup.enter="buscarFacultades(nomb)" placeholder="Ingrese nombre de la facultad">
 						<div class="botones">							
 						<button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:190px" >Añadir</button>
 						</div>
+			</div> -->
+			<div class="col-sm-6 top-titulo">
+				<h5 class="col-sm-6 " style="top:5px;" >Nombre: </h5>
+				<input class="col-sm-6 form-control" style="top:-5px;margin-bottom:20px" 
+						v-model="nomb" v-on:keyup.enter="buscarFacultades(nomb)" placeholder="Ingrese nombre de la facultad">
 			</div>
+			<div class="botones" >
+				<button  type="button" style="border-radius: 10px;margin-right:50px;padding-top:5px;margin-top:-25px" @click="nuevo()" class="row btn btn-info">Añadir</button>
+			</div> 
+
+
+
 
 			<table responsive class="table" style="text-align: left">
 				<thead>
@@ -189,12 +200,13 @@ export default {
 		
 		Eliminar(item){
 			Swal.fire({
-					title: '¿Dese eliminar '+item.nombre+'?',
+					text: '¿Desea eliminar '+item.nombre+'?',
 					icon: 'warning',
 					showCancelButton: true,
 					confirmButtonColor: '#0097A7',
 					cancelButtonColor: '#757575',
-					confirmButtonText: 'Confirmar'
+					confirmButtonText: 'Confirmar',
+					cancelButtonText: 'Cancelar'
 				}).then((result) => {
 					if (result.value) {
 						this.showModal()

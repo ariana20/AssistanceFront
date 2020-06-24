@@ -1,22 +1,16 @@
 <template>
   <div class="FormListarUsuario container"  >
     <!-- para que lo vea bien un coordinador -->
-    <!-- <div class="row top-titulo" style="text-align: left">
-      <div class="col-sm-6 top-titulo">
-            <h5 class="col-sm-6 "  style="top:13px;" >Nombre: </h5>
-            <input class="col-sm-6 form-control" style="top:8px;" 
-                   v-model="nomb" v-on:keyup.enter="buscarUsuario(nomb)" placeholder="Buscar por nombre"  >
-          
-      </div> -->
+
     <div class="row top-titulo" style="text-align: left" >
       <div class="col-sm-6 top-titulo">
         <h5 class="col-sm-6 " style="top:5px;" >Nombre o Código: </h5>
-        <input class="col-sm-6 form-control" style="top:-5px;margin-bottom:10px" 
+        <input class="col-sm-6 form-control" style="top:-10px;margin-bottom:10px" 
                   v-model="criterio" v-on:keyup.enter="buscarUsuario(criterio)" placeholder="Buscar por nombre o código"  >
       </div>
 
       <div class="botones" >
-        <button  type="button" style="border-radius: 10px;margin-right:50px" @click="nuevo()" class="row btn btn-info">Añadir</button>
+        <button  type="button" style="border-radius: 10px;margin-right:50px;margin-top:-15px;padding-top:5px" @click="nuevo()" class="row btn btn-info">Añadir</button>
       </div>    
 
 

@@ -4,11 +4,11 @@
     <div class="row top-titulo" style="text-align: left" >
       <div class="col-sm-6 top-titulo">
         <h5 class="col-sm-6 " style="margin-top:10px;margin-bottom: 30px;" >Nombre: </h5>
-        <input class="col-sm-6 form-control" style="top:0px;" v-model="nombre" placeholder="Buscar por nombre"  >
+        <input class="col-sm-6 form-control" style="top:0px;margin-top:-1px" v-model="nombre" placeholder="Buscar por nombre"  >
       </div>
 
       <div class="botones" >
-        <button  type="button" style="border-radius: 10px;margin-right:50px" @click="nuevo()" class="row btn btn-info">Añadir</button>
+        <button  type="button" style="border-radius: 10px;margin-right:50px;margin-top:-25px;padding-top:5px" @click="nuevo()" class="row btn btn-info">Añadir</button>
       </div>    
   <!-- </tr> -->
 

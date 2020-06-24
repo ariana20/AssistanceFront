@@ -1,10 +1,19 @@
 <template>
-  <div class="FormPrograma">
+  <!-- <div class="FormPrograma">
     <div class="container" style="left:60px;text-align: left;">
       <div class="top-titulo">
         <h4 class="col-sm-4 title-container">Nombre: </h4>
         <input class="col-sm-4 form-control" style="left:-600px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre del programa">
+      </div> -->
+  <div name="FormPrograma container">
+    <div   class="row top-titulo container" style="left:60px;text-align: left;">
+      <div class="col-sm-6 top-titulo">
+           <h5 class="col-sm-6 " style="top:5px;" >Nombre: </h5>
+          <input class="col-sm-6 form-control" type="text" style="top:-5px;margin-bottom:20px" 
+           v-model="nombre" placeholder="Ingrese nombre del programa">
       </div>
+
+
       <table class="table">
         <thead>
           <tr>
