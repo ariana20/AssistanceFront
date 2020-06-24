@@ -6,7 +6,7 @@
           <h5 class="col-sm-4 title-container">Buscar: </h5>
         </div>
         <div style="float: left;width:40vw">
-          <input v-on:change="Buscar(nombre)" class="col-sm-6 form-control" style="top:26px" v-model="nombre" placeholder="Ingrese un nombre">
+          <input v-on:change="Buscar(nombre)" class="col-sm-6 form-control" style="top:15px" v-model="nombre" placeholder="Ingrese un nombre">
         </div>
       </div>
       <br>

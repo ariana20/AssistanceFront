@@ -12,6 +12,7 @@
           <button  type="button" style="border-radius: 10px;margin-right:0px;margin-top:26px" @click="nuevo()" class="row btn btn-info">Añadir</button>
         </div>
       </div>
+      
       <br>
       <div style="margin-top:7%;width: 100%;display:block ruby;margin-right:0px">
       <div style="overflow: auto;width:100%;">

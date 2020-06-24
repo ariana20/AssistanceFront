@@ -7,7 +7,7 @@
        
       </div>
       <div class="botones" >
-          <button  type="button" style="border-radius: 10px;margin-right:50px" @click="nuevo()" class="row btn btn-info">Añadir</button>
+          <button  type="button" style="border-radius: 10px;margin-right:50px;padding-top:5px;margin-top:-25px" @click="nuevo()" class="row btn btn-info">Añadir</button>
       </div>      
     </div>
       <table class="table"  style="text-align:left">

@@ -25,7 +25,7 @@
                     </table>
                     <h6 >Las condiciones de los alumnos válidas son las siguientes:</h6>
                     <tr>
-                      <td  style="text-indent: 1.5cm;" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.nombre}}</td>
+                      <td style="text-indent: 1.5cm;" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.nombre}}</td>
                     </tr>
 
                     <input type="file" id="get-files" ref="file" name="client-file"  class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
