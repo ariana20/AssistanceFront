@@ -124,6 +124,11 @@ export default new Vuex.Store({
       path: '/calendariocitas',
       icon: 'ion-ios-calendar'
     },
+    {
+      text: 'Reportes',
+      path: '/reportes',
+      icon: 'ion-ios-stats'
+    },
     ],
     filtro:{
       query: '',
