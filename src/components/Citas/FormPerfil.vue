@@ -52,7 +52,7 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         <div name="VisorPdf" v-if="this.$store.state.verPdf && usuario!=null ">
             <div class="container" style="width:100%">
-                <div v-if="usuario.notas!=null">
+                <div v-if="usuario.notas!=null && usuario.notas!=''">
                     <!-- {{usuario.notas}} -->
                     <embed class="toolb" :src="usuario.notas+'#toolbar=0&navpanes=0&scroll=0'" width="1000" height="1000"/>
                 </div>
