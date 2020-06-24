@@ -1,10 +1,13 @@
 <template>
     <div class="formagendarcita container">
-        <div class="top-titulo " style="text-align:left;display: table;margin-bottom:20px">
-            <ul class="legend">
+        <div class="top-titulo ">
+            <div style="width:20%;"><ul class="legend">
                 <li><span class="ocupado"></span> Ocupado </li>
                 <li><span class="disponible"></span> Disponible </li>
-            </ul>
+            </ul></div>
+            <div style="text-align:right;">
+                <button type="button" class="btn btn-info" @click="modificarDisp">Modificar Disponibilidad</button>
+            </div>
         </div>
         <div style="text-align:left;">
             <Fullcalendar ref="fullCalendar"
@@ -26,7 +29,8 @@
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
                           hiddenDays= [0]
-                          :selectable="false"
+                          :selectable="true"
+                          @select="handleSelect"
                           minTime="08:00:00"
                           maxTime="22:00:00"
                           :allDaySlot="false"
@@ -69,6 +73,11 @@ export default {
                 ListPlugin,
                 momentPlugin
             ],
+            selectable: {
+                modificarDisp () {
+                    return !this.selectable
+                }
+            },
             columnFormat: 'ddd M/D',
             titleFormat: 'MMMM YYYY',
             calendar: null,
@@ -107,6 +116,18 @@ export default {
         ...mapGetters(["EVENTS"])
     },
     methods: {
+        handleSelect (arg) { 
+            this.$store.commit("ADD_EVENT", {
+                title: "Disponible",
+                start: arg.start,
+                end: arg.end,
+            })
+        },
+        modificarDisp () {
+            this.calendar.optionsManager.computed.selectable = false;
+            this.calendar.render();
+            console.log(this.calendar.optionsManager.computed);
+        },
         handleClick (arg) {
             if(arg.event.backgroundColor!='#B2EBF2') {
                 this.$modal.show(EventModal,{
@@ -122,17 +143,16 @@ export default {
         getReminders: function() {
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
-                axios.post('disponibilidades/dispSemanalVistaTu',{idUsuario:this.$store.state.usuario.id_usuario,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
+                axios.post('disponibilidades/dispSemanalVistaTu',{idUsuario:this.$store.state.usuario.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
-                    console.log('disp: ',response.data);
                     var rd = response.data[0];
                     var rd2 = response.data[1];
                     var rd3 = response.data[2];
                     var rd4 = response.data[3];
+                    
                     for(var i in rd) {
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
-                            console.log('alumno:',rd3);
                             if(rd2[i]=='o'){
                                 this.$store.commit("ADD_EVENT", {
                                     id: rd[i].id_disponibilidad,
@@ -148,8 +168,7 @@ export default {
                                     usuario_creacion: rd[i].usuario_creacion,
                                     id_usuario_tutor: rd[i].id_usuario,
                                     usuario_actualizacion: rd[i].usuario_actualizacion,
-
-
+                                    motivo: rd3[i].nombre
                                 });                              
                             } else {
                                 this.$store.commit("ADD_EVENT", {
@@ -268,7 +287,7 @@ function addTimes (startTime, endTime) {
 .vm--modal {
     border-radius: 25px;
     margin: 30px;
-    height: 227px !important;
+    height: 260px !important;
 }
 @media screen and (max-width: 759px) {
     .form-control { 
