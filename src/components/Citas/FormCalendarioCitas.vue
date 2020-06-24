@@ -1,27 +1,19 @@
 <template>
     <div class="formagendarcita container">
-        <div class="top-titulo " style="text-align:left;">
-            <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @click="showCalendar" >
-                <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
-                <option 
-                    v-for="(item, index) in tutores" 
-                    :key="index" 
-                    :value="item">
-                    {{ item.usuario.nombre + " " + item.usuario.apellidos }}
-                </option>
-            </select>
-            <ul class="legend">
+        <div class="top-titulo ">
+            <div style="width:20%;"><ul class="legend">
                 <li><span class="ocupado"></span> Ocupado </li>
                 <li><span class="disponible"></span> Disponible </li>
-                <li><span class="citareservada"></span> Cita Resevada </li>
-            </ul>
+            </ul></div>
+            <div style="text-align:right;">
+                <button type="button" class="btn btn-info" @click="modificarDisp">Modificar Disponibilidad</button>
+            </div>
         </div>
-        <div class="top-titulo" style="text-align:left;">
+        <div style="text-align:left;">
             <Fullcalendar ref="fullCalendar"
-                          :plugins = "calendarPlugins"
-                          defaultView = "timeGridWeek"
-                          :locales= "locales"
+                          :plugins ="calendarPlugins"
+                          defaultView ="timeGridWeek"
+                          :locales="locales"
                           locale="es"
                           :header ="{
                               left: 'prev',
@@ -29,26 +21,34 @@
                               right: 'next'
                           }"
                           :footer ="{
-                              left: 'today',
+                              left: 'timeGridWeek, timeGridDay, listWeek',
                               center: '',
                               right: ''
                           }"
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
-                          :customButtons="customButtons"
                           hiddenDays= [0]
                           :selectable="true"
-                          minTime= "08:00:00"
-                          maxTime= "22:00:00"
-                          :allDaySlot= "false"
-                          :editable= "false"
-                          :events = "EVENTS"
-                          @eventClick= "handleClick"
+                          @select="handleSelect"
+                          minTime="08:00:00"
+                          maxTime="22:00:00"
+                          :allDaySlot="false"
+                          :events ="EVENTS"
+                          @eventClick="handleClick"
+                          :customButtons="customButtons"
+                          :eventOverlap="false"
+                          :displayEventTime="false"
                           />
             <modals-container/>
-        </div>
         
+        </div>
+        <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+            <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+                <b-spinner style="width: 3rem; height: 3rem;"/>
+                <br >Cargando... 
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -65,10 +65,10 @@ import esLocale from '@fullcalendar/core/locales/es'
 import axios from 'axios'
 //import Vue from 'vue'
 import{mapGetters} from 'vuex'
-import EventModal from './EventModal'
+import EventModal from './../EventModal'
 
 export default {
-    name: 'formAgendarCita',
+    name: 'formCalendarioCitas',
     components: {Fullcalendar},
     data () {
         return {
@@ -79,6 +79,11 @@ export default {
                 ListPlugin,
                 momentPlugin
             ],
+            selectable: {
+                modificarDisp () {
+                    return !this.selectable
+                }
+            },
             columnFormat: 'ddd M/D',
             titleFormat: 'MMMM YYYY',
             calendar: null,
@@ -107,45 +112,35 @@ export default {
                         }
                     },
             },
-            nombre_usuario: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
-            tutorSel: this.$store.state.tutorDisponibilidad,
-            tutores: [],
+            isTutor: true,
+            nombre: '',
+            response: null,
         }
+
     },
     computed: {
         ...mapGetters(["EVENTS"])
     },
     methods: {
-        showCalendar() {
-            if(this.tutorSel) {
-                this.getReminders();
-            }
+        handleSelect (arg) { 
+            this.$store.commit("ADD_EVENT", {
+                title: "Disponible",
+                start: arg.start,
+                end: arg.end,
+            })
         },
-        listarTutores() {
-        const params = {
-            id_programa : this.$store.state.programaActual.id_programa,
-            nomFacu:this.$store.state.programaActual.facultad.nombre,
-            nombre: "",
-        };
-        axios
-        .post('/programa/tutoresListar', params)
-            .then(res =>{
-            console.log(res);
-            this.tutores=res.data;            
-            })
-            .catch(e => {
-            console.log(e.response);
-            })
+        modificarDisp () {
+            this.calendar.optionsManager.computed.selectable = false;
+            this.calendar.render();
+            console.log(this.calendar.optionsManager.computed);
         },
         handleClick (arg) {
-            if(arg.event.backgroundColor!='gray') {
+            if(arg.event.backgroundColor!='#B2EBF2') {
                 this.$modal.show(EventModal,{
                     text: "This is from the component",
                     event: arg.event,
-                    nombre_usuario: this.nombre_usuario,
-                    id_tutor: this.tutorSel.id_usuario,
-                    isTutor: false,
-                    tutorSel: this.tutorSel
+                    isTutor: true,
+                    nombre_usuario: arg.event.title
                 });
             } else { 
                 return false
@@ -154,62 +149,64 @@ export default {
         getReminders: function() {
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
-                axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
+                this.showModal()
+                axios.post('disponibilidades/dispSemanalVistaTu',{idUsuario:this.$store.state.usuario.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
                     var rd = response.data[0];
                     var rd2 = response.data[1];
+                    var rd3 = response.data[2];
+                    var rd4 = response.data[3];
+                    
                     for(var i in rd) {
-                        //console.log('usuario_actualizacion',rd[i])
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
                             if(rd2[i]=='o'){
-                                if(rd[i].alumno[0].id_usuario == this.$store.state.usuario.id_usuario){
-                                    this.$store.commit("ADD_EVENT", {
-                                        id: rd[i].id_disponibilidad,
-                                        title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
-                                        start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                        tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                        color: '#009892',
-                                        usuario_creacion: rd[i].usuario_creacion,
-                                        id_usuario_tutor: rd[i].id_usuario,
-                                        usuario_actualizacion: rd[i].usuario_actualizacion,
-                                        
-                                    });
-                                } else {
-                                    this.$store.commit("ADD_EVENT", {
-                                        id: rd[i].id_disponibilidad,
-                                        title: 'Ocupado',
-                                        start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                        tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                        color: 'gray',
-                                        usuario_creacion: rd[i].usuario_creacion,
-                                        id_usuario_tutor: rd[i].id_usuario,
-                                        usuario_actualizacion: rd[i].usuario_actualizacion,
-                                       
-                                    });
-                                }
+                                this.$store.commit("ADD_EVENT", {
+                                    id: rd[i].id_disponibilidad,
+                                    title: rd4[i][0].nombre + ' ' + rd4[i][0].apellidos,
+                                    description: rd3[i].nombre,
+                                    alumno: rd4[i][0],
+                                    start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                    fecha: rd[i].fecha,
+                                    horaIni: rd[i].hora_inicio, 
+                                    end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                    tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                    color: 'gray',
+                                    usuario_creacion: rd[i].usuario_creacion,
+                                    id_usuario_tutor: rd[i].id_usuario,
+                                    usuario_actualizacion: rd[i].usuario_actualizacion,
+                                    motivo: rd3[i].nombre
+                                });                              
                             } else {
                                 this.$store.commit("ADD_EVENT", {
                                     id: rd[i].id_disponibilidad,
                                     title: 'Disponible',
+                                    description:'',
                                     start: rd[i].fecha + " " + rd[i].hora_inicio,
                                     end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
                                     tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                    color: '#B2EBF2',
+                                    editable:false,
                                     usuario_creacion: rd[i].usuario_creacion,
                                     id_usuario_tutor: rd[i].id_usuario,
-                                    usuario_actualizacion: rd[i].usuario_actualizacion,
-                                    
+                                    usuario_actualizacion: rd[i].usuario_actualizacion
                                 });
                             }
-
                         //});
                     }
+                    this.hideModal()
                 }).catch(e => {
                     console.log(e.response);
+                    this.hideModal()
                 });
                 //this.calendar.render();
+            },
+            
+            showModal() {
+            this.$refs['my-modal'].show()
+            },
+            hideModal() {
+            this.$refs['my-modal'].hide()
             },
     },
     watch: {    
@@ -218,18 +215,12 @@ export default {
         }
     },
     mounted() {
-        //console.log('prog actual: ',this.$store.state.programaActual.id_programa);
-        this.listarTutores();
+        if(this.$store.state.usuario==null) this.$router.push('/login')
+        this.showModal()
+        this.getReminders();
         //this.calendar = this.$refs.fullCalendar.getApi();
         //idUsuario: this.$store.state.usuario.id_usuario
-        /*axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
-        .then(response => {
-            this.dispSemanalVistaAl = response.data;
-
-            console.log(response.data);
-        }).catch(e => {
-            console.log(e.response);
-        });*/
+        //this.calendar.render();
     }
     
 }
@@ -273,7 +264,7 @@ function addTimes (startTime, endTime) {
 </script>
 
 <style lang='scss' scoped>
-@import './../assets/styles/main.css';
+@import './../../assets/styles/main.css';
 
 @import '~@fullcalendar/core/main.css';
 @import '~@fullcalendar/daygrid/main.css';
@@ -329,5 +320,6 @@ function addTimes (startTime, endTime) {
 .fc-time-grid .fc-slats td {
     height: 2.5em;
 }
+
 
 </style>

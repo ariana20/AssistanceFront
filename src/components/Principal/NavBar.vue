@@ -1,37 +1,35 @@
 <template>
   <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-            
-      <b-collapse id="nav-collapse" is-nav>
-              <select 
-               v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.cantProg !== null && this.$store.state.cantProg.length!=0"
-               class="col-sm-2 form-control"
-               style="left:250px;top:5px;font-family:'Brandon Bold'"
-               v-model="selectedPrograma"
-               @change="cambiarProg()">
-                <option selected disabled :value="null" style=";font-family:'Brandon Bold'">Cambia de Programa</option>
-                <option
-                    v-for="(item, index) in $store.state.cantProg" 
-                    :key="index" 
-                    :value="item">
-                    <a v-if="item.programa && item.programa.nombre!=='Administrador'">{{ item.programa.nombre }} ({{item.tipoUsuario.nombre}})</a>
-                    <a v-else>Administrador</a>
-                </option>
-              </select>
+      <b-navbar-toggle target="nav-collapse" class="btn-navs"></b-navbar-toggle>
+      
+      <select 
+        v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.cantProg !== null && this.$store.state.cantProg.length!=0"
+        class="col-sm-2 form-control selectf"
+        v-model="selectedPrograma"
+        @change="cambiarProg()">
+        <option selected disabled :value="null" style=";font-family:'Brandon Bold'">Cambia de Programa</option>
+        <option
+          v-for="(item, index) in $store.state.cantProg" 
+          :key="index" 
+          :value="item">
+          <a v-if="item.programa && item.programa.nombre!=='Administrador'">{{ item.programa.nombre }} ({{item.tipoUsuario.nombre}})</a>
+          <a v-else>Administrador</a>
+        </option>
+      </select>
+      <b-collapse id="nav-collapse" class="menusnav" is-nav>
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           
-            <b-nav-item href="/login" v-if="this.$store.state.usuario === null || this.$store.state.usuario === undefined">
+            <b-nav-item class="optionsnav" href="/login" v-if="this.$route.path != '/login' && (this.$store.state.usuario === null || this.$store.state.usuario === undefined)">
               <a style="color:#000;font-weight:normal">Ingresar</a>
             </b-nav-item>
-            <b-nav-item-dropdown right v-if="this.$store.state.usuario !== null && this.$store.state.usuario !== undefined">
-                <!-- Using 'button-content' slot -->
-                <template v-slot:button-content>
-                <em style="color:#000000;font-weight:normal;" >{{$store.state.usuario.nombre}}</em>
+            <b-nav-item-dropdown class="buttonnav" right v-if="this.$store.state.usuario !== null && this.$store.state.usuario !== undefined">
+                <template v-slot:button-content style="color:red">
+                  <em style="color:#000000;font-weight:normal;" >{{$store.state.usuario.nombre}}</em>
                 </template>
-                <!-- <b-dropdown-item href="#">Profile</b-dropdown-item> -->
-                <b-dropdown-item v-on:click="logout()">Cerrar Sesión</b-dropdown-item>
+                <b-dropdown-item class="buttonnav btnnac"  v-on:click="logout()">
+                  Cerrar Sesión
+                </b-dropdown-item>
             </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -61,6 +59,7 @@ export default {
         }
         axios.post('/usuarios/permisos',paramr)
           .then(response=>{
+            this.$store.state.permisosUsuario = response.data;
             let acceder = false;
             for(var i=0; i < this.$store.state.navLinks.length; i++){
               for(var j=0; j < response.data.length; j++){
@@ -85,7 +84,7 @@ export default {
       }
     }
     else{
-      if (this.$route.path !== '/login' ) this.$router.push('login')
+      if (this.$route.path !== '/login' ) this.$router.push('/login')
     }
     
   },
@@ -112,7 +111,7 @@ export default {
               localStorage.setItem('usuarioActual', null)
               localStorage.setItem('programaSel', null)
               this.$store.state.programaActual = null;
-              if (this.$route.path !== '/login') this.$router.go('login');
+              if (this.$route.path !== '/login') this.$router.go('/login');
             }
             )
             
@@ -138,6 +137,7 @@ export default {
           }
           axios.post('/usuarios/permisos',paramr)
           .then(response=>{
+              this.$store.state.permisosUsuario = response.data;
               this.$store.state.rutas = [];
               for(var i=0; i < this.$store.state.navLinks.length; i++){
                   for(var j=0; j < response.data.length; j++){
@@ -175,8 +175,12 @@ export default {
     width: 110%;
     margin-bottom: 10px;
 }
-
-  .sidenav {
+.selectf{
+  left:14%;
+  top:15%;
+  font-family:'Brandon Bold';
+}
+.sidenav {
   height: 100%;
   width: 0;
   position: fixed;
@@ -187,30 +191,65 @@ export default {
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px;
-  }
+}
 
-  .sidenav a {
+.sidenav a {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
   color: #FFFFFF;
   display: block;
   transition: 0.3s;
-  }
+}
 
-  .sidenav a:hover {
+.sidenav a:hover {
   color: #f1f1f1;
-  }
+}
 
-  .sidenav .closebtn {
+.sidenav .closebtn {
   position: absolute;
   top: 0;
   right: 25px;
   font-size: 36px;
   margin-left: 50px;
-  }
-  @media screen and (max-height: 450px) {
+}
+@media screen and (max-height: 600px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
+  .btn-navs{
+    margin-left: 80%;
+    color: black;
+    border: 1px solid;
+    background:#009892;
   }
+  .menusnav{
+    background:#FFFFFF;
+    margin-top: 2%;
+    margin-left: 77%;
+    font-size: 4vw;
+    width: 5vw;
+    color: #757575;
+  }
+  .optionnav{
+    width: 5vw;
+  }
+  .buttonnav{
+    width: 25vw;
+    font-size: 3vw;
+  }
+  .btnnac{
+    width: 25vw;
+  }
+  .selectf{
+    position: absolute;
+    left:20%;
+    top:25%;
+    width: 40vw;
+    font-size: 3vw;
+    font-family:'Brandon Bold';
+  }
+  .a{
+    color: #009892;
+  }
+}
 </style>

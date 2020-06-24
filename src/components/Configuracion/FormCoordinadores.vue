@@ -1,18 +1,31 @@
 <template>
-  <div class="FormPrograma">
-    <div class="container" style="left:60px;text-align: left">
-      <div class="top-titulo">
+  <!-- <div class="FormPrograma">
+    <div class="container" style="left:60px;text-align: left"> -->
+	<div name="FormCoordinador container">
+		<div   class="row top-titulo container" style="left:60px;text-align: left;">
+      <!-- <div class="top-titulo">
             <h4 class="col-sm-4 title-container">Nombre: </h4>
             <input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre del coordinador">
             <div class="botones">
             <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:190px" >Añadir</button>
             </div>
-      </div>
+      </div> -->
         <!--<div class="row" style="margin-top:40px;margin-bottom:40px">
             <div class="font-weight-ligth text-left textF" style="font-size:20px;line-height: 35px;">Buscar:</div>
             <input class="borde-textbox" type="text" style="margin-left:3%;padding:7px" v-model="nombre">
             <b-button v-on:click="nuevo()" style="margin-left:60%;background: #0097A7">Añadir</b-button>
         </div>-->
+        <div class="col-sm-6 top-titulo">
+           <h5 class="col-sm-6 " style="top:5px;" >Nombre: </h5>
+          <input class="col-sm-6 form-control" type="text" style="top:-5px;margin-bottom:20px" 
+           v-model="nombre" placeholder="Ingrese nombre del coordinador">
+        </div>
+        <div class="botones" >
+           <button  type="button" style="border-radius: 10px;margin-right:50px;padding-top:5px;margin-top:-25px"
+              @click="nuevo()" class="row btn btn-info">Añadir</button>
+        </div> 
+
+
       <table class="table" style="text-align:center">
         <thead>
           <tr>
@@ -44,9 +57,10 @@
       </table>
     </div>
 
-    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-        Loading... <b-spinner style="margin-left:15px"/>
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
       </div>
     </b-modal>
       
@@ -64,32 +78,39 @@ export default {
     }
   },
   created(){
-    if(this.$store.state.coordinadoresL == null) this.listarCoordinadores();
+    if(this.$store.state.usuario==null) this.$router.push('/login')
+    if(this.$store.state.coordinadoresL == null) {
+      
+      this.listarCoordinadores();
+    }
     else this.coordinadores = this.$store.state.coordinadoresL;
+    console.log('a',this.$refs)
   },
   computed:{
-        nombre:{
-            get(){
-                return this.$store.state.filtro.query;
-            },
-            set(val){
-                this.$store.commit('SET_QUERY',val);
-            }
-        },
-        ...mapGetters({
-            coordinadoresFiltrados: 'filtrarCoordinadoresL'
-        })
+    nombre:{
+      get(){
+          return this.$store.state.filtro.query;
+      },
+      set(val){
+          this.$store.commit('SET_QUERY',val);
+      }
+    },
+    ...mapGetters({
+      coordinadoresFiltrados: 'filtrarCoordinadoresL'
+    })
   },
   methods:{
-    
     listarCoordinadores() {
+      this.showModal();
       this.axios.post('/facultad/coordinadoresPyF')
         .then(res =>{
-            this.$store.state.coordinadoresL = res.data;
-            this.coordinadores = res.data;
+          this.$store.state.coordinadoresL = res.data;
+          this.coordinadores = res.data;
+          this.hideModal();
         })
         .catch(e => {
           console.log(e.response);
+          this.hideModal();
         })
     },
     Editar(item){
@@ -98,20 +119,21 @@ export default {
     },
     Eliminar(item,index){
       Swal.fire({
-          title: '¿Dese eliminar a '+item.nombre+'?',
+          text: '¿Dese eliminar a '+item.nombre+'?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
           cancelButtonColor: '#757575',
-          confirmButtonText: 'Confirmar'
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar',
         }).then((result) => {
           if (result.value) {
             this.showModal();
             this.axios.post('/usuarios/eliminar/'+item.id_usuario)
               .then(response=>{
                 response
-                this.hideModal();
                 this.$store.state.roles.splice(index, 1);
+                this.hideModal();
                 Swal.fire({
                   text:"Eliminación Exitosa",
                   icon:"success",
@@ -127,16 +149,15 @@ export default {
 
           }
         })
-      
     },
     nuevo(){
       this.$router.push('/coordinador/'+0);
     },
     showModal() {
-      this.$refs['my-modal'].show()
+      //this.$refs['my-modal'].show()
     },
     hideModal() {
-      this.$refs['my-modal'].hide()
+      //this.$refs['my-modal'].hide()
     },
   }
 }

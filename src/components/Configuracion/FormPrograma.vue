@@ -1,21 +1,19 @@
 <template>
-  <div class="FormPrograma">
+  <!-- <div class="FormPrograma">
     <div class="container" style="left:60px;text-align: left;">
       <div class="top-titulo">
-            <h4 class="col-sm-4 title-container">Nombre: </h4>
-            <input class="col-sm-4 form-control" style="left:-600px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre del programa">
+        <h4 class="col-sm-4 title-container">Nombre: </h4>
+        <input class="col-sm-4 form-control" style="left:-600px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre del programa">
+      </div> -->
+  <div name="FormPrograma container">
+    <div   class="row top-titulo container" style="left:60px;text-align: left;">
+      <div class="col-sm-6 top-titulo">
+           <h5 class="col-sm-6 " style="top:5px;" >Nombre: </h5>
+          <input class="col-sm-6 form-control" type="text" style="top:-5px;margin-bottom:20px" 
+           v-model="nombre" placeholder="Ingrese nombre del programa">
       </div>
-      <!--<table>
-      <tbody>
-        <td style="width:662px">
-          <tr style="text-align:left"></tr>
-          <tr style="text-align:left">
-            <td>Buscar:</td>
-            <td> <input class="borde-textbox" type="text" style="margin-left:10%;padding:7px" v-model="nombre"></td>
-          </tr>
-        </td>
-      </tbody>
-      </table>-->
+
+
       <table class="table">
         <thead>
           <tr>
@@ -43,7 +41,13 @@
         </tbody>
       </table>
     </div>
-
+    
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
+      </div>
+    </b-modal>
       
   </div>
 </template>
@@ -58,33 +62,45 @@ export default {
     }
   },
   created(){
-    if(this.$store.state.programas.length == 0) this.listarProgramas();
+    if(this.$store.state.usuario==null) this.$router.push('/login')
+    if(this.$store.state.programas.length == 0) {
+      this.showModal()
+      this.listarProgramas();
+    }
     else this.programas = this.$store.state.programas;
   },
   computed:{
-        nombre:{
-            get(){
-                return this.$store.state.filtro.query;
-            },
-            set(val){
-                this.$store.commit('SET_QUERY',val);
-            }
-        },
-        ...mapGetters({
-            programasFiltrados: 'filtrarProgramas'
-        })
+    nombre:{
+      get(){
+          return this.$store.state.filtro.query;
+      },
+      set(val){
+          this.$store.commit('SET_QUERY',val);
+      }
+    },
+    ...mapGetters({
+      programasFiltrados: 'filtrarProgramas'
+    })
   },
   methods:{
-    
     listarProgramas() {
+      this.showModal()
       this.axios.post('/programa/listarConCoord')
         .then(res =>{
           this.$store.state.programas = res.data
           this.programas = res.data
+          this.hideModal()
         })
         .catch(e => {
           console.log(e.response);
+          this.hideModal()
         })
+    },
+    showModal() {
+      //this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      //this.$refs['my-modal'].hide()
     },
   }
 }

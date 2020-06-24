@@ -1,28 +1,43 @@
 <template>
-  <div class="FormListarUsuario container"  style="margin-top:20px">
+  <div class="FormListarUsuario container"  >
     <!-- para que lo vea bien un coordinador -->
-    <div class="row top-titulo" style="text-align: left">
-    
-      <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:20px">Nombre o Código:  
-        <input placeholder="Nombre o código" class="input row col-sm-6 form-control" style="left:25px;" type="text"  id="nombres"  v-model="nombre">  
-        
-        </div>
+
+    <div class="row top-titulo" style="text-align: left" >
+      <div class="col-sm-6 top-titulo">
+        <h5 class="col-sm-6 " style="top:5px;" >Nombre o Código: </h5>
+        <input class="col-sm-6 form-control" style="top:-10px;margin-bottom:10px" 
+                  v-model="criterio" v-on:keyup.enter="buscarUsuario(criterio)" placeholder="Buscar por nombre o código"  >
+      </div>
+
+      <div class="botones" >
+        <button  type="button" style="border-radius: 10px;margin-right:50px;margin-top:-15px;padding-top:5px" @click="nuevo()" class="row btn btn-info">Añadir</button>
+      </div>    
+
+
+      <!-- <div class="row col-sm-6"  style="margin:10px;font-size:20px">Nombre o Código:  
+        <input placeholder="Busca por nombre o código" class="input row col-sm-6 form-control" style="left:25px;" type="text"  v-model="nombre">  
+        <router-link to="/Usuario/0"> 
+        <button  type="button" style="border-radius: 10px;margin-right:50px" class="row btn btn-info">Añadir</button>
+      </router-link>
+      </div> -->
+     
         <!-- <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px">Codigo:  
         <input placeholder="Busque por Código" class="row col-sm-8 form-control" style="left:25px;" type="text" id="codigos" v-model="codigo">  
         </div> -->
         
-      <div class="row btn-derecha" >
+      <!-- <div class="row btn-derecha" >
       <router-link to="/Usuario/0"> 
         <button  type="button" style="border-radius: 10px;margin-right:50px" class="row btn btn-info">Añadir</button>
       </router-link>
-      </div>  
+      </div>   -->
          
 
       <table responsive class="table" style="text-align:left" >
         <thead>
           <tr>
             <th scope="col" style="width:100px">Código</th>
-            <th scope="col" style="width:200px">Nombre</th>
+            <th scope="col" style="width:150px">Nombre</th>
+            <th scope="col" style="width:200px">Apellidos</th>
             <th scope="col">Correo</th>
             <th scope="col">Estado</th>
             <th scope="col">Tipo de Usuario</th>
@@ -30,20 +45,26 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in usuariosFiltrados"  :key="index">
+          <tr v-for="(item, index) in usuarios"  :key="index">
             <td v-if="item!=undefined">{{item.codigo}}</td>
-            <td v-if="item!=undefined">{{item.nombre}}</td>
+            <!-- <td v-if="item!=undefined">{{item.nombre}} {{item.apellidos}}</td> -->
+            <td v-if="item!=undefined">{{item.nombre}}</td> 
+           <td v-if="item!=undefined"> {{item.apellidos}}</td> 
             <td v-if="item!=undefined">{{item.correo}}</td>  
-            <td style="font-size:30px">
-                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
-                <b-icon v-else icon="x" style="color:#757575"/>
+            <td >
+                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green;width:35px; height:35px;padding:0px"/>
+                <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;padding:0px"/>
             </td>
               <td>{{item.tipo_usuario[0].nombre}}</td>
-            <td style="text-align:right" >
+            <td  >
                <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
-              <button class="btn link"><b-icon icon="pencil" style="color:#0097A7;margin-left:-120px" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
+              
+                <b-icon icon="pencil" style="color:#0097A7;margin-right:20px;width:20px; height:20px;" v-on:click="llenarUsuarioEscogido(item)"></b-icon>
+                
               </router-link>              
-              <button class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575;margin-left:-100px"  v-on:click="eliminarUsuario(item,index)"></b-icon></button>
+              
+                <b-icon icon="dash-circle-fill" style="color:#757575;width:20px; height:20px;"  v-on:click="eliminarUsuario(item,index)"></b-icon>
+                
               
             </td>
           </tr>
@@ -64,12 +85,21 @@
 						</a>
 					</li>
 					<li class="page-item" v-if="paginate.current_page < paginate.last_page">
-						<a class="page-link" href="#" @click.prevent="changePage(paginate.current_page + 1)" style="color:rgb(0, 152, 146)">
+						<a class="page-link" href="#" @click.prevent="changePage(paginate.current_page + 1)" 
+            style="color:rgb(0, 152, 146)">
 							<span>Siguiente</span>
 						</a>
 					</li>
 				</ul>
 			</nav>
+      <!-- MODAL CARGANDO  -->
+      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
+      </div>
+      </b-modal>
+
   </div>
 </template>
 
@@ -93,12 +123,12 @@ export default {
       usuarios:[],
       //id_tipoXUsuario:[],
       cantU:null,
-      TodosarrayTU:[],
       tipoXUsuario:[],
       miUsuario:this.$store.state.usuario, //Para sacar el id del programa
+      criterio:"",
       state:{
-        usuarioEscogido:null,}
-      
+        usuarioEscogido:null,},
+      banderaVacio:false,
     }
   },
  
@@ -150,13 +180,16 @@ export default {
         // })
   },
   mounted(){
+    
+    
+    
     if(this.$store.state.usuario==null) this.$router.push('/login');
     
-    this.listarTUsuarios();
-    console.log('Store state usuariosA',this.$store.state.usuariosA);
-     if(this.$store.state.usuarios == null  ) {     
-       this.listarUsuarios(); } //}
-    else this.usuarios = this.$store.state.usuarios; //
+    //console.log('Store state usuariosA',this.$store.state.usuariosA);
+    this.criterio="";
+    this.banderaVacio=false;
+    this.listarUsuarios(); 
+    //this.usuarios = this.$store.state.usuarios; //
   },
   methods:{
 		changePage: function(page){
@@ -167,42 +200,107 @@ export default {
     //4 es el id del programa de admin
     //1 es el id tipo usuario de admin
     //2 es el id de usuairo admin
-     listarTUsuarios() {
-      axios.post('/tipoUsuarios/listarTodo')
-        .then(res =>{
-          // Ordenadito
-          let par=res.data;
-          this.TodosarrayTU=par;
-          console.log(res.data);
-          
-        })
-        .catch(e => {
-          console.log(e.response);
-        })
-    },
+    
     listarUsuarios(page) {
+    this.showModal();
     console.log(this.$store.state.programaActual.id_programa);
     var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
-     if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador
+    
+     if(this.$store.state.tipoActual.nombre!="Admin"){ console.log('196',page);//Para coordinador   
+
         axios.post(url) //Por ahora dsp será x program
         .then(res =>{
-          console.log('Usuarios ',res.data);    
+         // console.log('Usuarios ',res.data.tasks.data);    
           //ordenado por estado
-          let par=res.data.tasks.data;      
-          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado);});
+          let par=res.data.tasks.data; 
+          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});  console.log('202');  
+          //this.$store.state.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+          this.usuarios=this.$store.state.usuarios;
           this.paginate=res.data.paginate;
           // this.$store.state.usuarios=res.data;
           console.log(this.$store.state.tipoActual.nombre);
+            this.hideModal();
                    
         })
         .catch(e => {
           console.log(e.response);
+            this.hideModal();
+          //Swal de problema
+           Swal.fire({
+                    text:"Estamos teniendo problemas al listar los usuarios. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+           });
+
         })
       }
      
      
       
        
+    },
+    buscarUsuario(page){
+      this.showModal();
+      let paramsB;
+      // if(isNaN(this.criterio)){
+      //   //es código
+      //   this.criterio=parseInt(this.criterio);
+      //   console.log('es un numero');
+      // }
+      paramsB={
+        criterio:this.criterio,
+      }
+      console.log('Entro a buscar',this.criterio);
+      var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
+      
+       if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador   
+        console.log('entro al if ');
+        axios.post(url,paramsB) //Por ahora dsp será x program
+        .then(res =>{  
+          //ordenado por estado
+           console.log('res',res);
+           if(res.data==""){
+             this.hideModal();
+             //No encontró al usuario
+                Swal.fire({
+                    text:"No se ha encontrado ningún usuario "+this.criterio+".Intente nuevamente",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                });
+           }
+           else{
+          let par=res.data.tasks.data;
+          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});   
+          
+          this.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});   
+          this.paginate=res.data.paginate;
+          console.log('res',res);
+          console.log(this.$store.state.usuarios);
+          this.hideModal();
+          }
+                   
+        })
+        .catch(e => {
+          console.log('catc buscar',e);
+            this.hideModal();
+          //Swal de problema
+           Swal.fire({
+                    text:"Estamos teniendo problemas al buscar los usuarios. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+           });
+
+        })
+      }
+
+
+    
     },
     eliminarUsuario(item,index){
       Swal.fire({
@@ -259,8 +357,16 @@ export default {
       this.$store.state.usuarioEscogido=item;
       console.log('usuario escogido en store:',this.$store.state.usuarioEscogido);
       this.usuarioEscogido=item;
-   }
-   
+   },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
+    nuevo(){
+      this.$router.push('/Usuario/0');
+    }
   }
 }
 </script>
@@ -278,14 +384,17 @@ export default {
   .form-control {
     border-radius: 1.25rem;  
     border: 1px solid #757575;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
+    /* flex: 1; */
     /* width: 100%; */
     
 }
 .btn-derecha{
    margin-top: 5px;
 }  
+
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}
 input:focus {outline: none;box-shadow: none;}
+
 </style>

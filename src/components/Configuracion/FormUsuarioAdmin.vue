@@ -1,8 +1,6 @@
 <template>
   <div class="FormUsuario container" style="margin-top:5px">
     <div style="margin-right:50px"></div>  
-    <!-- </div>
-    <div> -->
       <table>
       <tbody>
         <td >
@@ -17,26 +15,14 @@
             <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index">
              {{ tipoU.nombre}}
              </option>
-          <!-- </select>
-          <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Tipo de tutoria:</td>  
-            <select v-model="tipostutoriasselect" class="col-sm-10 form-control" >
-            <option v-for="(tipotuto,index) in tipostutorias" :value="tipotuto.id_tipo_tutoria" v-bind:key="index">
-             {{ tipotuto.nombre}}
-             </option> -->
           </select>
          
         </tr>
-
-        <!-- </tr>    -->
-        <!-- <tr style="text-align:left" v-if="this.tiposUsuariosselect === 4"><td>Celular:</td>   <td> <input class="col-sm-10 form-control"  type="number"  v-model="telefono"></td></tr> -->
-
-            <!-- <div>{{this.tiposUsuariosselect}}</div> -->
 
        
         <tr style="margin-left:100px"  >
           <div class="row col-sm-6 " style="margin-left:80px;" > 
             <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div>
-            <!-- <div>{{estado}}</div> -->
 
           </tr>    
        </td> 
@@ -48,6 +34,12 @@
          
 
     </div>
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
+      </div>
+    </b-modal>
     </div>
   
 
@@ -83,7 +75,6 @@ export default {
 
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login');
-     console.log('usuario entrante?: ',this.usuario_entrante);
     this.listarTUsuarios();
     this.listarTT();
     if(this.id_usuario_entrante!=0){
@@ -287,6 +278,12 @@ export default {
             console.log('Tipos de tutorias: ',this.tipostutorias);
         })
         .catch(e=>console.log(e));
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
     },
   
     

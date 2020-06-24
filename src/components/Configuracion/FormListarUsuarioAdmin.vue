@@ -1,59 +1,55 @@
 <template>
   <div class="FormListarUsuario">
-    <div class="container" style="margin-left:100px;text-align: left">
-      <div class="top-titulo">
-            <h4 class="col-sm-4 title-container">Buscar: </h4>
-            <input v-on:change="Buscar(nombre)" class="col-sm-6 form-control" style="top:26px;right:230px;" v-model="nombre" placeholder="Ingrese nombre del usuario">
-            <div class="botones">
-            <!-- <button type="button" class="btn btn-info" style="text-align:right">Añadir</button> -->
-            </div>
+    <div style="margin-left:5%;text-align: left">
+      <div style="heigth:20%">
+        <div style="float:left;">
+          <h5 class="col-sm-4 title-container">Buscar: </h5>
+        </div>
+        <div style="float: left;width:40vw">
+          <input v-on:change="Buscar(nombre)" class="col-sm-6 form-control" style="top:15px" v-model="nombre" placeholder="Ingrese un nombre">
+        </div>
       </div>
-    <!-- para que lo vea bien un coordinador
-    <div class="row top-titulo">
-      <div class="row col-sm-4 tutoria-title" style="margin:10px;">Buscar: 
-        <input style="left:25px;" placeholder="Busque por nombre" class="row col-sm-8 form-control" type="text" v-model="nombre">  </div>
-                <div style="margin-right:600px"></div>
-                <div class="row btn-derecha" >
-                <router-link to="/Usuario/0"> 
-                  <button  type="button" style="margin-right:10px" class="row btn btn-info">Añadir</button>
-                </router-link>
-                </div>  -->
-      
-      <table class="table" >
-        <thead>
-          <tr>
-            <th scope="col" style="width:120px">Codigo</th>
-            <th scope="col" style="width:200px">Nombre</th>
-            <th scope="col">Correo</th>
-            <th scope="col">Programa (Tipo de Usuario)</th>
-            <!-- <th scope="col">Modif/Elim</th> -->
-          </tr>
-        </thead>
-        <tbody v-if="$store.state.usuariosA!=null">
-          <tr v-for="(item, index) in $store.state.usuariosA.data"  :key="index">
-            <th scope="row">{{item.codigo}}</th>
-            <td>{{item.nombre}} {{item.apellidos}}</td>
-            <td>{{item.correo}}</td>   
-            <!-- va a cambiar, me daran nombre -->
-            <td style="width:50%">
-              <div class="row" v-for="(item,index) in item.usuario_x_programas" :key="index" style="text-align:center">
-                <span v-if="item.programa">{{item.programa.nombre}}</span>
-                <span v-else> Sin Asignar </span>
-                <span style="margin-left:5px"> ({{item.tipo_usuario.nombre}})</span>
-              </div>  
-              <div v-if="item.usuario_x_programas.length == 0" >
-                <span> Sin Asignar </span>
-              </div>  
-            </td>
-            <!-- <td style="text-align: center">
-              <div class="row" style="width:115px">
-                <button class="btn link"><b-icon icon="pencil"></b-icon></button>
-                <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
-              </div>              
-            </td> -->
-          </tr>
-        </tbody>
-      </table>
+      <br>
+      <div style="margin-top:7%;width:100%;display:block ruby">
+      <div style="overflow: auto;width:100%;">
+        <table class="table" style="width:99%">
+          <thead>
+            <tr>
+              <th scope="col" style="width:5%">Codigo</th>
+              <th scope="col" style="width:15%">Nombre</th>
+              <th scope="col" style="width:25%">Correo</th>
+              <th scope="col" style="width:25%">Programa (Tipo de Usuario)</th>
+              <!-- <th scope="col">Modif/Elim</th> -->
+            </tr>
+          </thead>
+          <tbody v-if="$store.state.usuariosA!=null">
+            <tr v-for="(item, index) in $store.state.usuariosA.data"  :key="index">
+              <th scope="row">{{item.codigo}}</th>
+              <td>{{item.nombre}} {{item.apellidos}}</td>
+              <td>{{item.correo}}</td>   
+              <!-- va a cambiar, me daran nombre -->
+              <td style="width:50%">
+                <div class="row" v-for="(itema,index) in item.usuario_x_programas" :key="index" style="text-align:center;margin-left:0">
+                  <span v-if="itema.programa">{{itema.programa.nombre}}</span>
+                  <span v-else> Sin Asignar </span>
+                  <span style="margin-left:5px"> ({{itema.tipo_usuario.nombre}})</span>
+                  <hr v-if="item.usuario_x_programas.length > 1" style="border: 0px solid #757575;width:100%">
+                </div>  
+                <div v-if="item.usuario_x_programas.length == 0" >
+                  <span> Sin Asignar </span>
+                </div>  
+              </td>
+              <!-- <td style="text-align: center">
+                <div class="row" style="width:115px">
+                  <button class="btn link"><b-icon icon="pencil"></b-icon></button>
+                  <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
+                </div>              
+              </td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
       <div v-if="$store.state.usuariosA!=null">
       <nav aria-label="Page navigation example">
 				<ul class="pagination justify-content-center">
@@ -81,6 +77,14 @@
 			</nav>
       </div>
     </div>
+    
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
+      </div>
+    </b-modal>
+
   </div>
 </template>
 
@@ -92,109 +96,142 @@ export default {
   data(){
     return{
       nombre:null,
+      selectedFile:null,
+      selectedFiles:[],
     }
   },
- 
-  // computed:{
-  //       nombre:{
-  //         get(){
-  //             return this.$store.state.filtro.query;
-  //         },
-  //         set(val){
-  //             this.$store.commit('SET_QUERY',val);
-  //         }
-  //       },
-  //       ...mapGetters({
-  //         usuariosFiltrados: 'filtrarUsuariosAdmin'
-  //       })
-  // },
   mounted(){
-    console.log('Store state usuariosA',this.$store.state.usuariosA);
-     if(this.$store.state.usuariosA === null  ) {     
-       this.listarUsuarios(); } 
+    if(this.$store.state.usuario==null) this.$router.push('/login')
+    if(this.$store.state.usuariosA === null  ) { 
+      this.showModal();    
+      this.listarUsuarios(); 
+    } 
   },
   methods:{
     listarUsuarios() {
+      this.showModal()
       axios.post('/usuarios/listarTodo')
       .then(res =>{
         this.$store.state.usuariosA=res.data;
+        this.hideModal()
       })
       .catch(e => {
         console.log(e.response);
+        this.hideModal()
       })
     },
     Buscar(n) {
+      this.showModal()
       let obj = { busqueda: n}
       axios.post('/usuarios/listarTodo',obj)
       .then(res =>{
         this.$store.state.usuariosA=res.data;
+        this.hideModal()
       })
       .catch(e => {
         console.log(e.response);
+        this.hideModal()
       })
     },
     Page(n) {
       let obj;
+      this.showModal()
       if(this.nombre!='') obj = {page: n, busqueda: this.nombre}
       else obj = { page: n}
       axios.post('/usuarios/listarTodo',obj)
       .then(res =>{
         this.$store.state.usuariosA=res.data;
+        this.hideModal()
       })
       .catch(e => {
         console.log(e.response);
+        this.hideModal()
       })
     },
     eliminarUsuario(id){
-      Swal.fire({
-            text:'¿Desea eliminar?',
-            icon:'warning',
-            confirmButtonText: 'Eliminar',
-             confirmButtonColor:'#0097A7',
-            cancelButtonText: 'Cancelar',
-            cancelButtonColor:'C4C4C4',
-            showCancelButton: true,
-            showConfirmButton: true,
-            //html:' <div >Hello</div>',
+        Swal.fire({
+              text:'¿Desea eliminar?',
+              icon:'warning',
+              confirmButtonText: 'Eliminar',
+              confirmButtonColor:'#0097A7',
+              cancelButtonText: 'Cancelar',
+              cancelButtonColor:'C4C4C4',
+              showCancelButton: true,
+              showConfirmButton: true,
+              //html:' <div >Hello</div>',
 
-        }).then((result) => {
-            if (result.value) {
-              Swal.fire({
-                icon:'success',
-                text:'El usuario ha sido eliminado',
-                confirmButtonText:'Confirmo' ,
-                confirmButtonColor:'#0097A7'
-                }
-              )
-              //aqui iriía el eliminar
-              //ESte eliminar no debería estar.Debería ser un eliminar del programa
-              axios.post('/usuarios/eliminar/'+id)
-              .then(res =>{
-              // Ordenadito
-                    console.log(res);
-                     let index = this.$store.state.usuarios.indexOf( //
-                    function(element){
-                      return element.id_tipo_tutoria === id; //
-                    })
-                  this.$store.state.usuarios.splice(index, 1); //
-          
+          }).then((result) => {
+              if (result.value) {
+                this.showModal()
+                //aqui iriía el eliminar
+                //ESte eliminar no debería estar.Debería ser un eliminar del programa
+                axios.post('/usuarios/eliminar/'+id)
+                .then(res =>{
+                  res
+                  let index = this.$store.state.usuarios.indexOf(
+                  function(element){
+                    return element.id_tipo_tutoria === id; 
+                  })
+                  this.$store.state.usuarios.splice(index, 1);
+                  this.hideModal()
+                  Swal.fire({
+                    icon:'success',
+                    text:'El usuario ha sido eliminado',
+                    confirmButtonText:'Confirmo' ,
+                    confirmButtonColor:'#0097A7'
+                    }
+                  )
                 })
                 .catch(e => {
                   console.log(e.response);
+                  this.hideModal()
                 })
-
-            } else if (
-              /* Read more about handling dismissals below */
-              result.dismiss === Swal.DismissReason.cancel
-            ) {
-              Swal.fire({
-                text:'Se ha cancelado la eliminación',
-                confirmButtonColor:'#0097A7',}
-              )
-            }
-          })
-   } // eliminart
-   
+              } 
+              else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                  text:'Se ha cancelado la eliminación',
+                  confirmButtonColor:'#0097A7',}
+                )
+              }
+            })
+    }, 
+    onFileSelected(e){
+      let files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      for (let index = 0; index < files.length; index++) {
+        this.createFile(files[index]);
+      }
+      console.log(this.selectedFiles);
+    },
+    createFile(file) {
+      let reader = new FileReader();
+      let vm = this;
+      reader.onload = (e) => {
+          vm.selectedFile = e.target.result;
+          vm.selectedFiles.push(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    },
+    subirPDFs(){
+      this.showModal()
+      let obj = {files:this.selectedFiles}
+      axios.post('/usuarios/notas',obj)
+        .then(res =>{
+          this.$store.state.usuariosA=res.data;
+          this.hideModal()
+        })
+        .catch(e => {
+          console.log(e.response);
+          this.hideModal()
+        })
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
   }
 }
 </script>

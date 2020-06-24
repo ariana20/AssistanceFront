@@ -18,9 +18,7 @@
           <tr>
             <th scope="col">Código</th>
             <th scope="col">Nombre</th>
-            <th scope="col">Tipo de Solicitud</th>
-            <th scope="col">Descripción</th>
-            <th scope="col">Motivo</th>
+            <th scope="col">Descripcion</th>
             <th scope="col">Usuario Relacionado</th>
             <th scope="col">Fecha Solicitud</th>
             <th scope="col">Responder</th>
@@ -30,39 +28,37 @@
         <tbody>
           
           <tr v-for="(item, index) in solicitudesFiltrados" :key="index">
-            <td scope="row">{{item.usuarioSolicitante.codigo}}</td>
+            <td scope="row" v-if="item.usuarioSolicitante.codigo">{{item.usuarioSolicitante.codigo}}</td>
+            <td scope="row" v-else>Pendiente</td>
             <td>{{item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos}}</td>
-            <td>{{item.tipo_solicitud}}</td>
             <td>{{item.descripcion}}</td>
-            <td v-if="item.motivo">{{item.motivo}}</td>
-            <td v-else>-</td>
             <td v-if="item.usuarioRelacionado">{{item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos}}</td>
-            <td v-else style="text-align:center">-</td>
+            <td v-else style="text-align:center">Ninguno</td>
             <td>{{item.fecha_creacion}}</td>
             <td >
-                <button style="padding-left: 5px;padding-right: 5px;width:25px;margin-left:5px" v-on:click="Aceptar(item)" class="btn link">
-                    <b-icon icon="check-circle-fill" style="color:#0097A7"/>
-                </button>
-                <button style="padding-left: 5px;padding-right: 5px;margin-left:5px;width:25px" v-on:click="Rechazar" class="btn link">
-                    <b-icon icon="x-circle-fill" style="color:#757575"/>
-                </button>
+              <button style="padding-left: 5px;padding-right: 5px;width:25px;margin-left:5px" v-on:click="Aceptar(item)" class="btn link">
+                  <b-icon icon="check-circle-fill" style="color:#0097A7"/>
+              </button>
+              <button style="padding-left: 5px;padding-right: 5px;margin-left:5px;width:25px" v-on:click="Rechazar" class="btn link">
+                  <b-icon icon="x-circle-fill" style="color:#757575"/>
+              </button>
             </td>
             <td >
-                <button v-on:click="Elegir(item)" style="padding-left: 5px;padding-right: 5px;width:50px" class="btn link">
-                    <modalJ2 v-on:childToParentFacu="Detalle" :solicitud="item"/>      
-                </button>
+              <button v-on:click="Elegir(item)" style="padding-left: 5px;padding-right: 5px;width:50px" class="btn link">
+                  <modalJ2 v-on:childToParentFacu="Detalle" :solicitud="item"/>      
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
   
-    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-        Cargando... <b-spinner style="margin-left:15px"/>
-      </div>
-    </b-modal>
-
-      
+    <!-- Modal de cargando.más grande  -->
+      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+        <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+          <b-spinner style="width: 3rem; height: 3rem;"/>
+          <br >Cargando... 
+        </div>
+      </b-modal>
   </div>
 </template>
 
@@ -88,26 +84,25 @@ export default {
     else this.solicitudes = this.$store.state.solicitudes;
   },
   computed:{
-        nombre:{
-          get(){
-              return this.$store.state.filtro.query;
-          },
-          set(val){
-              this.$store.commit('SET_QUERY',val);
-          }
-        },
-        ...mapGetters({
-          solicitudesFiltrados: 'filtrarSolicitudes'
-        })
+    nombre:{
+      get(){
+        return this.$store.state.filtro.query;
+      },
+      set(val){
+        this.$store.commit('SET_QUERY',val);
+      }
+    },
+    ...mapGetters({
+      solicitudesFiltrados: 'filtrarSolicitudes'
+    })
   },
   methods:{
     listarSolicitudes() {
-        this.axios.post('/solicitudes/listarSol',{id: this.$store.state.usuario.id_usuario, id_programa: this.$store.state.programaActual.id_programa})
-        .then(response=>{
-            this.$store.state.solicitudes = response.data;
-        })
-        .catch(e=>console.log(e));
-      
+      this.axios.post('/solicitudes/listarSol',{id: this.$store.state.usuario.id_usuario, id_programa: this.$store.state.programaActual.id_programa})
+      .then(response=>{
+          this.$store.state.solicitudes = response.data;
+      })
+      .catch(e=>console.log(e))
     },
     Elegir(item){
         this.solEl = item;
@@ -135,47 +130,52 @@ export default {
             this.axios.post('/solicitudes/eliminar',param)
               .then(response=>{
                 response
-                let index = this.$store.state.solicitudes.indexOf(
-                  function(element){
-                    return element.id_solicitante === item.id_solicitante && element.id_remitente === item.id_remitente;
-                  })
+                let index;
+                for (index = 0; index < this.$store.state.solicitudes.length; index++) {
+                  if(this.$store.state.solicitudes[index].id_solicitante == item.id_solicitante 
+                  && this.$store.state.solicitudes[index].id_solicitante == item.id_solicitante 
+                  && this.$store.state.solicitudes[index].tipo_solicitud == item.tipo_solicitud){
+                    break;
+                  }
+                }
                 this.$store.state.solicitudes.splice(index,1);
+                this.hideModal();
                 let mensaje;
                 if(item.tipo_solicitud == 'Programa'){
-                    mensaje = "Se aceptó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
-                    let obj ={
-                        id_tipo_usuario:5, 
-                        id_programa:this.$store.state.programaActual.id_programa,
-                    }
-                    this.axios.post('/usuarios/nuevoPrograma/'+item.usuarioSolicitante.id_usuario,obj)
-                        .then(response=>{
-                            response
-                            emailjs.send(
-                                "gmail",
-                                "template_bV7OIjEW",
-                                {
-                                "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
-                                "mensaje":mensaje,
-                                "correo": item.usuarioSolicitante.correo
-                                }, 'user_ySzIMrq3LRmXhtVkmpXAA')
-                            .then((result) => {
-                                console.log('SUCCESS!', result.status, result.text);
-                            }, (error) => {
-                                console.log('FAILED...', error);
-                            });
-                            this.hideModal();
-                            Swal.fire({
-                            text:"Aceptado exitosamente",
-                            icon:"success",
-                            confirmButtonText: 'OK',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                            })
-                        })
-                        .catch(e=>{
-                          console.log(e)
+                  mensaje = "Se aceptó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
+                  let obj ={
+                      id_tipo_usuario:5, 
+                      id_programa:this.$store.state.programaActual.id_programa,
+                  }
+                  this.axios.post('/usuarios/nuevoPrograma/'+item.usuarioSolicitante.id_usuario,obj)
+                      .then(response=>{
+                          response
+                          emailjs.send(
+                              "gmail",
+                              "template_bV7OIjEW",
+                              {
+                              "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                              "mensaje":mensaje,
+                              "correo": item.usuarioSolicitante.correo
+                              }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                          .then((result) => {
+                              console.log('SUCCESS!', result.status, result.text);
+                          }, (error) => {
+                              console.log('FAILED...', error);
+                          });
                           this.hideModal();
-                        })
+                          Swal.fire({
+                          text:"Aceptado exitosamente",
+                          icon:"success",
+                          confirmButtonText: 'OK',
+                          confirmButtonColor:'#0097A7',
+                          showConfirmButton: true,
+                          })
+                      })
+                      .catch(e=>{
+                        console.log(e)
+                        this.hideModal();
+                      })
                 }
                 else if(item.tipo_solicitud == 'Tutor'){
                   mensaje = "Se te asignó "+item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos+" como tutor en el programa "+this.$store.state.programaActual.nombre
@@ -214,6 +214,47 @@ export default {
                         console.log(e)
                         this.hideModal();
                       })
+                }
+                else if(item.tipo_solicitud == 'Cita'){
+                  mensaje = "Se acepto tu cancelacion de la cita con el tutor "
+                    +item.usuarioRelacionado.nombre+" "
+                    +item.usuarioRelacionado.apellidos
+                    +" del día "+this.$store.state.programaActual.nombre
+                  let obj ={
+                    id_alumno:item.id_solicitante, 
+                    id_tutor:item.usuarioRelacionado.id_usuario,
+                    id_programa:this.$store.state.programaActual.id_programa,
+                    usuario_creacion: this.$store.state.usuario.id_usuario,
+                  }
+                  this.axios.post('/citas/eliminar',obj)
+                    .then(response=>{
+                        response
+                        emailjs.send(
+                            "gmail",
+                            "template_bV7OIjEW",
+                            {
+                            "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                            "mensaje":mensaje,
+                            "correo": item.usuarioSolicitante.correo
+                            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                        .then((result) => {
+                            console.log('SUCCESS!', result.status, result.text);
+                        }, (error) => {
+                            console.log('FAILED...', error);
+                        });
+                        this.hideModal();
+                        Swal.fire({
+                        text:"Cancelación de cita aceptada exitosamente",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                        })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
                 }
               })
               .catch(e=>{

@@ -1,6 +1,5 @@
 <template>
     <div style="text-align:left;">
-        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo">
 				<img  :src="tutor.imagen" height="110px" width="110px" />		
@@ -8,27 +7,13 @@
         <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo">	
                 <b-avatar size="7rem" ></b-avatar>		
 		</figure>
-        <div class="descripcion-tutor">
-            <div class="font-weight-bolder">{{tutor.nombre + " " + tutor.apellidos}}</div>
+        <div class="descripcion-tutor" style="margin-top:10%">
             <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
-            <div class="font-weight-bolder">Temas: </div>
-            <div>
-                <label v-for="(item,index) in tipoTutoria" :key="index">
-                    {{item.nombre}}<label v-if="index<tipoTutoria.length-1" style="margin-right:5px">, </label>
-                </label>
-            </div>
-            <div style="text-align: right" id="botones" >
-                <button type="button"
-                class="btn btn-info" v-on:click="verDisponibilidad()">Ver disponibilidad</button>
-                <!--button type="button"
-                class="btn btn-info">Ver Perfil</button> 
-                <button type="button"
-                class="btn btn-info btn-enviar-msg">Enviar Mensaje</button-->
-                <button type="button" style="align: right"
-                class="btn btn-info" v-on:click="solicitarTutor()">Solicitar Tutor</button> 
-            </div>
+            <div class="font-weight-bolder">Correo: {{tutor.correo}}</div>
+            <div class="font-weight-bolder">Telefono: {{tutor.telefono}}</div>
+            <div class="font-weight-bolder">Programa: {{this.$store.state.programaActual.nombre}}</div>
+            <div class="font-weight-bolder">Condicion: {{tutor.cond}}</div>
         </div>
-        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
                           
     </div>
 </template>
@@ -50,10 +35,6 @@ export default {
         }
     },
     methods:{
-        verDisponibilidad(){
-            this.$store.state.tutorDisponibilidad=this.tutor;
-            this.$router.push('/agendarcita');
-        },
         solicitarTutor(){
             Swal.fire({
                 text:"¿Desea solicitar a "+this.tutor.nombre+" como tutor o tutora?",

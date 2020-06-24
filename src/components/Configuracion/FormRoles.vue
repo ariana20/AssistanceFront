@@ -1,50 +1,63 @@
 <template>
   <div class="FormRoles container" >
     <div class="row top-titulo" style="text-align: left" >
-      <div class="top-titulo">
-            <h5 class="col-sm-4 title-container">Nombre: </h5>
-            <input class="col-sm-6 form-control" style="top:26px;right:100px;" v-model="nombre" placeholder="Busque por nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )" >
-            <div class="botones">
-            <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:280px" >Añadir</button>
-            </div>
+      <div class="col-sm-6 top-titulo">
+        <h5 class="col-sm-6 " style="margin-top: 5px;margin-bottom: 30px;" >Nombre: </h5>
+        <input class="col-sm-6 form-control" style="top:-5px;" v-model="nombre" placeholder="Buscar por nombre"  >
+       
       </div>
-        <!--<div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px;font-weight:bold">Buscar:  
-        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
-        </div>
-        <div style="margin-right:100px"></div>                   
-                 <button  type="button"  style="text-align:right" class="btn btn-info">Añadir</button> 
-                  <b-button v-on:click="nuevo()" style="height:40px;border-color:transparent;margin-left:25%;background: #0097A7">Añadir</b-button>-->
-           
-      </div>
+      <div class="botones" >
+          <button  type="button" style="border-radius: 10px;margin-right:50px;padding-top:5px;margin-top:-25px" @click="nuevo()" class="row btn btn-info">Añadir</button>
+      </div>      
+    </div>
       <table class="table"  style="text-align:left">
         <thead>
           <tr>
             <th scope="col">N°</th>
             <th scope="col">Nombre</th>
+            <th v-if="$store.state.tipoActual.nombre == 'Admin'" scope="col">Facultad/Programa</th>
             <th scope="col" style="text-align: center">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          
           <tr v-for="(item, index) in rolesFiltrados" :key="index">
             <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>
-            <td  style="text-align: center">
+            <td v-if="$store.state.tipoActual.nombre == 'Admin' && item.programa!=null">
+              <div v-if="item.programa.nombre == 'Administrador'">
+                General
+              </div>
+              <div v-else>
+                {{item.programa.nombre}}
+              </div>
+            </td>
+            <td  style="text-align: center" v-if="$store.state.tipoActual.nombre == 'Admin'">
               <button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
               <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
+            </td>
+            <td  style="text-align: center" v-else>
+              
+              <div v-if="(item.programa.nombre!='Administrador' && item.programa.nombre!=$store.state.programaActual.facultad.nombre)">
+                <button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
+                <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
+              </div>
+              
+              <div v-else>
+                Solo Visualización
+              </div>
+
             </td>
           </tr>
         </tbody>
       </table>
   
-    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-        Loading... <b-spinner style="margin-left:15px"/>
+     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
       </div>
-    </b-modal>
-
-      
-  </div>
+      </b-modal>
+    </div>
 </template>
 
 <script>
@@ -59,39 +72,67 @@ export default {
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
-    if(this.$store.state.roles === null) this.listarRoles();
+    if(this.$store.state.roles === null) {
+      this.showModal()
+      this.listarRoles();
+    }
     else this.roles = this.$store.state.roles;
+    this.nombre="";
   },
   computed:{
-        nombre:{
-          get(){
-              return this.$store.state.filtro.query;
-          },
-          set(val){
-              this.$store.commit('SET_QUERY',val);
-          }
-        },
-        ...mapGetters({
-          rolesFiltrados: 'filtrarRoles'
-        })
+    nombre:{
+      get(){
+        return this.$store.state.filtro.query;
+      },
+      set(val){
+        this.$store.commit('SET_QUERY',val);
+      }
+    },
+    ...mapGetters({
+      rolesFiltrados: 'filtrarRoles'
+    })
   },
   methods:{
     listarRoles() {
-        this.axios.post('/tipoUsuarios/listarTodo')
-        .then(response=>{
-          if(this.$store.state.tipoActual.nombre == 'Admin'){
-            this.$store.state.roles = response.data;
-          }
-          else{
-            this.$store.state.roles = response.data;
-            let index;
-            for (index = 0; index < this.$store.state.roles.length; index++) {
-              if(this.$store.state.roles[index].nombre == "Admin") break;              
-            }
-            this.$store.state.roles.splice(index, 1);
-          }
-        })
-        .catch(e=>console.log(e));
+      this.showModal()
+      if(this.$store.state.tipoActual.nombre == 'Admin'){
+        this.axios.post('/tipoUsuarios/tiposAdmin')
+          .then(response=>{
+              this.$store.state.roles = response.data;
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e)
+            this.hideModal()
+          });
+      }
+      if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+        let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
+        this.axios.post('/tipoUsuarios/tiposFacultad',obj)
+          .then(response=>{
+              this.$store.state.roles = response.data;
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e)
+            this.hideModal()
+          });
+      }
+      if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+        let obj = {
+          id_programa: this.$store.state.programaActual.id_programa,
+          id_facultad: this.$store.state.programaActual.id_facultad
+        }
+        this.axios.post('/tipoUsuarios/tiposPrograma',obj)
+          .then(response=>{
+              this.$store.state.roles = response.data;
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e)
+            this.hideModal()
+          });
+      }
       
     },
     Editar(id){
@@ -102,7 +143,7 @@ export default {
     },
     Eliminar(item){
       Swal.fire({
-          title: '¿Dese eliminar '+item.nombre+'?',
+          text: '¿Dese eliminar '+item.nombre+'?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
@@ -132,10 +173,8 @@ export default {
                 console.log(e)
                 this.hideModal();
               });
-
           }
         })
-      
     },
     showModal() {
       this.$refs['my-modal'].show()

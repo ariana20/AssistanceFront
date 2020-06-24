@@ -1,17 +1,13 @@
 <template>
 	<nav style="background: '#FFFFFF'">
 		<ul :style="{ background: background|| '#333'}" ref="nav">
-			<figure v-if="this.$store.state.usuario && this.$store.state.tipoActual.nombre=='Admin'" class="image-logo" @click="toggleNav">
-				<img :src="imagePath" height="60px" width="60px" />		
-				<nobr>ssistance</nobr>				
+			<figure v-if="this.$store.state.usuario && this.$store.state.tipoActual.nombre=='Admin'" class="image-logo logs2" @click="toggleNav">
+				<img :src="imagePath" height="65vh" width="65vw" style="margin-top:-5%;margin-left:-10%"  />		
+				<nobr class="logos2">ssistance</nobr>				
 			</figure>
-			<figure v-else class="image-logo" @click="toggleNav">
-				<img v-bind:src="logo" height="40px" width="40px" style="margin-top:-10px" />		
-				<nobr style="
-				color: rgb(0, 0, 0);
-				font-size: 30px;
-				margin-left:10px;
-				line-height: 55px;">
+			<figure v-else class="image-logo logs" @click="toggleNav">
+				<img v-bind:src="logo" height="45vh" width="45vw" class="lgo"/>		
+				<nobr class="logos">
 					{{siglas}}
 				</nobr>				
 			</figure>
@@ -95,14 +91,13 @@ nav {
 		figure {
 			position: fixed;
 			z-index: 1;
-			top: 3px;
-			left: 10px;
+			top: -2.8%;
+			left: -4%;
 			cursor: pointer;
-			margin-right: 10px;
 
 			nobr {
 				color: #000;
-				font-size: 20px;
+				font-size: 2vw;
 				//margin-left:10px;
 			}
 		}
@@ -125,6 +120,19 @@ nav {
 			width: 100%;
 		}
 	}
+}
+.lgo{
+	margin-top:-14%;
+}
+.logos{
+	color: black;
+	font-size: 2vw;
+	line-height: 8vh;
+}
+.logos2{
+	color: black;
+	font-size: 2vw;
+	line-height: 7vh;
 }
 @media screen and (max-width: 759px){
 	nav {
@@ -183,6 +191,30 @@ nav {
 				width: 100%;
 			}
 		}
+	}
+	.logs{
+		margin-left:0%;
+		margin-top:-12%;
+	}
+	.logs2{
+		position: fixed;
+		margin-left:-7%;
+		margin-top:1%;
+	}
+	.logos2{
+		color: white;
+		margin: -20%;
+		line-height: 0vh;
+	}
+	.lgo{
+		margin-top:-8%;
+	}
+	.logos{
+		visibility: hidden;
+		color: white;
+		margin-top: -50%;
+		font-size: 6vw;
+		line-height: 21vh;
 	}
 }
 

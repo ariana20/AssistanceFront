@@ -3,33 +3,49 @@
     <div class="container" >
       <table>
       <tbody  align="left">
-        <p style="white-space: pre-line;"></p>
-        <br>
+        
         <td style="width:1062px">
           <tr style="text-align:left"></tr>
           <tr style="text-align:left" ><td>Nombre:*</td>   
-            <td> <input class="input col-sm-10 form-control" type="text" v-model="tipotutoria.nombre"> </td>
+            <td> <input class="input col-sm-10 form-control" style="margin-left:13px" type="text" v-model="tipotutoria.nombre"> </td>
           </tr>
        
-          <tr style="text-align:left" ><td>Descripcion:</td> 
-          <textarea rows =3 cols=49  class="col-sm-10 form-control" type="text" v-model="tipotutoria.descripcion"  >    
+          <tr style="text-align:left"><td>Descripción:</td> 
+          <textarea style="margin-left:13px" rows =3 cols=40 class="col-sm-10 form-control" type="text" v-model="tipotutoria.descripcion"  >    
           </textarea> 
           <!-- Textarea tiene que tener un número menos de largo -->
           </tr>
-        
+                 
+            <div class="col-sm-6 "  style="margin-right:-14px">
+              <label style="margin-left:-13px;margin-right:16px">Condiciones:*</label>
+              <input type="radio" style="font-size: 22px;" id="yes" value="1" v-model="tipotutoria.individual">
+              <label style="text-indent:5px" >{{indgru[0].text}}</label>
+              <label style="text-indent: 34px;color:white;"> -</label>              
+              <input  type="radio" id="no" value="0" v-model="tipotutoria.individual">
+              <label style="text-indent:5px" >{{indgru[1].text}}</label>
+            </div>
+            <div class="col-sm-6 " style="margin-left:100px;"> 
+              <input type="radio" id="yes" value="1" v-model="tipotutoria.obligatorio">
+              <label style="text-indent:5px" >{{oblopc[0].text}}</label>
+              <label style="text-indent:20px;color:white;"> -</label>              
+              <input  type="radio" id="no" value="0" v-model="tipotutoria.obligatorio">
+              <label style="text-indent:5px" >{{oblopc[1].text}}</label>
+            </div>
+            <div class="col-sm-6 " style="margin-left:100px;"> 
+              <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorasignado">
+              <label style="text-indent:5px" >{{asigsol[0].text}}</label>
+              <label style="text-indent: 0cm;color:white;"> -</label>              
+              <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorasignado">
+              <label style="text-indent:5px" >{{asigsol[1].text}}</label>
+            </div>
+           <div class="col-sm-6 " style="margin-left:100px;"> 
+              <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorfijo">
+              <label style="text-indent:5px" >{{fijvar[0].text}}</label>
+              <label style="text-indent:40px;color:white;"> -</label>              
+              <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorfijo">
+              <label style="text-indent:5px" >{{fijvar[1].text}}</label>
+            </div>
 
-          <tr> 
-          <td >
-          </td>
-          </tr>
-          <div class="row col-sm-6 tutoria-title"  > <div>Condiciones:*</div>
-            <b-form-radio-group style="margin-left:20px" v-model="tipotutoria.individual" :options="indgru"></b-form-radio-group></div>
-          <div class="row col-sm-6 " style="margin-left:100px;" > 
-            <b-form-radio-group v-model="tipotutoria.obligatorio" :options="oblopc">    </b-form-radio-group></div>            
-            <div class="row col-sm-6 " style="margin-left:100px;"> 
-            <b-form-radio-group v-model="tipotutoria.tutorasignado" :options="asigsol">    </b-form-radio-group></div>
-            <div class="row col-sm-6 " style="margin-left:100px;"> 
-            <b-form-radio-group v-model="tipotutoria.tutorfijo" :options="fijvar">    </b-form-radio-group></div>
 
            <br>
             <div class="row col-sm-6 " style="margin-left:80px;" > 
@@ -40,9 +56,20 @@
     </div>      
       <button type="button" class="btn btn-info" style="border-radius: 10px" v-on:click="guardarTipoTutoria()">Guardar</button>
       <button type="button" style="border-radius: 10px;margin-left:50px"  class="btn btn-secondary" v-on:click="Cancelar()">Cancelar</button>
-      <div style="margin-left:180px;position:fixed;margin-top:120px;bottom:25px">
+      <div style="margin-left:10px;margin-top:10px;bottom:25px">
       * Campos obligatorios   
      </div >
+
+     <!-- listado de los tutores -->
+
+     
+       <!-- MODAL CARGANDO  -->
+      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
+      </div>
+      </b-modal>
   </div>
 
 </template>
@@ -80,20 +107,20 @@ export default Vue.extend( {
 
       },
       indgru:[
-        {value: '1',text: 'Individual'}, //guardo el value
-        {value: '0',text: 'Grupal'},
+        {value: '1',text: "Individual"+"\t"+" "+" "+" "+" "+" "}, //guardo el value
+        {value: '0',text: "Grupal"},
       ],
       oblopc:[
-        {value: '1',text: 'Obligatorio'},
-        {value: '0',text: 'Opcional'},
+        {value: '1',text: "Obligatorio \t\t"},
+        {value: '0',text: "Opcional"},
       ],
       asigsol:[
-        {value: '1',text: 'Con tutor asignado'},
-        {value: '0',text: 'Con tutor solicitado'},
+        {value: '1',text: "Tutor asignado"},
+        {value: '0',text: "Tutor solicitado"},
       ],
       fijvar:[
-        {value: '1',text: 'Con tutor fijo'},
-        {value: '0',text: 'Con tutor variable'},
+        {value: '1',text: "Tutor fijo \t\t"},
+        {value: '0',text: "Tutor variable"},
       ],
     
     }
@@ -110,27 +137,41 @@ export default Vue.extend( {
        this.tipotutoria.id_tipo_tutoria_entrante=parseInt((this.$route.path).substring(16,18),10);
        console.log('Id entrante en mounted ',this.tipotutoria.id_tipo_tutoria_entrante);
         if(this.tipotutoria.id_tipo_tutoria_entrante!=0 && this.tipotutoria.id_tipo_tutoria_entrante!=undefined ){
+          this.showModal();
            Axios.create()
-          .post('/TipoTutoria/mostrar/'+this.tipotutoria.id_tipo_tutoria_entrante).
-          then( response =>{
-            console.log('Id del tipo tutoria ',response.data.id_tipo_tutoria);
-           this.tipotutoria.nombre= response.data.nombre;
-           this.tipotutoria.descripcion=response.data.descripcion;
-           this.tipotutoria.individual=response.data.individual;
-           this.tipotutoria.obligatorio=response.data.obligatorio;
-           this.tipotutoria.tutorasignado=response.data.tutor_asignado;
-           this.tipotutoria.tutorfijo=response.data.tutor_fijo;
+            .post('/TipoTutoria/mostrar/'+this.tipotutoria.id_tipo_tutoria_entrante).
+            then( response =>{
+             console.log('Id del tipo tutoria ',response.data.id_tipo_tutoria);
+            this.tipotutoria.nombre= response.data.nombre;
+            this.tipotutoria.descripcion=response.data.descripcion;
+            this.tipotutoria.individual=response.data.individual;
+            this.tipotutoria.obligatorio=response.data.obligatorio;
+            this.tipotutoria.tutorasignado=response.data.tutor_asignado;
+            this.tipotutoria.tutorfijo=response.data.tutor_fijo;
             this.tipotutoria.estado=response.data.estado;
-         
-         });
+            this.hideModal();
+            })
+          .catch(e=>{
+            console.log(e);
+            this.hideModal();
+           //Swal de problema
+             Swal.fire({
+                    text:"Estamos teniendo problemas al listar los tipos de tutorias. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+              });
+        });
     }
 
   },
   methods:{
     
     guardarTipoTutoria() {
-    
-      if(this.tipotutoria.descripcion =="" || this.tipotutoria.nombre==""   ){
+        //aqui inicia
+      if( this.tipotutoria.nombre==""   ){
+        this.hideModal();
          Swal.fire({
               text:"No ha completado todos los campos",
               icon:"error",
@@ -140,6 +181,7 @@ export default Vue.extend( {
         })        
       }   
       else if (this.individual=="" ||  this.tipotutoria.obligatorio=="" || this.tipotutoria.tutorasignado=="" || this.tipotutoria.tutorfijo=="" ){
+        this.hideModal();
         console.log('Entro al elseif  de 4 condiciones');
               Swal.fire({
               text:"Debe elegir 1 opción de cada condición.\n",
@@ -154,6 +196,7 @@ export default Vue.extend( {
         if(this.tipotutoria.id_tipo_tutoria_entrante==0){
           //tt nuevo
            if(this.tipotutoria.estado=="ina"){      
+             this.hideModal();
                 Swal.fire({
               text:"No puede crear un tipo de tutoría como inactivo.",
               icon:"warning",
@@ -174,13 +217,15 @@ export default Vue.extend( {
               tutor_fijo:this.tipotutoria.tutorfijo,
               estado:this.tipotutoria.estado,   
               id_programa:this.tipotutoria.miprog.id_programa, 
-              // id_programa:4,         
-           };
+              // id_programa:4,
+              };
+              this.showModal();
          Axios.create()
-      // http://18.232.253.212/Back-end-Software/public/api/      
-        .post('TipoTutoria/insertar',params)
+         // http://18.232.253.212/Back-end-Software/public/api/      
+          .post('TipoTutoria/insertar',params)
           .then( response=>{
             console.log(response);
+              this.hideModal();
                Swal.fire({
               text:"El nuevo tipo de tutoria fue guardada con exito",
               icon:'success',
@@ -190,9 +235,11 @@ export default Vue.extend( {
               });
               //push
               this.$router.push('/ListaTiposTutorias');
+               this.$store.state.tipostutorias=null;
           })
            .catch(e => {
                   console.log(e.response);
+                  this.hideModal();
                    Swal.fire({
                     text:"Ocurrió un incoveniente. Vuelva a intentar en unos minutos.",
                     icon:'error',
@@ -217,10 +264,12 @@ export default Vue.extend( {
               id_programa:this.tipotutoria.miprog.id_programa, 
               // id_programa:4,           
            };
+           this.showModal();
           Axios.create()   
         .post('TipoTutoria/modificar/'+this.tipotutoria.id_tipo_tutoria_entrante,params)
           .then( response=>{
             console.log(response);
+            this.hideModal();
                Swal.fire({
               text:"El nuevo tipo de tutoria fue guardada con exito",
               icon:'success',
@@ -229,9 +278,12 @@ export default Vue.extend( {
               showConfirmButton: true,
               });
               this.$router.push('/ListaTiposTutorias');
+               this.$store.state.tipostutorias=null;
+              
           })
            .catch(e => {
                   console.log(e.response);
+                  this.hideModal();
                    Swal.fire({
                     text:"Ocurrió un incoveniente al modificar. Vuelva a intentar en unos minutos.",
                     icon:'error',
@@ -241,17 +293,9 @@ export default Vue.extend( {
               });
               //No lo redirigo porque perdería sus cambios
                 });
-
-
-
-
-        }
-         
-            
+        }      
       
-      }
-      
-      
+      }    
       console.log('salio del if');
 
     },
@@ -269,9 +313,16 @@ export default Vue.extend( {
             if (result.value) {
               //lo redirigo
               this.$router.push('/ListaTiposTutorias');
+              
             } 
           })
-    }
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
     
   }
 })

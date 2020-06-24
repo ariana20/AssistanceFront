@@ -1,7 +1,7 @@
 <template>
   <div class="viewinstitucion">
     <CabezeraTitulo 
-    msg="Configuración de la Institución"
+    msg="Institución"
     :image-path="require('@/assets/images/0e37a827-396c-4641-8547-056f4b61bd98.jpg')"/>
     <FormInstitucion/>
   </div>

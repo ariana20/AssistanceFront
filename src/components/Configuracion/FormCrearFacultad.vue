@@ -24,7 +24,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Código de la Facultad:</label>
+            <label>Código de la Facultad:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input v-if="idFacultad" id="codigoF" v-model="codVerifF"></b-form-input>
@@ -35,7 +35,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Nombre de la Facultad:</label>
+            <label>Nombre de la Facultad:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input v-if="idFacultad" id="nombreF" v-model="nombreVerifF"></b-form-input>
@@ -46,7 +46,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Correo Electrónico:</label>
+            <label>Correo Electrónico:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input id="correoF" v-model="facultad.correo"></b-form-input>
@@ -84,7 +84,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Código del Programa:</label>
+            <label>Código del Programa:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="codVerifP"></b-form-input>
@@ -94,7 +94,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Nombre del Programa:</label>
+            <label>Nombre del Programa:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="nombreVerifP"></b-form-input>
@@ -104,7 +104,7 @@
         </b-row>
         <b-row class="my-1">
             <b-col sm="3">
-            <label>Correo Electrónico:</label>
+            <label>Correo Electrónico:*</label>
             </b-col>
             <b-col sm="9">
             <b-form-input v-if="nuevoProg==1 || editProg==1" id="correo" v-model="programa.correo"></b-form-input>
@@ -157,7 +157,13 @@
         </table>
         
     </div>
-    
+
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
+      </div>
+      </b-modal>
   </div>
 </template>
 
@@ -255,29 +261,27 @@ export default {
     this.debouncedGetAnswerNP = lodash.debounce(this.getExisteNomP, 500)
   },
   mounted(){
+    if(this.$store.state.usuario==null) this.$router.push('/login')
     if(this.$store.state.facultadEscogida) {
+      this.showModal()
       this.idFacultad=this.$store.state.facultadEscogida.id_facultad;
       this.obtenerDatos();
     }else{
       this.idFacultad=0;
     }
-    console.log(this.$store.state.facultadEscogida);
-    console.log('Id facultad='+this.idFacultad);
   },
 
   methods:{
-    
     getExisteCodF: function(){
       axios.create()
         .post('/facultad/verificarCod/'+this.idFacultad,this.codVerifF)
           .then( response=>{
             this.existeCodF = response.data.success;
-            console.log(this.existeCodF)
-            console.log(response)
+            this.hideModal();
           })
-        .catch(e => {
-          console.log(e.response);
-        })
+          .catch(e => {
+            console.log(e.response);
+          })
     },
 
     getExisteNomF: function(){
@@ -288,17 +292,16 @@ export default {
             console.log(this.existeNomF)
             console.log(response)
           })
-        .catch(e => {
-          console.log(e.response);
-        })
+          .catch(e => {
+            console.log(e.response);
+          })
     },
     getExisteCodP: function(){
       axios.create()
         .post('/programa/verificarCod/'+this.programa.id_programa,this.codVerifP)
           .then( response=>{
             this.existeCodP = response.data.success;
-            console.log(this.existeCodP)
-            console.log(response)
+            this.hideModal();
           })
         .catch(e => {
           console.log(e.response);
@@ -310,8 +313,7 @@ export default {
         .post('/programa/verificarNom/'+this.programa.id_programa,this.nombreVerifP)
           .then( response=>{
             this.existeNomP = response.data.success;
-            console.log(this.existeNomP)
-            console.log(response)
+            this.hideModal();
           })
         .catch(e => {
           console.log(e.response);
@@ -319,42 +321,42 @@ export default {
     },
 
     obtenerDatos() {
-        axios.post('/facultad/listar/'+this.idFacultad)
+      this.showModal()
+      axios.post('/facultad/listar/'+this.idFacultad)
+        .then(response=>{
+          this.facultad.id_facultad = response.data[0].id_facultad;
+          this.facultad.id_programa = response.data[0].id_programa;
+          this.codVerifF=response.data[0].codigo;
+          this.nombreVerifF=response.data[0].nombre;
+          this.facultad.correo = response.data[0].correo;
+          this.facultad.descripcion=response.data[0].descripcion;
+
+          axios.post('/programa/listarConCoord/'+ this.facultad.id_facultad)
             .then(response=>{
-                console.log(response);
-                this.facultad.id_facultad = response.data[0].id_facultad;
-                this.facultad.id_programa = response.data[0].id_programa;
-                this.codVerifF=response.data[0].codigo;
-                this.nombreVerifF=response.data[0].nombre;
-                this.facultad.correo = response.data[0].correo;
-                this.facultad.descripcion=response.data[0].descripcion;
-                console.log(response);
-
-                axios.post('/programa/listarConCoord/'+ this.facultad.id_facultad)
-                    .then(response=>{
-                        for (let index = 0; index < response.data.length; index++) {
-                          var prog= new Object()
-                          prog=response.data[index].programa;
-                          prog.coordinador=response.data[index].coordinador;
-                          this.programas.push(prog);
-                        }
-                        
-                        console.log(response);
-
-                    })
-                    .catch(e=>console.log(e));
-
-                axios.post('/facultad/coordinadorFacultad/'+this.facultad.id_programa)
-                    .then(response=>{
-                        this.facultad.coordinador=response.data[0];
-                        this.facultad.coordinador.nombCompleto=response.data[0].nombre+" "+response.data[0].apellidos;
-                        console.log(this.facultad.coordinador);
-                        console.log(response);
-
-                    })
-                    .catch(e=>console.log(e));
+              for (let index = 0; index < response.data.length; index++) {
+                var prog= new Object()
+                prog=response.data[index].programa;
+                prog.coordinador=response.data[index].coordinador;
+                this.programas.push(prog);
+              }
             })
             .catch(e=>console.log(e));
+
+          axios.post('/facultad/coordinadorFacultad/'+this.facultad.id_programa)
+            .then(response=>{
+              this.facultad.coordinador=response.data[0];
+              this.facultad.coordinador.nombCompleto=response.data[0].nombre+" "+response.data[0].apellidos;
+              this.hideModal();
+            })
+            .catch(e=>{
+              console.log(e)
+              this.hideModal();
+            });
+        })
+        .catch(e=>{
+          console.log(e)
+          this.hideModal();
+        });
 
     },
 
@@ -364,52 +366,52 @@ export default {
       var   expresion2=/\w+@\w+\.+edu.pe/;
       var   expresion1=/\w+@\w+\.+pe/;
       if(this.facultad.nombre =="" || this.facultad.codigo =="" || this.facultad.correo==""){
-         Swal.fire({
-              text:"No ha completado todos los campos obligatorios",
-              icon:"error",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
+        Swal.fire({
+          text:"No ha completado todos los campos obligatorios",
+          icon:"error",
+          confirmButtonText: 'OK',
+          confirmButtonColor:'#0097A7',
+          showConfirmButton: true,
         }) 
       }else if(this.existeCodF==true){
-         Swal.fire({
-              text:"El código de facultad "+ this.codVerifF+" ya existe",
-              icon:"error",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
+        Swal.fire({
+          text:"El código de facultad "+ this.codVerifF+" ya existe",
+          icon:"error",
+          confirmButtonText: 'OK',
+          confirmButtonColor:'#0097A7',
+          showConfirmButton: true,
         }) 
       }else if(this.existeNomF==true){
-         Swal.fire({
-              text:"El nombre de facultad "+ this.nombreVerifF+" ya existe",
-              icon:"error",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
+        Swal.fire({
+          text:"El nombre de facultad "+ this.nombreVerifF+" ya existe",
+          icon:"error",
+          confirmButtonText: 'OK',
+          confirmButtonColor:'#0097A7',
+          showConfirmButton: true,
         }) 
 
       }else if( !expresion2.test(this.facultad.correo) &&  !expresion1.test(this.facultad.correo)){ //Verificación de correo
-          Swal.fire({
-            
-              text:"No ha escrito una dirección de correo válida. Todos los correos deben contener ser dominio @pucp.edu.pe o @pucp.pe",
-              icon:"error",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
+        Swal.fire({
+          text:"No ha escrito una dirección de correo válida. Todos los correos deben contener ser dominio @pucp.edu.pe o @pucp.pe",
+          icon:"error",
+          confirmButtonText: 'OK',
+          confirmButtonColor:'#0097A7',
+          showConfirmButton: true,
         }) 
       }else{
 
         if(this.$store.state.facultadEscogida){
+          this.showModal();
           //modifico la facultad, debo considerar progactualizar, progeliminar, progagregar
           
           axios.create()
             .post('/facultad/modificar/'+this.facultad.id_facultad,this.facultad)
               .then( response=>{
-                console.log(response);
+                response
               })
-            .catch(e => {
-              console.log(e.response);
-            })
+              .catch(e => {
+                console.log(e.response);
+              })
             if(this.facultad.coordinador){
               const params = {
                 id_usuario: this.facultad.coordinador.id_usuario,
@@ -418,7 +420,7 @@ export default {
               axios.create()
                 .post('/facultad/asignarCoordi',params)
                   .then( response=>{
-                    console.log(response)
+                    response
                   })
                 .catch(e => {
                   console.log(e.response);
@@ -428,7 +430,7 @@ export default {
           axios.create()
             .post('/programa/insertarVariosPro',this.progagregar)
               .then( response=>{
-                console.log(response);
+                response
               })
             .catch(e => {
               console.log(e.response);
@@ -436,7 +438,7 @@ export default {
           axios.create()
             .post('/programa/eliminarVariosPro',this.progeliminar)
               .then( response=>{
-                console.log(response);
+                response
               })
             .catch(e => {
               console.log(e.response);
@@ -444,7 +446,8 @@ export default {
           axios.create()
             .post('/programa/actualizarVariosPro',this.progactualizar)
               .then( response=>{
-                console.log(response);
+                response
+                this.hideModal();
                 Swal.fire({
                   text:"Guardado Exitosa",
                   icon:"success",
@@ -457,60 +460,64 @@ export default {
               
             .catch(e => {
               console.log(e.response);
+                this.hideModal();
             })
 
 
-        }else{
+        }
+        else{
+          this.showModal();
           //creo una facultad con la data final construida
           //falta colocarle el insertar coordinador a cada programa
           axios.create()
-          .post('/facultad/insertar',this.facultad)
-            .then( response=>{
-              this.facultad.id_facultad=response.data.id_facultad;
-              this.facultad.id_programa=response.data.id_programa;
-              console.log(response)
+            .post('/facultad/insertar',this.facultad)
+              .then( response=>{
+                this.facultad.id_facultad=response.data.id_facultad;
+                this.facultad.id_programa=response.data.id_programa;
 
-              if(this.facultad.coordinador){
-                const params = {
-                  id_usuario: this.facultad.coordinador.id_usuario,
-                  id_programa: this.facultad.id_programa
-                };
+                if(this.facultad.coordinador){
+                  const params = {
+                    id_usuario: this.facultad.coordinador.id_usuario,
+                    id_programa: this.facultad.id_programa
+                  };
+                  axios.create()
+                    .post('/facultad/asignarCoordi',params)
+                      .then( response=>{
+                        response
+                      })
+                    .catch(e => {
+                      console.log(e.response);
+                    })
+                }
+                
+                for(var i=0; i<this.programas.length; i++){
+                  this.programas[i].id_facultad=this.facultad.id_facultad;
+                }
                 axios.create()
-                  .post('/facultad/asignarCoordi',params)
+                  .post('/programa/insertarVariosPro',this.programas)
                     .then( response=>{
-                      console.log(response)
-                    })
-                  .catch(e => {
-                    console.log(e.response);
-                  })
-              }
-              
-              for(var i=0; i<this.programas.length; i++){
-                this.programas[i].id_facultad=this.facultad.id_facultad;
-              }
-              axios.create()
-                .post('/programa/insertarVariosPro',this.programas)
-                  .then( response=>{
-                    console.log(response);
-                    Swal.fire({
-                      text:"Guardado Exitosa",
-                      icon:"success",
-                      confirmButtonText: 'OK',
-                      confirmButtonColor:'#0097A7',
-                      showConfirmButton: true,
-                    })
-                  
-                    this.$router.push('/facultad');
+                      response
+                      this.hideModal();
+                      Swal.fire({
+                        text:"Guardado Exitosa",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                      })
+                    
+                      this.$router.push('/facultad');
 
-                  })
-                .catch(e => {
-                  console.log(e.response);
-                })
-
-            })
-          .catch(e => {
-            console.log(e.response);
-          })
+                    })
+                    .catch(e => {
+                      console.log(e.response);
+                      this.hideModal();
+                    })
+              })
+              .catch(e => {
+                console.log(e.response);
+                this.hideModal();
+              })
         }
         }
 
@@ -558,7 +565,6 @@ export default {
               showConfirmButton: true,
         }) 
       }else{
-        console.log(this.programa);
         var prog= new Object();
         prog.id_facultad=this.facultad.id_facultad;
         prog.id_programa=this.programa.id_programa;
@@ -599,14 +605,10 @@ export default {
         this.codVerifP="";
         this.nuevoProg=0;
         this.editProg=0;
-        console.log(this.programas);
       }
     },
     agregarPrograma(){
       this.nuevoProg=1;
-      
-
-
     },
     onChildClickProg (value) {
       this.programa.coordinador=value;
@@ -650,16 +652,15 @@ export default {
         this.programa.coordinador=item.coordinador;
         this.programa.coordinador.nombCompleto=item.coordinador.nombre+" "+item.coordinador.apellidos;  
       }
-      
       this.programa.id_facultad=item.id_facultad;
       this.programa.id_programa=item.id_programa;
-      
-
-
-      
-    }
-    
-
+    },
+		showModal() {
+			this.$refs['my-modal'].show()
+		},
+		hideModal() {
+			this.$refs['my-modal'].hide()
+		},
   }
 }
 </script>
@@ -679,5 +680,8 @@ export default {
     border-radius: 10px;
     margin: 5px;
 }
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
 
 </style>
