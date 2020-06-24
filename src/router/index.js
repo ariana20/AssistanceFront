@@ -258,6 +258,11 @@ Vue.use(VueRouter)
     path: '/agregarAlumnos',
     name: 'Agregar Alumnos',
     component: () => import(/* webpackChunkName: "ViewAgregarAlumnos" */ '../views/Gestion Periodo/ViewAgregarAlumnos.vue')
+  },
+  {
+    path: '/reportes',
+    name: 'Reportes',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReportes.vue')
   }
 ]
 const router = new VueRouter({
