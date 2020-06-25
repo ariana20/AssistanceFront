@@ -196,7 +196,7 @@ export default {
     },
     Eliminar(item){
       Swal.fire({
-        title: '¿Dese eliminar '+item.nombre+'?',
+        title: '¿Desea eliminar '+item.nombre+'?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#0097A7',

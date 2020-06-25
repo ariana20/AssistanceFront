@@ -133,7 +133,7 @@ export default {
         else{
           if(this.nombreRol!=null) this.nombre = this.nombreRol;
           Swal.fire({
-            title: '¿Dese guardar esta configuración de '+this.nombre+'?',
+            title: '¿Desea guardar esta configuración de '+this.nombre+'?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',

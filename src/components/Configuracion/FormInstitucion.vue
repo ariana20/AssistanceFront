@@ -110,7 +110,7 @@ export default {
       }
       else{
         Swal.fire({
-          text: '¿Dese modificar su Logo?',
+          text: '¿Desea modificar su Logo?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
@@ -182,7 +182,7 @@ export default {
           })        
         }else{
           Swal.fire({
-            text: '¿Dese modificar su Institución?',
+            text: '¿Desea modificar su Institución?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',

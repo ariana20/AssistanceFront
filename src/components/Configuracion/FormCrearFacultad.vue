@@ -622,7 +622,7 @@ export default {
     },
     Eliminar(ind, item){
       Swal.fire({
-          title: '¿Dese eliminar el programa'+item.nombre+'?',
+          title: '¿Desea eliminar el programa'+item.nombre+'?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',

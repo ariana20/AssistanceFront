@@ -17,8 +17,11 @@
         </div>
         <div class="col-12 col-md-3">
           <div v-if="planAccion.compromisos!=undefined && this.nuevo==false">
-            <select class= "form-control" style="color:gray;margin-top:-1%">
+            <select v-on:change="Elegir()" class= "form-control" style="color:gray;margin-top:-1%" v-model="planAccion">
               <option selected disabled :value="null">Elige un Plan de Acción</option>
+              <option v-for="(options,index) in planes" v-bind:key="index" :value="options">
+                {{ options.nombre}}
+              </option>
             </select>
           </div>
           <div v-else>
@@ -26,10 +29,10 @@
           </div>
         </div>
         <div class="col-12 col-md-3">
-          <b-button v-if="this.nuevo==false" v-on:click="nuevo=true" style="background: #0097A7;border: 0px;margin-top:-0.9%">
+          <b-button v-if="this.nuevo==false" v-on:click="Nuevo()" style="background: #0097A7;border: 0px;margin-top:-0.9%">
             Añadir Nuevo
           </b-button>
-          <b-button v-else v-on:click="nuevo=false" style="background: #0097A7;border: 0px;margin-top:-0.9%">
+          <b-button v-else v-on:click="Elegir()" style="background: #0097A7;border: 0px;margin-top:-0.9%">
             Cancelar
           </b-button>
         </div>
@@ -48,13 +51,13 @@
         </div>
       </div>
       <div class="row" style="margin-top:3%;margin-bottom:1%;text-align:left">
-        <div class="col-12 col-md-2">
+        <div class="col-12 col-md-3">
           <strong>Añadir Compromisos</strong>
         </div>
       </div>
       <div class="row" style="margin-bottom:1%">
         <div class="col-12 col-md-3 form-inline">
-          <b-form-input v-model="newTask" placeholder="Ingresar Compromiso" @keyup.enter="add" style="margin-left:0px"/>
+          <textarea  v-model="newTask" class="perso inp" id="subject" @keyup.enter="add" name="subject" placeholder="Ingresar Compromiso" style="resize: none;padding-top:2%;height:50px;width:100%"/>
         </div>
         <div class="col-12 col-md-1 form-inline">
           <b-button v-on:click="add" style="background: #0097A7;border: 0px">
@@ -69,8 +72,9 @@
       </div>
       <div class="row" style="margin-top:2%">
         <div class="col-md-3 form-inline" style="font-size:150%;text-align:right">
-          Completado
-          <input type="checkbox" style="height:20px;width:30px;" v-model="completado" />
+          <b-button v-on:click="TodoHecho" style="background: #0097A7;border: 0px;width:100%;margin-left:1%">
+            Todo Hecho >
+          </b-button>
         </div>
       </div>
 
@@ -80,7 +84,7 @@
           <div class="p-2 redondo" style="background: rgb(0, 152, 146)">
             <h3> Pendiente</h3>
             <draggable class="list-group kanban-column" :list="arrBacklog" group="tasks">
-              <div class="list-group-item" v-for="(element,index) in arrBacklog" :key="element.name">
+              <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrBacklog" :key="element.name">
                 <div class="row">
                   <div class="col-8">
                     {{element.name}} 
@@ -98,7 +102,7 @@
           <div class="p-2 redondo" style="background: rgb(0, 152, 146)">
             <h3> En Proceso</h3>
             <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
-              <div class="list-group-item" v-for="(element,index) in arrInProgress" :key="element.name">
+              <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrInProgress" :key="element.name">
                 <div class="row">
                   <div class="col-8">
                     {{element.name}} 
@@ -116,7 +120,7 @@
           <div class="p-2 redondo" style="background: rgb(0, 152, 146)">
             <h3> Por Revisar</h3>
             <draggable class="list-group kanban-column" :list="arrTested" group="tasks">
-              <div class="list-group-item" v-for="(element,index) in arrTested" :key="element.name">
+              <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrTested" :key="element.name">
                 <div class="row">
                   <div class="col-8">
                     {{element.name}} 
@@ -134,7 +138,7 @@
           <div class="p-2 redondo" style="background: rgb(0, 152, 146)">
             <h3> Hecho</h3>
             <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
-              <div class="list-group-item" v-for="(element,index) in arrDone" :key="element.name">
+              <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrDone" :key="element.name">
                 <div class="row">
                   <div class="col-8">
                     {{element.name}} 
@@ -169,6 +173,7 @@ export default {
       nuevo:false,
       tiposUsuario: null,
       planAccion:null,
+      planes:null,
       completado:false,
       nombre:'',
       descripcion:'',
@@ -188,32 +193,36 @@ export default {
     draggable,
   },
   mounted(){
-    this.showModal();
-    let obj = {
-      id_alumno: this.usr.id_usuario,
-      id_tutor: this.$store.state.usuario.id_usuario
-
-    }
-    this.axios.post('/planAccion/planAlumno',obj)
-      .then(response=>{
-        this.planAccion = response.data
-        if(this.planAccion!=null && this.planAccion.compromisos!=undefined) {
-          this.anadirPlan = true;
-          this.planAccion.compromisos.forEach(element => {
-            if(element.estado == 'hac') this.arrBacklog.push({name: element.nombre})
-            if(element.estado == 'pro') this.arrInProgress.push({name: element.nombre})
-            if(element.estado == 'rev') this.arrTested.push({name: element.nombre})
-            if(element.estado == 'hec') this.arrDone.push({name: element.nombre})
-          });
-        }
-        this.hideModal();
-      })
-      .catch(e=>{
-        console.log(e)
-        this.hideModal();
-      })
+    this.listarPlan()
   },
   methods:{
+    listarPlan(){
+      this.showModal();
+      let obj = {
+        id_alumno: this.usr.id_usuario,
+        id_tutor: this.$store.state.usuario.id_usuario
+
+      }
+      this.axios.post('/planAccion/planAlumno',obj)
+        .then(response=>{
+          this.planes = response.data
+          this.planAccion = response.data[0]
+          if(this.planAccion!=null && this.planAccion.compromisos!=undefined) {
+            this.anadirPlan = true;
+            this.planAccion.compromisos.forEach(element => {
+              if(element.estado == 'hac') this.arrBacklog.push({name: element.nombre})
+              if(element.estado == 'pro') this.arrInProgress.push({name: element.nombre})
+              if(element.estado == 'rev') this.arrTested.push({name: element.nombre})
+              if(element.estado == 'hec') this.arrDone.push({name: element.nombre})
+            });
+          }
+          this.hideModal();
+        })
+        .catch(e=>{
+          console.log(e)
+          this.hideModal();
+        })
+    },
     add(){
       if(this.newTask){
         this.arrBacklog.push({name: this.newTask})
@@ -221,119 +230,244 @@ export default {
       }
     },
     Guardar(){
-      this.arrBacklog.forEach(element => {
-        this.compromisos.push({nombre: element.name, estado: 'hac'})
-      });
-      this.arrInProgress.forEach(element => {
-        this.compromisos.push({nombre: element.name, estado: 'pro'})
-      });
-      this.arrTested.forEach(element => {
-        this.compromisos.push({nombre: element.name, estado: 'rev'})
-      });
-      this.arrDone.forEach(element => {
-        this.compromisos.push({nombre: element.name, estado: 'hec'})
-      });
-      if(this.planAccion.compromisos!=null){
-        this.planAccion.compromisos.forEach(element => {
-          let i;
-          for (i = 0; i < this.compromisos.length; i++) {
-            if(this.compromisos[i].nombre == element.nombre){
-              if(this.compromisos[i].estado != element.estado){
-                this.cambios.push(this.compromisos[i])
+      Swal.fire({
+        text: '¿Desea guardar sus cambios?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#0097A7',
+        cancelButtonColor: '#757575',
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.value) {
+          this.arrBacklog.forEach(element => {
+            this.compromisos.push({nombre: element.name, estado: 'hac'})
+          });
+          this.arrInProgress.forEach(element => {
+            this.compromisos.push({nombre: element.name, estado: 'pro'})
+          });
+          this.arrTested.forEach(element => {
+            this.compromisos.push({nombre: element.name, estado: 'rev'})
+          });
+          this.arrDone.forEach(element => {
+            this.compromisos.push({nombre: element.name, estado: 'hec'})
+          });
+          if(this.nuevo!=true){
+            this.planAccion.compromisos.forEach(element => {
+              let i;
+              for (i = 0; i < this.compromisos.length; i++) {
+                if(this.compromisos[i].nombre == element.nombre){
+                  if(this.compromisos[i].estado != element.estado){
+                    this.cambios.push(this.compromisos[i])
+                  }
+                  this.compromisos.splice(i,1)
+                }
               }
-              this.compromisos.splice(i,1)
+            });
+            if(this.cambios.length != 0){
+              if(this.compromisos.length != 0){
+                if(this.eliminados.length!=0){
+                  this.showModal()
+                  let obj ={
+                    id_tutor: this.$store.state.usuario.id_usuario,
+                    compromisos: this.compromisos,
+                    cambios: this.cambios,
+                    eliminados: this.eliminados,
+                  }
+                  this.axios.post('/planAccion/modificar/'+this.planAccion.id_plan_accion,obj)
+                    .then(response=>{
+                      response
+                      this.hideModal();
+                      Swal.fire({
+                      text:"Actualizacion de Plan de Accion exitosa",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                      })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
+                }
+                else{
+                  this.showModal()
+                  let obj ={
+                    id_tutor: this.$store.state.usuario.id_usuario,
+                    compromisos: this.compromisos,
+                    cambios: this.cambios,
+                  }
+                  this.axios.post('/planAccion/modificar/'+this.planAccion.id_plan_accion,obj)
+                    .then(response=>{
+                      response
+                      this.hideModal();
+                      Swal.fire({
+                      text:"Actualizacion de Plan de Accion exitosa",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                      })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
+                }
+              }
+              else{
+                if(this.eliminados.length!=0){
+                  this.showModal()
+                  let obj ={
+                    id_tutor: this.$store.state.usuario.id_usuario,
+                    cambios: this.cambios,
+                    eliminados: this.eliminados,
+                  }
+                  this.axios.post('/planAccion/modificar/'+this.planAccion.id_plan_accion,obj)
+                    .then(response=>{
+                      response
+                      this.hideModal();
+                      Swal.fire({
+                      text:"Actualizacion de Plan de Accion exitosa",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                      })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
+                }
+                else{
+                  this.showModal()
+                  let obj ={
+                    id_tutor: this.$store.state.usuario.id_usuario,
+                    cambios: this.cambios,
+                  }
+                  this.axios.post('/planAccion/modificar/'+this.planAccion.id_plan_accion,obj)
+                    .then(response=>{
+                      response
+                      this.hideModal();
+                      Swal.fire({
+                      text:"Actualizacion de Plan de Accion exitosa",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                      })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
+                }
+              }
             }
-          }
-        });
-        if(this.cambios.length != 0){
-          this.showModal();
-          if(this.compromisos.length != 0){
-            let obj ={
-              id_tutor: this.$store.state.usuario.id_usuario,
-              compromisos: this.compromisos,
-              cambios: this.cambios,
-              eliminados: this.eliminados,
-            }
-            this.axios.post('/planAccion/modificar/'+this.planAccion.id_plan_accion,obj)
-              .then(response=>{
-                response
-                this.hideModal();
-                Swal.fire({
-                text:"Actualizacion de Plan de Accion exitosa",
-                icon:"success",
-                confirmButtonText: 'OK',
-                confirmButtonColor:'#0097A7',
-                showConfirmButton: true,
-                })
-              })
-              .catch(e=>{
-                console.log(e)
-                this.hideModal();
-              })
+            else{
+              if(this.compromisos.length != 0){
+                if(this.eliminados.length!=0){
+                  this.showModal()
+                  let obj ={
+                    id_tutor: this.$store.state.usuario.id_usuario,
+                    compromisos: this.compromisos,
+                    eliminados: this.eliminados,
+                  }
+                  this.axios.post('/planAccion/modificar/'+this.planAccion.id_plan_accion,obj)
+                    .then(response=>{
+                      response
+                      this.hideModal();
+                      Swal.fire({
+                      text:"Actualizacion de Plan de Accion exitosa",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                      })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
+                }
+                else{
+                  this.showModal()
+                  let obj ={
+                    id_tutor: this.$store.state.usuario.id_usuario,
+                    compromisos: this.compromisos,
+                  }
+                  this.axios.post('/planAccion/modificar/'+this.planAccion.id_plan_accion,obj)
+                    .then(response=>{
+                      response
+                      this.hideModal();
+                      Swal.fire({
+                      text:"Actualizacion de Plan de Accion exitosa",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                      })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
+                }
+              }
+              else{
+                if(this.eliminados.length!=0){
+                  this.showModal()
+                  let obj ={
+                    id_tutor: this.$store.state.usuario.id_usuario,
+                    eliminados: this.eliminados,
+                  }
+                  this.axios.post('/planAccion/modificar/'+this.planAccion.id_plan_accion,obj)
+                    .then(response=>{
+                      response
+                      this.hideModal();
+                      Swal.fire({
+                      text:"Actualizacion de Plan de Accion exitosa",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                      })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
+                }
+                else{
+                  Swal.fire({
+                    text:"No ha realizado cambio alguno",
+                    icon:"warning",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  })
+                }
+              }
+            }      
           }
           else{
-            let obj ={
-              cambios: this.cambios,
-              eliminados: this.eliminados,
-            }
-            this.axios.post('/planAccion/modificar/'+this.planAccion.id_plan_accion,obj)
-              .then(response=>{
-                response
-                this.hideModal();
-                Swal.fire({
-                text:"Actualizacion de Plan de Accion exitosa",
-                icon:"success",
-                confirmButtonText: 'OK',
-                confirmButtonColor:'#0097A7',
-                showConfirmButton: true,
-                })
-              })
-              .catch(e=>{
-                console.log(e)
-                this.hideModal();
-              })
-          }
-          this.cambios = [];
-        }
-        else{
-          if(this.compromisos.length != 0){
-            this.showModal();
-            let obj ={
-              id_tutor: this.$store.state.usuario.id_usuario,
-              compromisos: this.compromisos,
-              cambios: this.cambios,
-              eliminados: this.eliminados,
-            }
-            this.axios.post('/planAccion/modificar/'+this.planAccion.id_plan_accion,obj)
-              .then(response=>{
-                response
-                this.hideModal();
-                Swal.fire({
-                text:"Actualizacion de Plan de Accion exitosa",
-                icon:"success",
-                confirmButtonText: 'OK',
-                confirmButtonColor:'#0097A7',
-                showConfirmButton: true,
-                })
-              })
-              .catch(e=>{
-                this.hideModal();
-                console.log(e)
-              })
-          }
-          else{
-            if(this.eliminados.length != 0){
-              this.showModal();
+            if(this.compromisos.length!=0){
               let obj ={
                 id_tutor: this.$store.state.usuario.id_usuario,
-                eliminados: this.eliminados,
+                id_alumno: this.usr.id_usuario,
+                nombre: this.nombre,
+                descripcion: this.descripcion,
+                compromisos: this.compromisos,
+                cambios: this.cambios,
               }
-              this.axios.post('/planAccion/modificar/'+this.planAccion.id_plan_accion,obj)
+              this.axios.post('/planAccion/insertar',obj)
                 .then(response=>{
                   response
                   this.hideModal();
                   Swal.fire({
-                  text:"Actualizacion de Plan de Accion exitosa",
+                  text:"Registro de Plan de Accion exitoso",
                   icon:"success",
                   confirmButtonText: 'OK',
                   confirmButtonColor:'#0097A7',
@@ -341,8 +475,8 @@ export default {
                   })
                 })
                 .catch(e=>{
-                  this.hideModal();
                   console.log(e)
+                  this.hideModal();
                 })
             }
             else{
@@ -354,49 +488,19 @@ export default {
                 showConfirmButton: true,
               })
             }
+            
           }
+          this.cambios = [];
+          this.eliminados = [];
+          this.compromisos = [];
+          this.arrBacklog = [];
+          this.arrInProgress = [];
+          this.arrTested = [];
+          this.arrDone = [];
+          this.nuevo = false;
+          this.listarPlan();
         }
-        
-      }
-      else{
-        if(this.compromisos.length!=0){
-          let obj ={
-            id_tutor: this.$store.state.usuario.id_usuario,
-            id_alumno: this.usr.id_usuario,
-            nombre: this.$store.state.usuario.nombre + " " + this.$store.state.usuario.apellidos + " - " + this.usr.nombre + " " + this.usr.apellidos,
-            descripcion: "Plan de Accion",
-            compromisos: this.compromisos,
-            cambios: this.cambios,
-          }
-          this.axios.post('/planAccion/insertar',obj)
-            .then(response=>{
-              response
-              this.hideModal();
-              Swal.fire({
-              text:"Registro de Plan de Accion exitoso",
-              icon:"success",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
-              })
-            })
-            .catch(e=>{
-              console.log(e)
-              this.hideModal();
-            })
-        }
-        else{
-          Swal.fire({
-            text:"No ha realizado cambio alguno",
-            icon:"warning",
-            confirmButtonText: 'OK',
-            confirmButtonColor:'#0097A7',
-            showConfirmButton: true,
-          })
-        }
-        
-      }
-      
+      })
     },
     Eliminar(index,array){
       if(array == 1){
@@ -423,6 +527,62 @@ export default {
         });
         this.arrDone.splice(index,1);
       }
+    },
+    Nuevo(){
+      this.nuevo=true;
+      this.arrBacklog = [];
+      this.arrInProgress = []
+      this.arrTested = []
+      this.arrDone = []
+      this.descripcion = ''
+      this.nombre = ''
+    },
+    Elegir(){
+      this.cambios = [];
+      this.eliminados = [];
+      this.compromisos = [];
+      this.arrBacklog = [];
+      this.arrInProgress = [];
+      this.arrTested = [];
+      this.arrDone = [];
+      this.nuevo=false
+      this.planAccion.compromisos.forEach(element => {
+        if(element.estado == 'hac') this.arrBacklog.push({name: element.nombre})
+        if(element.estado == 'pro') this.arrInProgress.push({name: element.nombre})
+        if(element.estado == 'rev') this.arrTested.push({name: element.nombre})
+        if(element.estado == 'hec') this.arrDone.push({name: element.nombre})
+      });
+    },
+    TodoHecho(){
+      Swal.fire({
+        text: '¿Desea mover todo a Hecho?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#0097A7',
+        cancelButtonColor: '#757575',
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+      }).then((result)=>{
+        if(result.value){
+          let arr = []
+          this.arrBacklog.forEach(element => {
+            arr.push({nombre: element.name})
+          });
+          this.arrInProgress.forEach(element => {
+            arr.push({nombre: element.name})
+          });
+          this.arrTested.forEach(element => {
+            arr.push({nombre: element.name})
+          });
+          this.arrBacklog = [];
+          this.arrInProgress = [];
+          this.arrTested = [];
+          arr.forEach(element => {
+            this.arrDone.push({name: element.nombre})
+          });
+        }
+      })
+      
     },
     showModal() {
       this.$refs['my-modal'].show()

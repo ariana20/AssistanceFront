@@ -234,7 +234,7 @@ export default {
             else{
                 if(this.idUnidad==null){
                     Swal.fire({
-                        title: '¿Dese guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
+                        title: '¿Desea guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#0097A7',
@@ -274,7 +274,7 @@ export default {
                 }
                 else{
                     Swal.fire({
-                        title: '¿Dese guardar los cambios para '+this.unidad.nombre+'?',
+                        title: '¿Desea guardar los cambios para '+this.unidad.nombre+'?',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#0097A7',
@@ -330,7 +330,7 @@ export default {
         else if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
             if(this.idUnidad==null){
                 Swal.fire({
-                    title: '¿Dese guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
+                    title: '¿Desea guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#0097A7',
@@ -366,7 +366,7 @@ export default {
             }
             else{
                 Swal.fire({
-                    title: '¿Dese guardar los cambios para '+this.unidad.nombre+'?',
+                    title: '¿Desea guardar los cambios para '+this.unidad.nombre+'?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#0097A7',
@@ -424,7 +424,7 @@ export default {
             else{
                 if(this.idUnidad==null){
                     Swal.fire({
-                        title: '¿Dese guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
+                        title: '¿Desea guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#0097A7',
@@ -463,7 +463,7 @@ export default {
                 }
                 else{
                     Swal.fire({
-                        title: '¿Dese guardar los cambios para '+this.unidad.nombre+'?',
+                        title: '¿Desea guardar los cambios para '+this.unidad.nombre+'?',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#0097A7',
