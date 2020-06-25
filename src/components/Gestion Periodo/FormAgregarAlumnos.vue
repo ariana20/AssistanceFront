@@ -117,11 +117,15 @@ export default Vue.extend ({
             banderaReporte:false,
             reporte:[],
             condiAlumnos:[],
+            miprog:this.$store.state.programaActual, //this.miprog.id_programa;
         }
     },
     mounted(){   
     //
+    if(this.$store.state.usuario==null) this.$router.push('/login');
+    
     this.listarCA();
+    document.getElementById("btnsubir").disabled =true; //inhabilita
     },
     methods: {
       listarCA(){
@@ -207,7 +211,10 @@ export default Vue.extend ({
         this.showModal();
         
        Axios /////////////ruta
-              .post('/usuarios/alumnoMasivo',this.formData,  {
+       //this.miprog.id_programa;
+              // .post('/usuarios/alumnoMasivo',
+              .post('/usuarios/alumnoMasivo',
+              this.formData,  {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }})
