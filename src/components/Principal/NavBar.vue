@@ -59,6 +59,7 @@ export default {
         }
         axios.post('/usuarios/permisos',paramr)
           .then(response=>{
+            this.$store.state.permisosUsuario = response.data;
             let acceder = false;
             for(var i=0; i < this.$store.state.navLinks.length; i++){
               for(var j=0; j < response.data.length; j++){
@@ -136,6 +137,7 @@ export default {
           }
           axios.post('/usuarios/permisos',paramr)
           .then(response=>{
+              this.$store.state.permisosUsuario = response.data;
               this.$store.state.rutas = [];
               for(var i=0; i < this.$store.state.navLinks.length; i++){
                   for(var j=0; j < response.data.length; j++){

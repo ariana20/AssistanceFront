@@ -15,6 +15,7 @@
           <tr>
             <th scope="col">N°</th>
             <th scope="col">Nombre</th>
+            <th v-if="$store.state.tipoActual.nombre == 'Admin'" scope="col">Facultad/Programa</th>
             <th scope="col" style="text-align: center">Acciones</th>
           </tr>
         </thead>
@@ -22,9 +23,29 @@
           <tr v-for="(item, index) in rolesFiltrados" :key="index">
             <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>
-            <td  style="text-align: center">
+            <td v-if="$store.state.tipoActual.nombre == 'Admin' && item.programa!=null">
+              <div v-if="item.programa.nombre == 'Administrador'">
+                General
+              </div>
+              <div v-else>
+                {{item.programa.nombre}}
+              </div>
+            </td>
+            <td  style="text-align: center" v-if="$store.state.tipoActual.nombre == 'Admin'">
               <button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
               <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
+            </td>
+            <td  style="text-align: center" v-else>
+              
+              <div v-if="(item.programa.nombre!='Administrador' && item.programa.nombre!=$store.state.programaActual.facultad.nombre)">
+                <button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
+                <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
+              </div>
+              
+              <div v-else>
+                Solo Visualización
+              </div>
+
             </td>
           </tr>
         </tbody>
@@ -74,25 +95,45 @@ export default {
   methods:{
     listarRoles() {
       this.showModal()
-      this.axios.post('/tipoUsuarios/listarTodo')
-      .then(response=>{
-        if(this.$store.state.tipoActual.nombre == 'Admin'){
-          this.$store.state.roles = response.data;
+      if(this.$store.state.tipoActual.nombre == 'Admin'){
+        this.axios.post('/tipoUsuarios/tiposAdmin')
+          .then(response=>{
+              this.$store.state.roles = response.data;
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e)
+            this.hideModal()
+          });
+      }
+      if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+        let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
+        this.axios.post('/tipoUsuarios/tiposFacultad',obj)
+          .then(response=>{
+              this.$store.state.roles = response.data;
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e)
+            this.hideModal()
+          });
+      }
+      if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+        let obj = {
+          id_programa: this.$store.state.programaActual.id_programa,
+          id_facultad: this.$store.state.programaActual.id_facultad
         }
-        else{
-          this.$store.state.roles = response.data;
-          let index;
-          for (index = 0; index < this.$store.state.roles.length; index++) {
-            if(this.$store.state.roles[index].nombre == "Admin") break;              
-          }
-          this.$store.state.roles.splice(index, 1);
-        }
-        this.hideModal()
-      })
-      .catch(e=>{
-        console.log(e)
-        this.hideModal()
-      });
+        this.axios.post('/tipoUsuarios/tiposPrograma',obj)
+          .then(response=>{
+              this.$store.state.roles = response.data;
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e)
+            this.hideModal()
+          });
+      }
+      
     },
     Editar(id){
       this.$router.push('/permisos/'+id);

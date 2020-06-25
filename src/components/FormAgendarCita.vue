@@ -145,6 +145,7 @@ export default {
                     nombre_usuario: this.nombre_usuario,
                     id_tutor: this.tutorSel.id_usuario,
                     isTutor: false,
+                    tutorSel: this.tutorSel
                 });
             } else { 
                 return false
@@ -153,7 +154,7 @@ export default {
         getReminders: function() {
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
-                axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
+                axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
                     var rd = response.data[0];
                     var rd2 = response.data[1];
@@ -217,7 +218,7 @@ export default {
         }
     },
     mounted() {
-        //console.log(this.$store.state.usuario);
+        //console.log('prog actual: ',this.$store.state.programaActual.id_programa);
         this.listarTutores();
         //this.calendar = this.$refs.fullCalendar.getApi();
         //idUsuario: this.$store.state.usuario.id_usuario
@@ -313,7 +314,7 @@ function addTimes (startTime, endTime) {
 .vm--modal {
     border-radius: 25px;
     margin: 30px;
-    height: 240px !important;
+    height: 260px !important;
 }
 @media screen and (max-width: 759px) {
     .form-control { 

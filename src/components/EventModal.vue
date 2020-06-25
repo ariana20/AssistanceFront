@@ -5,6 +5,15 @@
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
+      <div id="motivo"><b style="margin-top: 6px;">Motivo:</b><select class="form-control" style="width:40%" v-model="motivoSel">
+        <option disabled selected :value="null" focusable="false">Selecciona un motivo</option>
+        <option v-for="(item, index) in tipoTutorias" 
+                :key="index" 
+                :value="item">
+                {{ item.nombre }}
+        </option>
+        </select>
+        </div>
       <div id="botones">
         <button type="button" class="btn btn-info" :disabled='isDisabled'  @click="updateEvent">Aceptar</button>
         <button type="button" class="btn btn-secondary" @click="$emit('close')">Cerrar</button>
@@ -32,6 +41,7 @@
         <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
         <b>Fecha:</b>{{event.start | formatDate}} <br/>
         <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
+        <b>Motivo:</b>  {{ event.extendedProps.motivo }} <br/>
         <div id="botones">
           <button id="button" class="btn btn-info" @click="rutaEvent">Detalle</button>
           <button id="button" class="btn btn-info" @click="removeEvent">Cancelar Cita</button>
@@ -57,6 +67,8 @@ export default {
             end: {},
             isDisabled: false,
             idCita: null,
+            tipoTutorias: this.tutorSel.usuario.tipo_tutorias,
+            motivoSel: null
         }
     },
     methods: {
@@ -69,38 +81,50 @@ export default {
 
         },
         removeEvent() {
-          
-          console.log('idDisponibilidad: ',this.event.id);
-          console.log('usuario actualizando: ', this.$store.state.usuario.id_usuario);
-          console.log(this.idCita);
-          axios.post('citas/cancelarCita',{
-            idCita: this.idCita,
-            idDisponibilidad:this.event.id,
-            usuario_actualizacion:this.$store.state.usuario.id_usuario})
-          .then((response) => {
-            console.log('cancelar cita: ',response);
-            this.$store.commit("UPDATE_EVENT", {
-              id: this.event.id,
-              title: 'Disponible',
-              start: this.event.start,
-              color:'#B2EBF2',
+          //console.log('idDisponibilidad: ',this.event.id);
+          //console.log('usuario actualizando: ', this.$store.state.usuario.id_usuario);
+          //console.log(this.idCita);
+          Swal.fire({
+          text:'¿Estás seguro que desea cancelar al cita?',
+          icon:"warning",
+          confirmButtonText: 'Si',
+          showCancelButton: true,
+          cancelButtonText: 'No',
+          confirmButtonColor:'#0097A7',
+          showConfirmButton: true,
+        }).then((result) => {
+          if(result.value) {
+            axios.post('citas/cancelarCita',{
+              idCita: this.idCita,
+              idDisponibilidad:this.event.id,
+              usuario_actualizacion:this.$store.state.usuario.id_usuario})
+            .then((response) => {
+              console.log('cancelar cita: ',response);
+              this.$store.commit("UPDATE_EVENT", {
+                id: this.event.id,
+                title: 'Disponible',
+                start: this.event.start,
+                color:'#B2EBF2',
+              });
+              Swal.fire({
+                text:"La cita ha sido cancelada",
+                icon:"success",
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor:'#0097A7',
+                showConfirmButton: true,
+              });
+              
+            }).catch(e => {
+              console.log(e.response);
             });
-            Swal.fire({
-              text:"La cita ha sido cancelada",
-              icon:"success",
-              confirmButtonText: 'Aceptar',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
-            });
-            
-          }).catch(e => {
-            console.log(e.response);
-          });
-          this.$emit('close');
+            this.$emit('close');
+          } 
+        })
         },
         updateEvent () {
           this.isDisabled = true;
           //console.log(this.event.extendedProps);
+          if(this.motivoSel){
             this.$store.commit("UPDATE_EVENT", {
                 id: this.event.id,
                 title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
@@ -112,7 +136,7 @@ export default {
             //var hora_e=  moment(this.event.start).format('hh:mm a')
             //REGISTRAR LA CITA
             axios.post('citas/registrarCitaAlumno' ,{
-              id_tipo_tutoria: 4,
+              id_tipo_tutoria: this.motivoSel.id_tipo_tutoria,
               id_disponibilidad: this.event.id,
               usuario_creacion: this.event.extendedProps.usuario_creacion,
               usuario_actualizacion: this.$store.state.usuario.id_usuario,
@@ -130,6 +154,7 @@ export default {
             }).catch(e => {
                 console.log(e.response);
             });
+          }
             
         },
         getIdCita () {
@@ -194,12 +219,13 @@ export default {
     event: Object,
     isTutor: Boolean,
     nombre_usuario: String,
-    id_tutor: Number
+    id_tutor: Number,
+    tutorSel: Object,
   },mounted() {
-    
     this.$store.state.curEvent = this.event;
     console.log(this.event.id);
     this.getIdCita();
+
   }
 };
 
@@ -229,6 +255,7 @@ fieldset {
     padding:0;
     border:1px solid #757575;
     font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
+    height: 230px;
 }
 
 fieldset legend {
@@ -255,5 +282,9 @@ b, input {
     margin-top: 10px;
     justify-content: flex-end;
     margin-right: 20px;
+}
+#motivo {
+    display: flex;
+    flex-direction: row;
 }
 </style>

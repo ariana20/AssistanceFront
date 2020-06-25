@@ -226,7 +226,7 @@ export default {
                     id_programa:this.$store.state.programaActual.id_programa,
                     usuario_creacion: this.$store.state.usuario.id_usuario,
                   }
-                  this.axios.post('/citas/eliminar',obj)
+                  this.axios.post('/citas/cancelarCita',obj)
                     .then(response=>{
                         response
                         emailjs.send(
