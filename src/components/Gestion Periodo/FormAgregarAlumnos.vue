@@ -32,7 +32,7 @@
                     <button type="button" style="margin:5px;border-radius: 10px;" id="btnsubir" class="btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
                     <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:50px" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
       
-                    <h6 >* Campos obligatorios</h6>
+                    <h6 >* Columnas obligatorios</h6>
 
 
 
@@ -117,11 +117,15 @@ export default Vue.extend ({
             banderaReporte:false,
             reporte:[],
             condiAlumnos:[],
+            miprog:this.$store.state.programaActual, //this.miprog.id_programa;
         }
     },
     mounted(){   
     //
+    if(this.$store.state.usuario==null) this.$router.push('/login');
+    
     this.listarCA();
+    document.getElementById("btnsubir").disabled =true; //inhabilita
     },
     methods: {
       listarCA(){
@@ -181,27 +185,22 @@ export default Vue.extend ({
         console.log('archivoS',files);
         //console.log('cods',this.listAlumnosCod);
         this.formData= new FormData();           
-        this.formData.append('_hidden','solojoh');
-        //
-         for( var i = 0; i < files.length; i++ ){
-          let file = files[i];
-          if(file.size>=2000000){
-              this.formData=null;
-              Swal.fire({
-                    text:"No puede subir el conjunto de archivos debido al siguiente archivo: "+file.name+", ya que es mayor de 2 MB.",
+        this.formData.append('_hidden','solojohAl');   
+        if(files[0].size>=2000000){
+            Swal.fire({
+                    text:"No puede subir el archivo "+files[0].name+", ya que es mayor de 2 MB.",
                     icon:"warning",
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                })
-              
-              break;
-          }
-
-          this.formData.append('files[' + i + ']', file);
-         
-        }       
-        document.getElementById("btnsubir").disabled = true; //inhabilita
+             document.getElementById("btnsubir").disabled = true; //inhabilita
+        }   else{
+              this.formData.append('file', files[0]);
+        // document.getElementById("btnsubir").disabled = true; //inhabilita
+         document.getElementById("btnsubir").disabled =false; //habilita
+        }
+      
         
     },
 
@@ -211,15 +210,18 @@ export default Vue.extend ({
         document.getElementById("btnsubir").disabled = true; //inhabilita
         this.showModal();
         
-       Axios
-              .post('/usuarios/masivo',this.formData,  {
+       Axios /////////////ruta
+       //this.miprog.id_programa;
+              // .post('/usuarios/alumnoMasivo',
+              .post('/usuarios/alumnoMasivo',
+              this.formData,  {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }})
               .then( response=>{
                 console.log('rptaM: ',response);//Subida terminada
                 
-                if(response.data.status=="Se han encontrado errores"){
+                if(response.data.status.indexOf("Se han encontrado errores")!=-1){
                     this.hideModal();
              
                     Swal.fire({
@@ -233,6 +235,18 @@ export default Vue.extend ({
                     this.reporte=response.data.reporte;
                     document.getElementById("btnsubir").disabled = false;
                 }
+                  else if(response.data.status.indexOf("El archivo no tiene formato csv")!=-1){
+                     this.hideModal();
+                    Swal.fire({
+                        text:"No ha subido un archivo con formato .csv o está con delimitado de ','(coma) ",
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                   document.getElementById("btnsubir").disabled = true; //inhabilita
+
+                  }
                 else if(response.data.status=="Subida terminada"){ 
                     console.log(response);
                      this.hideModal();
@@ -279,7 +293,7 @@ export default Vue.extend ({
                this.hideModal();
                document.getElementById("btnsubir").disabled = false;
                  Swal.fire({
-                    text:"Estamos teniendo problemas al cargar las notas de los alumnos. Vuelve a intentar en unos minutos.",
+                    text:"Estamos teniendo problemas al cargar los datos de los nuevos alumnos. Vuelve a intentar en unos minutos.",
                     icon:"warning",
                     confirmButtonText: 'Ok',
                     confirmButtonColor:'#0097A7',
@@ -297,87 +311,9 @@ export default Vue.extend ({
     hideModal() {
       this.$refs['my-modal'].hide()
     },
-    onFileSelected(e){//para 1 x 1
-        
-      let files = e.target.files || e.dataTransfer.files;
-      if (!files.length)
-        return;
-      for (let index = 0; index < files.length; index++) {
-        this.createFile(files[index]);
-      }
-      console.log(this.selectedFiles);
-    },
-    createFile(file) {
-      let reader = new FileReader();
-      let vm = this;
-      reader.onload = (e) => {
-          vm.selectedFile = e.target.result;
-          vm.selectedFiles.push(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    },
-    guardarNotas(){ //Para 1 x 1
-      this.formData2= new FormData();
-           
-        this.formData2.append('_hidden','solojoh');
-        //
-         for( var i = 0; i < this.files.length; i++ ){
-          let file = this.files[i];
+   
 
-          this.formData2.append('files[' + i + ']', file);
-          this.formData2.append('codigos[' + i + ']', this.listAlumnosCod[i]);
-         
-        }     
-      this.showModal();
-       //Le tengo que enviar form data?
-      /*let obj = {
-            files:this.selectedFiles,
-            codigos:this.listAlumnosCod,
-          }*/
-      Axios.post('/usuarios/subirNotas',this.formData2,  {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }})
-          .then(res =>{
-            //this.$store.state.usuarios=res.data;
-            //res.data=='Subido'
-            this.hideModal();
-            Swal.fire({
-                    text:"Se guardaron los datos con éxito. Ningún archivo presentó errores",
-                    icon:"success",
-                    confirmButtonText: 'OK',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                  });
-                  console.log('grupal:',res);
-                  this.$router.push('/ListaUsuarios'); 
-                  this.$store.state.usuarioEscogido=null;//
-                  this.$store.state.usuarios=null;
-            
-          })
-          .catch(e => {
-              this.hideModal();
-            console.log(e.response.data);
-            Swal.fire({
-              text:"Estamos teniendo problemas al subir las notas de manera grupal. Vuelve a intentar en unos minutos.",
-              icon:"warning",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
-            })
-           })
-       
-    },
-    
-    File1by1(){
-        console.log('1x1');
-        this.file1x1=this.$refs.file.files[0];
-        console.log('archivos',this.file1x1);
-        //console.log('cods',this.listAlumnosCod);
-        this.files[0]=this.file1x1;
-    },
-
-    }
+  }
 })
 </script>
 

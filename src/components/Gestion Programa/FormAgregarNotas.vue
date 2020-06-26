@@ -187,6 +187,7 @@ export default Vue.extend ({
     },
     mounted(){
        
+    if(this.$store.state.usuario==null) this.$router.push('/login');
     
     Axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
         .then( response => {
@@ -200,7 +201,7 @@ export default Vue.extend ({
             console.log(e.response);
         });
 
-    //PArte del pdf
+      document.getElementById("btnsubir").disabled =true; //inhabilita
     
    
     },

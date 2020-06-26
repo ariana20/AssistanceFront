@@ -1,10 +1,15 @@
 <template>
     <div class="formagendarcita container">
-        <div class="top-titulo " style="text-align:left;display: table;margin-bottom:20px">
-            <ul class="legend">
+        <div class="top-titulo ">
+            <div style="width:20%;"><ul class="legend">
                 <li><span class="ocupado"></span> Ocupado </li>
                 <li><span class="disponible"></span> Disponible </li>
-            </ul>
+            </ul></div>
+            <div style="text-align:right;">
+                <input @click="modificarDisp" type="button" class="btn btn-info" value="Modificar Disponibilidad" id="modDisp">
+                <!--<button type="button" id="modificarDisp" class="btn btn-info" @click="modificarDisp">Modificar Disponibilidad</button>
+                <button type="button" id="actualizarDisp" class="btn btn-info" style="display:none;" @click="modificarDisp">Actualizar Disponibilidades</button>-->
+            </div>
         </div>
         <div style="text-align:left;">
             <Fullcalendar ref="fullCalendar"
@@ -26,7 +31,7 @@
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
                           hiddenDays= [0]
-                          :selectable="false"
+                          @select="handleSelect"
                           minTime="08:00:00"
                           maxTime="22:00:00"
                           :allDaySlot="false"
@@ -56,6 +61,8 @@ import TimeGridPlugin from '@fullcalendar/timegrid'
 import InteractionPlugin from '@fullcalendar/interaction'
 import ListPlugin from '@fullcalendar/list'
 import momentPlugin from '@fullcalendar/moment'
+import moment from 'moment'
+import Swal from 'sweetalert2'
 
 import esLocale from '@fullcalendar/core/locales/es'
 import axios from 'axios'
@@ -113,6 +120,82 @@ export default {
         ...mapGetters(["EVENTS"])
     },
     methods: {
+        handleSelect (arg) {
+            console.log(arg)
+            axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(arg.start).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
+            .then((response) => {
+                console.log(response.data)
+                if(response.data == 'l') {
+                    Swal.fire({
+                        html:'Se registrará una nueva disponibilidad el día <br> ' +  moment(arg.start).format("YYYY-MM-DD") + ' a las ' + moment(arg.start).format(" hh:mm a"),
+                        icon:"warning",
+                        confirmButtonText: 'Continuar',
+                        showCancelButton: true,
+                        cancelButtonText: 'Cancelar',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    }).then((result) => {
+                        if(result.value) {
+                            axios.post('disponibilidades/insertar',{
+                                id_usuario:this.$store.state.usuario.id_usuario,
+                                id_programa: this.$store.state.programaActual.id_programa,
+                                fecha:moment(arg.start).format("YYYY-MM-DD"),
+                                usuario_creacion: this.$store.state.usuario.id_usuario,
+                                usuario_actualizacion: this.$store.state.usuario.id_usuario,
+                                tipo_disponibilidad: 'fij',
+                                hora_inicio:moment(arg.start).format('HH:mm:ss')
+                            })
+                            .then((response) => {
+                                console.log(response.data)
+                                if(response.data){
+                                    this.$store.commit("ADD_EVENT", {
+                                        title: "Disponible",
+                                        start: arg.start,
+                                        end: arg.end,
+                                    })
+                                    Swal.fire({
+                                        text:"Se registró una nueva disponibilidad",
+                                        icon:"success",
+                                        confirmButtonText: 'Continuar',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+                                    });
+                                }
+                                this.getReminders();   
+                            }).catch(e => {
+                            console.log(e.response);
+                            });
+                        }
+                    })
+                }
+            }).catch(e => {
+                    console.log(e.response);
+                });
+                //this.calendar.render();
+            
+        },
+        modificarDisp () {
+
+            //this.calendar = this.$refs.fullCalendar.getApi()
+            var elem = document.getElementById("modDisp");
+            if (this.calendar.getOption('selectable')) {
+                location.reload();
+                /*let calendar = this.$refs.fullCalendar.getApi();
+                calendar.setOption('selectable','false')
+                elem.value = "Modificar Disponibilidad"
+                elem.style.backgroundColor ="#17a2b8"
+                console.log('calendarApi: ',calendar.getOption('selectable'))*/
+            }
+            else { 
+                let calendar = this.$refs.fullCalendar.getApi();
+                calendar.setOption('selectable','true')
+                elem.value = "Terminar";
+                elem.style.backgroundColor ="gray"
+                console.log('calendarApi: ',calendar.getOption('selectable'))
+            } 
+            
+            console.log(this.calendar);
+        },
         handleClick (arg) {
             if(arg.event.backgroundColor!='#B2EBF2') {
                 this.$modal.show(EventModal,{
@@ -129,17 +212,16 @@ export default {
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
                 this.showModal()
-                axios.post('disponibilidades/dispSemanalVistaTu',{idUsuario:this.$store.state.usuario.id_usuario,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
+                axios.post('disponibilidades/dispSemanalVistaTu',{idUsuario:this.$store.state.usuario.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
-                    console.log('disp: ',response.data);
                     var rd = response.data[0];
                     var rd2 = response.data[1];
                     var rd3 = response.data[2];
                     var rd4 = response.data[3];
+                    
                     for(var i in rd) {
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
-                            console.log('alumno:',rd3);
                             if(rd2[i]=='o'){
                                 this.$store.commit("ADD_EVENT", {
                                     id: rd[i].id_disponibilidad,
@@ -155,8 +237,7 @@ export default {
                                     usuario_creacion: rd[i].usuario_creacion,
                                     id_usuario_tutor: rd[i].id_usuario,
                                     usuario_actualizacion: rd[i].usuario_actualizacion,
-
-
+                                    motivo: rd3[i].nombre
                                 });                              
                             } else {
                                 this.$store.commit("ADD_EVENT", {
@@ -286,7 +367,7 @@ function addTimes (startTime, endTime) {
 .vm--modal {
     border-radius: 25px;
     margin: 30px;
-    height: 227px !important;
+    height: 260px !important;
 }
 @media screen and (max-width: 759px) {
     .form-control { 

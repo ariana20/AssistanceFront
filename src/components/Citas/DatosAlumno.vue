@@ -1,13 +1,15 @@
 <template>
-    <div style="text-align:left;">
+    <div class="row" style="text-align:left;">
         
-        <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo">
-				<img  :src="tutor.imagen" height="110px" width="110px" />		
-		</figure>
-        <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo">	
-                <b-avatar size="7rem" ></b-avatar>		
-		</figure>
-        <div class="descripcion-tutor" style="margin-top:10%">
+        <div class="col-12 col-md-5">
+            <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo">
+                    <img  :src="tutor.imagen" height="110px" width="110px" />		
+            </figure>
+            <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo">	
+                    <b-avatar size="7rem" ></b-avatar>		
+            </figure>
+        </div>
+        <div class=" col-12 col-md-5" style="margin-top:3%">
             <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
             <div class="font-weight-bolder">Correo: {{tutor.correo}}</div>
             <div class="font-weight-bolder">Telefono: {{tutor.telefono}}</div>

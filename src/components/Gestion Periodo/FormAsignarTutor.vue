@@ -282,7 +282,7 @@ export default {
 
     Eliminar: function(item, index) {
         Swal.fire({
-            title: '¿Dese eliminar la asignación de '+item.nombre+'?',
+            title: '¿Desea eliminar la asignación de '+item.nombre+'?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',
