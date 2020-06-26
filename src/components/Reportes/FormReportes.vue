@@ -47,11 +47,19 @@ export default {
                 legend: {
                     display: false
                 },
+                pieceLabel: {
+                    mode: 'percentage',
+                    precision: 1
+                },
                 responsive: true,
                 maintainAspectRatio:false
             },
             chartOp2:{
                 responsive: true,
+                pieceLabel: {
+                    mode: 'percentage',
+                    precision: 1
+                },
                 maintainAspectRatio:false
             },
             
