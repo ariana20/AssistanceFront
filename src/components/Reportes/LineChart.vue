@@ -15,8 +15,8 @@ export default {
         }
     },
     mounted(){
-        const dates = this.chartData.map(d=>d.date).reverse();
-        const totals = this.chartData.map(d=> d.total).reverse();
+        const dates = this.chartData.map(d=>d.nombre).reverse();
+        const totals = this.chartData.map(d=> d.cantalum).reverse();
 
         this.renderChart({
            labels:dates,
