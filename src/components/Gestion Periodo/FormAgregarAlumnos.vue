@@ -1,69 +1,72 @@
 <template>
-    <div class= "container">
-         <!-- <div class="row grid-divider "> -->
-            <div >
-                <section class="text-left" style="padding-top:0px">
-                    <h5 style="font-weight: bold;">Carga masiva de alumnos</h5>
-                    <h6 >El formato permitido para el archivo es el siguiente: CSV</h6>
-                    <h6 >El tamaño máximo permitido para el archivo es el siguiente: 2MB </h6>
-                    <h6 >El orden de las columnas permitidas para el archivo es el siguiente:</h6>                    
-                    <table class="table" style="text-align:left" >
-                     <thead>
-                       <tr >
-                            <th scope="col">Código*</th>
-                            <th scope="col">Correo*</th>
-                            <th scope="col">Nombres*</th>
-                            <!-- <th scope="col">Apellido Materno*</th>
-                            <th scope="col">Apellido Paterno*</th> -->
-                            <th scope="col">Apellidos</th>
+    <div style="margin-left:5%">
+      <div >
+        <section class="text-left" style="padding-top:0px">
+            <h5 style="font-weight: bold;">Carga masiva de alumnos</h5>
+            <h6 >El formato permitido para el archivo es el siguiente: CSV</h6>
+            <h6 >El tamaño máximo permitido para el archivo es el siguiente: 2MB </h6>
+            <h6 >El orden de las columnas permitidas para el archivo es el siguiente:</h6>  
+            
+            <div style="overflow: auto;width:100%;margin-top:2%">                  
+              <table class="table" style="text-align:left" >
+                <thead>
+                  <tr >
+                      <th scope="col">Código*</th>
+                      <th scope="col">Correo*</th>
+                      <th scope="col">Nombres*</th>
+                      <!-- <th scope="col">Apellido Materno*</th>
+                      <th scope="col">Apellido Paterno*</th> -->
+                      <th scope="col">Apellidos</th>
 
-                            <th scope="col">Celular</th>
-                            <th scope="col">Condición</th>                            
-                        </tr>
-                        
-                      </thead>
-                    </table>
-                    <h6 >Las condiciones de los alumnos válidas son las siguientes:</h6>
-                    <tr>
-                      <td style="text-indent: 1.5cm;" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.nombre}}</td>
+                      <th scope="col">Celular</th>
+                      <th scope="col">Condición</th>                            
+                  </tr>
+                  
+                </thead>
+              </table>
+            </div>
+            <h6 >Las condiciones de los alumnos válidas son las siguientes:</h6>
+            
+            <div style="overflow: auto;width:100%;margin-top:2%">
+              <tr>
+                <td style="text-indent: 1.5cm;" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.nombre}}</td>
+              </tr>
+            </div>
+
+            <input type="file" id="get-files" ref="file" name="client-file"  class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
+            <button type="button" style="margin:5px;border-radius: 10px;" id="btnsubir" class="btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
+            <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
+
+            <h6 >* Columnas obligatorios</h6>
+
+
+
+        </section>
+        <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
+            <h5 style="font-weight: bold;">Reporte de errores</h5>
+            <div style="overflow: auto;width:100%;margin-top:2%">
+              <table class="table" style="text-align:left" >
+                <thead>
+                  <tr>
+                    <th scope="col">N°</th>
+                      <th scope="col">Codigo</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Descripcion</th>
                     </tr>
-
-                    <input type="file" id="get-files" ref="file" name="client-file"  class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
-                    <button type="button" style="margin:5px;border-radius: 10px;" id="btnsubir" class="btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
-                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:50px" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
-      
-                    <h6 >* Columnas obligatorios</h6>
-
-
-
-                </section>
-                <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
-                    <h5 style="font-weight: bold;">Reporte de errores</h5>
-                    <table class="table" style="text-align:left" >
-                     <thead>
-                       <tr>
-                         <th scope="col">N°</th>
-                            <th scope="col">Codigo</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Descripcion</th>
-                            
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr v-for="(item, index) in reporte" :key="index">
-                            <th scope="row">{{index+1}}</th>
-                            <td>{{item.codigo}}</td>        
-                            <td>{{item.file}}</td>     
-                            <td>{{item.error}}</td>      
-                             
-                         </tr>
-                       </tbody>
-                     </table>
-                </section>
-
-
-            </div> 
-              <!-- Modal de cargando -->
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in reporte" :key="index">
+                      <th scope="row">{{index+1}}</th>
+                      <td>{{item.codigo}}</td>        
+                      <td>{{item.file}}</td>     
+                      <td>{{item.error}}</td>    
+                    </tr>
+                  </tbody>
+              </table>
+            </div>
+        </section>
+      </div> 
+      <!-- Modal de cargando -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
         <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
           <b-spinner style="width: 3rem; height: 3rem;"/>

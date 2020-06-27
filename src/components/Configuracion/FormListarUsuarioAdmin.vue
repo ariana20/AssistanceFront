@@ -1,17 +1,18 @@
 <template>
   <div class="FormListarUsuario">
     <div style="margin-left:5%;text-align: left">
-      <div style="heigth:20%">
-        <div style="float:left;">
-          <h5 class="col-sm-4 title-container">Buscar: </h5>
+      <div class="row">
+        <div class="form-inline col-12 col-md-2 col-lg-1">
+          <h5 style="margin-top:10%;margin-bottom:5%">Buscar: </h5>
         </div>
-        <div style="float: left;width:40vw">
-          <input v-on:change="Buscar(nombre)" class="col-sm-6 form-control" style="top:15px" v-model="nombre" placeholder="Ingrese un nombre">
+        <div class="form-inline col-12 col-md-4">
+          <input v-on:change="Buscar(nombre)" class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese un nombre">
         </div>
       </div>
+
       <br>
-      <div style="margin-top:7%;width:100%;display:block ruby">
-      <div style="overflow: auto;width:100%;">
+      <div style="width:100%;display:block ruby">
+      <div style="overflow: auto;width:95%;">
         <table class="table" style="width:99%">
           <thead>
             <tr>

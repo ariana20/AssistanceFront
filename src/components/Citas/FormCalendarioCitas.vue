@@ -326,62 +326,59 @@ function addTimes (startTime, endTime) {
 </script>
 
 <style lang='scss' scoped>
-@import './../../assets/styles/main.css';
+    @import './../../assets/styles/main.css';
+    @import '~@fullcalendar/core/main.css';
+    @import '~@fullcalendar/daygrid/main.css';
+    @import '~@fullcalendar/timegrid/main.css';
 
-@import '~@fullcalendar/core/main.css';
-@import '~@fullcalendar/daygrid/main.css';
-@import '~@fullcalendar/timegrid/main.css';
-
-.top-titulo {
-    display: flex;
-    justify-content: space-between;
-}
-.fc-header-toolbar {
-    margin-top: 10px;
-}
-.fc-button {
-    background-color: #17a2b8;
-    border-color: #17a2b8;
-}
-.fc-button-primary:not(:disabled).fc-button-active {
-    background-color: #757575;
-    border-color: #757575;
-}
-.fc-button:hover {
-    background:#00BCD4;border-color: #00BCD4;
-}
-.fc-button:focus {
-    background:#00BCD4 !important;
-    border-color: #00BCD4 !important;
-    outline:none !important;
-    box-shadow: none !important;
-    border: 2.3px solid transparent !important;
-}
-.fc-view-container {
-    font-family: "Brandon Bold" !important;
-}
-.fc-event { 
-    background-color: #B2EBF2;
-    border-color: #B2EBF2;
-}
-.vm--modal {
-    border-radius: 25px;
-    margin: 30px;
-    height: 260px !important;
-}
-@media screen and (max-width: 759px) {
-    .form-control { 
-        left: -100px;
+    .top-titulo {
+        display: flex;
+        justify-content: space-between;
     }
-}
-@media screen and (max-width: 1024px) {
-    .form-control { 
-        left: 0px;
+    .fc-header-toolbar {
+        margin-top: 10px;
     }
-}
-.fc-time-grid .fc-slats td {
-    height: 2.5em;
-}
-
-
+    .fc-button {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+    .fc-button-primary:not(:disabled).fc-button-active {
+        background-color: #757575;
+        border-color: #757575;
+    }
+    .fc-button:hover {
+        background:#00BCD4;border-color: #00BCD4;
+    }
+    .fc-button:focus {
+        background:#00BCD4 !important;
+        border-color: #00BCD4 !important;
+        outline:none !important;
+        box-shadow: none !important;
+        border: 2.3px solid transparent !important;
+    }
+    .fc-view-container {
+        font-family: "Brandon Bold" !important;
+    }
+    .fc-event { 
+        background-color: #B2EBF2;
+        border-color: #B2EBF2;
+    }
+    .vm--modal {
+        border-radius: 25px;
+        margin: 30px;
+        height: 260px !important;
+    }
+    @media screen and (max-width: 759px) {
+        .form-control { 
+            left: -100px;
+        }
+    }
+    @media screen and (max-width: 1024px) {
+        .form-control { 
+            left: 0px;
+        }
+    }
+    .fc-time-grid .fc-slats td {
+        height: 2.5em;
+    }
 </style>

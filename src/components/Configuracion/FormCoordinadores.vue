@@ -1,60 +1,49 @@
 <template>
   <!-- <div class="FormPrograma">
     <div class="container" style="left:60px;text-align: left"> -->
-	<div name="FormCoordinador container">
-		<div   class="row top-titulo container" style="left:60px;text-align: left;">
-      <!-- <div class="top-titulo">
-            <h4 class="col-sm-4 title-container">Nombre: </h4>
-            <input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre del coordinador">
-            <div class="botones">
-            <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:190px" >Añadir</button>
-            </div>
-      </div> -->
-        <!--<div class="row" style="margin-top:40px;margin-bottom:40px">
-            <div class="font-weight-ligth text-left textF" style="font-size:20px;line-height: 35px;">Buscar:</div>
-            <input class="borde-textbox" type="text" style="margin-left:3%;padding:7px" v-model="nombre">
-            <b-button v-on:click="nuevo()" style="margin-left:60%;background: #0097A7">Añadir</b-button>
-        </div>-->
-        <div class="col-sm-6 top-titulo">
-           <h5 class="col-sm-6 " style="top:5px;" >Nombre: </h5>
-          <input class="col-sm-6 form-control" type="text" style="top:-5px;margin-bottom:20px" 
-           v-model="nombre" placeholder="Ingrese nombre del coordinador">
-        </div>
-        <div class="botones" >
-           <button  type="button" style="border-radius: 10px;margin-right:50px;padding-top:5px;margin-top:-25px"
-              @click="nuevo()" class="row btn btn-info">Añadir</button>
-        </div> 
+	<div name="FormCoordinador">
+		<div style="margin-left:5%;text-align: left;">
+			<div class="row">
+				<div class="form-inline col-12 col-md-2 col-lg-1">
+					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
+				</div>
+				<div class="form-inline col-12 col-md-4">
+					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese nombre del coordinador">
+				</div>
+				<div class="form-inline col-12 col-md-2 offset-md-3 offset-lg-5">
+					<button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
+				</div>
+			</div>
 
-
-      <table class="table" style="text-align:center">
-        <thead>
-          <tr>
-            <th scope="col">N°</th>
-            <th scope="col">Codigo</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Correo</th>
-            <th scope="col">Facultad/Programa</th>
-            <th scope="col">Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in coordinadoresFiltrados" :key="index">
-            <td>{{index+1}}</td>
-            <td>{{item.codigo}}</td>
-            <td>{{item.nombre}}</td>
-            <td>{{item.correo}}</td>
-            <td>
-                <div v-for="(lugar,ind) in item.lugares" :key="ind">
-                    <a style="font-weight:normal">{{lugar}}</a>
-                </div>
-            </td>
-            <td style=";font-size:30px">
-                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
-                <b-icon v-else icon="check" style="color:#757575"/>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div style="overflow: auto;width:100%;">
+        <table class="table" style="text-align:center;margin-top:2%">
+          <thead>
+            <tr>
+              <th scope="col">Codigo</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Facultad/Programa</th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in coordinadoresFiltrados" :key="index">
+              <td>{{item.codigo}}</td>
+              <td>{{item.nombre}}</td>
+              <td>{{item.correo}}</td>
+              <td>
+                  <div v-for="(lugar,ind) in item.lugares" :key="ind">
+                      <a style="font-weight:normal">{{lugar}}</a>
+                  </div>
+              </td>
+              <td style=";font-size:30px">
+                  <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
+                  <b-icon v-else icon="check" style="color:#757575"/>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
@@ -173,6 +162,7 @@ export default {
     border-radius: 1.25rem;  
     border: 0.5px solid #757575;
     margin-bottom: 10px;
+    width: 100%;
 }
 .top-titulo {
     display: flex;

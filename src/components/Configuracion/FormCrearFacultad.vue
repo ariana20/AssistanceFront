@@ -1,7 +1,7 @@
 <template>
   <div class="FormCrearFacultad">
 
-    <div class="container" style="text-align: left">
+    <div style="text-align: left;margin-left:5%">
       <!--<div class="top-title title-container" style="text-align:right">
         <button type="button" class="btn btn-info" style="margin-left:30px" v-on:click="guardarFacultad()">Guardar</button>
             
@@ -10,151 +10,150 @@
             </router-link>
       </div>-->
         <b-container fluid>
-        <b-row class="my-1"  style="text-align: right">
-            <b-col sm="12">
-            
-            <button type="button" class="btn btn-info" style="margin-left:20px" v-on:click="guardarFacultad()">Guardar</button>
-            
-            <router-link to="/facultad">
-              <button type="button" class="btn btn-secondary" style="margin-left:20px">Cancelar</button>
-            </router-link>
-            </b-col>
-        </b-row>
-        <b-row>
-        </b-row>
-        <b-row class="my-1">
-            <b-col sm="3">
-            <label>Código de la Facultad:*</label>
-            </b-col>
-            <b-col sm="9">
-            <b-form-input v-if="idFacultad" id="codigoF" v-model="codVerifF"></b-form-input>
-            <b-form-input v-else id="codigoF" v-model="codVerifF"></b-form-input>
+          <b-row class="my-1"  style="text-align: right">
+              <b-col class="col-12 col-md-12" style=";margin-top:5%">
+                <button type="button" class="btn btn-info"  v-on:click="guardarFacultad()">Guardar</button>
+                
+                <router-link to="/facultad">
+                  <button type="button" class="btn btn-secondary" style="margin-left:20px">Cancelar</button>
+                </router-link>
+              </b-col>
+          </b-row>
+          <b-row class="my-1">
+              <b-col sm="3">
+              <label>Código de la Facultad:*</label>
+              </b-col>
+              <b-col sm="9">
+              <b-form-input v-if="idFacultad" id="codigoF" v-model="codVerifF"></b-form-input>
+              <b-form-input v-else id="codigoF" v-model="codVerifF"></b-form-input>
 
-            </b-col>
+              </b-col>
 
-        </b-row>
-        <b-row class="my-1">
-            <b-col sm="3">
-            <label>Nombre de la Facultad:*</label>
-            </b-col>
-            <b-col sm="9">
-            <b-form-input v-if="idFacultad" id="nombreF" v-model="nombreVerifF"></b-form-input>
-            <b-form-input v-else id="nombreF" v-model="nombreVerifF"></b-form-input>
+          </b-row>
+          <b-row class="my-1">
+              <b-col sm="3">
+              <label>Nombre de la Facultad:*</label>
+              </b-col>
+              <b-col sm="9">
+              <b-form-input v-if="idFacultad" id="nombreF" v-model="nombreVerifF"></b-form-input>
+              <b-form-input v-else id="nombreF" v-model="nombreVerifF"></b-form-input>
 
-            </b-col>
+              </b-col>
 
-        </b-row>
-        <b-row class="my-1">
-            <b-col sm="3">
-            <label>Correo Electrónico:*</label>
-            </b-col>
-            <b-col sm="9">
-            <b-form-input id="correoF" v-model="facultad.correo"></b-form-input>
-            </b-col>
-        </b-row>
-        <b-row class="my-1">
-            <b-col sm="3">
-            <label>Coordinador de Facultad:</label>
-            </b-col>
-            <b-col sm="8">
-            <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombCompleto" ></b-form-input>
-            <b-form-input id="idCoordinadorF" readonly v-else></b-form-input>
-            </b-col>
+          </b-row>
+          <b-row class="my-1">
+              <b-col sm="3">
+              <label>Correo Electrónico:*</label>
+              </b-col>
+              <b-col sm="9">
+              <b-form-input id="correoF" v-model="facultad.correo"></b-form-input>
+              </b-col>
+          </b-row>
+          <b-row class="my-1">
+              <b-col sm="3">
+              <label>Coordinador de Facultad:</label>
+              </b-col>
+              <b-col sm="8">
+              <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombCompleto" ></b-form-input>
+              <b-form-input id="idCoordinadorF" readonly v-else></b-form-input>
+              </b-col>
 
-            <b-col sm="1">
-            <b-col sm="1">
-            <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>            
-            </b-col>
-            </b-col>
-        </b-row>
-        <b-row></b-row>
+              <b-col sm="1">
+              <b-col sm="1">
+              <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>            
+              </b-col>
+              </b-col>
+          </b-row>
+          <b-row></b-row>
 
 
-        </b-container>
-        <br>
+          </b-container>
+          <br>
 
-        <b-container fluid>
-        <b-row>
-            
-            <h4 class="font-weight-bold">Programas de la Facultad:</h4>
-            <b-col sm="12" style="text-align: right">
-            <b-button v-if="nuevoProg==0 && editProg==0" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="agregarPrograma()">Añadir Programa</b-button>
-            <b-button v-if="nuevoProg==1 || editProg==1" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="guardarPrograma()">Guardar Programa</b-button>
-            </b-col>
-        </b-row>
-        <b-row class="my-1">
-            <b-col sm="3">
-            <label>Código del Programa:*</label>
-            </b-col>
-            <b-col sm="9">
-            <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="codVerifP"></b-form-input>
-            <b-form-input v-else readonly id="nombre" v-model="codVerifP"></b-form-input>
-            </b-col>
+          <b-container fluid>
+          <b-row>
+              
+              <h4 class="font-weight-bold">Programas de la Facultad:</h4>
+              <b-col sm="12" style="text-align: right">
+              <b-button v-if="nuevoProg==0 && editProg==0" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="agregarPrograma()">Añadir Programa</b-button>
+              <b-button v-if="nuevoProg==1 || editProg==1" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="guardarPrograma()">Guardar Programa</b-button>
+              </b-col>
+          </b-row>
+          <b-row class="my-1">
+              <b-col sm="3">
+              <label>Código del Programa:*</label>
+              </b-col>
+              <b-col sm="9">
+              <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="codVerifP"></b-form-input>
+              <b-form-input v-else readonly id="nombre" v-model="codVerifP"></b-form-input>
+              </b-col>
 
-        </b-row>
-        <b-row class="my-1">
-            <b-col sm="3">
-            <label>Nombre del Programa:*</label>
-            </b-col>
-            <b-col sm="9">
-            <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="nombreVerifP"></b-form-input>
-            <b-form-input v-else readonly id="nombre" v-model="nombreVerifP"></b-form-input>
-            </b-col>
+          </b-row>
+          <b-row class="my-1">
+              <b-col sm="3">
+              <label>Nombre del Programa:*</label>
+              </b-col>
+              <b-col sm="9">
+              <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="nombreVerifP"></b-form-input>
+              <b-form-input v-else readonly id="nombre" v-model="nombreVerifP"></b-form-input>
+              </b-col>
 
-        </b-row>
-        <b-row class="my-1">
-            <b-col sm="3">
-            <label>Correo Electrónico:*</label>
-            </b-col>
-            <b-col sm="9">
-            <b-form-input v-if="nuevoProg==1 || editProg==1" id="correo" v-model="programa.correo"></b-form-input>
-            <b-form-input v-else readonly id="correo" v-model="programa.correo"></b-form-input>
-            </b-col>
-        </b-row>
-        <b-row class="my-1">
-            <b-col sm="3">
-            <label>Coordinador de Programa:</label>
-            </b-col>
-            <b-col sm="8">
-            <b-form-input id="idCoordinador" readonly v-if="programa.coordinador!=null" v-model="programa.coordinador.nombCompleto" ></b-form-input>
-            <b-form-input id="idCoordinador" readonly v-else></b-form-input>
-            </b-col>
+          </b-row>
+          <b-row class="my-1">
+              <b-col sm="3">
+              <label>Correo Electrónico:*</label>
+              </b-col>
+              <b-col sm="9">
+              <b-form-input v-if="nuevoProg==1 || editProg==1" id="correo" v-model="programa.correo"></b-form-input>
+              <b-form-input v-else readonly id="correo" v-model="programa.correo"></b-form-input>
+              </b-col>
+          </b-row>
+          <b-row class="my-1">
+              <b-col sm="3">
+              <label>Coordinador de Programa:</label>
+              </b-col>
+              <b-col sm="8">
+              <b-form-input id="idCoordinador" readonly v-if="programa.coordinador!=null" v-model="programa.coordinador.nombCompleto" ></b-form-input>
+              <b-form-input id="idCoordinador" readonly v-else></b-form-input>
+              </b-col>
 
-            <b-col sm="1">
-            <modalJ v-on:childToParentProg="onChildClickProg"/>
-            </b-col>
-        </b-row>
-        <br>
+              <b-col sm="1">
+              <modalJ v-on:childToParentProg="onChildClickProg"/>
+              </b-col>
+          </b-row>
+          <br>
 
 
         
         </b-container>
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">N°</th>
-                <th scope="col">Código</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Correo</th>
-                <th scope="col">Coordinador</th>
-                <th scope="col" style="text-align: center">Acciones</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(item, index) in programas" :key="index">
-                <th scope="row">{{index+1}}</th>
-                <td >{{item.codigo}}</td>
-                <td >{{item.nombre}}</td>
-                <td >{{item.correo}}</td>
-                <td v-if="item.coordinador!=undefined">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
-                <td v-else>Sin coordinador</td>
-                <td style="text-align: center">
-                  <button class="btn link" v-on:click="Editar(item, index)"><b-icon icon="pencil"></b-icon></button>
-                  <button class="btn link" v-on:click="Eliminar(index, item)"><b-icon icon="dash-circle-fill"></b-icon></button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div style="overflow: auto;width:100%;">
+          <table class="table">
+              <thead>
+              <tr>
+                  <th scope="col">N°</th>
+                  <th scope="col">Código</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Correo</th>
+                  <th scope="col">Coordinador</th>
+                  <th scope="col" style="text-align: center">Acciones</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="(item, index) in programas" :key="index">
+                  <th scope="row">{{index+1}}</th>
+                  <td >{{item.codigo}}</td>
+                  <td >{{item.nombre}}</td>
+                  <td >{{item.correo}}</td>
+                  <td v-if="item.coordinador!=undefined">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
+                  <td v-else>Sin coordinador</td>
+                  <td style="text-align: center">
+                    <button class="btn link" v-on:click="Editar(item, index)"><b-icon icon="pencil"></b-icon></button>
+                    <button class="btn link" v-on:click="Eliminar(index, item)"><b-icon icon="dash-circle-fill"></b-icon></button>
+                  </td>
+              </tr>
+              </tbody>
+          </table>
+        </div>
         
     </div>
 

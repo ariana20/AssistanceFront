@@ -1,19 +1,17 @@
 <template>
-  <div name="FormSolicitudes" class="container" >
-    <div class="row top-titulo" style="text-align: left" >
-      <div class="top-titulo">
-            <h5 class="col-sm-4 title-container">Nombre: </h5>
-            <input class="col-sm-6 form-control" style="top:26px;right:40px;width:250px" v-model="nombre" placeholder="Busque por nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )" >
+  <div name="FormSolicitudes" style="text-align: left;margin-left:5%">
+      
+    <div class="row" style="width:100%">
+      <div class="form-inline col-12 col-md-2 col-lg-1">
+        <h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
       </div>
-        <!--<div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px;font-weight:bold">Buscar:  
-        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
-        </div>
-        <div style="margin-right:100px"></div>                   
-                 <button  type="button"  style="text-align:right" class="btn btn-info">Añadir</button> 
-                  <b-button v-on:click="nuevo()" style="height:40px;border-color:transparent;margin-left:25%;background: #0097A7">Añadir</b-button>-->
-           
+      <div class="form-inline col-12 col-md-4">
+        <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Busque por nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )">
       </div>
-      <table class="table"  style="text-align:left">
+    </div>
+          
+    <div style="overflow: auto;width:95%">
+      <table class="table"  style="text-align:left;margin-top:2%">
         <thead>
           <tr>
             <th scope="col">Código</th>
@@ -51,14 +49,15 @@
           </tr>
         </tbody>
       </table>
-  
+    </div>
+
     <!-- Modal de cargando.más grande  -->
-      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-        <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
-          <b-spinner style="width: 3rem; height: 3rem;"/>
-          <br >Cargando... 
-        </div>
-      </b-modal>
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -340,6 +339,7 @@ export default {
     border-radius: 1.25rem;  
     border: 0.5px solid #757575;
     margin-bottom: 10px;
+    width: 100%;
 }
 .motivo-dropdown-title {
     top: 10px;

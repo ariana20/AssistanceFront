@@ -401,127 +401,127 @@ export default Vue.extend ({
 </script>
 
 <style lang="scss" scoped>
-@import '../../assets/styles/material.css';
-@import '../../assets/styles/main.css';
-@import 'https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css';
-#left {
-    float: left;
-    margin-right: 27px;
-    width: 100px;
-}
+    @import '../../assets/styles/material.css';
+    @import '../../assets/styles/main.css';
+    @import 'https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css';
+    #left {
+        float: left;
+        margin-right: 27px;
+        width: 100px;
+    }
 
-#right {
-    text-align: right;
-}
-#floated {
-    margin-right: 50px;
-    float: right;
-    height: 100px;
-}
-.list-data { 
-    display: flex;
-    width: 100%;
-    height: 40px;
-}
-.close {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    right: 0%;
-    padding: 12px 16px;
-    transform: translate(0%, -50%);
-}
+    #right {
+        text-align: right;
+    }
+    #floated {
+        margin-right: 50px;
+        float: right;
+        height: 100px;
+    }
+    .list-data { 
+        display: flex;
+        width: 100%;
+        height: 40px;
+    }
+    .close {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        right: 0%;
+        padding: 12px 16px;
+        transform: translate(0%, -50%);
+    }
 
-input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper input.e-input, textarea.e-input, .e-input-group textarea.e-input, .e-input-group.e-control-wrapper textarea.e-input{
-    border-width: 1px !important;
-}
-.input.e-input, .e-input-group input.e-input, .e-input-group input, .e-input-group.e-control-wrapper input.e-input, .e-input-group.e-control-wrapper input, .e-float-input input, .e-float-input.e-input-group input, .e-float-input.e-control-wrapper input, .e-float-input.e-control-wrapper.e-input-group input, .e-input-group, .e-input-group.e-control-wrapper, .e-float-input, .e-float-input.e-control-wrapper {
-    border-radius: 1.25rem;  
-    border: 0.5px solid #757575;
-    text-align: center;
-    font-family: "Brandon Bold",Helvetica,Arial,sans-serif;
-    font-size: 17px;
-    margin-bottom:0px!important;
-}
-.e-control .e-autocomplete .e-lib .e-input .e-keyboard {
-    z-index: -100;
-}
-.borde-textbox {
-    border-radius: 1.25rem;  
-    border: 2px solid #757575;
-}
-.izq {
-    //background-color: cornflowerblue;
-    padding: 20px;
-}
-.der {
-    //background-color: darkgreen;
-    padding: 20px;
-}
-.tutoria-title{
-    margin-top: 30px;
-    margin-bottom: 20px;
-}
-.grid-divider {
-  overflow-x: hidden; //quickfix to hide divider on left side
-  position: relative;
-}
-.grid-divider > [class*="col-"]:nth-child(n + 2):after {
-  content: "";
-  background-color: #BABABA;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  @media (max-width: 767px) {
-    width: 100%;
-    height: 1px;
-    left: 0;
-    top: -4px; // quickfix to center line between columns
-  }
-  @media (min-width: 768px) {
-    width: 1px;
-    height: auto;
-    left: -1px; // quickfix to hide divider on left side
-  }
-}
-.font-weight-bolder {
-    color: black;
-    font-size: 24px;
-    font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
-}
-.botones {
-    margin:auto;
-}
-.btn {
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 10px;
-    margin: 5px;
-}
-.top-titulo {
-    display: flex;
-    justify-content: space-between;
-}
-.text-left {
-    margin-bottom: 20px;
-}
-.motivo-dropdown-title {
-    top: 10px;
-    text-align: left;
-}
+    input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper input.e-input, textarea.e-input, .e-input-group textarea.e-input, .e-input-group.e-control-wrapper textarea.e-input{
+        border-width: 1px !important;
+    }
+    .input.e-input, .e-input-group input.e-input, .e-input-group input, .e-input-group.e-control-wrapper input.e-input, .e-input-group.e-control-wrapper input, .e-float-input input, .e-float-input.e-input-group input, .e-float-input.e-control-wrapper input, .e-float-input.e-control-wrapper.e-input-group input, .e-input-group, .e-input-group.e-control-wrapper, .e-float-input, .e-float-input.e-control-wrapper {
+        border-radius: 1.25rem;  
+        border: 0.5px solid #757575;
+        text-align: center;
+        font-family: "Brandon Bold",Helvetica,Arial,sans-serif;
+        font-size: 17px;
+        margin-bottom:0px!important;
+    }
+    .e-control .e-autocomplete .e-lib .e-input .e-keyboard {
+        z-index: -100;
+    }
+    .borde-textbox {
+        border-radius: 1.25rem;  
+        border: 2px solid #757575;
+    }
+    .izq {
+        //background-color: cornflowerblue;
+        padding: 20px;
+    }
+    .der {
+        //background-color: darkgreen;
+        padding: 20px;
+    }
+    .tutoria-title{
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    .grid-divider {
+    overflow-x: hidden; //quickfix to hide divider on left side
+    position: relative;
+    }
+    .grid-divider > [class*="col-"]:nth-child(n + 2):after {
+        content: "";
+        background-color: #BABABA;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        @media (max-width: 767px) {
+            width: 100%;
+            height: 1px;
+            left: 0;
+            top: -4px; // quickfix to center line between columns
+        }
+        @media (min-width: 768px) {
+            width: 1px;
+            height: auto;
+            left: -1px; // quickfix to hide divider on left side
+        }
+    }
+    .font-weight-bolder {
+        color: black;
+        font-size: 24px;
+        font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
+    }
+    .botones {
+        margin:auto;
+    }
+    .btn {
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 10px;
+        margin: 5px;
+    }
+    .top-titulo {
+        display: flex;
+        justify-content: space-between;
+    }
+    .text-left {
+        margin-bottom: 20px;
+    }
+    .motivo-dropdown-title {
+        top: 10px;
+        text-align: left;
+    }
 
-.form-control {
-    border-radius: 1.25rem;  
-    border: 0.5px solid #757575;
-    margin-bottom: 10px;
-}
-.btn:focus {
-    outline:none;
-    box-shadow: none;
-    border: 2.3px solid transparent;
-}
-select:focus {
-    outline:none;
-    box-shadow: none;
-}
+    .form-control {
+        border-radius: 1.25rem;  
+        border: 0.5px solid #757575;
+        margin-bottom: 10px;
+    }
+    .btn:focus {
+        outline:none;
+        box-shadow: none;
+        border: 2.3px solid transparent;
+    }
+    select:focus {
+        outline:none;
+        box-shadow: none;
+    }
 </style>

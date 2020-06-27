@@ -1,45 +1,42 @@
 <template>
-  <!-- <div class="FormPrograma">
-    <div class="container" style="left:60px;text-align: left;">
-      <div class="top-titulo">
-        <h4 class="col-sm-4 title-container">Nombre: </h4>
-        <input class="col-sm-4 form-control" style="left:-600px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre del programa">
-      </div> -->
-  <div name="FormPrograma container">
-    <div   class="row top-titulo container" style="left:60px;text-align: left;">
-      <div class="col-sm-6 top-titulo">
-           <h5 class="col-sm-6 " style="top:5px;" >Nombre: </h5>
-          <input class="col-sm-6 form-control" type="text" style="top:-5px;margin-bottom:20px" 
-           v-model="nombre" placeholder="Ingrese nombre del programa">
+  <div name="FormPrograma">
+    <div style="margin-left:5%;text-align: left;">
+      <div class="row">
+        <div class="form-inline col-12 col-md-2 col-lg-1">
+          <h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
+        </div>
+        <div class="form-inline col-12 col-md-4">
+          <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese nombre del programa">
+        </div>
       </div>
 
 
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">N°</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Correo</th>
-            <th scope="col">Coordinador</th>
-            <th scope="col">Facultad</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in programasFiltrados" :key="index">
-            <td>{{index+1}}</td>
-            <td>{{item.programa.nombre}}</td>
-            <td>{{item.programa.correo}}</td>
-            <td>
-              <a style="font-weight:normal" v-if="item.coordinador">{{item.coordinador.nombre}}</a>
-              <a style="font-weight:normal" v-else>Sin Coordinador</a>
-            </td>
-            <td>
-              <a style="font-weight:normal" v-if="item.facultad">{{item.facultad.nombre}}</a>
-              <a style="font-weight:normal" v-else>Sin Facultad</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div style="overflow: auto;width:100%;">
+        <table class="table" style="margin-top:2%">
+          <thead>
+            <tr>
+              <th scope="col">Nombre</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Coordinador</th>
+              <th scope="col">Facultad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in programasFiltrados" :key="index">
+              <td>{{item.programa.nombre}}</td>
+              <td>{{item.programa.correo}}</td>
+              <td>
+                <a style="font-weight:normal" v-if="item.coordinador">{{item.coordinador.nombre}}</a>
+                <a style="font-weight:normal" v-else>Sin Coordinador</a>
+              </td>
+              <td>
+                <a style="font-weight:normal" v-if="item.facultad">{{item.facultad.nombre}}</a>
+                <a style="font-weight:normal" v-else>Sin Facultad</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     
     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
@@ -115,6 +112,7 @@ export default {
     border-radius: 1.25rem;  
     border: 0.5px solid #757575;
     margin-bottom: 10px;
+    width: 100%;
 }
 .top-titulo {
     display: flex;

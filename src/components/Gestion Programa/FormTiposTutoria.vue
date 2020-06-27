@@ -1,58 +1,129 @@
 <template>
-  <div class="FormTiposTutoria" style="margin-top:20px">
-    <div class="container" >
-      <table>
-      <tbody  align="left">
-        
-        <td style="width:1062px">
-          <tr style="text-align:left"></tr>
-          <tr style="text-align:left" ><td>Nombre:*</td>   
-            <td> <input class="input col-sm-10 form-control" style="margin-left:13px" type="text" v-model="tipotutoria.nombre"> </td>
-          </tr>
-       
-          <tr style="text-align:left"><td>Descripción:</td> 
-          <textarea style="margin-left:13px" rows =3 cols=40 class="col-sm-10 form-control" type="text" v-model="tipotutoria.descripcion"  >    
-          </textarea> 
-          <!-- Textarea tiene que tener un número menos de largo -->
-          </tr>
-                 
-            <div class="col-sm-6 "  style="margin-right:-14px">
-              <label style="margin-left:-13px;margin-right:16px">Condiciones:*</label>
-              <input type="radio" style="font-size: 22px;" id="yes" value="1" v-model="tipotutoria.individual">
-              <label style="text-indent:5px" >{{indgru[0].text}}</label>
-              <label style="text-indent: 37px;color:white;"> -</label>              
-              <input  type="radio" id="no" value="0" v-model="tipotutoria.individual">
-              <label style="text-indent:5px" >{{indgru[1].text}}</label>
+  <div class="FormTiposTutoria" style="margin-top:2%">
+    <div style="margin-left:5%" >
+      <div class="row">
+        <div class="col-12 col-md-4 col-lg-1 form-inline">
+          Nombre:*
+        </div>
+        <div class="col-11 col-md-6 col-lg-5">
+          <input style="margin-top:2%" class=" form-control" type="text" v-model="tipotutoria.nombre">
+        </div>
+      </div>
+      <div class="row" style="margin-top:1%">
+        <div class="col-12 col-md-4 col-lg-1 form-inline">
+          Descripción:
+        </div>
+        <div class="col-11 col-md-6 col-lg-5">
+          <textarea rows=3 cols=40 class="form-control" type="text" v-model="tipotutoria.descripcion"/> 
+        </div>
+      </div>
+      
+      <div class="row" style="margin-top:1%;text-align:left">
+        <div class="col-12 col-md-6 col-lg-1">
+          Condiciones:*
+        </div>
+        <div class="col-sm-12 offset-sm-1" style="margin-top:2%">
+          <div class="row">
+            <div class="col-5 col-md-3 col-lg-2">
+              <div class="row">
+                <div class="col-1">
+                  <input type="radio" style="font-size: 22px;" id="yes" value="1" v-model="tipotutoria.individual">
+                </div>
+                <div class="col-8">
+                  <label style="text-indent:5px" >{{indgru[0].text}}</label>
+                </div>
+              </div>
             </div>
-            <div class="col-sm-6 " style="margin-left:100px;"> 
-              <input type="radio" id="yes" value="1" v-model="tipotutoria.obligatorio">
-              <label style="text-indent:5px" >{{oblopc[0].text}}</label>
-              <label style="text-indent:22px;color:white;"> -</label>              
-              <input  type="radio" id="no" value="0" v-model="tipotutoria.obligatorio">
-              <label style="text-indent:5px" >{{oblopc[1].text}}</label>
+            <div class="col-5 col-md-4 col-lg-2">  
+              <div class="row">
+                <div class="col-1">               
+                  <input  type="radio" id="no" value="0" v-model="tipotutoria.individual">
+                </div>
+                <div class="col-8">
+                  <label style="text-indent:5px" >{{indgru[1].text}}</label>
+                </div>
+              </div>
+            </div>   
+          </div>
+        </div>
+        <div class="col-sm-12 offset-sm-1">
+          <div class="row">
+            <div class="col-5 col-md-3 col-lg-2">
+              <div class="row">
+                <div class="col-1">
+                  <input type="radio" id="yes" value="1" v-model="tipotutoria.obligatorio">
+                </div>
+                <div class="col-8">
+                  <label style="text-indent:5px" >{{oblopc[0].text}}</label>
+                </div>
+              </div>
             </div>
-            <div class="col-sm-6 " style="margin-left:100px;"> 
-              <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorasignado">
-              <label style="text-indent:5px" >{{asigsol[0].text}}</label>
-              <label style="text-indent:1px;color:white;"> -</label>              
-              <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorasignado">
-              <label style="text-indent:5px" >{{asigsol[1].text}}</label>
+            <div class="col-5 col-md-4 col-lg-2"> 
+              <div class="row">
+                <div class="col-1">        
+                  <input  type="radio" id="no" value="0" v-model="tipotutoria.obligatorio">
+                </div>
+                <div class="col-8">
+                  <label style="text-indent:5px" >{{oblopc[1].text}}</label>
+                </div>
+              </div>
+            </div>   
+          </div>
+        </div>
+        <div class="col-sm-12 offset-sm-1"> 
+          <div class="row">
+            <div class="col-5 col-md-3 col-lg-2">
+              <div class="row">
+                <div class="col-1">
+                  <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorasignado">
+                </div>
+                <div class="col-8">
+                  <label style="text-indent:5px" >{{asigsol[0].text}}</label>
+                </div>
+              </div>
             </div>
-           <div class="col-sm-6 " style="margin-left:100px;"> 
-              <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorfijo">
-              <label style="text-indent:5px" >{{fijvar[0].text}}</label>
-              <label style="text-indent:40px;color:white;"> -</label>              
-              <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorfijo">
-              <label style="text-indent:5px" >{{fijvar[1].text}}</label>
+            <div class="col-5 col-md-4 col-lg-2">    
+              <div class="row">
+                <div class="col-1">
+                  <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorasignado">
+                </div>
+                <div class="col-8">
+                  <label style="text-indent:5px" >{{asigsol[1].text}}</label>
+                </div>
+              </div>
+            </div>   
+          </div>
+        </div>
+        <div class="col-sm-12 offset-sm-1"> 
+          <div class="row">
+            <div class="col-5 col-md-3 col-lg-2">
+              <div class="row">
+                <div class="col-1">
+                  <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorfijo">
+                </div>
+                <div class="col-8">
+                  <label style="text-indent:5px" >{{fijvar[0].text}}</label>
+                </div>
+              </div>
             </div>
+            <div class="col-5 col-md-4 col-lg-2"> 
+              <div class="row">
+                <div class="col-1">               
+                  <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorfijo">
+                </div>
+                <div class="col-8">
+                  <label style="text-indent:5px" >{{fijvar[1].text}}</label>
+                </div>
+              </div>
+            </div>   
+          </div>
+        </div>
+      </div>
 
 
-           <br>
-            <div class="row col-sm-6 " style="margin-left:80px;" > 
-            <b-form-checkbox v-model="tipotutoria.estado" value="act" unchecked-value="ina" checked> Activo</b-form-checkbox></div>          
-        </td>        
-      </tbody>      
-      </table>
+      <br>
+      <div class="row col-sm-6 " style="margin-left:80px;" > 
+      <b-form-checkbox v-model="tipotutoria.estado" value="act" unchecked-value="ina" checked> Activo</b-form-checkbox></div>
     </div>      
       <button type="button" class="btn btn-info" style="border-radius: 10px" v-on:click="guardarTipoTutoria()">Guardar</button>
       <button type="button" style="border-radius: 10px;margin-left:50px"  class="btn btn-secondary" v-on:click="Cancelar()">Cancelar</button>

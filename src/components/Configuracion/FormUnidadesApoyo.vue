@@ -1,20 +1,20 @@
 <template>
   <div class="FormUnidadesApoyo">
     <div style="margin-left:5%;text-align: left;width:90%">  
-      <div style="heigth:20%">
-        <div style="float:left;">
-          <h5 class="col-sm-4 title-container">Nombre: </h5>
+      <div class="row">
+        <div class="form-inline col-12 col-md-2 col-lg-1">
+          <h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
         </div>
-        <div style="float: left;width:40vw">
-          <input class="col-sm-6 form-control" style="top:26px" v-model="nombre" placeholder="Buscar por nombre">
+        <div class="form-inline col-12 col-md-4">
+          <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
         </div>
-        <div class="popa" style="float: left;width:6vw">
-          <button  type="button" style="border-radius: 10px;margin-right:0px;margin-top:26px" @click="nuevo()" class="row btn btn-info">Añadir</button>
+        <div class="form-inline col-12 col-md-2 offset-md-3 offset-lg-5">
+          <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
         </div>
       </div>
       
       <br>
-      <div style="margin-top:7%;width: 100%;display:block ruby;margin-right:0px">
+      <div style="width: 100%;display:block ruby;margin-right:0px">
       <div style="overflow: auto;width:100%;">
         <table class="table">
           <thead>
@@ -255,27 +255,14 @@ export default {
     border-radius: 1.25rem;  
     border: 0.5px solid #757575;
     margin-bottom: 10px;
+    width: 100%;
 }
 .top-titulo {
     display: flex;
     justify-content: space-between;
 }
-.botones {
-    margin:auto;
-}
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}
 input:focus {outline: none;box-shadow: none;}
-@media only screen and (min-width: 800px) {
-  .popa {
-    margin-left: 28%;
-  }
-}
-
-@media only screen and (max-width: 700px) {
-  .popa {
-    margin-left: 0%;
-  }
-}
 
 </style>

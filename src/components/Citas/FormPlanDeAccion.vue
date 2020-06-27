@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-5">
     <div v-if="anadirPlan==false">
-      <b-button v-on:click="anadirPlan=true" style="background: #0097A7;border: 0px;width:100%;margin-left:1%">
+      <b-button v-on:click="anadirPlan=true;nuevo=true" style="background: #0097A7;border: 0px;width:100%;margin-left:1%">
         Añadir Plan De Acción
       </b-button>
     </div>
@@ -16,7 +16,7 @@
           <strong>Titulo:</strong>
         </div>
         <div class="col-12 col-md-3">
-          <div v-if="planAccion.compromisos!=undefined && this.nuevo==false">
+          <div v-if="planAccion!=undefined && planAccion.compromisos!=undefined && this.nuevo==false">
             <select v-on:change="Elegir()" class= "form-control" style="color:gray;margin-top:-1%" v-model="planAccion">
               <option selected disabled :value="null">Elige un Plan de Acción</option>
               <option v-for="(options,index) in planes" v-bind:key="index" :value="options">
@@ -32,9 +32,11 @@
           <b-button v-if="this.nuevo==false" v-on:click="Nuevo()" style="background: #0097A7;border: 0px;margin-top:-0.9%">
             Añadir Nuevo
           </b-button>
-          <b-button v-else v-on:click="Elegir()" style="background: #0097A7;border: 0px;margin-top:-0.9%">
-            Cancelar
-          </b-button>
+          <div v-else>
+            <b-button v-if="planAccion!=undefined" v-on:click="Elegir()" style="background: #0097A7;border: 0px;margin-top:-0.9%">
+              Cancelar
+            </b-button>
+          </div>
         </div>
       </div>
       <div class="row" style="margin-top:3%;text-align:left">
@@ -42,7 +44,7 @@
           <strong>Descripción:</strong>
         </div>
         <div class="col-12 col-md-7">
-          <div v-if="planAccion.compromisos==undefined" style="margin-left:2%">
+          <div v-if="nuevo!=true" style="margin-left:2%">
             {{this.planAccion.descripcion}}
           </div>
           <div v-else>
@@ -70,7 +72,7 @@
           </b-button>
         </div>
       </div>
-      <div class="row" style="margin-top:2%">
+      <div v-if="planAccion!=undefined" class="row" style="margin-top:2%">
         <div class="col-md-3 form-inline" style="font-size:150%;text-align:right">
           <b-button v-on:click="TodoHecho" style="background: #0097A7;border: 0px;width:100%;margin-left:1%">
             Todo Hecho >
@@ -81,12 +83,12 @@
       <div class="row">
 
         <div class="col-md-3" style="margin-top:5%">
-          <div class="p-2 redondo" style="background: rgb(0, 152, 146)">
+          <div class="p-2 redondo">
             <h3> Pendiente</h3>
             <draggable class="list-group kanban-column" :list="arrBacklog" group="tasks">
               <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrBacklog" :key="element.name">
                 <div class="row">
-                  <div class="col-8">
+                  <div class="col-8" style="color: #757575 !important;">
                     {{element.name}} 
                   </div>
                   <div class="col-1">
@@ -99,12 +101,12 @@
         </div>
 
         <div class="col-md-3" style="margin-top:5%">
-          <div class="p-2 redondo" style="background: rgb(0, 152, 146)">
+          <div class="p-2 redondo">
             <h3> En Proceso</h3>
             <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
               <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrInProgress" :key="element.name">
                 <div class="row">
-                  <div class="col-8">
+                  <div class="col-8" style="color: #757575 !important;">
                     {{element.name}} 
                   </div>
                   <div class="col-1">
@@ -117,12 +119,12 @@
         </div>
 
         <div class="col-md-3" style="margin-top:5%">
-          <div class="p-2 redondo" style="background: rgb(0, 152, 146)">
+          <div class="p-2 redondo">
             <h3> Por Revisar</h3>
             <draggable class="list-group kanban-column" :list="arrTested" group="tasks">
               <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrTested" :key="element.name">
                 <div class="row">
-                  <div class="col-8">
+                  <div class="col-8" style="color: #757575 !important;">
                     {{element.name}} 
                   </div>
                   <div class="col-1">
@@ -135,12 +137,12 @@
         </div>
 
         <div class="col-md-3" style="margin-top:5%">
-          <div class="p-2 redondo" style="background: rgb(0, 152, 146)">
+          <div class="p-2 redondo">
             <h3> Hecho</h3>
             <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
               <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrDone" :key="element.name">
                 <div class="row">
-                  <div class="col-8">
+                  <div class="col-8" style="color: #757575 !important;">
                     {{element.name}} 
                   </div>
                   <div class="col-1">
@@ -285,6 +287,15 @@ export default {
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                       })
+                      this.cambios = [];
+                      this.eliminados = [];
+                      this.compromisos = [];
+                      this.arrBacklog = [];
+                      this.arrInProgress = [];
+                      this.arrTested = [];
+                      this.arrDone = [];
+                      this.nuevo = false;
+                      this.listarPlan();
                     })
                     .catch(e=>{
                       console.log(e)
@@ -309,6 +320,15 @@ export default {
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                       })
+                      this.cambios = [];
+                      this.eliminados = [];
+                      this.compromisos = [];
+                      this.arrBacklog = [];
+                      this.arrInProgress = [];
+                      this.arrTested = [];
+                      this.arrDone = [];
+                      this.nuevo = false;
+                      this.listarPlan();
                     })
                     .catch(e=>{
                       console.log(e)
@@ -335,6 +355,15 @@ export default {
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                       })
+                      this.cambios = [];
+                      this.eliminados = [];
+                      this.compromisos = [];
+                      this.arrBacklog = [];
+                      this.arrInProgress = [];
+                      this.arrTested = [];
+                      this.arrDone = [];
+                      this.nuevo = false;
+                      this.listarPlan();
                     })
                     .catch(e=>{
                       console.log(e)
@@ -358,6 +387,15 @@ export default {
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                       })
+                      this.cambios = [];
+                      this.eliminados = [];
+                      this.compromisos = [];
+                      this.arrBacklog = [];
+                      this.arrInProgress = [];
+                      this.arrTested = [];
+                      this.arrDone = [];
+                      this.nuevo = false;
+                      this.listarPlan();
                     })
                     .catch(e=>{
                       console.log(e)
@@ -386,6 +424,15 @@ export default {
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                       })
+                      this.cambios = [];
+                      this.eliminados = [];
+                      this.compromisos = [];
+                      this.arrBacklog = [];
+                      this.arrInProgress = [];
+                      this.arrTested = [];
+                      this.arrDone = [];
+                      this.nuevo = false;
+                      this.listarPlan();
                     })
                     .catch(e=>{
                       console.log(e)
@@ -409,6 +456,15 @@ export default {
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                       })
+                      this.cambios = [];
+                      this.eliminados = [];
+                      this.compromisos = [];
+                      this.arrBacklog = [];
+                      this.arrInProgress = [];
+                      this.arrTested = [];
+                      this.arrDone = [];
+                      this.nuevo = false;
+                      this.listarPlan();
                     })
                     .catch(e=>{
                       console.log(e)
@@ -434,6 +490,15 @@ export default {
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                       })
+                      this.cambios = [];
+                      this.eliminados = [];
+                      this.compromisos = [];
+                      this.arrBacklog = [];
+                      this.arrInProgress = [];
+                      this.arrTested = [];
+                      this.arrDone = [];
+                      this.nuevo = false;
+                      this.listarPlan();
                     })
                     .catch(e=>{
                       console.log(e)
@@ -473,6 +538,15 @@ export default {
                   confirmButtonColor:'#0097A7',
                   showConfirmButton: true,
                   })
+                  this.cambios = [];
+                  this.eliminados = [];
+                  this.compromisos = [];
+                  this.arrBacklog = [];
+                  this.arrInProgress = [];
+                  this.arrTested = [];
+                  this.arrDone = [];
+                  this.nuevo = false;
+                  this.listarPlan();
                 })
                 .catch(e=>{
                   console.log(e)
@@ -490,15 +564,6 @@ export default {
             }
             
           }
-          this.cambios = [];
-          this.eliminados = [];
-          this.compromisos = [];
-          this.arrBacklog = [];
-          this.arrInProgress = [];
-          this.arrTested = [];
-          this.arrDone = [];
-          this.nuevo = false;
-          this.listarPlan();
         }
       })
     },
@@ -597,19 +662,23 @@ export default {
 <style>
   .kanban-column{
     min-height: 300px;
+    margin-top: 10%;
   }
 
   h3{
-    color: white;
+    color: rgb(0, 152, 146);
   }
 
   .list-group-item{
-    background: skyblue;
-    color: #757575 !important;
+    border-top: 0.5px solid rgb(0, 152, 146);
+    border-bottom: 0.5px solid rgb(0, 152, 146);
+    border-left: 0.5px solid white;
+    border-right: 0.5px solid white;
   }
 
   .redondo{
     border-radius: 10px;
+    border:0.5px solid rgb(0, 152, 146)
   }
 
   .inp{
