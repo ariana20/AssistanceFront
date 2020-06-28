@@ -1,31 +1,31 @@
 <template>
   <div class="FormInstitucion ">
-    <div class="container" style="text-align: left;left:-100px;">
+    <div style="text-align: left;margin-left:5%;">
       <form v-on:submit.prevent="guardarInstitucion" >
         <div class="row grid-divider" style="">
           <div class="izq col-lg-6 col-xm-2 col-md-12">
             <h4 class="font-weight-bolder text-left institucion-title">Datos</h4><br>
-            <div class="row rowmar">
-              <div class="font-weight-ligth text-left textF">Nombre * </div>
+            <div style="margin-bottom:5%">
+              <div class="font-weight-ligth text-left col-12 col-md-3">Nombre * </div>
               <input class="borde-textbox inp" type="text" v-model="nombre">
             </div>
-            <div class="row rowmar">
-              <div class="font-weight-ligth text-left textF">Siglas * </div>
+            <div style="margin-bottom:5%">
+              <div class="font-weight-ligth text-left col-12 col-md-3">Siglas * </div>
               <input class="borde-textbox inp" type="text" v-model="siglas" required>
             </div>
-            <div class="row rowmar">
-              <div class="font-weight-ligth text-left textF">Direccion * </div>
+            <div style="margin-bottom:5%">
+              <div class="font-weight-ligth text-left col-12 col-md-3">Direccion * </div>
               <input class="borde-textbox inp" type="text" v-model="direccion" required>
             </div>
-            <div class="row rowmar">
-              <div class="font-weight-ligth text-left textF">Telefono * </div>
+            <div style="margin-bottom:5%">
+              <div class="font-weight-ligth text-left col-12 col-md-3">Telefono * </div>
               <input class="borde-textbox inp" v-model="telefono" required>
             </div>
             <br>  * Campos obligatorios 
           </div>
           <div class="der col-lg-6 col-xm col-md-12">
-            <h4 class="font-weight-bolder text-left institucion-title">Logo</h4>
-            <div style="width:100px;text-align:center;margin-left:12%;margin-top:40px" >
+            <h4  style="margin-bottom:10%" class="font-weight-bolder text-left institucion-title">Logo</h4>
+            <div class="logoP" style="width:100px;text-align:center;margin-left:12%;margin-top:40px" >
               <img class="imgP" v-if="this.selectedFile!==null" alt="Vue logo" :src="selectedFile" id='LogoInst'>
               <img class="imgP" v-else alt="Vue logo" v-bind:src="logo" id='LogoInst'>        
             </div>
@@ -35,8 +35,8 @@
             </div>
           </div>
         </div>
-        <div style="margin-left:13%;margin-top:20px">
-          <button type="submit" style="margin-left:80px" class="btn btn-info" v-on:click="guardarInstitucion()">Guardar</button>
+        <div class="col-12" style="text-align:center;margin-top:20px;margin-bottom:5%">
+          <button type="submit" class="btn btn-info" v-on:click="guardarInstitucion()">Guardar</button>
         </div>
       </form>
     </div>
@@ -110,7 +110,7 @@ export default {
       }
       else{
         Swal.fire({
-          text: '¿Dese modificar su Logo?',
+          text: '¿Desea modificar su Logo?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
@@ -182,7 +182,7 @@ export default {
           })        
         }else{
           Swal.fire({
-            text: '¿Dese modificar su Institución?',
+            text: '¿Desea modificar su Institución?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',
@@ -240,14 +240,15 @@ export default {
 
   .inp{
     margin-left:2%;
-    width:300px;
+    width:90%;
     padding-left: 15px;
+    padding-right: 15px;
     height: calc(1.5em + 0.75rem + 2px);
     margin-top:-1%;
   }
 
-  .textF{
-    width: 20%;
+  .text-left{
+    margin-bottom:5%;
   }
 
   .rowmar{
@@ -258,5 +259,13 @@ export default {
   .institucion-title{
     margin-top: 30px;
     margin-bottom: 20px;
+  }
+
+  @media screen and (max-width: 600px) {
+    
+    .imgP{
+      margin-left:35%;
+    }
+
   }
 </style>

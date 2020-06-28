@@ -1,16 +1,20 @@
 <template>
-  <div class="FormRoles container" >
-    <div class="row top-titulo" style="text-align: left" >
-      <div class="col-sm-6 top-titulo">
-        <h5 class="col-sm-6 " style="margin-top: 5px;margin-bottom: 30px;" >Nombre: </h5>
-        <input class="col-sm-6 form-control" style="top:-5px;" v-model="nombre" placeholder="Buscar por nombre"  >
-       
+  <div class="FormRoles" style="text-align: left;margin-left:5%">
+
+    <div class="row">
+      <div class="form-inline col-12 col-md-2 col-lg-1">
+        <h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
       </div>
-      <div class="botones" >
-          <button  type="button" style="border-radius: 10px;margin-right:50px;padding-top:5px;margin-top:-25px" @click="nuevo()" class="row btn btn-info">Añadir</button>
-      </div>      
+      <div class="form-inline col-12 col-md-4">
+        <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
+      </div>
+      <div class="form-inline col-12 col-md-2 offset-md-3 offset-lg-4">
+        <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
+      </div>
     </div>
-      <table class="table"  style="text-align:left">
+
+    <div style="overflow: auto;width:100%;margin-top:2%">
+      <table class="table" style="width:99%">
         <thead>
           <tr>
             <th scope="col">N°</th>
@@ -50,14 +54,15 @@
           </tr>
         </tbody>
       </table>
-  
-     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
-        <b-spinner style="width: 3rem; height: 3rem;"/>
-        <br >Cargando... 
-      </div>
-      </b-modal>
     </div>
+
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+    <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+      <b-spinner style="width: 3rem; height: 3rem;"/>
+      <br >Cargando... 
+    </div>
+    </b-modal>
+  </div>
 </template>
 
 <script>
@@ -143,7 +148,7 @@ export default {
     },
     Eliminar(item){
       Swal.fire({
-          text: '¿Dese eliminar '+item.nombre+'?',
+          text: '¿Desea eliminar '+item.nombre+'?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
@@ -220,7 +225,7 @@ export default {
     justify-content: space-between;
 }
 .botones {
-    margin:auto;
+    margin-top: -0.5%;
 }
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}

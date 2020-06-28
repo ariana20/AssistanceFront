@@ -1,75 +1,61 @@
 <template>
-  <div class="FormListarUsuario container"  >
+  <div class="FormListarUsuario"  >
     <!-- para que lo vea bien un coordinador -->
 
-    <div class="row top-titulo" style="text-align: left" >
-      <div class="col-sm-6 top-titulo">
-        <h5 class="col-sm-6 " style="top:5px;" >Nombre o Código: </h5>
-        <input class="col-sm-6 form-control" style="top:-10px;margin-bottom:10px" 
-                  v-model="criterio" v-on:keyup.enter="buscarUsuario(criterio)" placeholder="Buscar por nombre o código"  >
+    <div style="text-align: left;margin-left:5%" >  
+         
+      <div class="row" style="width:100%">
+        <div class="form-inline col-12 col-md-3 col-lg-2">
+          <h5 style="margin-top:5%;margin-bottom:5%">Nombre o Código: </h5>
+        </div>
+        <div class="form-inline col-12 col-md-4">
+          <input class="form-control" v-model="criterio" placeholder="Buscar por nombre o código">
+        </div>
+        <div class="form-inline col-12 col-md-2 offset-md-2 offset-lg-4">
+          <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
+        </div>
       </div>
 
-      <div class="botones" >
-        <button  type="button" style="border-radius: 10px;margin-right:50px;margin-top:-15px;padding-top:5px" @click="nuevo()" class="row btn btn-info">Añadir</button>
-      </div>    
-
-
-      <!-- <div class="row col-sm-6"  style="margin:10px;font-size:20px">Nombre o Código:  
-        <input placeholder="Busca por nombre o código" class="input row col-sm-6 form-control" style="left:25px;" type="text"  v-model="nombre">  
-        <router-link to="/Usuario/0"> 
-        <button  type="button" style="border-radius: 10px;margin-right:50px" class="row btn btn-info">Añadir</button>
-      </router-link>
-      </div> -->
-     
-        <!-- <div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px">Codigo:  
-        <input placeholder="Busque por Código" class="row col-sm-8 form-control" style="left:25px;" type="text" id="codigos" v-model="codigo">  
-        </div> -->
-        
-      <!-- <div class="row btn-derecha" >
-      <router-link to="/Usuario/0"> 
-        <button  type="button" style="border-radius: 10px;margin-right:50px" class="row btn btn-info">Añadir</button>
-      </router-link>
-      </div>   -->
-         
-
-      <table responsive class="table" style="text-align:left" >
-        <thead>
-          <tr>
-            <th scope="col" style="width:100px">Código</th>
-            <th scope="col" style="width:150px">Nombre</th>
-            <th scope="col" style="width:200px">Apellidos</th>
-            <th scope="col">Correo</th>
-            <th scope="col">Estado</th>
-            <th scope="col">Tipo de Usuario</th>
-            <th scope="col">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in usuarios"  :key="index">
-            <td v-if="item!=undefined">{{item.codigo}}</td>
-            <!-- <td v-if="item!=undefined">{{item.nombre}} {{item.apellidos}}</td> -->
-            <td v-if="item!=undefined">{{item.nombre}}</td> 
-           <td v-if="item!=undefined"> {{item.apellidos}}</td> 
-            <td v-if="item!=undefined">{{item.correo}}</td>  
-            <td >
-                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green;width:35px; height:35px;padding:0px"/>
-                <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;padding:0px"/>
-            </td>
-              <td>{{item.tipo_usuario[0].nombre}}</td>
-            <td  >
-               <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
-              
-                <b-icon icon="pencil" style="color:#0097A7;margin-right:20px;width:20px; height:20px;" v-on:click="llenarUsuarioEscogido(item)"></b-icon>
+      <div style="overflow: auto;width:95%;margin-top:2%">
+        <table responsive class="table" style="text-align:left" >
+          <thead>
+            <tr>
+              <th scope="col" style="width:100px">Código</th>
+              <th scope="col" style="width:150px">Nombre</th>
+              <th scope="col" style="width:200px">Apellidos</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Tipo de Usuario</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in usuarios"  :key="index">
+              <td v-if="item!=undefined">{{item.codigo}}</td>
+              <!-- <td v-if="item!=undefined">{{item.nombre}} {{item.apellidos}}</td> -->
+              <td v-if="item!=undefined">{{item.nombre}}</td> 
+            <td v-if="item!=undefined"> {{item.apellidos}}</td> 
+              <td v-if="item!=undefined">{{item.correo}}</td>  
+              <td >
+                  <b-icon v-if="item.estado == 'act'" icon="check" style="color:green;width:35px; height:35px;padding:0px"/>
+                  <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;padding:0px"/>
+              </td>
+                <td>{{item.tipo_usuario[0].nombre}}</td>
+              <td  >
+                <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
                 
-              </router-link>              
-              
-                <b-icon icon="dash-circle-fill" style="color:#757575;width:20px; height:20px;"  v-on:click="eliminarUsuario(item,index)"></b-icon>
+                  <b-icon icon="pencil" style="color:#0097A7;margin-right:20px;width:20px; height:20px;" v-on:click="llenarUsuarioEscogido(item)"></b-icon>
+                  
+                </router-link>              
                 
-              
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                  <b-icon icon="dash-circle-fill" style="color:#757575;width:20px; height:20px;"  v-on:click="eliminarUsuario(item,index)"></b-icon>
+                  
+                
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <nav aria-label="Page navigation example">
 				<ul class="pagination justify-content-center">

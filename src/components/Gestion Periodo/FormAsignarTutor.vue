@@ -1,8 +1,8 @@
 <template>
   <div name="FormAsignarTutor">
-    <div class="container" style="text-align: center;margin-top:20px">
+    <div style="text-align: center;margin-top:2%;margin-left:5%">
 
-        <div class="row" style="text-align:center;">
+        <div class="row" style="text-align:left;">
             <h4 class="font-weight-bolder col-sm-2">Tutor: </h4>
             <select class="col-sm-5 form-control" v-model="tutorSeleccionado"  @click="listarTT()" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
@@ -15,16 +15,16 @@
             </select>
         </div>
         <div class="row" >
-          <div class="font-weight-bolder col-sm-2" style="text-align:center;">Temas: </div>
+          <div class="font-weight-bolder col-sm-2" style="text-align:left;">Temas: </div>
           <div>
               <label v-for="(item,index) in tipoTutoria" :key="index">
                   {{item.nombre}}<label v-if="index<tipoTutoria.length-1" style="margin-right:5px">, </label>
               </label>
           </div>
         </div>
-        <div class="row">
-            <div class="font-weight-bolder col-sm-2" style="text-align:center;">Alumnos</div>
-            <div class="font-weight-bolder col-sm-10" style="text-align:right;"><button  :disabled="!this.sel" type="button" class="btn btn-info" style="text-align:right;" @click="addAlumno">
+        <div class="row" style="margin-top:2%">
+            <div class="font-weight-bolder col-sm-2" style="text-align:left;">Alumnos</div>
+            <div class="font-weight-bolder col-sm-6" style="text-align:right;"><button  :disabled="!this.sel" type="button" class="btn btn-info" style="text-align:right;" @click="addAlumno">
                 Asignar
             </button>
             </div>
@@ -282,7 +282,7 @@ export default {
 
     Eliminar: function(item, index) {
         Swal.fire({
-            title: '¿Dese eliminar la asignación de '+item.nombre+'?',
+            title: '¿Desea eliminar la asignación de '+item.nombre+'?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',

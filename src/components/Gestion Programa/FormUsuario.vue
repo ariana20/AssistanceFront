@@ -1,6 +1,6 @@
 <template>
-  <div class="FormUsuario container">
-    <div class="row grid-divider" style="margin-top:40px" >
+  <div class="FormUsuario" style="margin-left:5%">
+    <div class="row grid-divider" style="margin-top:3%" >
       <div id="izquierdo" class="col-md-4">
         <table >
             <tbody >
@@ -1040,7 +1040,7 @@ body{
   border-radius: 1.25rem;  
   border: 0.5px solid #757575;
   margin-bottom: 10px;
-  /* width: 180%; */
+  width: 100%;
 }
 td { 
   margin-bottom:10px;
