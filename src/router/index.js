@@ -263,6 +263,17 @@ Vue.use(VueRouter)
     path: '/reportes',
     name: 'Reportes',
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReportes.vue')
+  },
+  {
+    path: '/registrarCita',
+    name: 'Registra Cita',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewRegistrarCitaCal.vue')
+  },
+  {
+    path: '/registrarCita/registrarCitaAgendada',
+    name: 'Registrar Cita Agendada',
+    // props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewRegistrarCitaAgendada.vue')
   }
 ]
 const router = new VueRouter({

@@ -2,9 +2,9 @@
     <div class= "container">
          <!-- <div class="row grid-divider "> -->
             <div >
-                <!-- <router-link to="agregarAlumnos"> 
-                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Alumnos</button>
-                 </router-link> -->
+                <router-link to="registrarCita"> 
+                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Registrar Cita</button>
+                 </router-link> 
 
 
                 <section class="text-left" style="padding-top:0px">
@@ -324,7 +324,7 @@ export default Vue.extend ({
         this.showModal();
         
        Axios
-              .post('/usuarios/masivo',this.formData,  {
+              .post('/usuarios/masivo/'+this.miprog.id_programa,this.formData,  {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }})
