@@ -16,6 +16,8 @@
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
             <div class="row grid-divider">
+                    
+
             <div class="izq col-lg-6 col-xm-2 col-md-12" style="text-align:left;">
                 <div class="font-weight-bolder text-left">Alumno</div>
                 <div class="row">
@@ -70,10 +72,7 @@
                     <div style="margin-top:10%;float:left;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>
                 </div>
                 
-                
-                <!--<div style="position:absolute; bottom:30px;">
-                    <input type="checkbox" v-model="asistencia"/>Asistencia
-                </div>-->
+           
             </div>
             <div class="der col-lg-6 col-xm col-md-12">
                 <div class="font-weight-bolder text-left">Resultado</div>

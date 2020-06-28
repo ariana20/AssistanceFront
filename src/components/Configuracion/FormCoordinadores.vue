@@ -16,7 +16,7 @@
 			</div>
 
       <div style="overflow: auto;width:100%;">
-        <table class="table" style="text-align:center;margin-top:2%">
+        <table class="table" style="text-align:left;margin-top:2%">
           <thead>
             <tr>
               <th scope="col">Codigo</th>

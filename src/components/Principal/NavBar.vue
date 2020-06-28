@@ -134,30 +134,30 @@ export default {
           }
           axios.post('/usuarios/permisos',paramr)
           .then(response=>{
-              this.$store.state.permisosUsuario = response.data;
-              this.$store.state.rutas = [];
-              for(var i=0; i < this.$store.state.navLinks.length; i++){
-                  for(var j=0; j < response.data.length; j++){
-                      if( this.$store.state.navLinks[i].text == response.data[j]){
-                          this.$store.state.rutas.push(this.$store.state.navLinks[i]);
-                      }
-                  }
-              }
-              this.$store.state.programaActual = this.selectedPrograma.programa;
-              this.$store.state.tipoActual = this.selectedPrograma.tipoUsuario;
-              this.$store.state.roles = null;
-              this.$store.state.permisos = null;
-              this.$store.state.unidades = null;
-              let stored = this.openStorage() // extract stored form
-              if (!stored) stored = {} 
-              stored = this.selectedPrograma; // store new value
-              this.saveStorage(stored)
-              if(this.$store.state.rutas[0]) {
-                  this.$router.push(this.$store.state.rutas[0].path)
-              }
-              else {
-                this.$router.push('/userNuevo')
-              }
+            this.$store.state.permisosUsuario = response.data;
+            this.$store.state.rutas = [];
+            for(var i=0; i < this.$store.state.navLinks.length; i++){
+                for(var j=0; j < response.data.length; j++){
+                    if( this.$store.state.navLinks[i].text == response.data[j]){
+                        this.$store.state.rutas.push(this.$store.state.navLinks[i]);
+                    }
+                }
+            }
+            this.$store.state.programaActual = this.selectedPrograma.programa;
+            this.$store.state.tipoActual = this.selectedPrograma.tipoUsuario;
+            this.$store.state.roles = null;
+            this.$store.state.permisos = null;
+            this.$store.state.unidades = null;
+            let stored = this.openStorage() // extract stored form
+            if (!stored) stored = {} 
+            stored = this.selectedPrograma; // store new value
+            this.saveStorage(stored)
+            if(this.$store.state.rutas[0]) {
+                this.$router.push(this.$store.state.rutas[0].path)
+            }
+            else {
+              this.$router.push('/userNuevo')
+            }
           }).catch( e=>console.log(e));
       }
     }

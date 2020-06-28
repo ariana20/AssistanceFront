@@ -3,7 +3,7 @@
       <!--<b-navbar-brand><router-link to="/">SoftVizcochitos</router-link></b-navbar-brand>-->
         <Tabs/>
         <figure class="image-logo" >
-                <img src="@/assets/images/assistance-logo.png" height="65vh" width="65vw" />			
+          <img class="imagel" src="@/assets/images/assistance-logo.png" height="65vh" width="65vw" />			
         </figure>
     </b-navbar>
 </template>
@@ -55,13 +55,16 @@ export default {
     margin-top:1%;
     margin-left:5%;
   }
-  @media screen and (max-height: 600px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-  .image-logo{
-    margin-top:-10%;
-    height: 1vh;
-    margin-left:-4%;
-  }
+  @media screen and (max-width: 800px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+    .image-logo{
+      height: 1vh;
+      margin-left:-6%;
+    }
+    .imagel{
+      margin-left: 25%;
+      margin-top: -40%;
+    }
   }
 </style>

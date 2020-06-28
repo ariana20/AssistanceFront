@@ -40,7 +40,7 @@
                 </div>
               </td>
               <td  style="text-align:left">
-                <button v-on:click="Editar(item.id_unidad_apoyo)" class="btn link" style="margin-left:-19px"><b-icon icon="pencil" style="color:#0097A7"/></button>
+                <button v-on:click="Editar(item.id_unidad_apoyo,false)" class="btn link" style="margin-left:-19px"><b-icon icon="pencil" style="color:#0097A7"/></button>
                 <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
               </td>
             </tr>
@@ -59,10 +59,10 @@
               </td>
               <td  style="text-align:left">
                 <div v-if="item.programas[0].nombre!='Administrador'">
-                  <button v-on:click="Editar(item.id_unidad_apoyo)" class="btn link" style="margin-left:-19px"><b-icon icon="pencil" style="color:#0097A7"/></button>
+                  <button v-on:click="Editar(item.id_unidad_apoyo,false)" class="btn link" style="margin-left:-19px"><b-icon icon="pencil" style="color:#0097A7"/></button>
                   <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
                 </div>
-                <div v-else>
+                <div v-else style="cursor: pointer;" v-on:click="Editar(item.id_unidad_apoyo,true)">
                   Solo Visualización
                 </div>
               </td>
@@ -85,12 +85,12 @@
                   <a style="font-weight:normal">General</a>
                 </div>
               </td>
-              <td  style="text-align:left">
+              <td  style="text-align:left;cursor: pointer;">
                   <div v-if="(item.programas[0].nombre!='Administrador' && item.programas[0].nombre!=$store.state.programaActual.facultad.nombre && item.programas.length==1)||(item.programas[0].nombre!='Administrador' && item.programas[0].nombre!=$store.state.programaActual.facultad.nombre && item.programas.length==1)">
-                    <button   v-if="item.programas[0].nombre!='Administrador' && item.programas[0].nombre!=$store.state.programaActual.facultad.nombre && item.programas.length==1" v-on:click="Editar(item.id_unidad_apoyo)" class="btn link" style="margin-left:-19px"><b-icon icon="pencil" style="color:#0097A7"/></button>
+                    <button   v-if="item.programas[0].nombre!='Administrador' && item.programas[0].nombre!=$store.state.programaActual.facultad.nombre && item.programas.length==1" v-on:click="Editar(item.id_unidad_apoyo,false)" class="btn link" style="margin-left:-19px"><b-icon icon="pencil" style="color:#0097A7"/></button>
                     <button v-if="item.programas[0].nombre!='Administrador' && item.programas[0].nombre!=$store.state.programaActual.facultad.nombre && item.programas.length==1" v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
                   </div>
-                  <div v-else>
+                  <div v-else v-on:click="Editar(item.id_unidad_apoyo,true)">
                     Solo Visualización
                   </div>
               </td>
@@ -188,7 +188,8 @@ export default {
           })
       }
     },
-    Editar(id){
+    Editar(id,Visualización){
+      this.$store.state.visualizacion = Visualización;  
       this.$router.push('/unidad/'+id);
     },
     nuevo(){

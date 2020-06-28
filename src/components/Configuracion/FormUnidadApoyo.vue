@@ -5,35 +5,47 @@
                 <div class="col-12 col-md-4 col-lg-1 form-inline">
                     Nombre: *
                 </div>
-                <div class="col-12 col-md-6 col-lg-5">
+                <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
                     <input style="margin-top:2%" v-model="unidad.nombre" class="form-control" type="text" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )">
+                </div>
+                <div class="col-12 col-md-6 col-lg-5" v-else>
+                    <input disabled style="margin-top:2%" v-model="unidad.nombre" class="form-control" type="text" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )">
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-1 form-inline">
                     Nombre del Contacto: *
                 </div>
-                <div class="col-12 col-md-6 col-lg-5">
+                <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
                     <input style="margin-top:2%" v-model="unidad.nombre_contacto" class="form-control" type="text" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )">
+                </div>
+                <div class="col-12 col-md-6 col-lg-5" v-else>
+                    <input disabled style="margin-top:2%" v-model="unidad.nombre_contacto" class="form-control" type="text" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )">
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-1 form-inline">
                     Correo del Contacto: *
                 </div>
-                <div class="col-12 col-md-6 col-lg-5">
+                <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
                     <input style="margin-top:2%" v-model="unidad.correo_contacto" id="corr" class="form-control"  type="text">
+                </div>
+                <div class="col-12 col-md-6 col-lg-5" v-else>
+                    <input style="margin-top:2%" v-model="unidad.correo_contacto" id="corr" class="form-control"  type="text" disabled>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-1 form-inline">
                     Télefono del Contacto: *
                 </div>
-                <div class="col-12 col-md-6 col-lg-5">
+                <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
                     <input style="margin-top:2%" v-model="unidad.telefono_contacto" type="text" class="form-control" value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
                 </div>
+                <div class="col-12 col-md-6 col-lg-5" v-else>
+                    <input disabled style="margin-top:2%" v-model="unidad.telefono_contacto" type="text" class="form-control" value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+                </div>
             </div>
-            <div v-if="$store.state.tipoActual.nombre == 'Admin'" class="row" >
+            <div v-if="$store.state.tipoActual.nombre == 'Admin' &&  $store.state.visualizacion!=true" class="row" >
                 <div class="col-12 col-md-4 col-lg-1 form-inline">
                     Facultad a Asignar: *
                 </div>
@@ -47,7 +59,7 @@
                     </select>
                 </div>
             </div>
-            <div v-if="(($store.state.tipoActual.nombre == 'Admin' && (prog) )|| $store.state.tipoActual.nombre == 'Coordinador Facultad') " class="row">
+            <div v-if="(($store.state.tipoActual.nombre == 'Admin' && (prog) )|| $store.state.tipoActual.nombre == 'Coordinador Facultad') &&  $store.state.visualizacion!=true" class="row">
                 <div class="col-12 col-md-4 col-lg-1 form-inline">
                     Programa a Asignar: *
                 </div>
@@ -66,9 +78,12 @@
                     * Campos obligatorios 
                 </div>
             </div>
-            <div  class="col-12 botones" style="text-align:center">   
+            <div  class="col-12 botones" style="text-align:center" v-if="$store.state.visualizacion!=true">   
                 <button type="button" style="margin:5px" class="btn btn-info" id="btnGuardar" v-on:click="Guardar()">Guardar</button>
-                <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="Regresar()"  >Cancelar</button>  
+                <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="Regresar()">Cancelar</button>  
+            </div>
+            <div  class="col-12 botones" style="text-align:center" v-else>
+                <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="Regresar()">Regresar</button>  
             </div>
         </div>
         <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
@@ -115,9 +130,9 @@ export default {
     if(this.$store.state.usuario==null) this.$router.push('/login')
     if(this.$store.state.tipoActual.nombre == 'Admin' || this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
         this.showModal()
-        axios.post('/facultad/listTodo')
+        axios.post('/facultad/listarFacultades',{id_institucion: 1})
             .then(response=>{
-                this.facultadesT = response.data.facultades
+                this.facultadesT = response.data
                 if(this.idUnidad){
                     this.axios.post('/unidadesApoyo/listar/'+this.idUnidad)
                         .then( response =>{

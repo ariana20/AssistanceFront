@@ -115,6 +115,7 @@
      <!-- <li         v-for="(newTT,ttIndex) in tipostutorias" :key="ttIndex" >
       {{newTT.id_tipo_tutoria}}  {{newTT.nombre}}
      </li> -->
+     
       <!-- Modal de cargando -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
         <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
@@ -442,6 +443,43 @@ export default {
     },
 
     listarTUsuarios() {
+       if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+        let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
+        this.axios.post('/tipoUsuarios/tiposFacultad',obj)
+          .then(res=>{
+               //Ordenadito
+           let par=res.data;
+          //  console.log('TUsu:',res.data);
+           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e)
+            this.hideModal()
+          });
+      }
+      if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+        let obj = {
+          id_programa: this.$store.state.programaActual.id_programa,
+          id_facultad: this.$store.state.programaActual.id_facultad
+        }
+        this.axios.post('/tipoUsuarios/tiposPrograma',obj)
+          .then(res=>{
+                //Ordenadito
+           let par=res.data;
+          //  console.log('TUsu:',res.data);
+           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e);
+            this.hideModal()
+          });
+      }
+
+
+    /*
+
       //taambién debería ser por programa
       Axios.create().post('/tipoUsuarios/listarTodo')
         .then(res =>{
@@ -474,6 +512,7 @@ export default {
           })
 
         })
+        */
     },
     cancelarUsuario(){
         Swal.fire({

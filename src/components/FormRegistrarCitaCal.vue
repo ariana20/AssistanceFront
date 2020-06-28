@@ -1,8 +1,9 @@
 <template>
     <div class="formagendarcita container">
         <div class="top-titulo " style="text-align:left;">
+            <!-- inicia combobox -->
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @click="showCalendar" >
+            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
@@ -11,10 +12,11 @@
                     {{ item.usuario.nombre + " " + item.usuario.apellidos }}
                 </option>
             </select>
+            <!-- leyenda -->
             <ul class="legend">
                 <li><span class="ocupado"></span> Ocupado </li>
                 <li><span class="disponible"></span> Disponible </li>
-                <li><span class="citareservada"></span> Cita Resevada </li>
+                <!-- <li><span class="citareservada"></span> Cita Resevada </li> -->
             </ul>
         </div>
         <div class="top-titulo" style="text-align:left;">
@@ -44,11 +46,19 @@
                           :allDaySlot= "false"
                           :editable= "false"
                           :events = "EVENTS"
-                          @eventClick= "handleClick"
+                         
+                          @eventClick= "rutaEvent"
                           />
+                           <!-- @eventClick= "handleClick" -->
             <modals-container/>
         </div>
-        
+               <!-- Modal de cargando -->
+      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+        <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+          <b-spinner style="width: 3rem; height: 3rem;"/>
+          <br >Cargando... 
+        </div>
+      </b-modal> 
     </div>
 </template>
 
@@ -65,10 +75,10 @@ import esLocale from '@fullcalendar/core/locales/es'
 import axios from 'axios'
 //import Vue from 'vue'
 import{mapGetters} from 'vuex'
-import EventModal from './EventModal'
-
+//import EventModal from './EventModalRegistrar'
+import Swal from 'sweetalert2'
 export default {
-    name: 'formAgendarCita',
+    name: 'formRegistrarCitaCal',
     components: {Fullcalendar},
     data () {
         return {
@@ -108,41 +118,116 @@ export default {
                     },
             },
             nombre_usuario: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
-            tutorSel: this.$store.state.tutorDisponibilidad,
+            tutorSel: null,
             tutores: [],
+            fechaIni:null,
+            miUsuario:this.$store.state.permisosUsuario,
+            isTutor:null,
         }
     },
     computed: {
         ...mapGetters(["EVENTS"])
     },
+    mounted() {        
+        this.listarTutores();
+        if (this.tutorSel)
+            this.showCalendar();
+        else
+            this.$store.state.events=[];            
+    },
     methods: {
         showCalendar() {
-            if(this.tutorSel) {
+            
+            if(this.tutorSel!=null) {
                 this.getReminders();
             }
         },
+        rutaEvent (arg) {
+           //Aquí me lleva a la cita agendada 
+          console.log('arg',arg);
+           if(arg.event.backgroundColor!='gray') {
+                // disponible
+                
+                this.$store.state.citaDatos={
+                        props:arg.event.extendedProps,
+                        id_disponibilidad:arg.event.id,
+                        fechaIni:arg.event.start,
+                        fechaFin:arg.event.end,
+                        id_tutor: this.tutorSel.id_usuario,
+                        tutorSel: this.tutorSel,
+                        isGray:false,
+                        alumnos:arg.event.allow,
+
+                };
+             
+                this.$router.push('/registrarCita/registrarCitaAgendada');
+            } else { 
+                //Gray
+                this.$store.state.citaDatos={
+                        props:arg.event.extendedProps,
+                        id_disponibilidad:arg.event.id,
+                        fechaIni:arg.event.start,
+                        fechaFin:arg.event.end,
+                        id_tutor: this.tutorSel.id_usuario,
+                        tutorSel: this.tutorSel,
+                        isGray:true,
+                        alumnos:arg.event.allow,
+
+                };
+                this.$router.push('/registrarCita/registrarCitaAgendada');
+                 }
+
+         
+
+        },
         listarTutores() {
-        const params = {
-            id_programa : this.$store.state.programaActual.id_programa,
-            nomFacu:this.$store.state.programaActual.facultad.nombre,
-            nombre: "",
-        };
-        axios
-        .post('/programa/tutoresListar', params)
+            
+            this.showModal();
+            // this.calendar=null;
+            // this.$store.commit=null;
+            const params = {
+                id_programa : this.$store.state.programaActual.id_programa,
+                nomFacu:this.$store.state.programaActual.facultad.nombre,
+                nombre: "",
+            };
+            axios
+            .post('/programa/tutoresListar', params)
             .then(res =>{
-            console.log(res);
-            this.tutores=res.data;            
+                console.log(res);
+                this.tutores=res.data;   
+                this.hideModal();  
+                if(this.$store.state.permisosUsuario.includes('Sesión de Tutoría')) {
+                  
+                    this.isTutor=true; //tiene tutorías- es tutor o es coordinador
+                    
+                }else  {
+                    //Es secretaria 
+                    this.isTutor=false;}
+                      
             })
             .catch(e => {
-            console.log(e.response);
+                console.log(e.response);
+                this.hideModal();
+                Swal.fire({
+                    text:"Estamos teniendo problemas al listar los tutores del programa. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                     showConfirmButton: true,
+                });
+                 this.$router.push('/registrarCita');
             })
         },
+         /*
         handleClick (arg) {
+            //Ya no entro
+           
             if(arg.event.backgroundColor!='gray') {
+                // aqui llamo y uso al modal
                 this.$modal.show(EventModal,{
                     text: "This is from the component",
                     event: arg.event,
-                    nombre_usuario: this.nombre_usuario,
+                    // nombre_usuario: this.nombre_usuario,
                     id_tutor: this.tutorSel.id_usuario,
                     isTutor: false,
                     tutorSel: this.tutorSel
@@ -150,48 +235,71 @@ export default {
             } else { 
                 return false
             }
-        },
+            
+
+        },*/
         getReminders: function() {
+         
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
-                axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
+                axios.post('disponibilidades/dispSemanalVistaAl',{
+                    idUsuario:this.tutorSel.id_usuario,
+                    idPrograma:this.$store.state.programaActual.id_programa,
+                    fechaIni:this.calendar.view.activeStart,
+                    fechaFin:this.calendar.view.activeEnd 
+                })
                 .then((response) => {
-                    var rd = response.data[0]; 
+                    
+                    var rd = response.data[0];
+                    console.log('rd',rd);
+
                     var rd2 = response.data[1];
                     for(var i in rd) {
                         //console.log('usuario_actualizacion',rd[i])
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
                             if(rd2[i]=='o'){
-                                if(rd[i].alumno[0].id_usuario == this.$store.state.usuario.id_usuario){
+                                
+                               if(rd[i].alumno.length==1){    
+                                   //Muestra al primer alumno
+                                   ///Soy arg
+                                   
                                     this.$store.commit("ADD_EVENT", {
+                                        allow: rd[i].alumno,
                                         id: rd[i].id_disponibilidad,
-                                        title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
-                                        start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                        tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                        color: '#009892',
-                                        usuario_creacion: rd[i].usuario_creacion,
-                                        id_usuario_tutor: rd[i].id_usuario,
-                                        usuario_actualizacion: rd[i].usuario_actualizacion,
-                                        
-                                    });
-                                } else {
-                                    this.$store.commit("ADD_EVENT", {
-                                        id: rd[i].id_disponibilidad,
-                                        title: 'Ocupado',
+                                        title:  rd[i].alumno[0].nombre+" "+rd[i].alumno[0].apellidos,
                                         start: rd[i].fecha + " " + rd[i].hora_inicio,
                                         end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
                                         tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                         color: 'gray',
+                                        // ya no es usuario creacion
                                         usuario_creacion: rd[i].usuario_creacion,
                                         id_usuario_tutor: rd[i].id_usuario,
                                         usuario_actualizacion: rd[i].usuario_actualizacion,
                                        
                                     });
-                                }
+                               }
+                               else if(rd[i].alumno.length>1){
+                                    //Muestra como cita grupal
+                                    this.$store.commit("ADD_EVENT", {
+                                        allow: rd[i].alumno,
+                                        id: rd[i].id_disponibilidad,
+                                        title:  'Cita grupal',
+                                        start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                        tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                        color: 'gray',
+                                        // ya no es usuario creacion
+                                        usuario_creacion: rd[i].usuario_creacion,
+                                        id_usuario_tutor: rd[i].id_usuario,
+                                        usuario_actualizacion: rd[i].usuario_actualizacion,
+                                       
+                                    });
+                               } 
+                               // }
                             } else {
                                 this.$store.commit("ADD_EVENT", {
+                                    
                                     id: rd[i].id_disponibilidad,
                                     title: 'Disponible',
                                     start: rd[i].fecha + " " + rd[i].hora_inicio,
@@ -206,31 +314,36 @@ export default {
 
                         //});
                     }
+                    
                 }).catch(e => {
                     console.log(e.response);
+                    
+                    Swal.fire({
+                        text:"Estamos teniendo problemas al mostrar la disponibilidad del tutor. Vuelve a intentar en unos minutos.",
+                        icon:"warning",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                         showConfirmButton: true,
+                    });
+                    
                 });
-                //this.calendar.render();
+                this.calendar.render();
             },
+            //Modal de cargando
+            showModal() {
+              this.$refs['my-modal'].show()
+            },
+            hideModal() {
+              this.$refs['my-modal'].hide()
+            },
+            
     },
     watch: {    
         eventFilter() {
-        this.$refs.calendar.fireMethod("rerenderEvents");
+            this.$refs.calendar.fireMethod("rerenderEvents");
         }
     },
-    mounted() {
-        //console.log('prog actual: ',this.$store.state.programaActual.id_programa);
-        this.listarTutores();
-        //this.calendar = this.$refs.fullCalendar.getApi();
-        //idUsuario: this.$store.state.usuario.id_usuario
-        /*axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
-        .then(response => {
-            this.dispSemanalVistaAl = response.data;
-
-            console.log(response.data);
-        }).catch(e => {
-            console.log(e.response);
-        });*/
-    }
+  
     
 }
 function addTimes (startTime, endTime) {
@@ -328,6 +441,11 @@ function addTimes (startTime, endTime) {
 }
 .fc-time-grid .fc-slats td {
     height: 2.5em;
+}
+.vm--modal {
+    border-radius: 25px;
+    margin: 30px;
+    height: 260px !important;
 }
 
 </style>

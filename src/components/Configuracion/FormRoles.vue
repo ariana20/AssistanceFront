@@ -1,19 +1,19 @@
 <template>
   <div class="FormRoles" style="text-align: left;margin-left:5%">
 
-    <div class="row">
-      <div class="form-inline col-12 col-md-2 col-lg-1">
+    <div class="row" style="width:100%">
+      <div class="form-inline col-11 col-md-2 col-lg-1">
         <h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
       </div>
-      <div class="form-inline col-12 col-md-4">
+      <div class="form-inline col-11 col-md-4">
         <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
       </div>
-      <div class="form-inline col-12 col-md-2 offset-md-3 offset-lg-4">
+      <div class="form-inline col-11 col-md-2 offset-md-3 offset-lg-4">
         <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
       </div>
     </div>
 
-    <div style="overflow: auto;width:100%;margin-top:2%">
+    <div style="overflow: auto;width:99%;margin-top:2%">
       <table class="table" style="width:99%">
         <thead>
           <tr>
@@ -36,17 +36,17 @@
               </div>
             </td>
             <td  style="text-align: center" v-if="$store.state.tipoActual.nombre == 'Admin'">
-              <button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
+              <button v-on:click="Editar(item.id_tipo_usuario,false)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
               <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
             </td>
             <td  style="text-align: center" v-else>
               
               <div v-if="(item.programa.nombre!='Administrador' && item.programa.nombre!=$store.state.programaActual.facultad.nombre)">
-                <button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
+                <button v-on:click="Editar(item.id_tipo_usuario,false)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
                 <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
               </div>
               
-              <div v-else>
+              <div v-else v-on:click="Editar(item.id_tipo_usuario,true)" style="cursor: pointer;">
                 Solo Visualización
               </div>
 
@@ -140,7 +140,8 @@ export default {
       }
       
     },
-    Editar(id){
+    Editar(id,Visualización){
+      this.$store.state.visualizacion = Visualización;  
       this.$router.push('/permisos/'+id);
     },
     nuevo(){
