@@ -255,8 +255,8 @@ export default {
         },
 
         generarReporte(){
-            this.RatioAtenciones();
-            //this.RatioAsignado();
+            //this.RatioAtenciones();
+            this.RatioAsignado();
         }
         
     }
