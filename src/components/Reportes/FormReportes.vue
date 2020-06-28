@@ -78,6 +78,9 @@ export default {
             selectedFacultad:null,
             programas:[],
             selectedPrograma:null,
+            //lista de identificadores
+            idPogramas:[],
+            idFacultades:[],
             //graficos
             asignados:[],
             atenciones:[],
@@ -136,6 +139,7 @@ export default {
     },
     created(){
         this.periodo = [this.inicio,this.fin];
+        this.RatioAsignado();
         this.RatioAtenciones();
         this.listarFacultades();
     },
@@ -162,8 +166,7 @@ export default {
         listarProgramas(){
             console.log(this.selectedFacultad);
             const params = {
-                id_facultad:this.selectedFacultad.id_facultad,
-                nombre:this.selectedFacultad.nombre                  //BORRAR CUANDO ACTUALICEN SERVER
+                id_facultad:this.selectedFacultad.id_facultad
             };
             axios.post('facultad/listarProgramasDefault', params)
             .then( response => {
@@ -181,23 +184,29 @@ export default {
 
         },
 
-
         async RatioAsignado(){
+            this.asignados=[];
             const params = {
-                id_programa: this.$store.state.programaActual.id_programa,
+                id_programa: this.idPogramas,
+                id_facultad: this.idFacultades,
+                id_institucion: 1,
+                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
-            const { data } =await axios.post("registros/cantAlumnos", params);
-            console.log("arrPositive: " + data);
-            this.asignados=data;
-            /*
-            data.forEach(d=>{
-                const date=d.nombre+"\n"+d.apellidos;
-                const {
-                    cantalum
-                }=d;
-                this.arrPositive.push({date,total:cantalum});
-                
-            })*/
+            var data;
+            if(this.idPogramas.length>0)
+                data =await axios.post("registros/asignadosXPrograma", params);
+            else if(this.idFacultades.length>0)
+                data =await axios.post("registros/asignadosXFacultad", params);
+            else
+                data =await axios.post("registros/asignadosXUniversidad", params);
+
+            console.log("asignadosXUniversidad ");
+            console.log(data);
+            this.asignados.push({date:"Asignados",total:data.data[0].asignados});
+            this.asignados.push({date:"No Asignados",total:data.data[1].noasignados});
+
+
         },
         handlePeriodChange(periodo) {
             this.periodo = periodo;
@@ -207,7 +216,24 @@ export default {
             today.setHours(0, 0, 0, 0);
             return date > today;
         },
+
         async RatioAtenciones(){
+            /*
+            this.atenciones=[];
+            const params = {
+
+
+            };
+            
+            const { data } =await axios.post("", params);
+            console.log(data);
+            
+
+            console.log(this.atenciones);*/
+        },
+
+        async RatioAtencionesOtraPantalla(){
+            this.atenciones=[];
             const params = {
                 id_programa: this.$store.state.programaActual.id_programa,
                 fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
@@ -229,7 +255,6 @@ export default {
         },
 
         generarReporte(){
-            console.log(this.date);
             this.RatioAtenciones();
             //this.RatioAsignado();
         }
