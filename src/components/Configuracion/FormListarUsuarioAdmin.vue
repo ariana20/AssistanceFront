@@ -17,7 +17,7 @@
           <thead>
             <tr>
               <th scope="col" style="width:5%">Codigo</th>
-              <th scope="col" style="width:15%">Nombre</th>
+              <th scope="col" style="width:20%">Nombre</th>
               <th scope="col" style="width:25%">Correo</th>
               <th scope="col" style="width:25%">Programa (Tipo de Usuario)</th>
               <!-- <th scope="col">Modif/Elim</th> -->
@@ -30,14 +30,15 @@
               <td>{{item.correo}}</td>   
               <!-- va a cambiar, me daran nombre -->
               <td style="width:50%">
-                <div class="row" v-for="(itema,index) in item.usuario_x_programas" :key="index" style="text-align:center;margin-left:0">
-                  <span v-if="itema.programa">{{itema.programa.nombre}}</span>
-                  <span v-else> Sin Asignar </span>
-                  <span style="margin-left:5px"> ({{itema.tipo_usuario.nombre}})</span>
-                  <hr v-if="item.usuario_x_programas.length > 1" style="border: 0px solid #757575;width:100%">
-                </div>  
-                <div v-if="item.usuario_x_programas.length == 0" >
-                  <span> Sin Asignar </span>
+                <div class="row">
+                  <div v-for="(itema,index) in item.usuario_x_programas" :key="index" style="text-align:center;margin-left:2%">
+                    <div v-if="index!=item.usuario_x_programas.length-1 && itema.programa">{{itema.programa.nombre+" ("+itema.tipo_usuario.nombre+")"+","+" "}}</div>
+                    <div v-else-if="itema.programa">{{itema.programa.nombre+" ("+itema.tipo_usuario.nombre+")"}}</div>
+                    <div v-else> Sin Asignar </div>
+                  </div>  
+                  <div v-if="item.usuario_x_programas.length == 0" style="text-align:center;margin-left:2%">
+                    <span> Sin Asignar </span>
+                  </div>
                 </div>  
               </td>
               <!-- <td style="text-align: center">

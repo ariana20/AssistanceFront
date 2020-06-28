@@ -49,15 +49,15 @@ export default {
         width:15%
     }
 
-    @media screen and (max-height: 600px) {
+    @media screen and (max-width: 800px) {
         .tabs{
-            margin-left:-7%;
+            margin-left:-3%;
             width:90%;
         }
         .tama{
-            margin-left:3%;
-            width:20%;
-            font-size: 2vw
+            margin-left:1%;
+            width:22%;
+            font-size: 60%
         }
     }
 </style>
