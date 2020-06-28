@@ -263,7 +263,24 @@ Vue.use(VueRouter)
     path: '/reportes',
     name: 'Reportes',
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReportes.vue')
-  }
+  },
+  {
+    path: '/registrarCita',
+    name: 'Registra Cita',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewRegistrarCitaCal.vue')
+  },
+  {
+    path: '/registrarCita/registrarCitaAgendada',
+    name: 'Registrar Cita Agendada',
+    // props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewRegistrarCitaAgendada.vue')
+  },
+  {
+    path: '/calendariocitas/cita-agendada-alumnos',
+    name: 'Cita Agendada Alumnos',
+    // props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewCitaAgendada2.vue')
+  },
 ]
 const router = new VueRouter({
   mode: 'history',

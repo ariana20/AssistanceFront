@@ -27,12 +27,14 @@ export default new Vuex.Store({
     usuarioEscogido:null,
     events: [],
     curEvent: null,
+    curSesion: null,
     tutorDisponibilidad:null,
     reg: false,
     idCita: null,
     verPdf:false,
     verCitas:false,
     verPlan:false,
+    citaDatos:null,
     navLinks: [
       {
         text: 'Institucion',
@@ -113,6 +115,11 @@ export default new Vuex.Store({
     {
       text: 'Citas',
       path: '/agendarcita',
+      icon: 'ion-ios-calendar'
+    },
+    {
+      text: 'Registrar Cita',
+      path: '/registrarCita',
       icon: 'ion-ios-calendar'
     },
     {

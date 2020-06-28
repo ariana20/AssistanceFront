@@ -216,7 +216,7 @@ export default Vue.extend ({
        Axios /////////////ruta
        //this.miprog.id_programa;
               // .post('/usuarios/alumnoMasivo',
-              .post('/usuarios/alumnoMasivo',
+              .post('/usuarios/alumnoMasivo/'+this.miprog.id_programa,
               this.formData,  {
             headers: {
                 'Content-Type': 'multipart/form-data'
