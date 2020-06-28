@@ -25,7 +25,7 @@
        
           <div class="row ">
             <div class="izq col-lg-6 col-xm-2 col-md-12">
-                <div class="font-weight-bolder text-left">Alumno</div>
+                <div class="font-weight-bolder text-left">Alumno(s)</div>
                 <div class="row">
                     <div class="col-md-4 col-sm-4">
                         <div class="col-sm-6"><label for="formGroupExampleInput">Código</label></div>
@@ -498,6 +498,15 @@ export default Vue.extend ({
                      showConfirmButton: true,
                  }) 
             
+            }
+            else if (this.alSeleccionado == 'Nombre del alumno'){
+                 Swal.fire({
+                     text:"Selección de alumno inválida",
+                     icon:"warning",
+                     confirmButtonText: 'OK',
+                     confirmButtonColor:'#0097A7',
+                     showConfirmButton: true,
+                 }) 
             }
             console.log(this.listAlumnosId);
             

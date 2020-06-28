@@ -284,6 +284,10 @@ export default {
 
         })
       }
+      else{
+          //Mensaje informativo de que esta pantalla no es para admin
+      
+      }
 
 
     

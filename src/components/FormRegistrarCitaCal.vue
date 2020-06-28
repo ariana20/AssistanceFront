@@ -128,35 +128,12 @@ export default {
     computed: {
         ...mapGetters(["EVENTS"])
     },
-    mounted() {
-        //console.log('prog actual: ',this.$store.state.programaActual.id_programa);
-        
-        // this.tutorSel=null;
-        
+    mounted() {        
         this.listarTutores();
-        
-        // console.log('id: ',this.$store.state.citaDatos.id_tutor);
-        //console.log('t:',this.tutorSel);
-        //if(this.$store.state.citaDatos.id_tutor)
-          //   this.tutorSel.id_usuario=this.$store.state.citaDatos.id_tutor;
-        
         if (this.tutorSel)
             this.showCalendar();
         else
-            this.$store.state.events=[];
-        
-        
-        //idUsuario: this.$store.state.usuario.id_usuario
-        /*axios.post('disponibilidades/dispSemanalVistaAl',{
-            idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
-        .then(response => {
-            this.dispSemanalVistaAl = response.data;
-
-            console.log(response.data);
-        }).catch(e => {
-            console.log(e.response);
-        });*/
-        
+            this.$store.state.events=[];            
     },
     methods: {
         showCalendar() {
