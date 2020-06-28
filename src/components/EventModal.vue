@@ -67,8 +67,8 @@ export default {
             end: {},
             isDisabled: false,
             idCita: null,
-            tipoTutorias: this.tutorSel.usuario.tipo_tutorias,
-            motivoSel: null
+            tipoTutorias: "",
+            motivoSel: null,
         }
     },
     methods: {
@@ -77,7 +77,7 @@ export default {
             name: 'Cita Agendada',
             props: {event:this.event }
           });*/
-          this.$router.push({name:'Cita Agendada', params: {event:this.event }});
+          this.$router.push({name:'Cita Agendada', params: {event:this.event}});
 
         },
         removeEvent() {
@@ -160,8 +160,10 @@ export default {
         getIdCita () {
           axios.post('disponibilidades/mostrarCita2', {idDisponibilidad:this.event.id})
           .then((response) => {
-            this.idCita = response.data.id_cita;
-            this.$store.state.idCita = response.data.id_cita;
+            this.idCita = response.data[0].id_cita;
+            this.$store.state.idCita = response.data[0].id_cita;
+            this.$store.state.curSesion = response.data
+            console.log('mostrarCita2: ',response.data)
             //this.idCita = response.data.cita[0].id_cita
             //console.log(response.data);
             //console.log(response.data.cita[0].id_cita);
@@ -222,8 +224,10 @@ export default {
     id_tutor: Number,
     tutorSel: Object,
   },mounted() {
+    if(this.tutorSel) {
+      this.tipoTutorias = this.tutorSel.usuario.tipo_tutorias
+    }
     this.$store.state.curEvent = this.event;
-    console.log(this.event.id);
     this.getIdCita();
 
   }
@@ -242,7 +246,7 @@ Vue.filter('formatHour', function(value) {
 
 </script>
 
-<style scope>
+<style scoped>
 @import './../assets/styles/main.css';
 div {
     color: black !important;

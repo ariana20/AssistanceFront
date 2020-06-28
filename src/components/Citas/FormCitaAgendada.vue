@@ -2,7 +2,10 @@
     <div class="formcitaagendada container">
         <div class="top-info" style="text-align:left;">
             <div id="botones">
-                <button type="button" class="btn btn-info" @click="guardar">Guardar</button>
+                <button v-if="this.cita[1]=='l' && !this.editar" type="button" class="btn btn-info" @click="editFields">Editar</button>
+                <button v-else-if="this.editar" type="button" class="btn btn-info" @click="guardar">Guardar</button>
+                
+                
                 <button type="button" class="btn btn-secondary" @click="cancelar">Cancelar</button>
             </div>
                 <div class="botones list-data"><div id="left">Día:          </div> <div id="right"> {{ this.event.extendedProps.fecha }} </div></div>
@@ -89,7 +92,7 @@
                     <button type="button" 
                             :disabled="!this.selectedMotivo"
                             class="btn btn-info" 
-                            @click="addMotivos(i)">Seleccionar</button>
+                            @click="addMotivos()">Seleccionar</button>
                     </div>
                 </div>
                 <div class="left-content" >
@@ -101,7 +104,7 @@
                             v-for="(newMotivo,motivoIndex) in listMotivos"  
                             :key="motivoIndex">
                             {{newMotivo}}
-                            <span name="remove" class="close" @click="deleteMotivo(motivoIndex)" style="margin-right : 20px;float:right;">&times;</span>           
+                            <span name="remove" class="close" @click="deleteMotivo(motivoIndex)" style="color:red;margin-right : 20px;float:right;">&times;</span>           
                         </li>
                     </ul>
                     <hr>
@@ -195,14 +198,34 @@ export default Vue.extend ({
             listAlumnosId: [],
             unidadesApoyo: [],
             selectedUnidadApoyo: null,
-            us:null,
+            cita: this.$store.state.curSesion,
+            editar: false
         }
     },
     mounted(){
-        if(this.$store.state.usuario==null) this.$router.push('/login')
-        else this.showModal()
+        console.log('idCita: ',this.$store.state.idCita)
+        //LLENANDO LOS CAMPOS CUANDO HAY INFO EN LA SESION
+        console.log('editar status: ',this.editar)
+        console.log('obtuve la cita: ',this.$store.state.curSesion)
+        // if(this.cita[1] != "l") {
+        //     this.descripcion = this.cita[1].resultado
+        //     if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
+        //         this.asistencia = true
+        //     }
+        //     console.log('longitud for:', this.cita[1].motivo_consultas)
+        //     for(var i in this.cita[1].motivo_consultas) {
+        //         this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
+        //         console.log('motivo selected: ', this.selectedMotivo)
+        //         this.addMotivos()
+        //     }
         
-        axios.post('usuarios/listar/'+this.event.extendedProps.alumno.id_usuario)
+        //     console.log('motivos: ', this.listMotivos)
+        //     //si hay info de la sesion quiere decir que ha asistido a su 
+        // }
+        console.log('cita  ', this.cita);
+        this.disableFields()
+        
+        axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {
             this.us = response.data
         }).catch(e => {
@@ -226,10 +249,52 @@ export default Vue.extend ({
             })
             .catch(e => {
             console.log(e.response);
-                this.hideModal()
-            });
+        });
+    axios.post('motivosConsulta/listarTodo')
+        .then( response => {
+            this.motivos = response.data;
+            this.fillFields()
+        })
+        .catch(e => {
+          console.log(e.response);
+        });
+    
     },
     methods: {
+        fillFields() {
+            if(this.cita[1] != "l") {
+            this.descripcion = this.cita[1].resultado
+            if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
+                this.asistencia = true
+            }
+            console.log('longitud for:', this.cita[1].motivo_consultas)
+            for(var i in this.cita[1].motivo_consultas) {
+                this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
+                console.log('motivo selected: ', this.selectedMotivo)
+                this.addMotivos()
+            }
+        }
+        },
+        enableFields() {
+            let elems = document.getElementsByTagName('input')
+            elems[0].disabled = false;
+            let elems2 = document.getElementsByTagName('select');
+            for(let i = 0; i < elems2.length; i++) {
+                elems2[i].disabled = false;
+            }
+            let elems3 = document.getElementsByTagName('textarea');
+            elems3[0].disabled = false;
+        },
+        disableFields() {
+            let elems = document.getElementsByTagName('input')
+            elems[0].disabled = true;
+            let elems2 = document.getElementsByTagName('select');
+            for(let i = 0; i < elems2.length; i++) {
+                elems2[i].disabled = true;
+            }
+            let elems3 = document.getElementsByTagName('textarea');
+            elems3[0].disabled = true;
+        },
         cancelar: function(){
             Swal.fire({
                     text:"¿Está seguro que desea cancelar?",
@@ -242,20 +307,37 @@ export default Vue.extend ({
                     showConfirmButton: true,
                 }).then((result) => {
                     if (result.value) {
-                    //lo redirigo
-                    this.$router.push('/calendariocitas');
-                    
+                        this.descripcion= '';
+                        this.motivo= null;
+                        this.sel= '';
+                        this.selectedTipoTutoria= null;
+                        this.selectedMotivo= '';
+                        this.newMotivo= null;
+                        this.listMotivosId= [];
+                        this.motivosBorrados=[];
+                        this.selectedUnidadApoyo= null;
+                        //lo redirigo
+                        this.$router.push('/calendariocitas');
                     } 
                 })
+        },
+        editFields: function () {
+            if(this.cita[1]=='l') {
+                this.enableFields()
+                this.editar=true
+            }
+            
         },
         guardar: function () {
             let array = []
             array.push(this.event.extendedProps.alumno.id_usuario);
             console.log(array);
             const sesion_params = {
+                id_cita: this.$store.state.idCita,
                 resultado: this.descripcion,
+                usuario_creacion: this.cita[1].usuario_creacion,
+                usuario_actualizacion: this.cita[1].usuario_actualizacion,
                 idAlumnos: array,
-                id_cita: this.$store.state.idCita, 
                 asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
             };
@@ -263,14 +345,12 @@ export default Vue.extend ({
                         
                             if(this.descripcion!=null) {
                                 if(this.selectedUnidadApoyo) {
-                                    //console.log('asdfasdf',this.selectedUnidadApoyo);
                                     this.enviarCorreo(this.selectedUnidadApoyo)
                                 }
-                                this.showModal()
                                 axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
                                         console.log(response);
-                                        this.hideModal()
+                                        this.disableFields()
                                         Swal.fire({
                                             text:"Se ha registrado la sesión con éxito",
                                             icon:"success",
@@ -281,7 +361,6 @@ export default Vue.extend ({
                                     })  
                                     .catch(e => {
                                         console.log(e.response);
-                                        this.hideModal()
                                     });
                                 }
                                 else {
@@ -316,6 +395,7 @@ export default Vue.extend ({
             }
         },
         addMotivos: function () {
+            console.log('la funcion addmotivos ha sido llamada',this.motivos)
             for(var i in this.motivos)
                 if(this.selectedMotivo==this.motivos[i].id_motivo_consulta) {
                     this.listMotivos.push(this.motivos[i].nombre);
@@ -326,39 +406,17 @@ export default Vue.extend ({
         },
         deleteMotivo: function (index) {
             var i;
+            if(this.cita[1]=='l'){
             for(i in this.motivosBorrados)
                 if(this.listMotivos[index]==this.motivosBorrados[i].nombre) {
                     this.motivos.push(this.motivosBorrados[i]);
                     break;
                 }
+            
             this.listMotivos.splice(index,1);
             this.listMotivosId.splice(index,1);
-        },
-        deleteAl: function(index) {
-            this.listAlumnosCod.splice(index,1);
-            this.listAlumnosNom.splice(index,1);
-        },
-        addAlumno: function () {  
-            var estaAl = false;
-            for( var i in this.listAlumnosCod ){
-                    if(this.sel == this.listAlumnosCod[i]){
-                        estaAl = true;
-                        break;
-                    }
+
             }
-            if(this.alSeleccionado != 'Nombre Alumno' && !estaAl && this.sel.length == 8){ 
-                this.listAlumnosNom.push(this.alSeleccionado);
-                this.listAlumnosCod.push(this.sel);
-                for(var j in this.codigos){
-                    if(this.sel == this.codigos[j].codigo)
-                        this.listAlumnosId.push(this.codigos[j].id_usuario);
-                }
-                this.alSeleccionado='Nombre Alumno';
-                this.sel= '';
-            }
-            console.log(this.listAlumnosId);
-            
-            
         },
         enviarCorreo(unidad){
             let mensaje = "Se te ha derivado a "+unidad.nombre+":<br>"

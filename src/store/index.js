@@ -26,6 +26,7 @@ export default new Vuex.Store({
     usuarioEscogido:null,
     events: [],
     curEvent: null,
+    curSesion: null,
     tutorDisponibilidad:null,
     reg: false,
     idCita: null,
