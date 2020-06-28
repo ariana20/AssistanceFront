@@ -82,7 +82,7 @@
 
       <div class="row">
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
           <div class="p-2 redondo">
             <h3> Pendiente</h3>
             <draggable class="list-group kanban-column" :list="arrBacklog" group="tasks">
@@ -100,7 +100,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
           <div class="p-2 redondo">
             <h3> En Proceso</h3>
             <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
@@ -118,7 +118,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
           <div class="p-2 redondo">
             <h3> Por Revisar</h3>
             <draggable class="list-group kanban-column" :list="arrTested" group="tasks">
@@ -136,7 +136,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
           <div class="p-2 redondo">
             <h3> Hecho</h3>
             <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
