@@ -122,6 +122,7 @@ export default {
             tutores: [],
             fechaIni:null,
             miUsuario:this.$store.state.permisosUsuario,
+            isTutor:null,
         }
     },
     computed: {
@@ -219,8 +220,12 @@ export default {
                 this.tutores=res.data;   
                 this.hideModal();  
                 if(this.$store.state.permisosUsuario.includes('Sesión de Tutoría')) {
-                    this.isTutor=true; //tiene tutorías
-                }else  this.isTutor=false; 
+                  
+                    this.isTutor=true; //tiene tutorías- es tutor o es coordinador
+                    
+                }else  {
+                    //Es secretaria 
+                    this.isTutor=false;}
                       
             })
             .catch(e => {
@@ -232,7 +237,8 @@ export default {
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
                      showConfirmButton: true,
-                })
+                });
+                 this.$router.push('/registrarCita');
             })
         },
          /*

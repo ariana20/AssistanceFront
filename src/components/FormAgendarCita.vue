@@ -156,7 +156,7 @@ export default {
                 this.$store.state.events = [];
                 axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
-                    var rd = response.data[0];
+                    var rd = response.data[0]; 
                     var rd2 = response.data[1];
                     for(var i in rd) {
                         //console.log('usuario_actualizacion',rd[i])

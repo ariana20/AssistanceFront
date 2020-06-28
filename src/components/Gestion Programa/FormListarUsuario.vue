@@ -9,7 +9,7 @@
           <h5 style="margin-top:5%;margin-bottom:5%">Nombre o Código: </h5>
         </div>
         <div class="form-inline col-12 col-md-4">
-          <input class="form-control" v-model="criterio" placeholder="Buscar por nombre o código">
+          <input class="form-control" v-model="criterio" @keyup.enter=" buscarUsuario" placeholder="Buscar por nombre o código">
         </div>
         <div class="form-inline col-12 col-md-2 offset-md-2 offset-lg-4">
           <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
