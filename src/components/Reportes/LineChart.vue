@@ -1,8 +1,8 @@
 <script>
-import {HorizontalBar} from "vue-chartjs";
+import {Line} from "vue-chartjs";
 
 export default {
-    extends: HorizontalBar,
+    extends: Line,
     props:{
         label:{
             type:String

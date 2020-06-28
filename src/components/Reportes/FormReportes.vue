@@ -35,14 +35,13 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row mt-5">
-            <div class="col-7"  v-if="arrPositive.length>0">
-                <strong>Alumnos Asignados</strong>
-                <line-chart :chartData="arrPositive" :options="chartOp" label='Alumnos asignados'></line-chart>
+            <div v-if="asignados.length>0">
+                <strong>Cantidad de Alumnos Asignados</strong>
+                <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
             </div>
-            <div class="col-1"></div>
-            <div class="col-3" v-if="arrAsistencia.length>0">
-                <strong>Atenciones</strong>
-                <pie-chart :chartData="arrAsistencia" :options="chartOp2" label='Alumnos asignados'></pie-chart>
+            <div v-if="atenciones.length>0">
+                <strong>Cantidad de Atenciones</strong>
+                <line-chart :chartData="atenciones" :options="chartOp2" label='Atenciones'></line-chart>
             </div>
         </div>
       </div>
@@ -68,8 +67,15 @@ export default {
     data(){
         return{
             date:'',
-            arrPositive:[],
-            arrAsistencia:[],
+            //filtros
+            facultades:[],
+            selectedFacultad:null,
+            programas:[],
+            selectedPrograma:null,
+            //graficos
+            asignados:[],
+            atenciones:[],
+            /////////
             chartOp:{
                 scales: {
                     xAxes: [{
@@ -111,17 +117,63 @@ export default {
   
     },
     created(){
-        this.RatioAsignado();
-        this.RatioAsistencia();
+        //this.RatioAsignado();
+        this.RatioAtenciones();
+        this.listarFacultades();
     },
     methods:{
+        listarFacultades(){
+            const params = {
+                id_institucion:1,
+            };
+            axios.post('facultad/listarTodo', params)
+            .then( response => {
+                this.facultades=response.data;
+                console.log(this.facultades);
+            })
+            .catch(e => {
+                console.log(e.response);
+            });
+
+        },
+        listarProgramas(){
+            const params = {
+                id_facultad:this.selectedFacultad.id_facultad,
+                nombre:this.selectedFacultad.nombre
+            };
+            axios.post('facultad/listarProgramasDefault', params)
+            .then( response => {
+                this.programas=response.data;
+                console.log(this.programas);
+            })
+            .catch(e => {
+                console.log(e.response);
+            });
+
+        },
+        listarTutores(){
+            const params = {
+                id_programa:this.selectedPrograma.id_programa,
+                nomFacu:this.selectedPrograma.nombre
+            };
+            axios.post('programa/tutoresListar', params)
+            .then( response => {
+                this.tutores=response.data;
+                console.log(this.tutores);
+            })
+            .catch(e => {
+                console.log(e.response);
+            });
+
+        },
+
         async RatioAsignado(){
             const params = {
                 id_programa: this.$store.state.programaActual.id_programa,
             };
             const { data } =await axios.post("registros/cantAlumnos", params);
-            console.log(data);
-            this.arrPositive=data;
+            console.log("arrPositive: " + data);
+            this.asignados=data;
             /*
             data.forEach(d=>{
                 const date=d.nombre+"\n"+d.apellidos;
@@ -132,35 +184,28 @@ export default {
                 
             })*/
         },
-        async RatioAsistencia(){
+        async RatioAtenciones(){
             const params = {
                 id_programa: this.$store.state.programaActual.id_programa,
                 fecha_ini:"2020-05-02",
                 fecha_fin:"2020-06-15",
             };
+            //fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
+            //hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
             const { data } =await axios.post("programa/cantAtendidos", params);
             console.log(data);
-
+            /*
             data.forEach(d =>{
-                if(d.asistencia=="asi") this.arrAsistencia.push({date:"Atendidos",total:d.cantalum});
-                else if(d.asistencia=="noa") this.arrAsistencia.push({date:"No Atendidos",total:d.cantalum});
-                else if(d.asistencia=="pen") this.arrAsistencia.push({date:"Pendientes",total:d.cantalum});
-
-                
-            })
-            console.log(this.arrAsistencia);
-            console.log(this.arrPositive);
-
-/*
-            data.forEach(d=>{
-                const date=d.nombre+"\n"+d.apellidos;
-                const {
-                    cantalum
-                }=d;
-                this.arrPositive.push({date,total:cantalum});
-                
+                if(d.asistencia=="asi") this.atenciones.push({date:"Atendidos",total:d.cantalum});
+                else if(d.asistencia=="noa") this.atenciones.push({date:"No Atendidos",total:d.cantalum});
+                else if(d.asistencia=="pen") this.atenciones.push({date:"Pendientes",total:d.cantalum});                
             })*/
         },
+        generarReporte(){
+            this.RatioAtenciones();
+            this.RatioAsignado();
+        }
+        
     }
 
     
