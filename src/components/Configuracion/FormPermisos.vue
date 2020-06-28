@@ -9,10 +9,15 @@
           <input v-if="idRol" type="text" class="form-control-plaintext" style="font-size:25px;height:40px;width:65%" :value="nombreRol" readonly>
           <input v-else class="form-control" style="top:5%" v-model="nombre" placeholder="Ingrese un nombre">
         </div>
-        <div class="col-11 col-sm-12 col-lg-3 offset-lg-4">
+        <div v-if="$store.state.visualizacion!=true" class="col-11 col-sm-12 col-lg-3 offset-lg-4">
           <div class="botones" style="display: inline-flex;">
             <button type="button" class="btn btn-info" @click="Guardar()" >Guardar</button>
             <button type="button" class="btn btn-info" @click="Regresar()" style="border-color:gray;background-color:gray;">Cancelar</button>
+          </div>
+        </div>
+        <div v-else class="col-11 col-sm-12 col-lg-3 offset-lg-4">
+          <div class="botones" style="display: inline-flex;">
+            <button type="button" class="btn btn-info" @click="Regresar()" style="border-color:gray;background-color:gray;">Regresar</button>
           </div>
         </div>
       </div>
@@ -23,8 +28,14 @@
           {{item.nombre}}
         </div>
         <div class="row text-left" style="margin-left:5%;margin-top:10px;width:90%;text-align:left" v-for="(itemA, indexA) in item.permisos" :key="indexA">
-          <input v-on:click="cambio(itemA.nombre,$event)" v-if="permisosActuales.includes(itemA.nombre)" type="checkbox"  :id="'exampleCheck'+indexA" checked>
-          <input v-on:click="cambio(itemA.nombre,$event)" v-else type="checkbox" :id="'exampleCheck'+indexA">
+          <div v-if="$store.state.visualizacion!=true">
+            <input v-on:click="cambio(itemA.nombre,$event)" v-if="permisosActuales.includes(itemA.nombre)" type="checkbox"  :id="'exampleCheck'+indexA" checked>
+            <input v-on:click="cambio(itemA.nombre,$event)" v-else type="checkbox" :id="'exampleCheck'+indexA">
+          </div>
+          <div v-else>
+            <input v-if="permisosActuales.includes(itemA.nombre)" type="checkbox"  :id="'exampleCheck'+indexA" checked disabled>
+            <input v-else type="checkbox" :id="'exampleCheck'+indexA" disabled>
+          </div>
           <div class="row font-weight-light" style="margin-left:2%;font-size:20px;width:200px">
             {{itemA.nombre}}
           </div>

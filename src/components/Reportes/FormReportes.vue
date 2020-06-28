@@ -3,7 +3,14 @@
       <div class="container">
         <div class="top-titulo" style="text-align:left;">
             <h4>Fechas:</h4>
-            <date-picker v-model="date" width="100" lang="es" range placeholder="Selecciona Rango de Fechas"></date-picker>
+            <date-picker 
+                v-model="periodo" 
+                width="100" lang="es" range 
+                placeholder="Selecciona Rango de Fechas"
+                :disabled-date="disabledAfterToday"
+                @input="handlePeriodChange"
+                input-class="form-control">
+            </date-picker>
             <div class="botones" style="margin-bottom:10px">
             <button type="button" class="btn btn-info" @click="generarReporte()" >Generar</button>
             </div>
@@ -12,12 +19,12 @@
         </div>
         <div class="row" style="text-align:left;">
             <h4>Facultad: </h4>
-            <select class="col-sm-2 form-control"  v-model="selectedFacultad">
+            <select class="col-sm-2 form-control"  v-model="selectedFacultad" v-on:change="listarProgramas()">
                 <option disabled selected :value="null" focusable="false">Selecciona una facultad</option>
                 <option 
                     v-for="(facultad, index) in facultades" 
                     :key="index" 
-                    :value="facultad.id_facultad">
+                    :value="facultad">
                     {{ facultad.nombre }}
                 </option>
             </select>
@@ -25,9 +32,9 @@
             <select class="col-sm-2 form-control"  v-model="selectedPrograma">
                 <option disabled selected :value="null" focusable="false">Selecciona un programa</option>
                 <option 
-                    v-for="(programa, index) in programas" 
+                    v-for="(programa, index) in progSinDefault"
                     :key="index" 
-                    :value="programa.id_programa">
+                    :value="programa" >
                     {{ programa.nombre }}
                 </option>
             </select>
@@ -35,14 +42,13 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row mt-5">
-            <div class="col-7"  v-if="arrPositive.length>0">
-                <strong>Alumnos Asignados</strong>
-                <line-chart :chartData="arrPositive" :options="chartOp" label='Alumnos asignados'></line-chart>
+            <div v-if="asignados.length>0">
+                <strong>Cantidad de Alumnos Asignados</strong>
+                <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
             </div>
-            <div class="col-1"></div>
-            <div class="col-3" v-if="arrAsistencia.length>0">
-                <strong>Atenciones</strong>
-                <pie-chart :chartData="arrAsistencia" :options="chartOp2" label='Alumnos asignados'></pie-chart>
+            <div v-if="atenciones.length>0">
+                <strong>Cantidad de Atenciones</strong>
+                <line-chart :chartData="atenciones" :options="chartOp" label='Atenciones'></line-chart>
             </div>
         </div>
       </div>
@@ -58,7 +64,7 @@ import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import LineChart from '@/components/Reportes/LineChart.vue'
 import PieChart from '@/components/Reportes/PieChart.vue'
-//import moment from 'moment';
+import moment from 'moment';
 export default {
     components:{
         LineChart,
@@ -67,9 +73,22 @@ export default {
     },
     data(){
         return{
-            date:'',
-            arrPositive:[],
-            arrAsistencia:[],
+            //filtros
+            facultades:[],
+            selectedFacultad:null,
+            programas:[],
+            selectedPrograma:null,
+            //lista de identificadores
+            idPogramas:[],
+            idFacultades:[],
+            //graficos
+            asignados:[],
+            atenciones:[],
+            //datepicker
+            inicio: new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
+            fin: new Date(),
+            periodo:'',
+            //opciones de gráficos
             chartOp:{
                 scales: {
                     xAxes: [{
@@ -110,57 +129,136 @@ export default {
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.height = "2.4em";
   
     },
+    computed: {
+        progSinDefault: function () {
+            return this.programas.filter(i => i != null && i.codigo != this.selectedFacultad.codigo)
+        },
+        progDefault: function () {
+            return this.programas.filter(i => i.codigo == this.selectedFacultad.codigo)
+        }
+    },
     created(){
+        this.periodo = [this.inicio,this.fin];
         this.RatioAsignado();
-        this.RatioAsistencia();
+        this.RatioAtenciones();
+        this.listarFacultades();
     },
     methods:{
-        async RatioAsignado(){
+        listarFacultades(){
             const params = {
-                id_programa: this.$store.state.programaActual.id_programa,
+                id_institucion:1,
             };
-            const { data } =await axios.post("registros/cantAlumnos", params);
-            console.log(data);
-            this.arrPositive=data;
-            /*
-            data.forEach(d=>{
-                const date=d.nombre+"\n"+d.apellidos;
-                const {
-                    cantalum
-                }=d;
-                this.arrPositive.push({date,total:cantalum});
-                
-            })*/
+            axios.post('facultad/listarFacultades', params)
+            .then( response => {
+                this.facultades=response.data;
+                var facu=new Object();
+                facu.nombre="Todos";
+                facu.id_facultad=0;
+                facu.codigo="TODOS";
+                this.facultades.push(facu);
+                console.log(this.facultades);
+            })
+            .catch(e => {
+                console.log(e.response);
+            });
+
         },
-        async RatioAsistencia(){
+        listarProgramas(){
+            console.log(this.selectedFacultad);
+            const params = {
+                id_facultad:this.selectedFacultad.id_facultad
+            };
+            axios.post('facultad/listarProgramasDefault', params)
+            .then( response => {
+                this.programas=response.data;
+                var prog=new Object();
+                prog.nombre="Todos";
+                prog.id_programa=0;
+                prog.codigo="TODOS";
+                this.programas.push(prog);
+                console.log(this.programas);
+            })
+            .catch(e => {
+                console.log(e.response);
+            });
+
+        },
+
+        async RatioAsignado(){
+            this.asignados=[];
+            const params = {
+                id_programa: this.idPogramas,
+                id_facultad: this.idFacultades,
+                id_institucion: 1,
+                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+            };
+            var data;
+            if(this.idPogramas.length>0)
+                data =await axios.post("registros/asignadosXPrograma", params);
+            else if(this.idFacultades.length>0)
+                data =await axios.post("registros/asignadosXFacultad", params);
+            else
+                data =await axios.post("registros/asignadosXUniversidad", params);
+
+            console.log("asignadosXUniversidad ");
+            console.log(data);
+            this.asignados.push({date:"Asignados",total:data.data[0].asignados});
+            this.asignados.push({date:"No Asignados",total:data.data[1].noasignados});
+
+
+        },
+        handlePeriodChange(periodo) {
+            this.periodo = periodo;
+        },
+        disabledAfterToday(date){
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return date > today;
+        },
+
+        async RatioAtenciones(){
+            /*
+            this.atenciones=[];
+            const params = {
+
+
+            };
+            
+            const { data } =await axios.post("", params);
+            console.log(data);
+            
+
+            console.log(this.atenciones);*/
+        },
+
+        async RatioAtencionesOtraPantalla(){
+            this.atenciones=[];
             const params = {
                 id_programa: this.$store.state.programaActual.id_programa,
-                fecha_ini:"2020-05-02",
-                fecha_fin:"2020-06-15",
+                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
+            console.log(params.fecha_ini);
+            //fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
+            //hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
             const { data } =await axios.post("programa/cantAtendidos", params);
             console.log(data);
-
+            
             data.forEach(d =>{
-                if(d.asistencia=="asi") this.arrAsistencia.push({date:"Atendidos",total:d.cantalum});
-                else if(d.asistencia=="noa") this.arrAsistencia.push({date:"No Atendidos",total:d.cantalum});
-                else if(d.asistencia=="pen") this.arrAsistencia.push({date:"Pendientes",total:d.cantalum});
-
-                
+                if(d.asistencia=="asi") this.atenciones.push({date:"Atendidos",total:d.cantalum});
+                else if(d.asistencia=="noa") this.atenciones.push({date:"No Atendidos",total:d.cantalum});
+                else if(d.asistencia=="pen") this.atenciones.push({date:"Pendientes",total:d.cantalum});   
+                else if(d.asistencia=="can") this.atenciones.push({date:"Cancelados",total:d.cantalum});                
             })
-            console.log(this.arrAsistencia);
-            console.log(this.arrPositive);
-
-/*
-            data.forEach(d=>{
-                const date=d.nombre+"\n"+d.apellidos;
-                const {
-                    cantalum
-                }=d;
-                this.arrPositive.push({date,total:cantalum});
-                
-            })*/
+            console.log(this.atenciones);
         },
+
+        generarReporte(){
+            //this.RatioAtenciones();
+            this.RatioAsignado();
+        }
+        
     }
 
     
