@@ -76,6 +76,7 @@ export default {
     components: {Fullcalendar},
     data () {
         return {
+            aux: null,
             calendarPlugins: [
                 DayGridPlugin,
                 TimeGridPlugin,
@@ -128,7 +129,8 @@ export default {
             }
             axios.post('usuarios/tutoriaTutor', params)
             .then((response) => {
-                console.log('tipostutoria:', response.data)
+                
+                this.aux= response.data
             }).catch(e => {
                 console.log(e.response);
             });
@@ -235,11 +237,12 @@ export default {
                         fechaIni:arg.event.start,
                         fechaFin:arg.event.end,
                         id_tutor: this.$store.state.usuario.id_usuario,
-                        tutorSel: this.$store.state.usuario,
+                        tttutorSel: this.aux,
                         isGray:false,
                         alumnos:arg.event.allow,///////////agregar allow 
 
                 };             				
+                console.log('citaDatos: ',this.$store.state.citaDatos)
                 this.$router.push('/registrarCita/registrarCitaAgendada');
 
             } else {
