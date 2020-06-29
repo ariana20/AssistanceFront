@@ -213,7 +213,12 @@ export default {
             console.log(data);
             this.asignados.push({date:"Asignados",total:data.data[0].asignados});
             this.asignados.push({date:"No Asignados",total:data.data[1].noasignados});
+        // 5 alumnos bica-2 asistieron y 3 no 
 
+        //3 alumnos carta-1
+        
+        //4 alumnos trica-2
+        //12-           5 asistieron(40% bica + 20% carta + 40% trica)
 
         },
         handlePeriodChange(periodo) {
