@@ -1,52 +1,55 @@
 <template>
-  <div class="FormPrograma">
-    <div class="container" style="left:60px;text-align: left">
-      <div class="top-titulo">
-            <h4 class="col-sm-4 title-container">Nombre: </h4>
-            <input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre del coordinador">
-            <div class="botones">
-            <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:190px" >Añadir</button>
-            </div>
+  <!-- <div class="FormPrograma">
+    <div class="container" style="left:60px;text-align: left"> -->
+	<div name="FormCoordinador">
+		<div style="margin-left:5%;text-align: left;">
+			<div class="row">
+				<div class="form-inline col-12 col-md-2 col-lg-1">
+					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
+				</div>
+				<div class="form-inline col-12 col-md-4">
+					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese nombre del coordinador">
+				</div>
+				<div class="form-inline col-12 col-md-2 offset-md-3 offset-lg-5">
+					<button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
+				</div>
+			</div>
+
+      <div style="overflow: auto;width:100%;">
+        <table class="table" style="text-align:center;margin-top:2%">
+          <thead>
+            <tr>
+              <th scope="col">Codigo</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Facultad/Programa</th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in coordinadoresFiltrados" :key="index">
+              <td>{{item.codigo}}</td>
+              <td>{{item.nombre}}</td>
+              <td>{{item.correo}}</td>
+              <td>
+                  <div v-for="(lugar,ind) in item.lugares" :key="ind">
+                      <a style="font-weight:normal">{{lugar}}</a>
+                  </div>
+              </td>
+              <td style=";font-size:30px">
+                  <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
+                  <b-icon v-else icon="check" style="color:#757575"/>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-        <!--<div class="row" style="margin-top:40px;margin-bottom:40px">
-            <div class="font-weight-ligth text-left textF" style="font-size:20px;line-height: 35px;">Buscar:</div>
-            <input class="borde-textbox" type="text" style="margin-left:3%;padding:7px" v-model="nombre">
-            <b-button v-on:click="nuevo()" style="margin-left:60%;background: #0097A7">Añadir</b-button>
-        </div>-->
-      <table class="table" style="text-align:center">
-        <thead>
-          <tr>
-            <th scope="col">N°</th>
-            <th scope="col">Codigo</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Correo</th>
-            <th scope="col">Facultad/Programa</th>
-            <th scope="col">Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in coordinadoresFiltrados" :key="index">
-            <td>{{index+1}}</td>
-            <td>{{item.codigo}}</td>
-            <td>{{item.nombre}}</td>
-            <td>{{item.correo}}</td>
-            <td>
-                <div v-for="(lugar,ind) in item.lugares" :key="ind">
-                    <a style="font-weight:normal">{{lugar}}</a>
-                </div>
-            </td>
-            <td style=";font-size:30px">
-                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
-                <b-icon v-else icon="check" style="color:#757575"/>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
 
-    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-        Loading... <b-spinner style="margin-left:15px"/>
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
       </div>
     </b-modal>
       
@@ -64,32 +67,39 @@ export default {
     }
   },
   created(){
-    if(this.$store.state.coordinadoresL == null) this.listarCoordinadores();
+    if(this.$store.state.usuario==null) this.$router.push('/login')
+    if(this.$store.state.coordinadoresL == null) {
+      
+      this.listarCoordinadores();
+    }
     else this.coordinadores = this.$store.state.coordinadoresL;
+    console.log('a',this.$refs)
   },
   computed:{
-        nombre:{
-            get(){
-                return this.$store.state.filtro.query;
-            },
-            set(val){
-                this.$store.commit('SET_QUERY',val);
-            }
-        },
-        ...mapGetters({
-            coordinadoresFiltrados: 'filtrarCoordinadoresL'
-        })
+    nombre:{
+      get(){
+          return this.$store.state.filtro.query;
+      },
+      set(val){
+          this.$store.commit('SET_QUERY',val);
+      }
+    },
+    ...mapGetters({
+      coordinadoresFiltrados: 'filtrarCoordinadoresL'
+    })
   },
   methods:{
-    
     listarCoordinadores() {
+      this.showModal();
       this.axios.post('/facultad/coordinadoresPyF')
         .then(res =>{
-            this.$store.state.coordinadoresL = res.data;
-            this.coordinadores = res.data;
+          this.$store.state.coordinadoresL = res.data;
+          this.coordinadores = res.data;
+          this.hideModal();
         })
         .catch(e => {
           console.log(e.response);
+          this.hideModal();
         })
     },
     Editar(item){
@@ -98,20 +108,21 @@ export default {
     },
     Eliminar(item,index){
       Swal.fire({
-          title: '¿Dese eliminar a '+item.nombre+'?',
+          text: '¿Desea eliminar a '+item.nombre+'?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
           cancelButtonColor: '#757575',
-          confirmButtonText: 'Confirmar'
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar',
         }).then((result) => {
           if (result.value) {
             this.showModal();
             this.axios.post('/usuarios/eliminar/'+item.id_usuario)
               .then(response=>{
                 response
-                this.hideModal();
                 this.$store.state.roles.splice(index, 1);
+                this.hideModal();
                 Swal.fire({
                   text:"Eliminación Exitosa",
                   icon:"success",
@@ -127,16 +138,15 @@ export default {
 
           }
         })
-      
     },
     nuevo(){
       this.$router.push('/coordinador/'+0);
     },
     showModal() {
-      this.$refs['my-modal'].show()
+      //this.$refs['my-modal'].show()
     },
     hideModal() {
-      this.$refs['my-modal'].hide()
+      //this.$refs['my-modal'].hide()
     },
   }
 }
@@ -152,6 +162,7 @@ export default {
     border-radius: 1.25rem;  
     border: 0.5px solid #757575;
     margin-bottom: 10px;
+    width: 100%;
 }
 .top-titulo {
     display: flex;

@@ -1,19 +1,17 @@
 <template>
-  <div name="FormSolicitudes" class="container" >
-    <div class="row top-titulo" style="text-align: left" >
-      <div class="top-titulo">
-            <h5 class="col-sm-4 title-container">Nombre: </h5>
-            <input class="col-sm-6 form-control" style="top:26px;right:40px;width:250px" v-model="nombre" placeholder="Busque por nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )" >
+  <div name="FormSolicitudes" style="text-align: left;margin-left:5%">
+      
+    <div class="row" style="width:100%">
+      <div class="form-inline col-12 col-md-2 col-lg-1">
+        <h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
       </div>
-        <!--<div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px;font-weight:bold">Buscar:  
-        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
-        </div>
-        <div style="margin-right:100px"></div>                   
-                 <button  type="button"  style="text-align:right" class="btn btn-info">Añadir</button> 
-                  <b-button v-on:click="nuevo()" style="height:40px;border-color:transparent;margin-left:25%;background: #0097A7">Añadir</b-button>-->
-           
+      <div class="form-inline col-12 col-md-4">
+        <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Busque por nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )">
       </div>
-      <table class="table"  style="text-align:left">
+    </div>
+          
+    <div style="overflow: auto;width:95%">
+      <table class="table"  style="text-align:left;margin-top:2%">
         <thead>
           <tr>
             <th scope="col">Código</th>
@@ -28,7 +26,8 @@
         <tbody>
           
           <tr v-for="(item, index) in solicitudesFiltrados" :key="index">
-            <td scope="row">{{item.usuarioSolicitante.codigo}}</td>
+            <td scope="row" v-if="item.usuarioSolicitante.codigo">{{item.usuarioSolicitante.codigo}}</td>
+            <td scope="row" v-else>Pendiente</td>
             <td>{{item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos}}</td>
             <td>{{item.descripcion}}</td>
             <td v-if="item.usuarioRelacionado">{{item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos}}</td>
@@ -50,14 +49,15 @@
           </tr>
         </tbody>
       </table>
-  
-    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-        Cargando... <b-spinner style="margin-left:15px"/>
+    </div>
+
+    <!-- Modal de cargando.más grande  -->
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
       </div>
     </b-modal>
-
-      
   </div>
 </template>
 
@@ -138,45 +138,43 @@ export default {
                   }
                 }
                 this.$store.state.solicitudes.splice(index,1);
-                console.log(item);
-                console.log(index);
                 this.hideModal();
                 let mensaje;
                 if(item.tipo_solicitud == 'Programa'){
-                    mensaje = "Se aceptó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
-                    let obj ={
-                        id_tipo_usuario:5, 
-                        id_programa:this.$store.state.programaActual.id_programa,
-                    }
-                    this.axios.post('/usuarios/nuevoPrograma/'+item.usuarioSolicitante.id_usuario,obj)
-                        .then(response=>{
-                            response
-                            emailjs.send(
-                                "gmail",
-                                "template_bV7OIjEW",
-                                {
-                                "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
-                                "mensaje":mensaje,
-                                "correo": item.usuarioSolicitante.correo
-                                }, 'user_ySzIMrq3LRmXhtVkmpXAA')
-                            .then((result) => {
-                                console.log('SUCCESS!', result.status, result.text);
-                            }, (error) => {
-                                console.log('FAILED...', error);
-                            });
-                            this.hideModal();
-                            Swal.fire({
-                            text:"Aceptado exitosamente",
-                            icon:"success",
-                            confirmButtonText: 'OK',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                            })
-                        })
-                        .catch(e=>{
-                          console.log(e)
+                  mensaje = "Se aceptó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
+                  let obj ={
+                      id_tipo_usuario:5, 
+                      id_programa:this.$store.state.programaActual.id_programa,
+                  }
+                  this.axios.post('/usuarios/nuevoPrograma/'+item.usuarioSolicitante.id_usuario,obj)
+                      .then(response=>{
+                          response
+                          emailjs.send(
+                              "gmail",
+                              "template_bV7OIjEW",
+                              {
+                              "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                              "mensaje":mensaje,
+                              "correo": item.usuarioSolicitante.correo
+                              }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                          .then((result) => {
+                              console.log('SUCCESS!', result.status, result.text);
+                          }, (error) => {
+                              console.log('FAILED...', error);
+                          });
                           this.hideModal();
-                        })
+                          Swal.fire({
+                          text:"Aceptado exitosamente",
+                          icon:"success",
+                          confirmButtonText: 'OK',
+                          confirmButtonColor:'#0097A7',
+                          showConfirmButton: true,
+                          })
+                      })
+                      .catch(e=>{
+                        console.log(e)
+                        this.hideModal();
+                      })
                 }
                 else if(item.tipo_solicitud == 'Tutor'){
                   mensaje = "Se te asignó "+item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos+" como tutor en el programa "+this.$store.state.programaActual.nombre
@@ -215,6 +213,47 @@ export default {
                         console.log(e)
                         this.hideModal();
                       })
+                }
+                else if(item.tipo_solicitud == 'Cita'){
+                  mensaje = "Se acepto tu cancelacion de la cita con el tutor "
+                    +item.usuarioRelacionado.nombre+" "
+                    +item.usuarioRelacionado.apellidos
+                    +" del día "+this.$store.state.programaActual.nombre
+                  let obj ={
+                    id_alumno:item.id_solicitante, 
+                    id_tutor:item.usuarioRelacionado.id_usuario,
+                    id_programa:this.$store.state.programaActual.id_programa,
+                    usuario_creacion: this.$store.state.usuario.id_usuario,
+                  }
+                  this.axios.post('/citas/cancelarCita',obj)
+                    .then(response=>{
+                        response
+                        emailjs.send(
+                            "gmail",
+                            "template_bV7OIjEW",
+                            {
+                            "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                            "mensaje":mensaje,
+                            "correo": item.usuarioSolicitante.correo
+                            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                        .then((result) => {
+                            console.log('SUCCESS!', result.status, result.text);
+                        }, (error) => {
+                            console.log('FAILED...', error);
+                        });
+                        this.hideModal();
+                        Swal.fire({
+                        text:"Cancelación de cita aceptada exitosamente",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                        })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
                 }
               })
               .catch(e=>{
@@ -300,6 +339,7 @@ export default {
     border-radius: 1.25rem;  
     border: 0.5px solid #757575;
     margin-bottom: 10px;
+    width: 100%;
 }
 .motivo-dropdown-title {
     top: 10px;

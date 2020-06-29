@@ -1,46 +1,49 @@
 <template>
-  <div class="FormRoles container" style="margin-top:20px">
-  
-        <div class="row top-titulo">
-          <div class="row col-sm-6 "  style="margin:10px;font-size:20px">Nombre:  
-            <input placeholder="Buscar por nombre" class="row col-sm-6 form-control" style="left:25px;" type="text" v-model="nombre"  >  
-          </div>
-          <!-- <div style="margin-right:500px"></div> -->
-          <div class="row btn-derecha" >
-                <router-link to="tiposdeTutoria/0"> 
-                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Añadir</button>
-           </router-link>
-        </div>    
-  <!-- </tr> -->
+  <div class="FormRoles" style="margin-top:5px;margin-left:5%">  
+    <div style="text-align: left" >
+      
+			<div class="row" style="width:100%">
+				<div class="form-inline col-11 col-md-2 col-lg-1">
+					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
+				</div>
+				<div class="form-inline col-11 col-md-4">
+					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
+				</div>
+				<div class="form-inline col-11 col-md-2 offset-md-3 offset-lg-5">
+					<button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
+				</div>
+			</div> 
 
-      <table class="table" style="text-align:left" >
-        <thead>
-          <tr>
-            <th scope="col">N°</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Estado</th>
-            <th scope="col" style="text-align: center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in tipostutoriasFiltrados" :key="index">
-            <th scope="row">{{index+1}}</th>
-            <td>{{item.nombre}}</td>        
-            <td >
-                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green;width:35px; height:35px;"/>
-                <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;"/>
-            </td>     
-            <td  style="text-align: center">
-                 <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}">                          
-                    <b-icon style="color:#0097A7;width:20px; height:20px;margin-right:20px;" icon="pencil"/>
-                 </router-link>                  
-                  <b-icon v-on:click="eliminarTtutoria(item.id_tipo_tutoria)" style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"/>
-              
-            </td>
-          
-          </tr>
-        </tbody>
-      </table>
+      <div style="overflow: auto;width:100%">
+        <table class="table" style="text-align:left;margin-top:2%" >
+          <thead>
+            <tr>
+              <th scope="col">N°</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Estado</th>
+              <th scope="col" style="text-align: center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in tipostutoriasFiltrados" :key="index">
+              <th scope="row">{{index+1}}</th>
+              <td>{{item.nombre}}</td>        
+              <td >
+                  <b-icon v-if="item.estado == 'act'" icon="check" style="color:green;width:35px; height:35px;"/>
+                  <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;"/>
+              </td>     
+              <td  style="text-align: center">
+                    <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}">                          
+                      <b-icon style="color:#0097A7;width:20px; height:20px;margin-right:20px;" icon="pencil"/>
+                    </router-link>                  
+                    <b-icon v-on:click="eliminarTtutoria(item)" style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"/>
+                
+              </td>
+            
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
         <!-- MODAL CARGANDO  -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
@@ -94,7 +97,7 @@ computed:{
         .then(response=>{
           // Ordenadito por estado
            let par=response.data;
-           this.$store.state.tipostutorias=par.sort((a, b) => { return a.estado.localeCompare(b.estado);});
+           this.$store.state.tipostutorias=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
 
             // this.$store.state.tipostutorias = response.data; //
 
@@ -118,10 +121,10 @@ computed:{
       this.$router.push('/tiposdeTutoria/'+id); //
     },
     
-    eliminarTtutoria(id){
-        console.log('Id del tipo de tutoria a eliminar: ',id);
+    eliminarTtutoria(item){
+        console.log('Id del tipo de tutoria a eliminar: ',item);
       Swal.fire({
-            text:'¿Desea eliminar?',
+            text:'¿Desea eliminar el tipo de tutoria '+item.nombre+'?',
             icon:'warning',
             confirmButtonText: 'Eliminar',
              confirmButtonColor:'#0097A7',
@@ -141,17 +144,30 @@ computed:{
                 }
               )
               //aqui iriía el eliminar
-              Axios.post('/TipoTutoria/eliminar/'+id)
+              Axios.post('/TipoTutoria/eliminar/'+item.id_tipo_tutoria)
                 .then(response=>{
                   console.log(response);
                   console.log('eliminaré a :', this.$store.state.tipostutorias.id_tipo_tutoria);
                   let index = this.$store.state.tipostutorias.indexOf( //
                     function(element){
-                      return element.id_tipo_tutoria === id; //
-                    })
-                  this.$store.state.tipostutorias.splice(index, 1); //
+                      return element.id_tipo_tutoria === item.id_tipo_tutoria; //
+                   })
+                  this.$store.state.tipostutorias.splice(index, 1); //  
+                  this.$router.push('/ListaTiposTutorias'); //
+                  
+
                 })
-                .catch(e=>console.log(e));
+                .catch(e=>{
+                  console.log('catch del eliminar',e);
+                   Swal.fire({
+                    text:"Estamos teniendo problemas al eliminar este tipo de tutoria. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  });
+
+                });
 
             } else if (
               /* Read more about handling dismissals below */
@@ -170,6 +186,9 @@ computed:{
     },
     hideModal() {
       this.$refs['my-modal'].hide()
+    },
+    nuevo(){
+      this.$router.push('/tiposdeTutoria/0');
     },
 
 

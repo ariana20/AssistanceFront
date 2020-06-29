@@ -253,6 +253,27 @@ Vue.use(VueRouter)
     name: 'Cita Agendada',
     props: true,
     component: () => import(/* webpackChunkName: "ViewCitaAgendada" */ '../views/Citas/ViewCitaAgendada.vue')
+  },
+  {
+    path: '/agregarAlumnos',
+    name: 'Agregar Alumnos',
+    component: () => import(/* webpackChunkName: "ViewAgregarAlumnos" */ '../views/Gestion Periodo/ViewAgregarAlumnos.vue')
+  },
+  {
+    path: '/reportes',
+    name: 'Reportes',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReportes.vue')
+  },
+  {
+    path: '/registrarCita',
+    name: 'Registra Cita',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewRegistrarCitaCal.vue')
+  },
+  {
+    path: '/registrarCita/registrarCitaAgendada',
+    name: 'Registrar Cita Agendada',
+    // props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewRegistrarCitaAgendada.vue')
   }
 ]
 const router = new VueRouter({

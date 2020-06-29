@@ -1,23 +1,32 @@
 <template>
-  <div class="FormUsuario container">
-    <div class="row grid-divider" style="margin-top:40px" >
+  <div class="FormUsuario" style="margin-left:5%">
+    <div class="row grid-divider" style="margin-top:3%" >
       <div id="izquierdo" class="col-md-4">
         <table >
             <tbody >
             <td >
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) ||( event.charCode== 239) || (event.charCode== 130) || (event.charCod==144 ) || (event.charCod==181) || (event.charCod==214) || (event.charCod==233) || (event.charCod==224))"   -->
               <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) || event.charCode== 130 || event.charCod==144 ||event.charCod==181 || event.charCod==214 || event.charCod==233 || event.charCod==224)" -->
-              <tr v-if="this.IsmsgUsuario==true" style="text-align:left"><td style="width:90px;"></td> <td>{{msgUsuario}}</td> </tr> 
-              <tr style="text-align:left"><td style="width:90px;">Codigo:*</td>   <td> <input class="form-control" type="text" maxlength="8"    id="cod" v-on:keyup="verificarUsuariosCod();"   v-model="codigo"></td></tr> 
-              <tr style="text-align:left"><td style="width:90px;">Nombre:*</td>   <td> <input class="form-control" type="text"    maxlength="100"   v-model="nombre"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Apellidos:*</td>   <td> <input class="form-control" type="text"    maxlength="100"   v-model="apellidos"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Celular:</td>   <td>   <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
-              <tr style="text-align:left"><td style="width:90px;">Correo:*</td>   <td> <input id="corr" class="form-control"  type="text" v-model="correo" v-on:keyup="verificarUsuariosCorreo();" ></td></tr>
-              <tr style="text-align:left"><td style="width:90px;"></td></tr>
+              <tr style="text-align:left"><td style="width:80px;">Codigo:*</td>   <td> <input class="form-control" style="width: 180%;" type="text" maxlength="8"    id="cod" v-on:keyup="verificarUsuariosCod();"   v-model="codigo"></td></tr> 
+              <tr style="text-align:left"><td style="width:80px;">Nombre:*</td>   <td> <input class="form-control" style="width: 180%;" type="text"    maxlength="100"   v-model="nombre"></td></tr>
+              <tr style="text-align:left"><td style="width:80px;">Apellidos:*</td>   <td> <input class="form-control" style="width: 180%;" type="text"    maxlength="100"   v-model="apellidos"></td></tr>
+              <tr style="text-align:left"><td style="width:80px;">Celular:</td>   <td>   <input  type="text" class="form-control" style="width: 180%;"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
+              <tr style="text-align:left"><td style="width:80px;">Correo:*</td>   <td> <input id="corr" class="form-control" style="width: 180%;"  type="text" v-model="correo" v-on:keyup="verificarUsuariosCorreo();" ></td></tr>
+              <tr style="text-align:left"><td style="width:80px;"></td></tr>
                
               <tr class="" style="bottom:0px;margin-left:0px;" > 
                 <b-form-checkbox v-model="estado" value="act" unchecked-value="ina" > Activo</b-form-checkbox>
-                </tr>
+                 </tr>
+                <tr>
+                  <td ></td>
+                  <h5  v-if="this.IsmsgUsuario==false"   style="color:white;text-align:right;margin-left:50px">{{msgUsuario}}</h5>               
+                  <h5  v-else  style="color:#009892;text-align:right;margin-left:50px">
+                     {{msgUsuario}}
+                   
+                    </h5>
+                  
+                </tr> 
+              
  
             </td> 
           </tbody>
@@ -29,11 +38,13 @@
         <!-- <tr style="text-align:right;margin:600px"  > </tr>   -->
               <!-- <div class="" style="padding:220px; bottom:0px;margin-left:40px;" > 
                 <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div> -->
+  
+               
       </div>
 
-      <div id="derecho" class="col-md-4">
+      <div id="derecho" class="col-md-6">
        <tr style="text-align:left"><td style="width:150px;">Tipos de usuarios:*</td>   
-          <select v-model="tiposUsuariosselect" class="form-control" @click="listarTT()" >
+          <select v-model="tiposUsuariosselect" class="col sm-6 form-control" @click="listarTT()" >
             <option value="no" hidden selected >Selecciona un tipo de usuario</option>
             <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index" >
              {{ tipoU.nombre}}
@@ -41,22 +52,24 @@
           </select>
 
         </tr>
-          <div class="top-titulo" style="margin-bottom:20px;" >
-                    <div class="col-sm-6" v-if="this.tiposUsuariosselect === 4" style="margin-left:-25px;">Tipos de tutorias:*     </div>
-                    <select v-if="this.tiposUsuariosselect === 4" class="col-sm-6 form-control"  style="margin-left:8px;top:5px;"
-                     v-model="tipostutoriasselect">
+          <div style="margin-bottom:20px;" >
+            <tr style="text-align:left">  
+                    <td style="width:150px;"  v-if="this.tiposUsuariosselect === 4" >Tipos de tutorias:*     </td>
+                    <select v-if="this.tiposUsuariosselect === 4" class="col-sm-12 form-control"    v-model="tipostutoriasselect">
                         <option selected disabled value="no">Selecciona un tipo de tutoria</option>
                         <option v-for="(tt, i) in tipostutorias"  :key="i"   :value="tt.id_tipo_tutoria">
                         {{ tt.nombre }}
                         </option>
                     </select>
+                  </tr>
                     <!-- <div class="col-sm-6" > -->
                     <button  type="button"  v-if="this.tiposUsuariosselect === 4" class="col-sm-4 btn btn-info"                     
                             style="margin-left:10px;margin:5px;border-radius: 10px;"
                             @click="addMTT(i)">Seleccionar</button>
                     <!-- </div> -->
-                    <div class="col-sm-6 " v-if="this.tiposUsuariosselect === 5" style="margin-left:-40px;">Condición del alumno:* </div>
-                    <select v-if="this.tiposUsuariosselect === 5" class="col-sm-6 form-control"  style="margin-right:20px;margin-left:-10px;top:5px;"
+                <tr>      
+                    <td style="width:110px;" v-if="this.tiposUsuariosselect === 5" >Condición del alumno: </td>
+                    <select v-if="this.tiposUsuariosselect === 5" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
                      v-model="condiAlumnosselect">  <!--aqui guardo-->
                         <option selected disabled value="no">Selecciona una condición</option>
                         <option v-for="(condi, i) in condiAlumnos"  :key="i" :value="condi.abreviatura"  > <!--falta agregar value, creo que abreviatura le mando-->
@@ -65,28 +78,28 @@
                         </option>
                     </select>
                    
-
-
+                </tr>
+          
           </div>
                  <div class="left-content" v-if="this.tiposUsuariosselect === 4" >
                     <h6 style="color:black;font-weight:900;text-align:left;" v-if="this.tiposUsuariosselect === 4">Tipos de tutoria seleccionados</h6>
-                    <hr>
+                    <!-- <hr >  -->
                     <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
                         <div v-if="listTT.length == 0">No tiene tipos de tutorias seleccionados</div>
                         <li class="motivos-seleccionados list-group-item" style="text-align:left;"
                             v-for="(newTT,ttIndex) in listTT"  
                             :key="ttIndex">
                             {{newTT}}
-                            <span name="remove" class="close" @click="deleteTT(ttIndex)" style="margin-right : 20px;float:right;">&times;</span>           
+                            <span name="remove" class="close" @click="deleteTT(ttIndex)" style="margin-right:20px;float:right;">&times;</span>           
                         </li>
                     </ul>
                     </div>
 
       </div>
     </div>
-    <div  class="botones" style="margin-top:0px;bottom:25px">   
-        <button type="button" style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnGuardar" v-on:click="guardarUsuario()">Guardar</button>
-        <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:50px" v-on:click="cancelarUsuario()"  >Cancelar</button>  
+    <div  class="botones" style="margin-top:0px;bottom:25px;padding-top:10px">   
+        <button type="button" style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnGuarda" v-on:click="guardarUsuario()">Guardar</button>
+        <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:50px" id="btnCancela" v-on:click="cancelarUsuario()"  >Cancelar</button>  
       
      </div>
     <!-- <div> -->
@@ -102,6 +115,7 @@
      <!-- <li         v-for="(newTT,ttIndex) in tipostutorias" :key="ttIndex" >
       {{newTT.id_tipo_tutoria}}  {{newTT.nombre}}
      </li> -->
+     
       <!-- Modal de cargando -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
         <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
@@ -165,10 +179,11 @@ export default {
     
     if(this.$store.state.usuario==null) this.$router.push('/login');
     //  console.log('usuario entrante?: ',this.usuario_entrante);
-    
+    this.IsmsgUsuario=false;
+    this.msgUsuario="Assistance"
     this.listarTUsuarios();    
     this.listarCA();  
-    console.log("numero del path",parseInt((this.$route.path).substring(9,11),10));
+    // console.log("numero del path",parseInt((this.$route.path).substring(9,11),10));
     if(parseInt((this.$route.path).substring(9,11),10) ==0){
       this.id_usuario_entrante=0;
       //no hay usuario entrante, pero puede que aparezca 
@@ -180,13 +195,13 @@ export default {
       
       this.id_usuario_entrante=this.$store.state.usuarioEscogido.id_usuario;
       this.usuario_entrante=this.$store.state.usuarioEscogido;
-      console.log('Id usuario entrante: ',this.id_usuario_entrante);     
+      // console.log('Id usuario entrante: ',this.id_usuario_entrante);     
       this.tiposUsuariosselect=this.usuario_entrante.pivot.id_tipo_usuario;      
       Axios.create()
        .post('/usuarios/listar/'+this.id_usuario_entrante).then( response =>{
          document.getElementById("corr").disabled = true;
           // document.getElementById("cod").disabled = true;
-         console.log('usuario listado para modificar',response);
+        //  console.log('usuario listado para modificar',response);
 
            this.codigo=response.data.codigo;
            this.nombre= response.data.nombre;
@@ -224,11 +239,14 @@ export default {
     
     guardarUsuario() { //Para usuarios nuevecitos más que nada, si no, se van a una función
       // this.showModal();console.log('show1');
+      document.getElementById("btnGuarda").disabled = true; //inhabilita
+      document.getElementById("btnCancela").disabled = true; //inhabilita
+
       var   expresion2=/\w+@\w+\.+edu.pe/;
        var   expresion1=/\w+@\w+\.+pe/;
       // console.log('estado: ',this.estado);
       // if(this.estado==null) console.log('entro al if estado: ',this.estado);
-      console.log('codigo a guardar: ',this.codigo);
+      // console.log('codigo a guardar: ',this.codigo);
       if(this.nombre=="" ||this.apellidos=="" || this.codigo=="" || this.codigo===null || this.correo=="" || this.estado===null   ){
           // this.hideModal();console.log('hide2');
       //Cuando está vacio todo
@@ -319,7 +337,7 @@ export default {
             condicion_alumno:this.condiAlumnosselect,//le doy el value
              
             };
-            console.log(params);
+            // console.log(params);
              this.usuarioNuevo(params);
             }
             else{
@@ -337,7 +355,7 @@ export default {
             id_tipo_usuario:this.tiposUsuariosselect,  
             //ahora, si es tipo usuario 4 de tutor debe insertar el tipo de tutoria
             };
-            console.log(params);
+            // console.log(params);
             this.usuarioNuevo(params);
             }
               
@@ -420,15 +438,54 @@ export default {
       }
       // this.hideModal();console.log('Hide1');
       }
+      document.getElementById("btnGuarda").disabled = false; //habilita
+      document.getElementById("btnCancela").disabled = false; //habilita
     },
 
     listarTUsuarios() {
+       if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+        let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
+        this.axios.post('/tipoUsuarios/tiposFacultad',obj)
+          .then(res=>{
+               //Ordenadito
+           let par=res.data;
+          //  console.log('TUsu:',res.data);
+           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e)
+            this.hideModal()
+          });
+      }
+      if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+        let obj = {
+          id_programa: this.$store.state.programaActual.id_programa,
+          id_facultad: this.$store.state.programaActual.id_facultad
+        }
+        this.axios.post('/tipoUsuarios/tiposPrograma',obj)
+          .then(res=>{
+                //Ordenadito
+           let par=res.data;
+          //  console.log('TUsu:',res.data);
+           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e);
+            this.hideModal()
+          });
+      }
+
+
+    /*
+
       //taambién debería ser por programa
       Axios.create().post('/tipoUsuarios/listarTodo')
         .then(res =>{
            //Ordenadito
            let par=res.data;
-           console.log('TUsu:',res.data);
+          //  console.log('TUsu:',res.data);
            this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
           // this.tiposUsuarios=res.data;
           //console.log(this.tiposUsuarios); 
@@ -455,6 +512,7 @@ export default {
           })
 
         })
+        */
     },
     cancelarUsuario(){
         Swal.fire({
@@ -480,11 +538,11 @@ export default {
       if(this.banderaTT==false){
         this.banderaTT=true;
       //listo todos los tipos de tutorias de mi programa
-      Axios.post('/TipoTutoria/listarTodo/'+ this.miprog.id_programa)
+      Axios.post('/TipoTutoria/listarActivos/'+ this.miprog.id_programa)
       // Axios.post('/TipoTutoria/listarActivos/'+ this.miprog.id_programa)  //falta que esté en el servidor
         .then(response=>{
             this.tipostutorias = response.data; //
-            console.log('Tipos de tutorias: ',this.tipostutorias);
+            // console.log('Tipos de tutorias: ',this.tipostutorias);
             if(this.id_usuario_entrante!=0){
             //Despues de llenar los tipos de tutorias veo cuales son del tutor 
 
@@ -504,7 +562,7 @@ export default {
             
                for(var j in this.tipostutorias){
                 if(this.tipostutorias[j].id_tipo_tutoria==this.tipostutoriasselect){
-                    console.log('For:j',' ',this.tipostutorias[j].id_tipo_tutoria); 
+                    // console.log('For:j',' ',this.tipostutorias[j].id_tipo_tutoria); 
                     this.tipostutorias.splice(j,1);
                   break; //Si ya es uno igual,salgo
                  }
@@ -562,12 +620,11 @@ export default {
             id_programa:this.miprog.id_programa,
             tutorias_insertar:this.listTTId,
           }
-          console.log('I de actualizarTT: ',i);
      
        //actualizo el tipo de tutoria
           Axios.post('/usuarios/updateTipoTutoria/'+i ,paramsTT)
           .then(response=>{
-             console.log('tutorias_insertar',this.listTTId );
+            //  console.log('tutorias_insertar',this.listTTId );
              console.log('tipo de tutoria insertado para modificar',response.data);  
              this.$store.state.usuarioEscogido=null;//
              this.$store.state.usuarios=null;//             
@@ -595,7 +652,6 @@ export default {
         
         if(this.codigo.length==8 && this.banderaUsuProg==false){
           // this.showModal();console.log('show2');
-          console.log('Codigo con 8 digitos listo para verificar');
           
             const paramsV={
               criterio:this.codigo,
@@ -604,7 +660,7 @@ export default {
             Axios.post('/usuarios/verificarUsuario' ,paramsV)
             .then(response=>{
              //Si es código ya existe
-              console.log('respuesta verif cod: ',response);
+              // console.log('respuesta verif cod: ',response);
              if(response.data.status=='El codigo ingresado ya existe'){
                
                //Le aviso al usuario y lleno los campos
@@ -619,7 +675,7 @@ export default {
                 this.apellidos=response.data.usuario[0].apellidos;               
                 this.telefono=response.data.usuario[0].telefono;
                 this.estado=response.data.usuario[0].estado; 
-                console.log('existente: ',this.usuario_entrante);
+                // console.log('existente: ',this.usuario_entrante);
                 //Su tipo de usuario falta llenar
                 
                 this.msgUsuario="Usuario existente";
@@ -631,7 +687,7 @@ export default {
               //  debería poder continuar con mi vida sin decirle nada al usuario
               //o pongo un texto debajo del código que diga que el usuario es nuevo...con un v-if y una bandera
               // this.hideModal();
-              console.log(response.data.status);
+               console.log(response.data.status);
              }
            
 
@@ -646,7 +702,7 @@ export default {
 
         }
         else{
-          console.log('Menos o más 8 digitos');
+          // console.log('Menos o más 8 digitos');
         
           // this.hideModal();
         }
@@ -660,7 +716,7 @@ export default {
         
         // this.showModal();console.log('show3');
         //es un correo "válido",entonces llamo para verificar si existe o no
-        console.log('Verif correo');
+        // console.log('Verif correo');
         const paramsV={
               criterio:this.correo,
         }
@@ -671,11 +727,11 @@ export default {
              if(response.data.status=='El correo ingresado ya existe'){
                //Le aviso al usuario y lleno los campos
                 //el id tambien llenaría
-                console.log(response.data.usuario[0].codigo);//sí sale el codigo
-                console.log('entre a if de verf correo');
+                // console.log(response.data.usuario[0].codigo);//sí sale el codigo
+                // console.log('entre a if de verf correo');
                 document.getElementById("corr").disabled = true;
               //console.log(this.usuario_entrante.codigo); //No existe,ni idea
-                console.log(response.data.usuario[0].codigo);
+                // console.log(response.data.usuario[0].codigo);
                 document.getElementById("cod").disabled = true;                
                 //No puedo agregar un usuario con código  - o null
                 this.id_usuario_entrante=response.data.usuario[0].id_usuario;                
@@ -685,7 +741,7 @@ export default {
                 this.apellidos=response.data.usuario[0].apellidos;               
                 this.telefono=response.data.usuario[0].telefono;
                 this.estado=response.data.usuario[0].estado; 
-                console.log('existente: ',this.usuario_entrante);
+                // console.log('existente: ',this.usuario_entrante);
                 //tipo de usuarip
                  this.msgUsuario="Usuario existente";
                 this.IsmsgUsuario=true;
@@ -717,9 +773,7 @@ export default {
 
                 console.log('Usuario insertado: ',response.data);  
                 if(response.data["Error capturado:"]=="El codigo o correo ingresados ya existen"){
-                  console.log('Entro al if del error');
-                  console.log('codigo:', params.codigo);
-                  console.log('correo:', params.correo);
+
                   // this.hideModal();
                    Swal.fire({
                     text:"Ha ingresado un correo o código que ya existe en la institución. Por favor, corriga los datos.",
@@ -730,8 +784,8 @@ export default {
                   });
                 }
                 else{
-                   //Enviar un correo a localhost, debería cambiarse cuando ya tengamos la ruta
-                  let direccion = "localhost:8000/login"
+                   
+                  let direccion = "https://proyectosoftware20201front.vizcochitos.cloudns.cl/login"
                   emailjs.send(
                   "gmail",
                   "template_bV7OIjEW",
@@ -756,7 +810,7 @@ export default {
                    //Como se guardaron con éxito ahora agrego el titutoria
                   if(this.tiposUsuariosselect==4){
                         var idusuarionuevo=response.data["user"].id_usuario;
-                        console.log('id del usuario nuevo: ',response.data["user"].id_usuario);
+                        // console.log('id del usuario nuevo: ',response.data["user"].id_usuario);
                         this.actualizarTT(idusuarionuevo);//tiene hide?
                   }
                   else{
@@ -773,8 +827,7 @@ export default {
 
             }).catch(e => {
               console.log('catch insertar usuario nuevo',e);
-              console.log(e);
-              // this.hideModal();
+                      // this.hideModal();
                  Swal.fire({
                     text:"Estamos teniendo problemas al crear un nuevo usuario. Vuelve a intentar en unos minutos.",
                     icon:"warning",
@@ -799,11 +852,11 @@ export default {
             .then( response=>{
               
               console.log(response); //si hay error de =igual codigo salta excepcion
-              console.log('data: ',response.data);
+              // console.log('data: ',response.data);
               //Saltaba error si quiero modificar algo normal y la respuesta era un objeto
              
               if(response.data.id_usuario!=null){ //Entonces pregunto primero si es un objeto con algún atributo al azar
-                  console.log('entro a data.id pq es true');
+                  // console.log('entro a data.id pq es true');
                   // this.hideModal();
                   Swal.fire({
                   text:"Se modificaron los datos con éxito",
@@ -813,7 +866,7 @@ export default {
                   showConfirmButton: true,
                   }) 
               //Como se guardaron con éxito ahora agrego el titutoria, solo si tiene demonios
-                  console.log('params2 ',params2.id_tipo_usuario_Nuevo);
+                  // console.log('params2 ',params2.id_tipo_usuario_Nuevo);
                   //Si es tutor actualizo el tt
                 if(this.tiposUsuariosselect==4){
                    this.actualizarTT(this.id_usuario_entrante);
@@ -830,7 +883,7 @@ export default {
               //this.$router.push('/ListaUsuarios'); //ahora va a estar en el actualizarTT
               }
               else if(response.data.substring(0,20)=='Excepción capturada:'){ //Luego pregunto si es este tipo de excepcion
-                console.log('no entro a data.id y entro a excepcion');
+                // console.log('no entro a data.id y entro a excepcion');
                 //  this.hideModal();  
                    
                 Swal.fire({
@@ -895,7 +948,7 @@ export default {
 
             }).catch(e => {
               console.log('catch usuario existente',e);
-              console.log(e);
+              // console.log(e);
               // this.hideModal();
                  Swal.fire({
                     text:"Estamos teniendo problemas al insertar este usuario a su programa. Vuelve a intentar en unos minutos.",
@@ -987,7 +1040,7 @@ body{
   border-radius: 1.25rem;  
   border: 0.5px solid #757575;
   margin-bottom: 10px;
-  width: 200%;
+  width: 100%;
 }
 td { 
   margin-bottom:10px;
@@ -1006,5 +1059,8 @@ input:focus {outline: none;box-shadow: none;}
 .motivo-dropdown-title {
     top: 10px;
     text-align: left;
+}
+.top-titulo{
+  width: 100%;
 }
 </style>

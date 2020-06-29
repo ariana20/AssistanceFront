@@ -1,10 +1,9 @@
 <template>
   <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
-      <b-navbar-toggle target="nav-collapse" class="btn-navs"></b-navbar-toggle>
       
       <select 
         v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.cantProg !== null && this.$store.state.cantProg.length!=0"
-        class="col-sm-2 form-control selectf"
+        class="col-5 col-md-2 form-control selectf"
         v-model="selectedPrograma"
         @change="cambiarProg()">
         <option selected disabled :value="null" style=";font-family:'Brandon Bold'">Cambia de Programa</option>
@@ -16,23 +15,21 @@
           <a v-else>Administrador</a>
         </option>
       </select>
-      <b-collapse id="nav-collapse" class="menusnav" is-nav>
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-          
-            <b-nav-item class="optionsnav" href="/login" v-if="this.$route.path != '/login' && (this.$store.state.usuario === null || this.$store.state.usuario === undefined)">
-              <a style="color:#000;font-weight:normal">Ingresar</a>
-            </b-nav-item>
-            <b-nav-item-dropdown class="buttonnav" right v-if="this.$store.state.usuario !== null && this.$store.state.usuario !== undefined">
-                <template v-slot:button-content style="color:red">
-                  <em style="color:#000000;font-weight:normal;" >{{$store.state.usuario.nombre}}</em>
-                </template>
-                <b-dropdown-item class="buttonnav btnnac"  v-on:click="logout()">
-                  Cerrar Sesión
-                </b-dropdown-item>
-            </b-nav-item-dropdown>
-        </b-navbar-nav>
-      </b-collapse>
+
+      
+      <b-navbar-nav class="col-1 offset-md-11 offset-10" style="padding-left:5%">
+          <b-nav-item href="/login" v-if="this.$route.path != '/login' && (this.$store.state.usuario === null || this.$store.state.usuario === undefined)">
+            <a style="color:#000;font-weight:normal">Ingresar</a>
+          </b-nav-item>
+          <b-nav-item-dropdown class="buttonnav" right v-if="this.$store.state.usuario !== null && this.$store.state.usuario !== undefined">
+              <template v-slot:button-content>
+                <em style="color:#000000;font-weight:normal;" >{{$store.state.usuario.nombre}}</em>
+              </template>
+              <b-dropdown-item class="buttonnav btnnac" style="background:white"  v-on:click="logout()">
+                Cerrar Sesión
+              </b-dropdown-item>
+          </b-nav-item-dropdown>
+      </b-navbar-nav>
     </b-navbar>
 </template>
 
@@ -59,6 +56,7 @@ export default {
         }
         axios.post('/usuarios/permisos',paramr)
           .then(response=>{
+            this.$store.state.permisosUsuario = response.data;
             let acceder = false;
             for(var i=0; i < this.$store.state.navLinks.length; i++){
               for(var j=0; j < response.data.length; j++){
@@ -136,6 +134,7 @@ export default {
           }
           axios.post('/usuarios/permisos',paramr)
           .then(response=>{
+              this.$store.state.permisosUsuario = response.data;
               this.$store.state.rutas = [];
               for(var i=0; i < this.$store.state.navLinks.length; i++){
                   for(var j=0; j < response.data.length; j++){
@@ -174,8 +173,9 @@ export default {
     margin-bottom: 10px;
 }
 .selectf{
+  position: fixed;
   left:14%;
-  top:15%;
+  top:1%;
   font-family:'Brandon Bold';
 }
 .sidenav {
@@ -211,7 +211,8 @@ export default {
   font-size: 36px;
   margin-left: 50px;
 }
-@media screen and (max-height: 600px) {
+
+@media screen and (max-width: 600px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
   .btn-navs{
@@ -231,23 +232,22 @@ export default {
   .optionnav{
     width: 5vw;
   }
-  .buttonnav{
-    width: 25vw;
-    font-size: 3vw;
-  }
   .btnnac{
-    width: 25vw;
+    width: 100%;
+    margin-left: -100px;
   }
-  .selectf{
-    position: absolute;
-    left:20%;
-    top:25%;
-    width: 40vw;
-    font-size: 3vw;
-    font-family:'Brandon Bold';
+
+  .dropdown-menu{
+    margin-left: -100px;
   }
+
   .a{
     color: #009892;
+  }
+  
+  .selectf{
+    top:2%;
+    left:20%;
   }
 }
 </style>

@@ -1,19 +1,20 @@
 <template>
   <div class="FormUnidadesApoyo">
     <div style="margin-left:5%;text-align: left;width:90%">  
-      <div style="heigth:20%">
-        <div style="float:left;">
-          <h5 class="col-sm-4 title-container">Nombre: </h5>
+      <div class="row">
+        <div class="form-inline col-12 col-md-2 col-lg-1">
+          <h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
         </div>
-        <div style="float: left;width:40vw">
-          <input class="col-sm-6 form-control" style="top:26px" v-model="nombre" placeholder="Buscar por nombre">
+        <div class="form-inline col-12 col-md-4">
+          <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
         </div>
-        <div class="popa" style="float: left;width:6vw">
-          <button  type="button" style="border-radius: 10px;margin-right:0px;margin-top:26px" @click="nuevo()" class="row btn btn-info">Añadir</button>
+        <div class="form-inline col-12 col-md-2 offset-md-3 offset-lg-5">
+          <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
         </div>
       </div>
+      
       <br>
-      <div style="margin-top:7%;width: 100%;display:block ruby;margin-right:0px">
+      <div style="width: 100%;display:block ruby;margin-right:0px">
       <div style="overflow: auto;width:100%;">
         <table class="table">
           <thead>
@@ -99,9 +100,10 @@
       </div>
       </div>
     </div>
-    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-        Loading... <b-spinner style="margin-left:15px"/>
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
       </div>
     </b-modal>
   </div>
@@ -118,46 +120,58 @@ export default {
     }
   },
   mounted(){
-    if(this.$store.state.unidades == null) this.listarUnidades();
+    if(this.$store.state.usuario==null) this.$router.push('/login')
+    if(this.$store.state.unidades == null) {
+      this.showModal()
+      this.listarUnidades();
+    }
     else this.unidades = this.$store.state.unidades;
     this.nombre="";
   },
   computed:{
-        nombre:{
-            get(){
-                return this.$store.state.filtro.query;
-            },
-            set(val){
-                this.$store.commit('SET_QUERY',val);
-            }
-        },
-        ...mapGetters({
-            unidadesFiltrados: 'filtrarUnidades'
-        })
+    nombre:{
+      get(){
+        return this.$store.state.filtro.query;
+      },
+      set(val){
+        this.$store.commit('SET_QUERY',val);
+      }
+    },
+    ...mapGetters({
+      unidadesFiltrados: 'filtrarUnidades'
+    })
   },
   methods:{
     listarUnidades() {
       if (this.$store.state.tipoActual.nombre == 'Admin') {
+        this.showModal()
         this.axios.post('/unidadesApoyo/unidadesAdmin')
           .then(res =>{
             this.$store.state.unidades = res.data
             this.unidades = res.data
+            this.hideModal()
           })
           .catch(e => {
             console.log(e.response);
+            this.hideModal()
           })
-      } else if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+      } 
+      else if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+        this.showModal()
         let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
         this.axios.post('/unidadesApoyo/unidadesFacultad',obj)
           .then(res =>{
             this.$store.state.unidades = res.data
             this.unidades = res.data
+            this.hideModal()
           })
           .catch(e => {
             console.log(e.response);
+            this.hideModal()
           })
       }
       else{
+        this.showModal()
         let obj = {
           id_programa: this.$store.state.programaActual.id_programa,
           id_facultad: this.$store.state.programaActual.id_facultad
@@ -166,9 +180,11 @@ export default {
           .then(res =>{
             this.$store.state.unidades = res.data
             this.unidades = res.data
+            this.hideModal()
           })
           .catch(e => {
             console.log(e.response);
+            this.hideModal()
           })
       }
     },
@@ -180,41 +196,44 @@ export default {
     },
     Eliminar(item){
       Swal.fire({
-          title: '¿Dese eliminar '+item.nombre+'?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#0097A7',
-          cancelButtonColor: '#757575',
-          confirmButtonText: 'Confirmar'
-        }).then((result) => {
-          if (result.value) {
-            this.showModal();
-            let obj = {
-              tipoUsuario: this.$store.state.tipoActual.nombre,
-              id_facultad: this.$store.state.programaActual.id_facultad,
-              id_programa: this.$store.state.programaActual.id_programa  
-            }
-            this.axios.post('/unidadesApoyo/eliminar/'+item.id_unidad_apoyo,obj)
-              .then(response=>{
-                response
-                let index = this.$store.state.unidades.indexOf(
-                  function(element){
-                    return element.id_unidad_apoyo === item.id_unidad_apoyo;
-                  })
-                this.$store.state.unidades.splice(index, 1);
-                this.hideModal();
-                Swal.fire({
-                  text:"Eliminación Exitosa",
-                  icon:"success",
-                  confirmButtonText: 'OK',
-                  confirmButtonColor:'#0097A7',
-                  showConfirmButton: true,
-                })
-              })
-              .catch(e=>console.log(e));
-
+        title: '¿Desea eliminar '+item.nombre+'?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#0097A7',
+        cancelButtonColor: '#757575',
+        confirmButtonText: 'Confirmar'
+      }).then((result) => {
+        if (result.value) {
+          this.showModal();
+          let obj = {
+            tipoUsuario: this.$store.state.tipoActual.nombre,
+            id_facultad: this.$store.state.programaActual.id_facultad,
+            id_programa: this.$store.state.programaActual.id_programa  
           }
-        })
+          this.axios.post('/unidadesApoyo/eliminar/'+item.id_unidad_apoyo,obj)
+            .then(response=>{
+              response
+              let index = this.$store.state.unidades.indexOf(
+                function(element){
+                  return element.id_unidad_apoyo === item.id_unidad_apoyo;
+                })
+              this.$store.state.unidades.splice(index, 1);
+              this.hideModal();
+              Swal.fire({
+                text:"Eliminación Exitosa",
+                icon:"success",
+                confirmButtonText: 'OK',
+                confirmButtonColor:'#0097A7',
+                showConfirmButton: true,
+              })
+            })
+            .catch(e=>{
+              console.log(e)
+              this.hideModal();
+            });
+
+        }
+      })
       
     },
     showModal() {
@@ -236,27 +255,14 @@ export default {
     border-radius: 1.25rem;  
     border: 0.5px solid #757575;
     margin-bottom: 10px;
+    width: 100%;
 }
 .top-titulo {
     display: flex;
     justify-content: space-between;
 }
-.botones {
-    margin:auto;
-}
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}
 input:focus {outline: none;box-shadow: none;}
-@media only screen and (min-width: 800px) {
-  .popa {
-    margin-left: 28%;
-  }
-}
-
-@media only screen and (max-width: 700px) {
-  .popa {
-    margin-left: 0%;
-  }
-}
 
 </style>

@@ -1,47 +1,49 @@
 <template>
   <div class="FormInstitucion ">
-    <div class="container" style="text-align: left;left:-100px;">
+    <div style="text-align: left;margin-left:5%;">
       <form v-on:submit.prevent="guardarInstitucion" >
         <div class="row grid-divider" style="">
           <div class="izq col-lg-6 col-xm-2 col-md-12">
             <h4 class="font-weight-bolder text-left institucion-title">Datos</h4><br>
-            <div class="row rowmar">
-              <div class="font-weight-ligth text-left textF">Nombre </div>
+            <div style="margin-bottom:5%">
+              <div class="font-weight-ligth text-left col-12 col-md-3">Nombre * </div>
               <input class="borde-textbox inp" type="text" v-model="nombre">
             </div>
-            <div class="row rowmar">
-              <div class="font-weight-ligth text-left textF">Siglas </div>
+            <div style="margin-bottom:5%">
+              <div class="font-weight-ligth text-left col-12 col-md-3">Siglas * </div>
               <input class="borde-textbox inp" type="text" v-model="siglas" required>
             </div>
-            <div class="row rowmar">
-              <div class="font-weight-ligth text-left textF">Direccion </div>
+            <div style="margin-bottom:5%">
+              <div class="font-weight-ligth text-left col-12 col-md-3">Direccion * </div>
               <input class="borde-textbox inp" type="text" v-model="direccion" required>
             </div>
-            <div class="row rowmar">
-              <div class="font-weight-ligth text-left textF">Telefono </div>
+            <div style="margin-bottom:5%">
+              <div class="font-weight-ligth text-left col-12 col-md-3">Telefono * </div>
               <input class="borde-textbox inp" v-model="telefono" required>
             </div>
+            <br>  * Campos obligatorios 
           </div>
           <div class="der col-lg-6 col-xm col-md-12">
-            <h4 class="font-weight-bolder text-left institucion-title">Logo</h4>
-            <div style="width:100px;text-align:center;margin-top:40px" >
+            <h4  style="margin-bottom:10%" class="font-weight-bolder text-left institucion-title">Logo</h4>
+            <div class="logoP" style="width:100px;text-align:center;margin-left:12%;margin-top:40px" >
               <img class="imgP" v-if="this.selectedFile!==null" alt="Vue logo" :src="selectedFile" id='LogoInst'>
               <img class="imgP" v-else alt="Vue logo" v-bind:src="logo" id='LogoInst'>        
             </div>
             <div style=";text-align:center">
               <input type="file" v-on:change="onFileSelected" style="margin-top:20px"><br>
-              <button @click="onUpload" type="button" class="btn btn-info" style="margin-left: -280px;margin-top:20px">Subir</button>
+              <button @click="onUpload" type="button" class="btn btn-info" style="margin-left: -10%;margin-top:20px">Subir</button>
             </div>
           </div>
         </div>
-        <div style="margin-left:23%;margin-top:20px">
-          <button type="submit" style="margin-left:80px" class="btn btn-info" v-on:click="guardarInstitucion()">Guardar</button>
+        <div class="col-12" style="text-align:center;margin-top:20px;margin-bottom:5%">
+          <button type="submit" class="btn btn-info" v-on:click="guardarInstitucion()">Guardar</button>
         </div>
       </form>
     </div>
-    <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-        Loading... <b-spinner style="margin-left:15px"/>
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
       </div>
     </b-modal>
   </div>
@@ -64,6 +66,7 @@ export default {
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
+    this.showModal()
     axios
       .post('/institucion/listarTodo')
         .then( response=>{
@@ -73,9 +76,11 @@ export default {
           this.telefono = response.data[0].telefono;
           this.siglas = response.data[0].siglas;
           this.logo = response.data[0].logo;
+          this.hideModal()
         })
         .catch(e => {
           console.log(e.response);
+          this.hideModal()
         });
   },
   methods:{
@@ -105,15 +110,16 @@ export default {
       }
       else{
         Swal.fire({
-          title: '¿Dese modificar su Logo?',
+          text: '¿Desea modificar su Logo?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
           cancelButtonColor: '#757575',
-          confirmButtonText: 'Confirmar'
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar'
         }).then((result) => {
-          this.showModal();
           if (result.value) {
+            this.showModal()
             axios.post('/institucion/subirLogo',{image: this.selectedFile})
               .then( response=>{
                 console.log(response)
@@ -138,10 +144,12 @@ export default {
                 })
                 .catch(e => {
                   console.log(e.response);
+                  this.hideModal();
                 })
               })
               .catch(e => {
                 console.log(e.response);
+                this.hideModal();
               })
           }
         })
@@ -156,30 +164,31 @@ export default {
       let telVal = this.telefono=='' || this.telefono == null ;
       if(!(regex.test(this.telefono))){
         Swal.fire({
-              title:"No es un número válido",
-              text:"Formato (+11)111111111",
-              icon:"error",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
+          title:"No es un número válido",
+          text:"Formato (+11)111111111",
+          icon:"error",
+          confirmButtonText: 'OK',
+          confirmButtonColor:'#0097A7',
+          showConfirmButton: true,
         })   
       } else{
         if( nomVal || siglasVal || dirVal || telVal){
           Swal.fire({
-                text:"No ha completado todos los campos",
-                icon:"error",
-                confirmButtonText: 'OK',
-                confirmButtonColor:'#0097A7',
-                showConfirmButton: true,
+            text:"No ha completado todos los campos",
+            icon:"error",
+            confirmButtonText: 'OK',
+            confirmButtonColor:'#0097A7',
+            showConfirmButton: true,
           })        
         }else{
           Swal.fire({
-            title: '¿Dese modificar su Institución?',
+            text: '¿Desea modificar su Institución?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',
             cancelButtonColor: '#757575',
-            confirmButtonText: 'Confirmar'
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
           }).then((result) => {
             if (result.value) {
               this.showModal();
@@ -203,6 +212,7 @@ export default {
                 })
                 .catch(e => {
                   console.log(e.response);
+                  this.hideModal();
                 })
             }
           })
@@ -229,22 +239,33 @@ export default {
   }
 
   .inp{
-    margin-left:50px;
-    width:300px;
+    margin-left:2%;
+    width:90%;
     padding-left: 15px;
+    padding-right: 15px;
+    height: calc(1.5em + 0.75rem + 2px);
+    margin-top:-1%;
   }
 
-  .textF{
-    width: 50px;
+  .text-left{
+    margin-bottom:5%;
   }
 
   .rowmar{
     margin-left:10px;
-    margin-top:20px
+    margin-top:20px;
   }
   
   .institucion-title{
     margin-top: 30px;
     margin-bottom: 20px;
+  }
+
+  @media screen and (max-width: 600px) {
+    
+    .imgP{
+      margin-left:35%;
+    }
+
   }
 </style>

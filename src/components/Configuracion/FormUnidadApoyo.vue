@@ -1,70 +1,81 @@
 <template>
     <div class="FormRoles">
-        <div class="container" style="margin-left:300px;margin-top:40px;text-align: left">
-            <table>
-                <tbody>
-                    <td >
-                        <tr style="text-align:left">
-                            <td style="width:200px;">Nombre:</td>
-                            <td>
-                                <input v-model="unidad.nombre" class="form-control" type="text" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )">
-                            </td>
-                        </tr>
-                        <tr style="text-align:left">
-                            <td style="width:200px;">Nombre del Contacto:</td>
-                            <td>
-                                <input v-model="unidad.nombre_contacto" class="form-control" type="text" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )">
-                            </td>
-                        </tr>
-                        <tr style="text-align:left">
-                            <td style="width:200px;">Correo del Contacto:</td>
-                            <td>
-                                <input v-model="unidad.correo_contacto" id="corr" class="form-control"  type="text">
-                            </td>
-                        </tr>
-                        <tr style="text-align:left">
-                            <td style="width:200px;">Télefono del Contacto:</td>
-                            <td>
-                                <input  v-model="unidad.telefono_contacto" type="text" class="form-control" value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
-                            </td>
-                        </tr>
-                        <tr v-if="$store.state.tipoActual.nombre == 'Admin'" style="text-align:left">
-                            <td style="width:200px;">Facultad a Asignar:</td>
-                            <td style="width:200px;">
-                                <select @change="Programas(facultadEl)" class= "form-control" style="color:gray" v-model="facultadEl">
-                                    <option selected disabled :value="null">Elige una Facultad</option>
-                                    <option v-if="$store.state.tipoActual.nombre == 'Admin'" :value="0">General</option>
-                                    <option v-for="options in facultadesT" v-bind:key="options.id_facultad" :value="options">
-                                    {{ options.nombre}}
-                                    </option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr v-if="(($store.state.tipoActual.nombre == 'Admin' && (prog) )|| $store.state.tipoActual.nombre == 'Coordinador Facultad') " style="text-align:left">
-                            <td style="width:200px;">Programa a Asignar:</td>
-                            <td style="width:200px;">
-                                <select class= "form-control" style="color:gray" v-model="programaEl">
-                                    <option selected disabled :value="null">Elige un Programa</option>
-                                    <option v-if="$store.state.tipoActual.nombre == 'Admin' || $store.state.tipoActual.nombre == 'Coordinador Facultad'" :value="0">General Facultad</option>
-                                    <option v-for="options in programasT" v-bind:key="options.id_programa" :value="options">
-                                    {{ options.nombre}}
-                                    </option>
-                                </select>
-                            </td>
-                        </tr>
-                    
-                    </td> 
-                </tbody>
-            </table>
-            <div  class="botones" style="bottom:25px;margin-top:40px;margin-left:240px">   
+        <div style="margin-left:5%;text-align: left;margin-top:5%">
+            <div class="row" >
+                <div class="col-12 col-md-4 col-lg-1 form-inline">
+                    Nombre: *
+                </div>
+                <div class="col-12 col-md-6 col-lg-5">
+                    <input style="margin-top:2%" v-model="unidad.nombre" class="form-control" type="text" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-4 col-lg-1 form-inline">
+                    Nombre del Contacto: *
+                </div>
+                <div class="col-12 col-md-6 col-lg-5">
+                    <input style="margin-top:2%" v-model="unidad.nombre_contacto" class="form-control" type="text" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-4 col-lg-1 form-inline">
+                    Correo del Contacto: *
+                </div>
+                <div class="col-12 col-md-6 col-lg-5">
+                    <input style="margin-top:2%" v-model="unidad.correo_contacto" id="corr" class="form-control"  type="text">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-4 col-lg-1 form-inline">
+                    Télefono del Contacto: *
+                </div>
+                <div class="col-12 col-md-6 col-lg-5">
+                    <input style="margin-top:2%" v-model="unidad.telefono_contacto" type="text" class="form-control" value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+                </div>
+            </div>
+            <div v-if="$store.state.tipoActual.nombre == 'Admin'" class="row" >
+                <div class="col-12 col-md-4 col-lg-1 form-inline">
+                    Facultad a Asignar: *
+                </div>
+                <div class="col-12 col-md-6 col-lg-5">
+                    <select @change="Programas(facultadEl)" class= "form-control" style="color:gray;margin-top:2%" v-model="facultadEl">
+                        <option selected disabled :value="null">Elige una Facultad</option>
+                        <option v-if="$store.state.tipoActual.nombre == 'Admin'" :value="0">General</option>
+                        <option v-for="options in facultadesT" v-bind:key="options.id_facultad" :value="options">
+                        {{ options.nombre}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div v-if="(($store.state.tipoActual.nombre == 'Admin' && (prog) )|| $store.state.tipoActual.nombre == 'Coordinador Facultad') " class="row">
+                <div class="col-12 col-md-4 col-lg-1 form-inline">
+                    Programa a Asignar: *
+                </div>
+                <div class="col-12 col-md-6 col-lg-5">
+                    <select class= "form-control" style="color:gray;margin-top:2%" v-model="programaEl">
+                        <option selected disabled :value="null">Elige un Programa</option>
+                        <option v-if="$store.state.tipoActual.nombre == 'Admin' || $store.state.tipoActual.nombre == 'Coordinador Facultad'" :value="0">General Facultad</option>
+                        <option v-for="options in programasT" v-bind:key="options.id_programa" :value="options">
+                        {{ options.nombre}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-top:2%">
+                <div class="col-12 form-inline">
+                    * Campos obligatorios 
+                </div>
+            </div>
+            <div  class="col-12 botones" style="text-align:center">   
                 <button type="button" style="margin:5px" class="btn btn-info" id="btnGuardar" v-on:click="Guardar()">Guardar</button>
                 <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="Regresar()"  >Cancelar</button>  
             </div>
         </div>
-        <b-modal ref="my-modal" style="margin-left:20%" size="sm" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-        <div style="color:#0097A7;margin-left:25%" class="sb-1 d-flex">
-            Loading... <b-spinner style="margin-left:15px"/>
-        </div>
+        <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+            <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+                <b-spinner style="width: 3rem; height: 3rem;"/>
+                <br >Cargando... 
+            </div>
         </b-modal>
     </div>
 </template>
@@ -101,32 +112,37 @@ export default {
     }
   },
   created(){
-      if(this.$store.state.tipoActual.nombre == 'Admin' || this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
-          axios.post('/facultad/listTodo')
+    if(this.$store.state.usuario==null) this.$router.push('/login')
+    if(this.$store.state.tipoActual.nombre == 'Admin' || this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+        this.showModal()
+        axios.post('/facultad/listTodo')
             .then(response=>{
                 this.facultadesT = response.data.facultades
                 if(this.idUnidad){
-                    this.axios.post('/unidadesApoyo/listar/'+this.idUnidad).then( response =>{
-                        this.unidad= response.data;
-                        let index2;
-                        for (index2 = 0; index2 < this.facultadesT.length; index2++) {
-                            if(this.facultadesT[index2].id_facultad == this.unidad.programas[0].id_facultad) break;
-                        }
-                        this.facultadEl = this.facultadesT[index2];
-                        if(index2>=this.facultadesT.length) this.facultadEl = 0;
-                        this.Programas(this.facultadEl);
-                    }).catch(e => {
-                        e
-                        Swal.fire({
-                            title: e,
-                            text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
-                            icon:"warning",
-                            confirmButtonText: 'Sí',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                        }); 
-                        this.$store.state.usuarios=null;
-                        this.$router.push('/unidadesApoyo');          
+                    this.axios.post('/unidadesApoyo/listar/'+this.idUnidad)
+                        .then( response =>{
+                            this.unidad= response.data;
+                            let index2;
+                            for (index2 = 0; index2 < this.facultadesT.length; index2++) {
+                                if(this.facultadesT[index2].id_facultad == this.unidad.programas[0].id_facultad) break;
+                            }
+                            this.facultadEl = this.facultadesT[index2];
+                            if(index2>=this.facultadesT.length) this.facultadEl = 0;
+                            this.Programas(this.facultadEl);
+                        })
+                        .catch(e => {
+                            e
+                            this.hideModal()
+                            Swal.fire({
+                                title: e,
+                                text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+                                icon:"warning",
+                                confirmButtonText: 'Sí',
+                                confirmButtonColor:'#0097A7',
+                                showConfirmButton: true,
+                            }); 
+                            this.$store.state.usuarios=null;
+                            this.$router.push('/unidadesApoyo');          
                     });
 
                 }
@@ -139,14 +155,9 @@ export default {
                     this.Programas(this.facultadEl);
                 }
             })
-            
-      }
-      if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
-          if(this.idUnidad){
-            this.axios.post('/unidadesApoyo/listar/'+this.idUnidad).then( response =>{
-                this.unidad= response.data;
-            }).catch(e => {
+            .catch(e => {
                 e
+                this.hideModal()
                 Swal.fire({
                     title: e,
                     text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
@@ -156,11 +167,33 @@ export default {
                     showConfirmButton: true,
                 }); 
                 this.$store.state.usuarios=null;
-                this.$router.push('/unidadesApoyo');          
-            });
-
+                this.$router.push('/unidadesApoyo');        
+            })
+    }
+    if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+        if(this.idUnidad){
+            this.showModal();
+            this.axios.post('/unidadesApoyo/listar/'+this.idUnidad)
+                .then( response =>{
+                    this.unidad= response.data;
+                    this.hideModal()
+                })
+                .catch(e => {
+                    e
+                    this.hideModal()
+                    Swal.fire({
+                        title: e,
+                        text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+                        icon:"warning",
+                        confirmButtonText: 'Sí',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    }); 
+                    this.$store.state.usuarios=null;
+                    this.$router.push('/unidadesApoyo');          
+                });
         }
-      }
+    }
   },
   methods:{
 
@@ -210,7 +243,7 @@ export default {
             else{
                 if(this.idUnidad==null){
                     Swal.fire({
-                        title: '¿Dese guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
+                        title: '¿Desea guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#0097A7',
@@ -250,7 +283,7 @@ export default {
                 }
                 else{
                     Swal.fire({
-                        title: '¿Dese guardar los cambios para '+this.unidad.nombre+'?',
+                        title: '¿Desea guardar los cambios para '+this.unidad.nombre+'?',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#0097A7',
@@ -306,7 +339,7 @@ export default {
         else if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
             if(this.idUnidad==null){
                 Swal.fire({
-                    title: '¿Dese guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
+                    title: '¿Desea guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#0097A7',
@@ -342,7 +375,7 @@ export default {
             }
             else{
                 Swal.fire({
-                    title: '¿Dese guardar los cambios para '+this.unidad.nombre+'?',
+                    title: '¿Desea guardar los cambios para '+this.unidad.nombre+'?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#0097A7',
@@ -400,7 +433,7 @@ export default {
             else{
                 if(this.idUnidad==null){
                     Swal.fire({
-                        title: '¿Dese guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
+                        title: '¿Desea guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#0097A7',
@@ -439,7 +472,7 @@ export default {
                 }
                 else{
                     Swal.fire({
-                        title: '¿Dese guardar los cambios para '+this.unidad.nombre+'?',
+                        title: '¿Desea guardar los cambios para '+this.unidad.nombre+'?',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#0097A7',
@@ -498,6 +531,7 @@ export default {
     Programas(facultad){
         this.prog = false;
         if(facultad != "0"){
+            this.showModal()
             axios.post('/programa/listarConCoord/'+facultad.id_facultad)
                 .then(response=>{
                     let aux=[];
@@ -516,15 +550,29 @@ export default {
                         this.vez = false;
                     }
                     this.prog = true;
+                    this.hideModal()
                 })
+                .catch(e => {
+                    e
+                    this.hideModal()
+                    Swal.fire({
+                        title: e,
+                        text:"Estamos teniendo problemas. Vuelve a intentar en unos minutos.",
+                        icon:"warning",
+                        confirmButtonText: 'Sí',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    }); 
+                    this.$store.state.usuarios=null;
+                    this.$router.push('/unidadesApoyo');          
+                });
         }
-        
     },
     showModal() {
-      this.$refs['my-modal'].show()
+      //this.$refs['my-modal'].show()
     },
     hideModal() {
-      this.$refs['my-modal'].hide()
+      //this.$refs['my-modal'].hide()
     },
   }
 }
@@ -541,6 +589,7 @@ export default {
     border-radius: 1.25rem;  
     border: 0.5px solid #757575;
     margin-bottom: 10px;
+    width: 100%;
 }
 .motivo-dropdown-title {
     top: 10px;

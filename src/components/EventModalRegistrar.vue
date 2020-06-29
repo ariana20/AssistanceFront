@@ -1,11 +1,11 @@
 <template>
   <div style="margin-top:15px;">
-    <fieldset v-if="this.event.backgroundColor!='#009892' && !isTutor">
-      <legend>Registrar Cita</legend>
-      <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
+    <fieldset v-if="this.event.backgroundColor!='#009892' && !isTutor"> <!-- deberia ser si es !alumno-->
+      <legend>Reserva de Cita</legend>
+      <!-- <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/> -->
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
-      <div id="motivo"><b style="margin-top: 6px;">Motivo:</b><select class="form-control" style="width:40%" v-model="motivoSel">
+      <!-- <div id="motivo"><b style="margin-top: 6px;">Motivo:</b><select class="form-control" style="width:40%" v-model="motivoSel">
         <option disabled selected :value="null" focusable="false">Selecciona un motivo</option>
         <option v-for="(item, index) in tipoTutorias" 
                 :key="index" 
@@ -13,9 +13,12 @@
                 {{ item.nombre }}
         </option>
         </select>
-        </div>
+        </div> -->
+
+
       <div id="botones">
-        <button type="button" class="btn btn-info" :disabled='isDisabled'  @click="updateEvent">Aceptar</button>
+        <!-- <button type="button" class="btn btn-info" :disabled='isDisabled'  @click="updateEvent">Aceptar</button> -->
+        <button id="button" class="btn btn-info" @click="rutaEvent">Agregar Alumnos</button>
         <button type="button" class="btn btn-secondary" @click="$emit('close')">Cerrar</button>
       </div>
       <div style="margin-bottom: 20px;"></div>
@@ -23,7 +26,7 @@
 
     <fieldset v-if="this.event.backgroundColor=='#009892' && !isTutor">
       <legend>Cita Registrada</legend>
-      <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
+      <!-- <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/> -->
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
       <b>Tipo Tutoría:</b>  {{ event.description }} <br/>
@@ -35,10 +38,11 @@
     </fieldset>
 
 
+<!-- 
     <fieldset v-if="isTutor">
       <div v-if="this.event.backgroundColor!='#B2EBF2'">
         <legend>Cita Agendada</legend>
-        <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
+         <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/> 
         <b>Fecha:</b>{{event.start | formatDate}} <br/>
         <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
         <b>Motivo:</b>  {{ event.extendedProps.motivo }} <br/>
@@ -49,7 +53,7 @@
         </div>
         <div style="margin-bottom: 20px;"></div>
       </div>
-    </fieldset>
+    </fieldset> -->
   </div>
 </template>
 
@@ -67,13 +71,27 @@ export default {
             end: {},
             isDisabled: false,
             idCita: null,
-            tipoTutorias: "",
-            motivoSel: null,
+            tipoTutorias: this.tutorSel.usuario.tipo_tutorias,
+            motivoSel: null
         }
     },
     methods: {
+          //Modal de cargando
+         showModal() {
+           this.$refs['my-modal'].show()
+         },
+          hideModal() {
+            this.$refs['my-modal'].hide()
+          },
         rutaEvent () {
-          this.$router.push({name:'Cita Agendada', params: {event:this.event}});
+          /*this.$router.push({
+            name: 'Cita Agendada',
+            props: {event:this.event }
+          });*/
+          //Aquí me lleva a la cita agendada 
+          this.$router.push({
+            name:'Registrar Cita Agendada', 
+            props: {event:this.event }});
 
         },
         removeEvent() {
@@ -118,6 +136,7 @@ export default {
         })
         },
         updateEvent () {
+          //Guardar o actualizar la cita
           this.isDisabled = true;
           //console.log(this.event.extendedProps);
           if(this.motivoSel){
@@ -136,6 +155,7 @@ export default {
               id_disponibilidad: this.event.id,
               usuario_creacion: this.event.extendedProps.usuario_creacion,
               usuario_actualizacion: this.$store.state.usuario.id_usuario,
+              //jiji aquí ya no iría mi id_usuario, si no el id del alumno
               idUsuario: this.$store.state.usuario.id_usuario,
             }).then(response => {
               console.log('registrarCitaAl response: ', response.data);
@@ -156,10 +176,8 @@ export default {
         getIdCita () {
           axios.post('disponibilidades/mostrarCita2', {idDisponibilidad:this.event.id})
           .then((response) => {
-            this.idCita = response.data[0].id_cita;
-            this.$store.state.idCita = response.data[0].id_cita;
-            this.$store.state.curSesion = response.data
-            console.log('mostrarCita2: ',response.data)
+            this.idCita = response.data.id_cita;
+            this.$store.state.idCita = response.data.id_cita;
             //this.idCita = response.data.cita[0].id_cita
             //console.log(response.data);
             //console.log(response.data.cita[0].id_cita);
@@ -216,14 +234,14 @@ export default {
     text: String,
     event: Object,
     isTutor: Boolean,
-    nombre_usuario: String,
+    // nombre_usuario: String,
     id_tutor: Number,
     tutorSel: Object,
-  },mounted() {
-    if(this.tutorSel) {
-      this.tipoTutorias = this.tutorSel.usuario.tipo_tutorias
-    }
+  },
+  
+  mounted() {
     this.$store.state.curEvent = this.event;
+    console.log(this.event.id);
     this.getIdCita();
 
   }
@@ -243,6 +261,7 @@ Vue.filter('formatHour', function(value) {
 </script>
 
 <style scoped>
+
 @import './../assets/styles/main.css';
 div {
     color: black !important;
@@ -253,9 +272,9 @@ fieldset {
     margin-bottom: 10px;
     border-radius: 25px;
     padding:0;
-    border:1px solid #757575;
+    /* border:1px solid #757575; */
     font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
-    height: 230px;
+    height: 280px;
 }
 
 fieldset legend {
@@ -286,5 +305,10 @@ b, input {
 #motivo {
     display: flex;
     flex-direction: row;
+}
+.vm--modal {
+    border-radius: 25px;
+    margin: 30px;
+    height: 230px !important;
 }
 </style>

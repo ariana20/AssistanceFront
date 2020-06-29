@@ -15,6 +15,7 @@ export default new Vuex.Store({
     coordinadores:null,
     coordinadoresL:null,
     permisos:null,
+    permisosUsuario:null,
     roles:null, //Filtrar Tipos de Usuario
     solicitudes:null, //Filtrar Permisos
     unidades:null, //Filtrar Unidades de Apoyo
@@ -29,6 +30,10 @@ export default new Vuex.Store({
     tutorDisponibilidad:null,
     reg: false,
     idCita: null,
+    verPdf:false,
+    verCitas:false,
+    verPlan:false,
+    citaDatos:null,
     navLinks: [
       {
         text: 'Institucion',
@@ -53,7 +58,7 @@ export default new Vuex.Store({
       {
         text: 'Tipos de Tutoria',
 		path: '/ListaTiposTutorias',
-		icon: 'ion-ios-book'
+		icon: 'ion-ios-bookmarks'
       },
       {
         text: 'Usuarios',
@@ -63,7 +68,7 @@ export default new Vuex.Store({
       {
        text: 'Tipos de Usuario',
        path: '/tiposUsuario',
-       icon: 'ion-ios-people'
+       icon: 'ion-md-people'
      },
      {
        text: 'Unidades de Apoyo',
@@ -86,10 +91,16 @@ export default new Vuex.Store({
     icon: 'ion-ios-book'
       },
     {
+        text: 'Agregar Alumnos',
+        path: '/agregarAlumnos',
+        icon: 'ion-ios-person-add'
+      },
+    {
     text: 'Agregar Notas',
     path: '/agregarNotas',
     icon: 'ion-ios-document'
     },
+   
     {
       text: 'Tutores',
       path: '/tutoresDisponibles',
@@ -106,14 +117,24 @@ export default new Vuex.Store({
       icon: 'ion-ios-calendar'
     },
     {
+      text: 'Registrar Cita',
+      path: '/registrarCita',
+      icon: 'ion-ios-calendar'
+    },
+    {
       text: 'Asignar Tutor',
       path: '/asignartutor',
-      icon: 'ion-ios-people'
+      icon: 'ion-ios-contacts'
     },
     {
       text: 'Calendario',
       path: '/calendariocitas',
       icon: 'ion-ios-calendar'
+    },
+    {
+      text: 'Reportes',
+      path: '/reportes',
+      icon: 'ion-ios-stats'
     },
     ],
     filtro:{
