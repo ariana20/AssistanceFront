@@ -73,10 +73,6 @@ export default {
     },
     methods: {
         rutaEvent () {
-          /*this.$router.push({
-            name: 'Cita Agendada',
-            props: {event:this.event }
-          });*/
           this.$router.push({name:'Cita Agendada', params: {event:this.event}});
 
         },
@@ -257,7 +253,7 @@ fieldset {
     margin-bottom: 10px;
     border-radius: 25px;
     padding:0;
-    border:1px solid #757575;
+    /*border:1px solid #757575;*/
     font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
     height: 230px;
 }
