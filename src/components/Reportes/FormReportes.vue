@@ -2,42 +2,66 @@
   <div class="FormReportes">
       <div class="container">
         <div class="top-titulo" style="text-align:left;">
-            <h4>Fechas:</h4>
-            <date-picker 
-                v-model="periodo" 
-                width="100" lang="es" range 
-                placeholder="Selecciona Rango de Fechas"
-                :disabled-date="disabledAfterToday"
-                @input="handlePeriodChange"
-                input-class="form-control">
-            </date-picker>
-            <div class="botones" style="margin-bottom:10px">
-            <button type="button" class="btn btn-info" @click="generarReporte()" >Generar</button>
+            <div class="col-4">
+                <h5>Fechas:</h5>
+                <date-picker style="left:0px" class="wide-date-example"
+                    v-model="periodo" 
+                    width="20" lang="es" range 
+                    placeholder="Selecciona Rango de Fechas"
+                    :disabled-date="disabledAfterToday"
+                    @input="handlePeriodChange"
+                    input-class="form-control">
+                </date-picker>
             </div>
-
-
-        </div>
-        <div class="row" style="text-align:left;">
-            <h4>Facultad: </h4>
-            <select class="col-sm-2 form-control"  v-model="selectedFacultad" v-on:change="listarProgramas()">
-                <option disabled selected :value="null" focusable="false">Selecciona una facultad</option>
-                <option 
-                    v-for="(facultad, index) in facultades" 
-                    :key="index" 
-                    :value="facultad">
-                    {{ facultad.nombre }}
-                </option>
-            </select>
-            <h4>Programa: </h4>
-            <select class="col-sm-2 form-control"  v-model="selectedPrograma">
-                <option disabled selected :value="null" focusable="false">Selecciona un programa</option>
-                <option 
-                    v-for="(programa, index) in progSinDefault"
-                    :key="index" 
-                    :value="programa" >
-                    {{ programa.nombre }}
-                </option>
-            </select>
+            <div class="col-4">
+                <div class="row">
+                <div class="col"><h5>Facultad: </h5></div>
+                <div class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
+                </div>
+                <select class="form-control"  v-model="selectedFacultad" v-on:change="listarProgramas()">
+                    <option disabled selected :value="null" focusable="false">Selecciona una facultad</option>
+                    <option 
+                        v-for="(facultad, index) in facultades" 
+                        :key="index" 
+                        :value="facultad">
+                        {{ facultad.nombre }}
+                    </option>
+                </select>
+                <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
+                    <li class="motivos-seleccionados list-group-item" style="text-align:left;"
+                        v-for="(facultad,index) in facultadesSelect"  
+                        :key="index">
+                        {{facultad.nombre}}
+                        <span name="remove" class="close" @click="deleteFacu(index)" style="float:right;">&times;</span>           
+                    </li>
+                </ul>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="col"><h5>Programa: </h5></div>
+                    <div  class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
+                </div>
+                <select class="form-control"  v-model="selectedPrograma">
+                    <option disabled selected :value="null" focusable="false">Selecciona un programa</option>
+                    <option 
+                        v-for="(programa, index) in progSinDefault"
+                        :key="index" 
+                        :value="programa" >
+                        {{ programa.nombre }}
+                    </option>
+                </select>
+                <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
+                    <li class="motivos-seleccionados list-group-item" style="text-align:left;"
+                        v-for="(programa,index) in programasSelect"  
+                        :key="index">
+                        {{programa.nombre}}
+                        <span name="remove" class="close" @click="deleteProg(index)" style="float:right;">&times;</span>        
+                    </li>
+                </ul>
+            </div>
+            <div class="botones" style="margin-bottom:10px;text-align: up">
+                <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
+            </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
@@ -49,6 +73,17 @@
             <div v-if="atenciones.length>0">
                 <strong>Cantidad de Atenciones</strong>
                 <line-chart :chartData="atenciones" :options="chartOp" label='Atenciones'></line-chart>
+            </div>
+        </div>
+        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
+        <div class="row mt-5">
+            <div v-if="satisfaccion.length>0">
+                <strong>Satisfacción del alumno</strong>
+                <pie-chart :chartData="satisfaccion" :options="chartOp2" label='Satisfacción del alumno'></pie-chart>
+            </div>
+            <div v-if="planAccion.length>0">
+                <strong>Cumplimiento de Planes de Acción</strong>
+                <line-chart :chartData="planAccion" :options="chartOp" label='Cumplimiento de Planes de Acción'></line-chart>
             </div>
         </div>
       </div>
@@ -76,12 +111,16 @@ export default {
             //filtros
             facultades:[],
             selectedFacultad:null,
+            facultadesSelect:[],
             programas:[],
             selectedPrograma:null,
+            programasSelect:[],
             //lista de identificadores
             idPogramas:[],
             idFacultades:[],
             //graficos
+            satisfaccion:[],
+            planAccion:[],
             asignados:[],
             atenciones:[],
             //datepicker
@@ -122,11 +161,12 @@ export default {
 
     },
     mounted(){
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.borderRadius = "1.25rem"; 
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.border= "0.5px solid #757575";    
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontWeight = "400";
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontSize = "1rem";
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.height = "2.4em";
+        
+        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.borderRadius = "1.25rem"; 
+        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.border= "0.5px solid #757575";    
+        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontWeight = "400";
+        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
+        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
   
     },
     computed: {
@@ -272,6 +312,17 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/styles/material.css';
 
+.wide-date-example {
+    width: 100% !important;
+}
+
+.list-group-item {
+    padding-top: 0.1rem;
+    padding-right: 1rem;
+    padding-bottom: 0.1rem;
+    padding-left: 1rem;
+}
+
 .close {
     cursor: pointer;
     position: absolute;
@@ -291,6 +342,11 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
     font-family: "Brandon Bold",Helvetica,Arial,sans-serif;
     font-size: 17px;
     margin-bottom:0px!important;
+}
+#wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: right;
 }
 .e-control .e-autocomplete .e-lib .e-input .e-keyboard {
     z-index: -100;
@@ -333,6 +389,10 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
     left: -1px; // quickfix to hide divider on left side
   }
 }
+.button{
+    top:0%;
+    position:relative
+}
 .font-weight-bolder {
     color: black;
     font-size: 24px;
@@ -340,12 +400,16 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
 }
 .botones {
     margin:auto;
+    top:0%;
+    position:relative
 }
 .btn {
     padding-left: 20px;
     padding-right: 20px;
     border-radius: 10px;
     margin: 5px;
+    top:0%;
+    position:relative
 }
 .top-titulo {
     display: flex;
