@@ -38,7 +38,7 @@
     <fieldset v-if="isTutor">
       <div v-if="this.event.backgroundColor!='#B2EBF2'">
         <legend>Cita Agendada</legend>
-        <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
+        <b>Alumno(s) :</b>  {{ nombre_usuario }} <br/>
         <b>Fecha:</b>{{event.start | formatDate}} <br/>
         <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
         <b>Motivo:</b>  {{ event.extendedProps.motivo }} <br/>
@@ -73,8 +73,12 @@ export default {
     },
     methods: {
         rutaEvent () {
-          this.$router.push({name:'Cita Agendada', params: {event:this.event}});
-
+          if(this.event.title == 'Cita Grupal') {
+            this.$router.push({name:'Cita Agendada Alumnos'});  
+          }
+          else {
+            this.$router.push({name:'Cita Agendada', params: {event:this.event}});  
+          }
         },
         removeEvent() {
           //console.log('idDisponibilidad: ',this.event.id);
