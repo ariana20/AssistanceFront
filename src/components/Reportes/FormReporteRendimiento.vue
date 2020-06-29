@@ -117,6 +117,14 @@ export default {
                 },
                 maintainAspectRatio:false
             },
+             chartOp3:{
+                responsive: true,
+                pieceLabel: {
+                    mode: 'percentage',
+                    precision: 1
+                },
+                maintainAspectRatio:false
+            },
             
         }
 

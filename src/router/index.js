@@ -281,6 +281,11 @@ Vue.use(VueRouter)
     // props: true,
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewCitaAgendada2.vue')
   },
+  {
+    path: '/reporteRendimiento',
+    name: 'Reporte Rendimiento',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteRendimiento.vue')
+  },
 ]
 const router = new VueRouter({
   mode: 'history',

@@ -1,6 +1,6 @@
 <template>
   <div class="viewreportes">
-    <CabezeraTitulo msg="Reporte Rendimiento"
+    <CabezeraTitulo msg="Reporte Bajo Rendimiento"
     :image-path="require('@/assets/images/studying.jpg')"/>
     <FormReporteRendimiento/>
   </div>

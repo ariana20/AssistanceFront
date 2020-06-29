@@ -128,7 +128,8 @@ export default {
     computed: {
         ...mapGetters(["EVENTS"])
     },
-    mounted() {        
+    mounted() {     
+         
         this.listarTutores();
         if (this.tutorSel)
             this.showCalendar();
@@ -145,7 +146,7 @@ export default {
         rutaEvent (arg) {
            //Aquí me lleva a la cita agendada 
           console.log('arg',arg);
-           console.log('tt',this.tutorSel); 
+           
            console.log('yo',this.$store.state.usuario);
            if(arg.event.backgroundColor!='gray') {
                 // disponible
@@ -183,6 +184,7 @@ export default {
          
 
         },
+        
         listarTutores() {
             
             this.showModal();
@@ -338,6 +340,8 @@ export default {
             hideModal() {
               this.$refs['my-modal'].hide()
             },
+          
+            
             
     },
     watch: {    

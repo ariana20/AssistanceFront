@@ -2,8 +2,8 @@
     <div style="margin-left:5%">
          <!-- <div class="row grid-divider "> -->
             <div >
-                <router-link to="calendariocitas/cita-agendada-alumnos"> 
-                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Cita Alumnos</button>
+                <router-link to="reporteRendimiento"> 
+                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Reporte</button>
                  </router-link> 
 
 
