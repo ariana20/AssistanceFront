@@ -1,5 +1,5 @@
 <template>
-  <div class="FormTiposTutoria" style="margin-top:2%">
+  <div class="FormTiposTutoria container" style="margin-top:2%">
     <div style="margin-left:5%" >
       <div class="row">
         <div class="col-12 col-md-4 col-lg-1 form-inline">
@@ -29,7 +29,7 @@
                 <div class="col-1">
                   <input type="radio" style="font-size: 22px;" id="yes" value="1" v-model="tipotutoria.individual">
                 </div>
-                <div class="col-8">
+                <div class="col-10">
                   <label style="text-indent:5px" >{{indgru[0].text}}</label>
                 </div>
               </div>
@@ -39,7 +39,7 @@
                 <div class="col-1">               
                   <input  type="radio" id="no" value="0" v-model="tipotutoria.individual">
                 </div>
-                <div class="col-8">
+                <div class="col-10">
                   <label style="text-indent:5px" >{{indgru[1].text}}</label>
                 </div>
               </div>
@@ -53,7 +53,7 @@
                 <div class="col-1">
                   <input type="radio" id="yes" value="1" v-model="tipotutoria.obligatorio">
                 </div>
-                <div class="col-8">
+                <div class="col-10">
                   <label style="text-indent:5px" >{{oblopc[0].text}}</label>
                 </div>
               </div>
@@ -63,7 +63,7 @@
                 <div class="col-1">        
                   <input  type="radio" id="no" value="0" v-model="tipotutoria.obligatorio">
                 </div>
-                <div class="col-8">
+                <div class="col-10">
                   <label style="text-indent:5px" >{{oblopc[1].text}}</label>
                 </div>
               </div>
@@ -77,7 +77,7 @@
                 <div class="col-1">
                   <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorasignado">
                 </div>
-                <div class="col-8">
+                <div class="col-10">
                   <label style="text-indent:5px" >{{asigsol[0].text}}</label>
                 </div>
               </div>
@@ -87,7 +87,7 @@
                 <div class="col-1">
                   <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorasignado">
                 </div>
-                <div class="col-8">
+                <div class="col-10">
                   <label style="text-indent:5px" >{{asigsol[1].text}}</label>
                 </div>
               </div>
@@ -101,7 +101,7 @@
                 <div class="col-1">
                   <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorfijo">
                 </div>
-                <div class="col-8">
+                <div class="col-10">
                   <label style="text-indent:5px" >{{fijvar[0].text}}</label>
                 </div>
               </div>
@@ -111,7 +111,7 @@
                 <div class="col-1">               
                   <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorfijo">
                 </div>
-                <div class="col-8">
+                <div class="col-10">
                   <label style="text-indent:5px" >{{fijvar[1].text}}</label>
                 </div>
               </div>
@@ -130,9 +130,11 @@
       <div style="margin-left:10px;margin-top:10px;bottom:25px">
       * Campos obligatorios   
      </div >
+     <div style="overflow: auto;width:100%">
        <div v-if="this.banderaTutores==false">No hay ningún tutor asociado a este tipo de tutoria</div> 
    
      <!-- listado de los tutores -->
+     
       <table v-else class="table" style="text-align:left" >
         <thead>
           <tr>
@@ -158,7 +160,7 @@
           </tr>
         </tbody>
       </table>
-     
+     </div>
        <!-- MODAL CARGANDO  -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">

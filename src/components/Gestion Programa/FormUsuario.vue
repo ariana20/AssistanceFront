@@ -43,10 +43,10 @@
       </div>
 
       <div id="derecho" class="col-md-6">
-       <tr style="text-align:left"><td style="width:150px;">Tipos de usuarios:*</td>   
-          <select v-model="tiposUsuariosselect" class="col sm-6 form-control" @click="listarTT()" >
-            <option value="no" hidden selected >Selecciona un tipo de usuario</option>
-            <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index" >
+       <tr style="text-align:left;" ><td style="width:150px;">Tipos de usuarios:*</td>   
+          <select v-model="tiposUsuariosselect" class="col sm-6 form-control" style="cursor:pointer"  @click="listarTT()" >
+            <option value="no" hidden selected  >Selecciona un tipo de usuario</option>
+            <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index" style="cursos:pointer;" >
              {{ tipoU.nombre}}
              </option>
           </select>
@@ -55,7 +55,7 @@
           <div style="margin-bottom:20px;" >
             <tr style="text-align:left">  
                     <td style="width:150px;"  v-if="this.tiposUsuariosselect === 4" >Tipos de tutorias:*     </td>
-                    <select v-if="this.tiposUsuariosselect === 4" class="col-sm-12 form-control"    v-model="tipostutoriasselect">
+                    <select v-if="this.tiposUsuariosselect === 4" class="col-sm-12 form-control"    v-model="tipostutoriasselect" style="cursor:pointer">
                         <option selected disabled value="no">Selecciona un tipo de tutoria</option>
                         <option v-for="(tt, i) in tipostutorias"  :key="i"   :value="tt.id_tipo_tutoria">
                         {{ tt.nombre }}

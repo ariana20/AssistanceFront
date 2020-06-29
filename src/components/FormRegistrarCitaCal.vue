@@ -3,7 +3,7 @@
         <div class="top-titulo " style="text-align:left;">
             <!-- inicia combobox -->
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" >
+            <select class="col-sm-4 form-control" style="left:-160px;top:26px;cursor:pointer" v-model="tutorSel"  @change="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
@@ -19,7 +19,7 @@
                 <!-- <li><span class="citareservada"></span> Cita Resevada </li> -->
             </ul>
         </div>
-        <div class="top-titulo" style="text-align:left;">
+        <div class="top-titulo" style="text-align:left">
             <Fullcalendar ref="fullCalendar"
                           :plugins = "calendarPlugins"
                           defaultView = "timeGridWeek"
@@ -46,9 +46,11 @@
                           :allDaySlot= "false"
                           :editable= "false"
                           :events = "EVENTS"
-                         
                           @eventClick= "rutaEvent"
+                         
+                          
                           />
+                           <!-- @eventMouseover= "rutaEvent" -->
                            <!-- @eventClick= "handleClick" -->
             <modals-container/>
         </div>
@@ -426,9 +428,15 @@ function addTimes (startTime, endTime) {
 .fc-view-container {
     font-family: "Brandon Bold" !important;
 }
+.myCalendar {
+    cursor: pointer;
+}
 .fc-event { 
     background-color: #B2EBF2;
     border-color: #B2EBF2;
+   
+    cursor: pointer;
+
 }
 .vm--modal {
     border-radius: 25px;

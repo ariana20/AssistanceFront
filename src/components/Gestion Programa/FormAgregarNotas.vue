@@ -8,20 +8,20 @@
 
 
                 <section class="text-left" style="padding-top:0px">
-                    <h5 style="font-weight: bold;">Carga masiva de notas de alumnos</h5>
-                    <h6 >El formato permitido para los archivos es el siguiente: PDF</h6>
-                    <h6 >El formato de nombre permitido para los archivos es el siguiente: Codigo</h6>
-                    <h6 >El tamaño máximo permitido para los archivos es el siguiente: 2MB </h6>
-                    <h6 >Ejemplo: 20152354.PDF</h6>
+                    <h5 class="font-weight-ligth text-left col-md-6" style="font-weight: bold;">Carga masiva de notas de alumnos</h5>
+                    <h6 class="font-weight-ligth text-left col-md-6" >El formato permitido para los archivos es el siguiente: PDF</h6>
+                    <h6 class="font-weight-ligth text-left col-md-6" >El formato de nombre permitido para los archivos es el siguiente: Codigo</h6>
+                    <h6 class="font-weight-ligth text-left col-md-6" >El tamaño máximo permitido para los archivos es el siguiente: 2MB </h6>
+                    <h6 class="font-weight-ligth text-left col-md-6" >Ejemplo: 20152354.PDF</h6>
 
                     <input type="file" id="get-files" ref="file" name="client-file" 
                     multiple class="col-md-offset-4 col-md-4" v-on:change="FileUpload" style="margin-top:5%" />
                     <button style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnsubir" v-on:click="subirPDFs">Subir archivos</button>
-                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
+                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarNotas()"  >Cancelar</button>  
       
                 </section>
                 <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
-                    <h5 style="font-weight: bold;">Reporte de errores</h5>
+                    <h5 class="font-weight-ligth text-left col-md-6"  style="font-weight: bold;">Reporte de errores</h5>
                     <table class="table" style="text-align:left" >
                      <thead>
                        <tr>
