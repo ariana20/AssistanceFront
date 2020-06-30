@@ -37,7 +37,7 @@
               <button style="padding-left: 5px;padding-right: 5px;width:25px;margin-left:5px" v-on:click="Aceptar(item)" class="btn link">
                   <b-icon icon="check-circle-fill" style="color:#0097A7"/>
               </button>
-              <button style="padding-left: 5px;padding-right: 5px;margin-left:5px;width:25px" v-on:click="Rechazar" class="btn link">
+              <button style="padding-left: 5px;padding-right: 5px;margin-left:5px;width:25px" v-on:click="Rechazar(item)" class="btn link">
                   <b-icon icon="x-circle-fill" style="color:#757575"/>
               </button>
             </td>
@@ -49,6 +49,12 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div v-if="solicitudesFiltrados==null || solicitudesFiltrados.length==0" class="row" style="width:100%">
+      <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
+        Ninguna Solicitud Pendiente
+      </div>
     </div>
 
     <!-- Modal de cargando.más grande  -->
@@ -215,15 +221,14 @@ export default {
                       })
                 }
                 else if(item.tipo_solicitud == 'Cita'){
-                  mensaje = "Se acepto tu cancelacion de la cita con el tutor "
+                  mensaje = "Se aceptó tu cancelacion de la cita con el tutor "
                     +item.usuarioRelacionado.nombre+" "
                     +item.usuarioRelacionado.apellidos
-                    +" del día "+this.$store.state.programaActual.nombre
+                    +" del día "+item.cita.disponibilidad.fecha+ " a las "+item.cita.disponibilidad.hora_inicio+" en el programa "+this.$store.state.programaActual.nombre
                   let obj ={
-                    id_alumno:item.id_solicitante, 
-                    id_tutor:item.usuarioRelacionado.id_usuario,
-                    id_programa:this.$store.state.programaActual.id_programa,
-                    usuario_creacion: this.$store.state.usuario.id_usuario,
+                    idCita:item.cita.id_cita, 
+                    idDisponibilidad:item.cita.id_disponibilidad,
+                    usuario_actualizacion: this.$store.state.usuario.id_usuario,
                   }
                   this.axios.post('/citas/cancelarCita',obj)
                     .then(response=>{
@@ -292,7 +297,7 @@ export default {
                 let mensaje;
                 if(item.tipo_solicitud == 'Programa') mensaje = "Se rechazó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
                 if(item.tipo_solicitud == 'Tutor') mensaje = "Se rechazó tu solicitud para asignacion de Tutor en el programa de "+this.$store.state.programaActual.nombre
-                console.log(mensaje)
+                if(item.tipo_solicitud == 'Cita') mensaje = "Se rechazó tu solicitud para la cancelación de tu cita con "+this.$store.state.usuario.nombre+" "+this.$store.state.usuario.apellidos
                 emailjs.send(
                   "gmail",
                   "template_bV7OIjEW",
