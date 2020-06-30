@@ -63,6 +63,12 @@ export default {
       text-align:center;
       width:100%
     }
+@media screen and (max-width: 1100px){
+  .margs{
+    margin-top: 10%;
+  }
+}
+
 @media screen and (max-width: 759px){
   .margs{
     margin-top: 25%;

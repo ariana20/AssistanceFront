@@ -192,6 +192,9 @@ export default {
                     },
                     showCancelButton: true,
                     confirmButtonText: 'Enviar',
+                    confirmButtonColor:'#0097A7',
+                    cancelButtonText: 'Cancelar',
+                    cancelButtonColor:'C4C4C4',
                     showLoaderOnConfirm: true,
                     preConfirm: (login) => {
                       const params={

@@ -1,7 +1,7 @@
 <template>
     <div name="Modal" >
-        <a href="#openModal"><b-icon icon="caret-right-square-fill" style="color:#0097A7"/></a>
-        <div id="openModal" class="modalbg">
+        <a :href="'#openModal'+id"><b-icon icon="caret-right-square-fill" style="color:#0097A7"/></a>
+        <div :id="'openModal'+id" class="modalbg">
             <div class="dialog" style="width:50%">
                 <a href="#close" title="Close" class="close">X</a>
                 <div style="margin-top:3%;margin-bottom:3%;font-size:200%">
@@ -70,7 +70,7 @@
                     <div class="col-12 col-md-2" style="text-align:left">
                         <strong>Descripcion:</strong>
                     </div>
-                    <div class="col-12 col-md-7" style="text-align:left">
+                    <div class="col-12 col-md-8" style="text-align:left;height:100px;overflow:auto">
                         {{cita.sesion.resultado}}
                     </div>
                 </div>
@@ -91,7 +91,7 @@
 
 <script>
 export default {
-    props: ['cita','alumno'],
+    props: ['cita','alumno','id'],
   mounted(){
   },
   methods:{

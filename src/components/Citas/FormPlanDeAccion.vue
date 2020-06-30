@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="row" style="margin-bottom:1%">
-        <div class="col-12 col-md-3 form-inline">
+        <div class="col-12 col-md-4 form-inline">
           <textarea  v-model="newTask" class="perso inp" id="subject" @keyup.enter="add" name="subject" placeholder="Ingresar Compromiso" style="resize: none;padding-top:2%;height:50px;width:100%"/>
         </div>
         <div class="col-12 col-md-1 form-inline">
@@ -66,7 +66,7 @@
             Añadir
           </b-button>
         </div>
-        <div class="col-md-2 offset-md-6 form-inline">
+        <div class="col-md-2 offset-md-5 form-inline">
           <b-button v-on:click="Guardar" style="background: #0097A7;border: 0px;width:100%;margin-left:1%">
             Guardar
           </b-button>
@@ -82,7 +82,7 @@
 
       <div class="row">
 
-        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
+        <div class="col-md-3" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Pendiente</h3>
             <draggable class="list-group kanban-column" :list="arrBacklog" group="tasks">
@@ -100,7 +100,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
+        <div class="col-md-3" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> En Proceso</h3>
             <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
@@ -118,7 +118,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
+        <div class="col-md-3" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Por Revisar</h3>
             <draggable class="list-group kanban-column" :list="arrTested" group="tasks">
@@ -136,7 +136,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
+        <div class="col-md-3" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Hecho</h3>
             <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
@@ -678,7 +678,8 @@ export default {
 
   .redondo{
     border-radius: 10px;
-    border:0.5px solid rgb(0, 152, 146)
+    border:0.5px solid rgb(0, 152, 146);
+    box-shadow: black 2px 2px 5px;
   }
 
   .inp{
