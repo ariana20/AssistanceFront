@@ -84,7 +84,7 @@ export default {
                 ListPlugin,
                 momentPlugin
             ],
-            columnFormat: 'ddd M/D',
+            columnFormat: 'ddd D/M',
             titleFormat: 'MMMM YYYY',
             calendar: null,
             locales: [esLocale],
@@ -289,13 +289,17 @@ export default {
                     var rd2 = response.data[1];
                     var rd3 = response.data[2];
                     var rd4 = response.data[3];
+                    console.log('llenado de cal disponibilidades:', response.data)
                     for(var i in response.data[0]) {
                         var start_hour = rd[i].hora_inicio;
                         
-                            //if(rd2[i]=='o' && response.data[3][i].length){
-                            if(rd2[i]=='o' && response.data[3][i].length ) {
-                                if( rd4[i]!='l' && response.data[3][i].length == 1) {
-                                    if(rd4[i][0].pivot.asistencia!='noa' || rd4[i][0].pivot.asistencia!='pen') {
+                            //SI ESTA OCUPADO 
+                            if(rd2[i]=='o') {
+                                //SI ES UNA CITA INDIVIDUAL
+                                if(response.data[3][i].length == 1) {
+                                    //SI YA SE REGISTRO RESULTADO DE LA CITA
+                                    console.log('alumno:',rd4[i][0].nombre,'asiste:',rd4[i][0].pivot.asistencia)
+                                    if(rd4[i][0].pivot.asistencia!='noa' && rd4[i][0].pivot.asistencia!='pen') {
                                         this.$store.commit("ADD_EVENT", {
                                             allow: rd[i].alumno,
                                             id: rd[i].id_disponibilidad,
@@ -334,8 +338,10 @@ export default {
                                         })
                                     }
 
-                                } else if(rd4[i]!='l' && response.data[3][i].length > 1 ) {
-                                    if(rd4[i][0].pivot.asistencia!='noa' || rd4[i][0].pivot.asistencia!='pen') {
+                                }
+                                //SI ES UNA CITA GRUPAL
+                                else  {                               
+                                    if(rd4[i][0].pivot.asistencia!='noa' && rd4[i][0].pivot.asistencia!='pen') {
                                         this.$store.commit("ADD_EVENT", {
                                             allow: rd[i].alumno,
                                             id: rd[i].id_disponibilidad,
@@ -500,6 +506,7 @@ function addTimes (startTime, endTime) {
     .fc-event { 
         background-color: #B2EBF2;
         border-color: #B2EBF2;
+        cursor: pointer;
     }
     .vm--modal {
         border-radius: 25px;
