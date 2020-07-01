@@ -1,5 +1,5 @@
 <template>
-  <div class="FormReportes">
+  <div class="FormAsistencia">
       <div class="container">
         <div class="top-titulo" style="text-align:left;">
             <div class="col-4">
@@ -15,47 +15,24 @@
             </div>
             <div class="col-4">
                 <div class="row">
-                <div class="col"><h5>Facultad: </h5></div>
+                <div class="col"><h5>Tutor(a): </h5></div>
                 <div class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
                 </div>
-                <select class="form-control"  v-model="selectedFacultad" v-on:change="listarProgramas()">
-                    <option disabled selected :value="null" focusable="false">Selecciona una facultad</option>
+                <select class="form-control"  v-model="selectedFacultad" v-on:change="listarTutores()">
+                    <option disabled selected :value="null" focusable="false">Selecciona un(a) tutor(a)</option>
                     <option 
-                        v-for="(facultad, index) in facultades" 
+                        v-for="(tutor, index) in tutores" 
                         :key="index" 
-                        :value="facultad">
-                        {{ facultad.nombre }}
+                        :value="tutor">
+                        {{ tutor.nombre }}
                     </option>
                 </select>
                 <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
                     <li class="motivos-seleccionados list-group-item" style="text-align:left;"
-                        v-for="(facultad,index) in facultadesSelect"  
+                        v-for="(tutor,index) in tutorSelect"  
                         :key="index">
-                        {{facultad.nombre}}
-                        <span name="remove" class="close" @click="deleteFacu(index)" style="float:right;">&times;</span>           
-                    </li>
-                </ul>
-            </div>
-            <div class="col-4">
-                <div class="row">
-                    <div class="col"><h5>Programa: </h5></div>
-                    <div  class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
-                </div>
-                <select class="form-control"  v-model="selectedPrograma">
-                    <option disabled selected :value="null" focusable="false">Selecciona un programa</option>
-                    <option 
-                        v-for="(programa, index) in progSinDefault"
-                        :key="index" 
-                        :value="programa" >
-                        {{ programa.nombre }}
-                    </option>
-                </select>
-                <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
-                    <li class="motivos-seleccionados list-group-item" style="text-align:left;"
-                        v-for="(programa,index) in programasSelect"  
-                        :key="index">
-                        {{programa.nombre}}
-                        <span name="remove" class="close" @click="deleteProg(index)" style="float:right;">&times;</span>        
+                        {{tutor.nombre}}
+                        <span name="remove" class="close" @click="deleteTutor(index)" style="float:right;">&times;</span>           
                     </li>
                 </ul>
             </div>
@@ -69,16 +46,10 @@
             <div v-if="asignados.length>0">
                 <strong>Cantidad de Alumnos Asignados</strong>
                 <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
-                <div class="botones" style="margin-bottom:10px;text-align: right">
-                    <button type="button" class="btn btn-info"  @click="verDetalleAsistencia()" >Ver más</button>
-                </div>
             </div>
             <div v-if="atenciones.length>0">
                 <strong>Cantidad de Atenciones</strong>
                 <line-chart :chartData="atenciones" :options="chartOp" label='Atenciones'></line-chart>
-                <div class="botones" style="margin-bottom:10px;text-align: right">
-                    <button type="button" class="btn btn-info"  @click="verDetalleAtenciones()" >Ver más</button>
-                </div>
             </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
@@ -86,19 +57,10 @@
             <div v-if="satisfaccion.length>0">
                 <strong>Satisfacción del alumno</strong>
                 <pie-chart :chartData="satisfaccion" :options="chartOp2" label='Satisfacción del alumno'></pie-chart>
-                <div class="botones" style="margin-bottom:10px;text-align: right">
-                    <button type="button" class="btn btn-info"  @click="verDetalleSatisfaccion()" >Ver más</button>
-                </div>
             </div>
             <div v-if="planAccion.length>0">
                 <strong>Cumplimiento de Planes de Acción</strong>
                 <line-chart :chartData="planAccion" :options="chartOp" label='Cumplimiento de Planes de Acción'></line-chart>
-                <div class="botones" style="margin-bottom:10px;text-align: right">
-                    <button type="button" class="btn btn-info"  @click="verDetallePlanAccion()" >Ver más</button>
-                </div>
-            </div>
-            <div class="botones" style="margin-bottom:10px;text-align: right">
-                <button type="button" class="btn btn-info"  @click="verDetallePlanAccion()" >Ver más</button>
             </div>
         </div>
       </div>
@@ -177,11 +139,11 @@ export default {
     },
     mounted(){
         
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.borderRadius = "1.25rem"; 
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.border= "0.5px solid #757575";    
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontWeight = "400";
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
+        document.querySelector("#container > div > div.FormAsistencia > div > div.top-titulo > div:nth-child(1) > div > div > input").style.borderRadius = "1.25rem"; 
+        document.querySelector("#container > div > div.FormAsistencia > div > div.top-titulo > div:nth-child(1) > div > div > input").style.border= "0.5px solid #757575";    
+        document.querySelector("#container > div > div.FormAsistencia > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontWeight = "400";
+        document.querySelector("#container > div > div.FormAsistencia > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
+        document.querySelector("#container > div > div.FormAsistencia > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
   
     },
     computed: {
@@ -312,21 +274,6 @@ export default {
         generarReporte(){
             //this.RatioAtenciones();
             this.RatioAsignado();
-        },
-        verDetalleAsistencia(){
-            this.$router.push('/crearFacultad');
-        },
-        verDetalleAtenciones(){
-            this.$router.push('/crearFacultad');
-
-        },
-        verDetalleSatisfaccion(){
-            this.$router.push('/crearFacultad');
-
-        },
-        verDetallePlanAccion(){
-            this.$router.push('/crearFacultad');
-
         }
         
     }
