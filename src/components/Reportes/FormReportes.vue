@@ -94,11 +94,11 @@
                 <strong>Cumplimiento de Planes de Acción</strong>
                 <line-chart :chartData="planAccion" :options="chartOp" label='Cumplimiento de Planes de Acción'></line-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
-                    <button type="button" class="btn btn-info"  @click="verDetallePlanAccion()" >Ver más</button>
+                    <button type="button" class="btn btn-info"  @click="verDetalleRendimiento()" >Ver más</button>
                 </div>
             </div>
             <div class="botones" style="margin-bottom:10px;text-align: right">
-                <button type="button" class="btn btn-info"  @click="verDetallePlanAccion()" >Ver más</button>
+                <button type="button" class="btn btn-info"  @click="verDetalleRendimiento()" >Ver más</button>
             </div>
         </div>
       </div>
@@ -324,8 +324,8 @@ export default {
             this.$router.push('/crearFacultad');
 
         },
-        verDetallePlanAccion(){
-            this.$router.push('/crearFacultad');
+        verDetalleRendimiento(){
+            this.$router.push('/reporteRendimiento');
 
         }
         
