@@ -43,13 +43,14 @@
         </section>
         <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
             <h5 class="font-weight-ligth text-left col-md-6"  style="font-weight: bold;">Reporte de errores</h5>
-            <div class="font-weight-ligth text-left col-md-6"  style="overflow: auto;width:100%;margin-top:2%">
+            <div class="font-weight-ligth text-left col-md-12"  style="overflow: auto;width:100%;margin-top:2%">
               <table class="table" style="text-align:left" >
                 <thead>
                   <tr>
                     <th scope="col">N°</th>
                       <th scope="col">Codigo</th>
-                      <th scope="col">Nombre</th>
+                      <th scope="col">Nombres</th>
+                      <th scope="col">Correo</th>
                       <th scope="col">Descripcion</th>
                     </tr>
                   </thead>
@@ -57,7 +58,8 @@
                     <tr v-for="(item, index) in reporte" :key="index">
                       <th scope="row">{{index+1}}</th>
                       <td>{{item.codigo}}</td>        
-                      <td>{{item.file}}</td>     
+                      <td>{{item.nombre + " "+ item.apellido  }}</td>     
+                      <td>{{item.correo}}</td>     
                       <td>{{item.error}}</td>    
                     </tr>
                   </tbody>
