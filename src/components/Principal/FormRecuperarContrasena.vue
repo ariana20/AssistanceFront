@@ -25,7 +25,7 @@
                 Nueva contraseña:
             </div>
             <div class="col-12 col-md-5">
-                <input class="borde-textbox inp" type="text" placeholder="Nueva contraseña"  v-model="nuevaContrasena"/>
+                <input class="borde-textbox inp" type="password" placeholder="Nueva contraseña"  v-model="nuevaContrasena"/>
             </div>
         </div>
         <div v-if="usuario!=null && usuario.bloqueado=='2'" class="row" style="margin-top:5%;text-align:left">
@@ -33,7 +33,12 @@
                 Confirmar contraseña:
             </div>
             <div class="col-12 col-md-5">
-                <input class="borde-textbox inp" type="text" placeholder="Confirmar contraseña"  v-model="nuevaContrasenaConfirmar"/>
+                <input class="borde-textbox inp" type="password" placeholder="Confirmar contraseña"  v-model="nuevaContrasenaConfirmar"/>
+            </div>
+        </div>
+        <div v-if="usuario!=null && usuario.bloqueado=='2'" class="row" style="margin-top:5%;text-align:center">
+            <div class="col-12 col-md-6"> 
+                <button type="submit" class="btn btn-info" v-on:click="cambiarContrasena()">Cambiar Contraseña</button>
             </div>
         </div>
     </div>
@@ -67,7 +72,6 @@ export default {
                 })
               }
               else{
-                this.usuario={}
                 Swal.fire({
                   text:"No existe un usuario con ese correo",
                   icon:"error",
@@ -75,10 +79,45 @@ export default {
                   confirmButtonColor:'#0097A7',
                   showConfirmButton: true,
                 })
-                
               }
             })          
         },
+        cambiarContrasena(){
+            if(this.nuevaContrasena == this.nuevaContrasenaConfirmar){
+                Swal.fire({
+                    text: '¿Desea modificar su contraseña?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#0097A7',
+                    cancelButtonColor: '#757575',
+                    confirmButtonText: 'Confirmar',
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                    result
+                    this.axios.post('/usuarios/modificar/'+this.usuario.id_usuario,{password: this.nuevaContrasena,bloqueado: "0"})
+                        .then(response=>{
+                            response
+                            Swal.fire({
+                                text:"Contraseña cambiada correctamente",
+                                icon:"success",
+                                confirmButtonText: 'OK',
+                                confirmButtonColor:'#0097A7',
+                                showConfirmButton: true,
+                            })
+                            this.$router.push('/login')
+                        }) 
+                })
+            }
+            else{
+                Swal.fire({
+                  text:"Las contraseñas ingresadas no coinciden",
+                  icon:"error",
+                  confirmButtonText: 'OK',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+                })
+            }
+        }
   }
 }
 </script>

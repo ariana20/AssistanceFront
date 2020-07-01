@@ -408,6 +408,13 @@ import emailjs from 'emailjs-com';
                   "correo": response.data.user.correo
                   }, 'user_ySzIMrq3LRmXhtVkmpXAA')
                   .then((result) => {
+                    console.log('SUCCESS!', result.status, result.text);
+                  }, (error) => {
+                    console.log('FAILED...', error);
+                  });
+                this.axios.post('/usuarios/modificar/'+response.data.user.id_usuario,{bloqueado: "2"})
+                  .then(response=>{
+                    response
                     Swal.fire({
                       text:"Se le envió las instrucciones al correo registrado",
                       icon:"success",
@@ -415,10 +422,7 @@ import emailjs from 'emailjs-com';
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                     })
-                    console.log('SUCCESS!', result.status, result.text);
-                  }, (error) => {
-                    console.log('FAILED...', error);
-                  });
+                  }) 
               }
               else{
                 window.location.href = '/login#close'
