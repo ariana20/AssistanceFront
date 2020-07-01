@@ -1,5 +1,5 @@
 <template>
-  <div class="FormRoles" style="margin-top:5px;margin-left:5%">  
+  <div class="FormRoles " style="margin-top:5px;margin-left:5%">  
     <div style="text-align: left" >
       
 			<div class="row" style="width:100%">
@@ -15,7 +15,7 @@
 			</div> 
 
       <div style="overflow: auto;width:100%">
-        <table class="table" style="text-align:left;margin-top:2%" >
+        <table class="table " style="text-align:left;margin-top:2%" >
           <thead>
             <tr>
               <th scope="col">N°</th>

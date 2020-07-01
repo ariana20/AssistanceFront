@@ -3,7 +3,7 @@
         <div class="top-titulo " style="text-align:left;">
             <!-- inicia combobox -->
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" >
+            <select class="col-sm-4 form-control" style="left:-160px;top:26px;cursor:pointer" v-model="tutorSel"  @change="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
@@ -19,7 +19,7 @@
                 <!-- <li><span class="citareservada"></span> Cita Resevada </li> -->
             </ul>
         </div>
-        <div class="top-titulo" style="text-align:left;">
+        <div class="top-titulo" style="text-align:left">
             <Fullcalendar ref="fullCalendar"
                           :plugins = "calendarPlugins"
                           defaultView = "timeGridWeek"
@@ -46,9 +46,11 @@
                           :allDaySlot= "false"
                           :editable= "false"
                           :events = "EVENTS"
-                         
                           @eventClick= "rutaEvent"
+                         
+                          
                           />
+                           <!-- @eventMouseover= "rutaEvent" -->
                            <!-- @eventClick= "handleClick" -->
             <modals-container/>
         </div>
@@ -128,7 +130,8 @@ export default {
     computed: {
         ...mapGetters(["EVENTS"])
     },
-    mounted() {        
+    mounted() {     
+         
         this.listarTutores();
         if (this.tutorSel)
             this.showCalendar();
@@ -145,6 +148,8 @@ export default {
         rutaEvent (arg) {
            //Aquí me lleva a la cita agendada 
           console.log('arg',arg);
+           
+           console.log('yo',this.$store.state.usuario);
            if(arg.event.backgroundColor!='gray') {
                 // disponible
                 
@@ -154,7 +159,7 @@ export default {
                         fechaIni:arg.event.start,
                         fechaFin:arg.event.end,
                         id_tutor: this.tutorSel.id_usuario,
-                        tutorSel: this.tutorSel,
+                        tttutorSel: this.tutorSel.usuario.tipo_tutorias,
                         isGray:false,
                         alumnos:arg.event.allow,
 
@@ -163,13 +168,14 @@ export default {
                 this.$router.push('/registrarCita/registrarCitaAgendada');
             } else { 
                 //Gray
+               
                 this.$store.state.citaDatos={
                         props:arg.event.extendedProps,
                         id_disponibilidad:arg.event.id,
                         fechaIni:arg.event.start,
                         fechaFin:arg.event.end,
                         id_tutor: this.tutorSel.id_usuario,
-                        tutorSel: this.tutorSel,
+                        tttutorSel: this.tutorSel.usuario.tipo_tutorias,
                         isGray:true,
                         alumnos:arg.event.allow,
 
@@ -180,6 +186,7 @@ export default {
          
 
         },
+        
         listarTutores() {
             
             this.showModal();
@@ -196,13 +203,12 @@ export default {
                 console.log(res);
                 this.tutores=res.data;   
                 this.hideModal();  
-                if(this.$store.state.permisosUsuario.includes('Sesión de Tutoría')) {
-                  
-                    this.isTutor=true; //tiene tutorías- es tutor o es coordinador
-                    
+                if(this.$store.state.permisosUsuario.includes('Sesión de Tutoría')) {                  
+                    this.isTutor=true; //tiene tutorías- es tutor o es coordinador                    
                 }else  {
                     //Es secretaria 
-                    this.isTutor=false;}
+                    this.isTutor=false;
+                }
                       
             })
             .catch(e => {
@@ -251,14 +257,14 @@ export default {
                 .then((response) => {
                     
                     var rd = response.data[0];
-                    console.log('rd',rd);
+                    console.log('r',response);
 
                     var rd2 = response.data[1];
                     for(var i in rd) {
                         //console.log('usuario_actualizacion',rd[i])
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
-                            if(rd2[i]=='o'){
+                            if(rd2[i]=='o' && rd[i].alumno.length>=1){
                                 
                                if(rd[i].alumno.length==1){    
                                    //Muestra al primer alumno
@@ -336,6 +342,8 @@ export default {
             hideModal() {
               this.$refs['my-modal'].hide()
             },
+          
+            
             
     },
     watch: {    
@@ -420,9 +428,15 @@ function addTimes (startTime, endTime) {
 .fc-view-container {
     font-family: "Brandon Bold" !important;
 }
+.myCalendar {
+    cursor: pointer;
+}
 .fc-event { 
     background-color: #B2EBF2;
     border-color: #B2EBF2;
+   
+    cursor: pointer;
+
 }
 .vm--modal {
     border-radius: 25px;
@@ -447,5 +461,11 @@ function addTimes (startTime, endTime) {
     margin: 30px;
     height: 260px !important;
 }
-
+select:focus {outline: none;box-shadow: none;}
+.form-control {
+  border-radius: 1.25rem;  
+  border: 0.5px solid #757575;
+  margin-bottom: 10px;
+  width: 100%;
+}
 </style>

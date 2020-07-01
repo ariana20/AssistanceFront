@@ -54,7 +54,7 @@
             <div class="container" style="width:100%">
                 <div v-if="usuario.notas!=null && usuario.notas!=''">
                     <!-- {{usuario.notas}} -->
-                    <embed class="toolb" :src="usuario.notas+'#toolbar=0&navpanes=0&scroll=0'" width="1000" height="1000"/>
+                    <embed class="toolb" :src="usuario.notas+'#toolbar=0&navpanes=0&scroll=0'" height="400vh" style="width:85%;overflow:auto"/>
                 </div>
                 <div v-else>
                     <h2>No tiene notas registradas actualmente</h2>
@@ -78,16 +78,19 @@
                         <td v-if="item!=undefined">{{item.disponibilidad.fecha}}</td>
                         <td v-if="item!=undefined">{{item.disponibilidad.hora_inicio}}</td>  
                         <td >
-                            <div v-if="item.pivot.asistencia">
-                                Asistio
+                            <div v-if="item.pivot.asistencia == 'asi'">
+                                Asistió
+                            </div>
+                            <div v-else-if="item.pivot.asistencia == 'pen'">
+                                Pendiente
                             </div>
                             <div v-else>
-                                No Asistio
+                                No Asistió
                             </div>
                         </td>
                         <td >
                             <button v-on:click="Elegir(item)" style="padding-left: 5px;padding-right: 5px;width:50px" class="btn link">
-                                <modalJ2 :alumno="usuario" :cita="item"/>      
+                                <modalJ2 :id="item.id_cita" :alumno="usuario" :cita="item"/>      
                             </button>
                         </td>
                     </tr>
@@ -186,6 +189,13 @@ export default ({
 
 <style lang="scss" scoped>
 @import '../../assets/styles/material.css';
+
+#outerContainer #mainContainer div.toolbar {
+  display: none !important; /* hide PDF viewer toolbar */
+}
+#outerContainer #mainContainer #viewerContainer {
+  top: 0 !important; /* move doc up into empty bar space */
+}
 
 .close {
     cursor: pointer;
@@ -291,7 +301,13 @@ select:focus {
 
 .toolb{
     .toolbar{
-        visibility: hidden;
+        display: none !important; 
+    }
+    #outerContainer #mainContainer div.toolbar {
+        display: none !important; /* hide PDF viewer toolbar */
+    }
+    #outerContainer #mainContainer #viewerContainer {
+    top: 0 !important; /* move doc up into empty bar space */
     }
 }
 </style>

@@ -5,7 +5,7 @@
     <div style="text-align: left;margin-left:5%" >  
          
       <div class="row" style="width:100%">
-        <div class="form-inline col-12 col-md-3 col-lg-2">
+        <div class="form-inline col-12 col-md-4 col-lg-2">
           <h5 style="margin-top:5%;margin-bottom:5%">Nombre o Código: </h5>
         </div>
         <div class="form-inline col-12 col-md-4">
@@ -199,9 +199,9 @@ export default {
          // console.log('Usuarios ',res.data.tasks.data);    
           //ordenado por estado
           let par=res.data.tasks.data; 
-          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});  console.log('202');  
+          // this.$store.state.usuarios=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
           //this.$store.state.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-          this.usuarios=this.$store.state.usuarios;
+          this.usuarios=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
           this.paginate=res.data.paginate;
           // this.$store.state.usuarios=res.data;
           console.log(this.$store.state.tipoActual.nombre);
@@ -260,9 +260,9 @@ export default {
            }
            else{
           let par=res.data.tasks.data;
-          this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});   
+          //this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});   
           
-          this.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});   
+          this.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});   
           this.paginate=res.data.paginate;
           console.log('res',res);
           console.log(this.$store.state.usuarios);

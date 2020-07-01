@@ -243,8 +243,13 @@ export default Vue.extend ({
                     showConfirmButton: true,
                 }).then((result) => {
                     if (result.value) {
-                    //lo redirigo
-                    this.$router.push('/registrarCita');
+                    if(this.mipermisosUsuario.includes("Registrar Cita")){
+                            this.$router.push('/registrarCita');
+                        }
+                        else  if(this.mipermisosUsuario.includes("Calendario")){
+                              
+                                this.$router.push('/calendariocitas');
+                        }
                     this.$store.state.citaDatos=null;
                     
                     } 
@@ -542,8 +547,8 @@ export default Vue.extend ({
                 });
         },
         listarTT(){
-            console.log('tutor',this.$store.state.citaDatos.tutorSel);
-            this.tt=this.$store.state.citaDatos.tutorSel.usuario.tipo_tutorias;
+            console.log('tttutor',this.$store.state.citaDatos.tttutorSel);
+            this.tt=this.$store.state.citaDatos.tttutorSel;
             
         },
         resultadosCita(){

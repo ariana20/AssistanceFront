@@ -47,8 +47,8 @@
         </div>
         <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
             <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
-            <b-spinner style="width: 3rem; height: 3rem;"/>
-            <br >Cargando... 
+                <b-spinner style="width: 3rem; height: 3rem;"/>
+                <br >Cargando... 
             </div>
         </b-modal>
     </div>
@@ -76,6 +76,7 @@ export default {
     components: {Fullcalendar},
     data () {
         return {
+            aux: null,
             calendarPlugins: [
                 DayGridPlugin,
                 TimeGridPlugin,
@@ -121,6 +122,20 @@ export default {
         ...mapGetters(["EVENTS"])
     },
     methods: {
+        getTipoTutorias() {
+            const params = {
+                idTutor: this.$store.state.usuario.id_usuario,
+                id_programa: this.$store.state.programaActual.id_programa,
+            }
+            axios.post('usuarios/tutoriaTutor', params)
+            .then((response) => {
+                
+                this.aux= response.data
+            }).catch(e => {
+                console.log(e.response);
+            });
+        },
+        
         handleSelect (arg) {
             console.log(arg)
             axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(arg.start).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
@@ -147,7 +162,7 @@ export default {
                                 hora_inicio:moment(arg.start).format('HH:mm:ss')
                             })
                             .then((response) => {
-                                console.log(response.data)
+                                
                                 if(response.data){
                                     this.$store.commit("ADD_EVENT", {
                                         title: "Disponible",
@@ -215,11 +230,25 @@ export default {
             } else if(arg.event.backgroundColor=='#B2EBF2' && this.calendar.getOption('selectable')) {
                 //borrar disponibilidad
                 this.deleteEvent(arg)
-            } else { 
+            } else if(arg.event.backgroundColor=='#B2EBF2') { 
+                this.$store.state.citaDatos={
+                        props:arg.event.extendedProps,
+						id_disponibilidad:arg.event.id,
+                        fechaIni:arg.event.start,
+                        fechaFin:arg.event.end,
+                        id_tutor: this.$store.state.usuario.id_usuario,
+                        tttutorSel: this.aux,
+                        isGray:false,
+                        alumnos:arg.event.allow,///////////agregar allow 
+
+                };             				
+                console.log('citaDatos: ',this.$store.state.citaDatos)
+                this.$router.push('/registrarCita/registrarCitaAgendada');
+
+            } else {
                 return false
             }       
         },
- 
         deleteEvent(arg) {
             Swal.fire({
                 text:'¿Estás seguro que desea cancelar al cita?',
@@ -258,19 +287,15 @@ export default {
                     var rd2 = response.data[1];
                     var rd3 = response.data[2];
                     var rd4 = response.data[3];
-                    console.log('DISPOs asis: ',rd4)
                     for(var i in response.data[0]) {
                         var start_hour = rd[i].hora_inicio;
-                        console.log('long: ',rd4[i].length)
-                        //this.events.push({
-                            if(rd4[i]!='l'&& rd4[i].length>0) {
-                                console.log('asis: ',rd4[i][0].pivot.asistencia)
-                            }
+                        
                             //if(rd2[i]=='o' && response.data[3][i].length){
                             if(rd2[i]=='o' && response.data[3][i].length ) {
-                                if( rd4[i]!='l' && rd4[i].length>0) {
+                                if( rd4[i]!='l' && response.data[3][i].length == 1) {
                                     if(rd4[i][0].pivot.asistencia!='noa') {
                                         this.$store.commit("ADD_EVENT", {
+                                            allow: rd[i].alumno,
                                             id: rd[i].id_disponibilidad,
                                             title: rd4[i][0].nombre + ' ' + rd4[i][0].apellidos,
                                             description: rd3[i].nombre,
@@ -289,6 +314,7 @@ export default {
                                     }
                                     else {
                                         this.$store.commit("ADD_EVENT", {
+                                            allow: rd[i].alumno,
                                             id: rd[i].id_disponibilidad,
                                             title: rd4[i][0].nombre + ' ' + rd4[i][0].apellidos,
                                             description: rd3[i].nombre,
@@ -306,6 +332,46 @@ export default {
                                         })
                                     }
 
+                                } else if(rd4[i]!='l' && response.data[3][i].length > 1 ) {
+                                    if(rd4[i][0].pivot.asistencia!='noa') {
+                                        this.$store.commit("ADD_EVENT", {
+                                            allow: rd[i].alumno,
+                                            id: rd[i].id_disponibilidad,
+                                            title: 'Cita Grupal',
+                                            description: rd3[i].nombre,
+                                            alumno: rd4[i][0],
+                                            start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                            fecha: rd[i].fecha,
+                                            horaIni: rd[i].hora_inicio, 
+                                            end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                            tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                            color: 'gray',
+                                            usuario_creacion: rd[i].usuario_creacion,
+                                            id_usuario_tutor: rd[i].id_usuario,
+                                            usuario_actualizacion: rd[i].usuario_actualizacion,
+                                            motivo: rd3[i].nombre
+                                        })   
+                                    }
+                                    else {
+                                        this.$store.commit("ADD_EVENT", {
+                                            allow: rd[i].alumno,
+                                            id: rd[i].id_disponibilidad,
+                                            title: 'Cita Grupal',
+                                            description: rd3[i].nombre,
+                                            alumno: rd4[i][0],
+                                            start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                            fecha: rd[i].fecha,
+                                            horaIni: rd[i].hora_inicio, 
+                                            end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                            tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                            color: '#FFC107',
+                                            usuario_creacion: rd[i].usuario_creacion,
+                                            id_usuario_tutor: rd[i].id_usuario,
+                                            usuario_actualizacion: rd[i].usuario_actualizacion,
+                                            motivo: rd3[i].nombre
+                                        })
+                                    }
+                                                                        
                                 }
                                                            
                             } 
@@ -324,7 +390,6 @@ export default {
                                     usuario_actualizacion: rd[i].usuario_actualizacion
                                 });
                             }
-                        //});
                     }
                     this.hideModal()
                 }).catch(e => {
@@ -347,6 +412,7 @@ export default {
         }
     },
     mounted() {
+        this.getTipoTutorias()
         if(this.$store.state.usuario==null) this.$router.push('/login')
         this.showModal()
         this.getReminders();
@@ -395,7 +461,7 @@ function addTimes (startTime, endTime) {
 
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
     @import './../../assets/styles/main.css';
     @import '~@fullcalendar/core/main.css';
     @import '~@fullcalendar/daygrid/main.css';

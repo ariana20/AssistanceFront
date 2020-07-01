@@ -1,7 +1,7 @@
 <template>
   <div class="FormListarUsuario">
     <div style="margin-left:5%;text-align: left">
-      <div class="row">
+      <div class="row" style="width:100%">
         <div class="form-inline col-12 col-md-2 col-lg-1">
           <h5 style="margin-top:10%;margin-bottom:5%">Buscar: </h5>
         </div>
@@ -53,30 +53,33 @@
       </div>
       </div>
       <div v-if="$store.state.usuariosA!=null">
-      <nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-center">
-					<li class="page-item" v-if="$store.state.usuariosA.current_page > 1">
-						<a class="page-link" href="#" tabindex="-1" @click.prevent="Page($store.state.usuariosA.current_page - 1)" style="color:rgb(0, 152, 146)">
-							<span>Anterior</span>
-						</a>
-					</li>
-					<li class="page-item" v-for="page in $store.state.usuariosA.last_page" :key="page">
-						<a  v-if="page != $store.state.usuariosA.current_page" class="page-link" href="#" @click.prevent="Page(page)" style="color:rgb(0, 152, 146)">
-              <span class="sr-only">(current_page)</span>
-              {{ page }}
-						</a>
-						<a v-else class="page-link" href="#" style="color:rgb(0, 152, 146)">
-              <span class="sr-only">(current_page)</span>
-              {{ page }}
-						</a>
-					</li>
-					<li class="page-item" v-if="$store.state.usuariosA.current_page < $store.state.usuariosA.last_page">
-						<a class="page-link" href="#" @click.prevent="Page($store.state.usuariosA.current_page + 1)" style="color:rgb(0, 152, 146)">
-							<span>Siguiente</span>
-						</a>
-					</li>
-				</ul>
-			</nav>
+        
+        <div style="overflow: scroll;width:95%;">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" v-if="$store.state.usuariosA.current_page > 1">
+                <a class="page-link" href="#" tabindex="-1" @click.prevent="Page($store.state.usuariosA.current_page - 1)" style="color:rgb(0, 152, 146)">
+                  <span>Anterior</span>
+                </a>
+              </li>
+              <li class="page-item" v-for="page in $store.state.usuariosA.last_page" :key="page">
+                <a  v-if="page != $store.state.usuariosA.current_page" class="page-link" href="#" @click.prevent="Page(page)" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ page }}
+                </a>
+                <a v-else class="page-link" href="#" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ page }}
+                </a>
+              </li>
+              <li class="page-item" v-if="$store.state.usuariosA.current_page < $store.state.usuariosA.last_page">
+                <a class="page-link" href="#" @click.prevent="Page($store.state.usuariosA.current_page + 1)" style="color:rgb(0, 152, 146)">
+                  <span>Siguiente</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
     

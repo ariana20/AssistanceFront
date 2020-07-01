@@ -2,7 +2,7 @@
 	<div name="FormFacultad container">
 		<div style="margin-left:5%;text-align: left;">
 
-			<div class="row">
+			<div class="row" style="width:100%">
 				<div class="form-inline col-12 col-md-2 col-lg-1">
 					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
 				</div>

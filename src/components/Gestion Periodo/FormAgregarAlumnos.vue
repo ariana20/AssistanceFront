@@ -2,49 +2,48 @@
     <div style="margin-left:5%">
       <div >
         <section class="text-left" style="padding-top:0px">
-            <h5 style="font-weight: bold;">Carga masiva de alumnos</h5>
-            <h6 >El formato permitido para el archivo es el siguiente: CSV</h6>
-            <h6 >El tamaño máximo permitido para el archivo es el siguiente: 2MB </h6>
-            <h6 >El orden de las columnas permitidas para el archivo es el siguiente:</h6>  
+            <h5 class="font-weight-ligth text-left col-md-6" style="font-weight: bold;">Carga masiva de alumnos</h5>
+            <h6 class="font-weight-ligth text-left col-md-6">El formato permitido para el archivo es el siguiente: CSV(delimitado por comas)</h6>
+            <h6 class="font-weight-ligth text-left col-md-6">El tamaño máximo permitido para el archivo es el siguiente: 2MB </h6>
+            <h6 class="font-weight-ligth text-left col-md-6">El orden de las columnas permitidas para el archivo es el siguiente:</h6>  
             
-            <div style="overflow: auto;width:100%;margin-top:2%">                  
-              <table class="table" style="text-align:left" >
-                <thead>
-                  <tr >
-                      <th scope="col">Código*</th>
-                      <th scope="col">Correo*</th>
-                      <th scope="col">Nombres*</th>
+            <div class="font-weight-ligth text-left col-md-6" style="overflow: auto;width:100%;margin-top:2%"> 
+                      <td style="text-indent: 25px">Codigo*</td>
+                      <td style="text-indent: 25px">Correo*</td>
+                      <td style="text-indent: 25px" >Nombres*</td>
                       <!-- <th scope="col">Apellido Materno*</th>
                       <th scope="col">Apellido Paterno*</th> -->
-                      <th scope="col">Apellidos</th>
-
-                      <th scope="col">Celular</th>
-                      <th scope="col">Condición</th>                            
-                  </tr>
-                  
-                </thead>
-              </table>
+                      <td style="text-indent: 25px" >Apellidos</td>
+                      <td style="text-indent: 25px">Celular</td>
+                      <td style="text-indent: 25px" >Condicion</td>                            
+        
             </div>
-            <h6 >Las condiciones de los alumnos válidas son las siguientes:</h6>
+            <h6 class="font-weight-ligth text-left col-md-6">Las condiciones de los alumnos válidas son las siguientes:</h6>
             
-            <div style="overflow: auto;width:100%;margin-top:2%">
+            <div class="font-weight-ligth text-left col-md-6" style="overflow: auto;width:100%;margin-top:2%">
               <tr>
-                <td style="text-indent: 1.5cm;" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.nombre}}</td>
+                <td style="text-indent:25px" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.abreviatura}}</td>
               </tr>
             </div>
-
-            <input type="file" id="get-files" ref="file" name="client-file"  class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
-            <button type="button" style="margin:5px;border-radius: 10px;" id="btnsubir" class="btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
-            <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
-
-            <h6 >* Columnas obligatorios</h6>
-
+             <!-- <h6 class="font-weight-ligth text-left col-md-6">Las condiciones de los alumnos no son obligatorias, por lo que si no coloca una, se asume que la condición del alumno es "Cachimbo"-pri</h6> -->
+            
+            <div >
+              <input type="file" id="get-files" ref="file" name="client-file"  class="col-md-4" v-on:change="FileUpload" />
+            
+                <button type="button" style="margin:5px;border-radius: 10px;" id="btnsubir" class="col-sm-2 btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
+                <button type="button"  class="col-sm-2 btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
+            
+                <h6 >* Columnas obligatorios-No incluirlas en la cabecera</h6>
+             
+            
+            </div>
+           
 
 
         </section>
         <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
-            <h5 style="font-weight: bold;">Reporte de errores</h5>
-            <div style="overflow: auto;width:100%;margin-top:2%">
+            <h5 class="font-weight-ligth text-left col-md-6"  style="font-weight: bold;">Reporte de errores</h5>
+            <div class="font-weight-ligth text-left col-md-6"  style="overflow: auto;width:100%;margin-top:2%">
               <table class="table" style="text-align:left" >
                 <thead>
                   <tr>
@@ -223,8 +222,16 @@ export default Vue.extend ({
             }})
               .then( response=>{
                 console.log('rptaM: ',response);//Subida terminada
-                
-                if(response.data.status.indexOf("Se han encontrado errores")!=-1){
+                if(response.data==[]) {
+                  Swal.fire({
+                    text:"Estamos teniendo problemas al cargar los datos de los nuevos alumnos. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  }); 
+                }
+                else if(response.data.status.indexOf("Se han encontrado errores")!=-1){
                     this.hideModal();
              
                     Swal.fire({
