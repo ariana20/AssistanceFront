@@ -13,7 +13,7 @@
                     input-class="form-control">
                 </date-picker>
             </div>
-            <div class="col-4">
+            <!--div class="col-4">
                 <div class="row">
                 <div class="col"><h5>Facultad: </h5></div>
                 <div class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
@@ -58,8 +58,8 @@
                         <span name="remove" class="close" @click="deleteProg(index)" style="float:right;">&times;</span>        
                     </li>
                 </ul>
-            </div>
-            <div class="botones" style="margin-bottom:10px;text-align: up">
+            </div-->
+            <div class="botones" style="margin-bottom:10px;margin-right: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
         </div>
@@ -70,7 +70,7 @@
                 <strong>Cantidad de Alumnos Asignados</strong>
                 <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
-                    <button type="button" class="btn btn-info"  @click="verDetalleAsistencia()" >Ver más</button>
+                    <button type="button" class="btn btn-info"  @click="verDetalleAsignado()" >Ver más</button>
                 </div>
             </div>
             <div v-if="atenciones.length>0">
@@ -79,6 +79,9 @@
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleAtenciones()" >Ver más</button>
                 </div>
+            </div>
+            <div class="botones" style="margin-bottom:10px;text-align: right">
+                <button type="button" class="btn btn-info"  @click="verDetalleAtenciones()" >Ver más</button>
             </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
@@ -194,9 +197,10 @@ export default {
     },
     created(){
         this.periodo = [this.inicio,this.fin];
+        this.idPogramas.push(this.$store.state.programaActual.id_programa);
         this.RatioAsignado();
         this.RatioAtenciones();
-        this.listarFacultades();
+        //this.listarFacultades();
     },
     methods:{
         listarFacultades(){
@@ -241,6 +245,7 @@ export default {
 
         async RatioAsignado(){
             this.asignados=[];
+            
             const params = {
                 id_programa: this.idPogramas,
                 id_facultad: this.idFacultades,
@@ -273,18 +278,20 @@ export default {
         },
 
         async RatioAtenciones(){
-            /*
+            
             this.atenciones=[];
             const params = {
-
-
+                id_programa:this.idPogramas,
+                id_facultad:11,
+                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
             
-            const { data } =await axios.post("", params);
+            const { data } =await axios.post("programa/asistenciaXPrograma", params);
+            console.log("Asistencia por programa");
             console.log(data);
             
 
-            console.log(this.atenciones);*/
         },
 
         async RatioAtencionesOtraPantalla(){
@@ -313,15 +320,15 @@ export default {
             //this.RatioAtenciones();
             this.RatioAsignado();
         },
-        verDetalleAsistencia(){
-            this.$router.push('/crearFacultad');
+        verDetalleAsignado(){
+            this.$router.push('/reporteAsignado');
         },
         verDetalleAtenciones(){
-            this.$router.push('/crearFacultad');
+            this.$router.push('/reporteAtenciones');
 
         },
         verDetalleSatisfaccion(){
-            this.$router.push('/crearFacultad');
+            this.$router.push('/reporteSatisfaccion');
 
         },
         verDetalleRendimiento(){

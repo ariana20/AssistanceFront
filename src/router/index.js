@@ -286,6 +286,16 @@ Vue.use(VueRouter)
     name: 'Reporte Rendimiento',
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteRendimiento.vue')
   },
+  {
+    path: '/reporteAsignado',
+    name: 'Reporte Asignado',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteAsignado.vue')
+  },
+  {
+    path: '/reporteAtenciones',
+    name: 'Reporte Atenciones',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteAtenciones.vue')
+  },
 ]
 const router = new VueRouter({
   mode: 'history',

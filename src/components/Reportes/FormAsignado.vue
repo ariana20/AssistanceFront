@@ -1,5 +1,5 @@
 <template>
-  <div class="FormAsistencia">
+  <div class="FormAsignado">
       <div class="container">
         <div class="top-titulo" style="text-align:left;">
             <div class="col-4">
@@ -18,7 +18,7 @@
                 <div class="col"><h5>Tutor(a): </h5></div>
                 <div class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
                 </div>
-                <select class="form-control"  v-model="selectedFacultad" v-on:change="listarTutores()">
+                <select class="form-control"  v-model="selectedTutor" v-on:change="listarTutores()">
                     <option disabled selected :value="null" focusable="false">Selecciona un(a) tutor(a)</option>
                     <option 
                         v-for="(tutor, index) in tutores" 
@@ -36,33 +36,13 @@
                     </li>
                 </ul>
             </div>
-            <div class="botones" style="margin-bottom:10px;text-align: up">
+            <div class="botones" style="margin-bottom:10px;text-align: up;margin-right: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
-        <div class="row mt-5">
-            <div v-if="asignados.length>0">
-                <strong>Cantidad de Alumnos Asignados</strong>
-                <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
-            </div>
-            <div v-if="atenciones.length>0">
-                <strong>Cantidad de Atenciones</strong>
-                <line-chart :chartData="atenciones" :options="chartOp" label='Atenciones'></line-chart>
-            </div>
-        </div>
-        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
-        <div class="row mt-5">
-            <div v-if="satisfaccion.length>0">
-                <strong>Satisfacción del alumno</strong>
-                <pie-chart :chartData="satisfaccion" :options="chartOp2" label='Satisfacción del alumno'></pie-chart>
-            </div>
-            <div v-if="planAccion.length>0">
-                <strong>Cumplimiento de Planes de Acción</strong>
-                <line-chart :chartData="planAccion" :options="chartOp" label='Cumplimiento de Planes de Acción'></line-chart>
-            </div>
-        </div>
+
       </div>
 
   </div>
@@ -74,27 +54,27 @@
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
-import LineChart from '@/components/Reportes/LineChart.vue'
-import PieChart from '@/components/Reportes/PieChart.vue'
 import moment from 'moment';
 export default {
     components:{
-        LineChart,
-        PieChart,
         DatePicker
     },
     data(){
         return{
             //filtros
-            facultades:[],
+            facultad:[],
             selectedFacultad:null,
-            facultadesSelect:[],
+            facultadSelect:[],
             programas:[],
             selectedPrograma:null,
             programasSelect:[],
+            tutores:[],
+            selectedTutor:null,
+            tutorSelect:[],
             //lista de identificadores
             idPogramas:[],
             idFacultades:[],
+            idTutores:[],
             //graficos
             satisfaccion:[],
             planAccion:[],
@@ -139,11 +119,11 @@ export default {
     },
     mounted(){
         
-        document.querySelector("#container > div > div.FormAsistencia > div > div.top-titulo > div:nth-child(1) > div > div > input").style.borderRadius = "1.25rem"; 
-        document.querySelector("#container > div > div.FormAsistencia > div > div.top-titulo > div:nth-child(1) > div > div > input").style.border= "0.5px solid #757575";    
-        document.querySelector("#container > div > div.FormAsistencia > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontWeight = "400";
-        document.querySelector("#container > div > div.FormAsistencia > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
-        document.querySelector("#container > div > div.FormAsistencia > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
+        document.querySelector("#container > div > div.FormAsignado > div > div.top-titulo > div:nth-child(1) > div > div > input").style.borderRadius = "1.25rem"; 
+        document.querySelector("#container > div > div.FormAsignado > div > div.top-titulo > div:nth-child(1) > div > div > input").style.border= "0.5px solid #757575";    
+        document.querySelector("#container > div > div.FormAsignado > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontWeight = "400";
+        document.querySelector("#container > div > div.FormAsignado > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
+        document.querySelector("#container > div > div.FormAsignado > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
   
     },
     computed: {
