@@ -13,7 +13,7 @@
                     input-class="form-control">
                 </date-picker>
             </div>
-            <!--div class="col-4">
+            <!--div class="col-4"> Filtros que pondré posteriormente ewe
                 <div class="row">
                 <div class="col"><h5>Facultad: </h5></div>
                 <div class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
@@ -66,7 +66,7 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row mt-5">
-            <div  v-if="asignados.length>0">
+            <div class="col-6" v-if="asignados.length>0">
                 <strong>Cantidad de Alumnos Asignados</strong>
                 <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
@@ -80,28 +80,22 @@
                     <button type="button" class="btn btn-info"  @click="verDetalleAtenciones()" >Ver más</button>
                 </div>
             </div>
-            <div class="botones" style="margin-bottom:10px;text-align: right">
-                <button type="button" class="btn btn-info"  @click="verDetalleAtenciones()" >Ver más</button>
-            </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         <div class="row mt-5">
-            <div v-if="satisfaccion.length>0">
+            <div class="col-6" v-if="satisfaccion.length>0">
                 <strong>Satisfacción del alumno</strong>
                 <pie-chart :chartData="satisfaccion" :options="chartOp2" label='Satisfacción del alumno'></pie-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleSatisfaccion()" >Ver más</button>
                 </div>
             </div>
-            <div v-if="planAccion.length>0">
-                <strong>Cumplimiento de Planes de Acción</strong>
-                <line-chart :chartData="planAccion" :options="chartOp" label='Cumplimiento de Planes de Acción'></line-chart>
+            <div class="col-6" v-if="alumnosBR.length>0">
+                <strong>Asistencia Alumnos Bajo Rendimiento</strong>
+                <bar-chart :chartData="alumnosBR" :options="chartOp" label='Cumplimiento de Planes de Acción'></bar-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleRendimiento()" >Ver más</button>
                 </div>
-            </div>
-            <div class="botones" style="margin-bottom:10px;text-align: right">
-                <button type="button" class="btn btn-info"  @click="verDetalleRendimiento()" >Ver más</button>
             </div>
         </div>
       </div>
@@ -117,11 +111,13 @@ import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import LineChart from '@/components/Reportes/LineChart.vue'
 import PieChart from '@/components/Reportes/PieChart.vue'
+import BarChart from '@/components/Reportes/BarChart.vue'
 import moment from 'moment';
 export default {
     components:{
         LineChart,
         PieChart,
+        BarChart,
         DatePicker
     },
     data(){
@@ -138,7 +134,7 @@ export default {
             idFacultades:[],
             //graficos
             satisfaccion:[],
-            planAccion:[],
+            alumnosBR:[],
             asignados:[],
             atenciones:[],
             //datepicker
@@ -153,7 +149,8 @@ export default {
                         ticks:{precision:0}
                     }],
                     yAxes: [{
-                        stacked: false,
+                        stacked: true,
+                        ticks:{precision:0}
                     }]
                 },        
                 legend: {
@@ -200,6 +197,7 @@ export default {
         this.idPogramas.push(this.$store.state.programaActual.id_programa);
         this.RatioAsignado();
         this.RatioAtenciones();
+        this.BajoRendimiento();
         //this.listarFacultades();
     },
     methods:{
@@ -281,51 +279,56 @@ export default {
             
             this.atenciones=[];
             const params = {
-                id_programa:this.idPogramas,
-                id_facultad:11,
+                id_programa:this.$store.state.programaActual.id_programa,
                 fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
             
-            const { data } =await axios.post("programa/asistenciaXPrograma", params);
-            console.log("Asistencia por programa");
+            const { data } =await axios.post("programa/citasXDiaTodos", params);
+            console.log("Asistencia por día");
             console.log(data);
-            /*
+            
             data.forEach(d =>{
-                if(d.asistencia=="asi") this.atenciones.push({date:"Atendidos",total:d.cantalum});
-                else if(d.asistencia=="noa") this.atenciones.push({date:"No Atendidos",total:d.cantalum});
-                else if(d.asistencia=="pen") this.atenciones.push({date:"Pendientes",total:d.cantalum});   
-                else if(d.asistencia=="can") this.atenciones.push({date:"Cancelados",total:d.cantalum});                
-            })*/
+                this.atenciones.push({date:d.fecha,total:d.count});               
+            })
             
 
         },
 
-        async RatioAtencionesOtraPantalla(){
-            this.atenciones=[];
+
+        async BajoRendimiento(){
+
+            this.alumnosBR=[];
+
             const params = {
-                id_programa: this.$store.state.programaActual.id_programa,
+                id_programa: this.idPogramas,
+                id_facultad: this.$store.state.programaActual.id_facultad,
+                id_institucion: 1,
                 fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
-            console.log(params.fecha_ini);
-            //fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
-            //hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
-            const { data } =await axios.post("programa/cantAtendidos", params);
-            console.log(data);
+            console.log('params: ',params);
+            var data =await axios.post("usuarios/datosBajoRendimiento", params);
+           
+            // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
+            //LLenado del gráfico de la izquierda
+            this.alumnosBR.push({date:"Asistieron >50%-Cuarta",total:data.data[4].total_alumnos});
+            this.alumnosBR.push({date:"Asistieron <50%-Cuarta",total:data.data[5].total_alumnos});
+
+            this.alumnosBR.push({date:"Asistieron >50%-Trica",total:data.data[2].total_alumnos});
+            this.alumnosBR.push({date:"Asistieron <50%-Trica",total:data.data[3].total_alumnos});
             
-            data.forEach(d =>{
-                if(d.asistencia=="asi") this.atenciones.push({date:"Atendidos",total:d.cantalum});
-                else if(d.asistencia=="noa") this.atenciones.push({date:"No Atendidos",total:d.cantalum});
-                else if(d.asistencia=="pen") this.atenciones.push({date:"Pendientes",total:d.cantalum});   
-                else if(d.asistencia=="can") this.atenciones.push({date:"Cancelados",total:d.cantalum});                
-            })
-            console.log(this.atenciones);
+            this.alumnosBR.push({date:"Asistieron >50%-Bica",total:data.data[0].total_alumnos});
+            this.alumnosBR.push({date:"Asistieron <50%-Bica",total:data.data[1].total_alumnos});
+                
+
         },
 
         generarReporte(){
             //this.RatioAtenciones();
             this.RatioAsignado();
+            this.BajoRendimiento();
+            this.RatioAtenciones();
         },
         verDetalleAsignado(){
             this.$router.push('/reporteAsignado');
