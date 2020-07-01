@@ -1,25 +1,25 @@
 <template>
   <div class="FormReportes">
       <div class="container">
-        <div class="top-titulo" style="text-align:left;">
-            <h4>Fechas:</h4>
+        <div  class="top-titulo" style="text-align:left;">
+            <h5 class="font-weight-ligth text-left col-sm-2">Fechas:</h5>
             <date-picker 
                 v-model="periodo" 
                 width="100" lang="es" range 
                 placeholder="Selecciona Rango de Fechas"
                 :disabled-date="disabledAfterToday"
                 @input="handlePeriodChange"
-                input-class="form-control">
+                input-class="col-sm-12 form-control">
             </date-picker>
             <div class="botones" style="margin-bottom:10px">
-            <button type="button" class="btn btn-info" @click="generarReporte()" >Generar</button>
+                <button type="button" class=" col-sm-12 btn btn-info" style="height:37px;width:100px;text-align:center" @click="generarReporte()" >Generar</button>
             </div>
 
 
-        </div>
-        <div class="row" style="text-align:left;">
-            <h4>Facultad: </h4>
-            <select class="col-sm-2 form-control"  v-model="selectedFacultad" v-on:change="listarProgramas()">
+         </div>  <!-- fin del top  -->
+        <div class="row" style="margin-left:1px;text-align:left;">
+            <!-- <h4 v-if="this.isCoordinador===false">Facultad: </h4>
+            <select  class="col-sm-3 form-control" v-if="this.isCoordinador===false" v-model="selectedFacultad" v-on:change="listarProgramas()">
                 <option disabled selected :value="null" focusable="false">Selecciona una facultad</option>
                 <option 
                     v-for="(facultad, index) in facultades" 
@@ -27,14 +27,20 @@
                     :value="facultad">
                     {{ facultad.nombre }}
                 </option>
-            </select>
-            <h4>Programa: </h4>
-            <select class="col-sm-2 form-control"  v-model="selectedPrograma">
+            </select> -->
+            <h5 class="font-weight-ligth text-left col-sm-2" v-if="this.isCoordinador===false" >Programa: </h5>
+            <select  id="cbxProg" v-if="this.isCoordinador===false"  class="col-sm-3 form-control" style="align:left"  v-model="selectedPrograma">
                 <option disabled selected :value="null" focusable="false">Selecciona un programa</option>
-                <option 
+                <!-- <option 
                     v-for="(programa, index) in progSinDefault"
                     :key="index" 
                     :value="programa" >
+                    {{ programa.nombre }}
+                </option> -->
+                <option 
+                    v-for="(programa, index) in programas"
+                    :key="index" 
+                    :value="programa.id_programa" >
                     {{ programa.nombre }}
                 </option>
             </select>
@@ -42,16 +48,31 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row mt-5">
-            <div v-if="asignados.length>0">
-                <strong>Cantidad de Alumnos Asignados</strong>
-                <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
+            <h5 class="font-weight-ligth text-left col-sm-12" v-if="this.nosemuestra===true" >No se ha generado ningún reporte </h5>
+            <h5 class="font-weight-ligth text-left col-sm-12" v-if="this.sinGrafico===true && this.nosemuestra===false" >No se ha generado un reporte con datos significativos </h5>
+           
+
+            <div v-if="alumnosBR.length>0 && this.sinGrafico===false">
+                <strong>Cantidad de alumnos que asistieron a sus citas</strong>
+                <bar-chart :chartData="alumnosBR" :options="chartOp" 
+                label='Alumnos con Bajo Rendimiento'  style="display: block; width: 444px; height: 222px;"></bar-chart>
             </div>
-            <div v-if="atenciones.length>0">
-                <strong>Cantidad de Atenciones</strong>
-                <line-chart :chartData="atenciones" :options="chartOp" label='Atenciones'></line-chart>
-            </div>
+            <!-- <div v-if="alumnosBRPlan.length>0 && this.sinGrafico===false">
+                <strong>Cantidad de alumnos que asistieron a sus citas</strong>
+                <bar-chart :chartData="alumnosBRPlan" :options="chartOp" 
+                label='Alumnos con Plan de Acción terminado'  style="display: block; width: 444px; height: 222px;"></bar-chart>
+            </div> -->
+         
+            
         </div>
       </div>
+        <!-- Modal de cargando -->
+      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+        <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+          <b-spinner style="width: 3rem; height: 3rem;"/>
+          <br >Cargando... 
+        </div>
+      </b-modal>
 
   </div>
 </template>
@@ -62,17 +83,27 @@
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
-import LineChart from '@/components/Reportes/LineChart.vue'
-import PieChart from '@/components/Reportes/PieChart.vue'
+// import LineChart from '@/components/Reportes/LineChart.vue'
+// import PieChart from '@/components/Reportes/PieChart.vue'
+import BarChart from '@/components/Reportes/BarChart.vue'
+// import DoughnutChart from '@/components/Reportes/DoughnutChart.vue'
 import moment from 'moment';
+import Swal from 'sweetalert2';
 export default {
     components:{
-        LineChart,
-        PieChart,
-        DatePicker
+        // LineChart,
+        // PieChart,
+        // DoughnutChart,
+        DatePicker,
+        BarChart,
     },
     data(){
         return{
+            //Permisos que afectan filtros
+            isCoordinador:true,
+            mipermisosUsuario:null,
+            nosemuestra:true,
+            sinGrafico:false,
             //filtros
             facultades:[],
             selectedFacultad:null,
@@ -83,19 +114,26 @@ export default {
             idFacultades:[],
             //graficos
             asignados:[],
+            bicas:[],
+            tricas:[],
+            cuartas:[],
             atenciones:[],
+            alumnosBR:[],
+            alumnosBRPlan:[],
             //datepicker
             inicio: new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
             fin: new Date(),
             periodo:'',
+           
+
             //opciones de gráficos
             chartOp:{
                 scales: {
-                    xAxes: [{
+                    yAxes: [{
                         stacked: true,
                         ticks:{precision:0}
                     }],
-                    yAxes: [{
+                    xAxes: [{
                         stacked: false,
                     }]
                 },        
@@ -132,32 +170,40 @@ export default {
     mounted(){
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.borderRadius = "1.25rem"; 
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.border= "0.5px solid #757575";    
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontWeight = "400";
+        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontWeight = "300";
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.height = "2.4em";
-  
+          this.periodo = [this.inicio,this.fin];
+        this.BajoRendimiento();
+        this.listarFacultades();
+        this.filtrosSegunUsuario();
     },
     computed: {
-        progSinDefault: function () {
-            return this.programas.filter(i => i != null && i.codigo != this.selectedFacultad.codigo)
-        },
+        
         progDefault: function () {
             return this.programas.filter(i => i.codigo == this.selectedFacultad.codigo)
         }
     },
     created(){
-        this.periodo = [this.inicio,this.fin];
-        this.RatioAsignado();
-        this.RatioAtenciones();
-        this.listarFacultades();
+      
+
     },
+ 
     methods:{
+        progSinDefault: function () {
+            return this.programas.filter(i => i != null && i.codigo != this.selectedFacultad.codigo)
+        },
+     
         listarFacultades(){
+            this.showModal();
             const params = {
                 id_institucion:1,
             };
             axios.post('facultad/listarFacultades', params)
             .then( response => {
+                this.hideModal();
+                this.mipermisosUsuario=this.$store.state.permisosUsuario;
+                console.log('perm',this.mipermisosUsuario);
                 this.facultades=response.data;
                 var facu=new Object();
                 facu.nombre="Todos";
@@ -165,26 +211,49 @@ export default {
                 facu.codigo="TODOS";
                 this.facultades.push(facu);
                 console.log(this.facultades);
+                //Manejo de permisos
+          
+                if(this.mipermisosUsuario.includes("Usuarios")){
+                   
+                    console.log('prog:',this.$store.state.programaActual);
+                    this.selectedPrograma=this.$store.state.programaActual.id_programa;
+                    this.listarProgramas();
+                    console.log('selectedPrograma: ',this.selectedPrograma);
+                    // document.getElementById("cbxProg").disabled = true;//inhabilita
+                    
+                //Llenar el combo box con su programa y no mostrarlo
+                     this.isCoordinador=true;
+                }     else{
+                    //Probablemente sea coord de faci
+                    this.listarProgramas();
+                    this.hideModal();
+                    this.isCoordinador=false;
+
+                    
+
+                }          
+                
             })
             .catch(e => {
-                console.log(e.response);
+                console.log('catch:',e.response);
             });
-
+            
         },
         listarProgramas(){
-            console.log(this.selectedFacultad);
+           // console.log(this.selectedFacultad);
             const params = {
-                id_facultad:this.selectedFacultad.id_facultad
+                id_facultad:this.$store.state.programaActual.id_facultad,
+                
             };
             axios.post('facultad/listarProgramasDefault', params)
             .then( response => {
                 this.programas=response.data;
+                this.programas.splice(0,1);
+                console.log(this.programas);
                 var prog=new Object();
                 prog.nombre="Todos";
                 prog.id_programa=0;
-                prog.codigo="TODOS";
                 this.programas.push(prog);
-                console.log(this.programas);
             })
             .catch(e => {
                 console.log(e.response);
@@ -192,33 +261,52 @@ export default {
 
         },
 
-        async RatioAsignado(){
-            this.asignados=[];
-            const params = {
-                id_programa: this.idPogramas,
-                id_facultad: this.idFacultades,
-                id_institucion: 1,
-                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
-                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
-            };
-            var data;
-            if(this.idPogramas.length>0)
-                data =await axios.post("registros/asignadosXPrograma", params);
-            else if(this.idFacultades.length>0)
-                data =await axios.post("registros/asignadosXFacultad", params);
-            else
-                data =await axios.post("registros/asignadosXUniversidad", params);
+        async BajoRendimiento(){
+           this.sinGrafico=false;
+            console.log(this.selectedPrograma);
+            if(this.selectedPrograma==null) this.hideModal();
+            this.bicas=[];
+            this.tricas=[];
+            this.cuartas=[];
+            this.alumnosBR=[];
+            if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){            
+                var programas=[];
+                console.log(this.selectedPrograma);
+                if(this.selectedPrograma==0){
+                    var n=this.programas.length;
+                    for(let i=1;i<n-1;i++ ){                    
+                        programas[i]=this.programas[i].id_programa;
+                    }
+                }else{
+                    programas[0]=this.selectedPrograma;
+                }
 
-            console.log("asignadosXUniversidad ");
-            console.log(data);
-            this.asignados.push({date:"Asignados",total:data.data[0].asignados});
-            this.asignados.push({date:"No Asignados",total:data.data[1].noasignados});
-        // 5 alumnos bica-2 asistieron y 3 no 
+                const params = {
+                    id_programa: programas,
+                    id_facultad: this.$store.state.programaActual.id_facultad,
+                    id_institucion: 1,
+                    fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                    fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+                };
+                console.log('params: ',params);
+                var data =await axios.post("usuarios/datosBajoRendimiento", params);
+                console.log('data:',data);
+                // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
+                
+                this.alumnosBR.push({date:"Asistieron >50%-Cuarta",total:data.data[4].total_alumnos});
+                this.alumnosBR.push({date:"Asistieron <50%-Cuarta",total:data.data[5].total_alumnos});
 
-        //3 alumnos carta-1
-        
-        //4 alumnos trica-2
-        //12-           5 asistieron(40% bica + 20% carta + 40% trica)
+                this.alumnosBR.push({date:"Asistieron >50%-Trica",total:data.data[2].total_alumnos});
+                this.alumnosBR.push({date:"Asistieron <50%-Trica",total:data.data[3].total_alumnos});
+                
+                this.alumnosBR.push({date:"Asistieron >50%-Bica",total:data.data[0].total_alumnos});
+                this.alumnosBR.push({date:"Asistieron <50%-Bica",total:data.data[1].total_alumnos});
+                
+               
+               
+            }else{
+                this.sinGrafico=true;
+            }
 
         },
         handlePeriodChange(periodo) {
@@ -228,48 +316,51 @@ export default {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             return date > today;
-        },
-
-        async RatioAtenciones(){
-            /*
-            this.atenciones=[];
-            const params = {
-
-
-            };
-            
-            const { data } =await axios.post("", params);
-            console.log(data);
-            
-
-            console.log(this.atenciones);*/
-        },
-
-        async RatioAtencionesOtraPantalla(){
-            this.atenciones=[];
-            const params = {
-                id_programa: this.$store.state.programaActual.id_programa,
-                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
-                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
-            };
-            console.log(params.fecha_ini);
-            //fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
-            //hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
-            const { data } =await axios.post("programa/cantAtendidos", params);
-            console.log(data);
-            
-            data.forEach(d =>{
-                if(d.asistencia=="asi") this.atenciones.push({date:"Atendidos",total:d.cantalum});
-                else if(d.asistencia=="noa") this.atenciones.push({date:"No Atendidos",total:d.cantalum});
-                else if(d.asistencia=="pen") this.atenciones.push({date:"Pendientes",total:d.cantalum});   
-                else if(d.asistencia=="can") this.atenciones.push({date:"Cancelados",total:d.cantalum});                
-            })
-            console.log(this.atenciones);
-        },
+        },    
 
         generarReporte(){
-            //this.RatioAtenciones();
-            this.RatioAsignado();
+             
+            this.validaciones();
+            
+            this.nosemuestra=false;
+            this.BajoRendimiento();
+               
+        },
+           filtrosSegunUsuario(){
+               console.log('f');
+            
+           
+        },
+     
+        showModal() {
+            this.$refs['my-modal'].show()
+        },
+        hideModal() {
+            this.$refs['my-modal'].hide()
+        },
+        validaciones(){
+            this.sinGrafico=false;
+            this.nosemuestra=true;
+            console.log(this.periodo);
+            if(this.selectedPrograma==null){
+                
+                Swal.fire({
+                    text:"No ha seleccionado un programa.",
+                    icon:"warning",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+               })
+            }
+            else if(this.periodo[0]==null && this.periodo[1]==null ){
+                Swal.fire({
+                    text:"No ha seleccionado una fecha",
+                    icon:"warning",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+               })
+            }
         }
         
     }
@@ -294,6 +385,12 @@ export default {
     transform: translate(0%, -50%);
 }
 
+
+element.style {
+    display: block;
+    height: 800px;
+    width: 800px;
+}
 input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper input.e-input, textarea.e-input, .e-input-group textarea.e-input, .e-input-group.e-control-wrapper textarea.e-input{
     border-width: 1px !important;
 }

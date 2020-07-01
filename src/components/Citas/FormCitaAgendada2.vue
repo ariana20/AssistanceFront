@@ -336,6 +336,7 @@ export default Vue.extend ({
             let array = []
             array.push(this.event.extendedProps.alumno.id_usuario);
             console.log(array);
+            
             const sesion_params = {
                 id_cita: this.$store.state.idCita,
                 resultado: this.descripcion,
