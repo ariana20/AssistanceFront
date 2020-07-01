@@ -15,28 +15,32 @@
             </div>
             <div class="col-4">
                 <div class="row">
-                <div class="col"><h5>Tutor(a): </h5></div>
-                <div class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
+                    <div class="col"><h5>Tutor(a): </h5></div>
+                    <div class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;" 
+                        :disabled="!this.selectedTutor"
+                        @click="addTutor" 
+                        >Seleccionar</h8>
+                    </div>
                 </div>
-                <select class="form-control"  v-model="selectedTutor" v-on:change="listarTutores()">
+                <select class="form-control"  v-model="selectedTutor">
                     <option disabled selected :value="null" focusable="false">Selecciona un(a) tutor(a)</option>
                     <option 
                         v-for="(tutor, index) in tutores" 
                         :key="index" 
-                        :value="tutor">
-                        {{ tutor.nombre }}
+                        :value="tutor.usuario">
+                        {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
                     </option>
                 </select>
                 <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
                     <li class="motivos-seleccionados list-group-item" style="text-align:left;"
                         v-for="(tutor,index) in tutorSelect"  
                         :key="index">
-                        {{tutor.nombre}}
+                        {{tutor.nombre + " " + tutor.apellidos}}
                         <span name="remove" class="close" @click="deleteTutor(index)" style="float:right;">&times;</span>           
                     </li>
                 </ul>
             </div>
-            <div class="botones" style="margin-bottom:10px;text-align: up;margin-right: 0px;">
+            <div class="botones" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
         </div>
@@ -44,7 +48,7 @@
         
 
       </div>
-
+    
   </div>
 </template>
 
@@ -138,7 +142,8 @@ export default {
         this.periodo = [this.inicio,this.fin];
         this.RatioAsignado();
         this.RatioAtenciones();
-        this.listarFacultades();
+        this.listarTutores();
+        //this.listarFacultades();
     },
     methods:{
         listarFacultades(){
@@ -180,6 +185,22 @@ export default {
             });
 
         },
+        listarTutores(){
+            const params = {
+                id_programa : this.$store.state.programaActual.id_programa,
+                nomFacu:this.$store.state.programaActual.facultad.nombre,
+                nombre: "",
+            };
+            axios
+            .post('/programa/tutoresListar', params)
+                .then(res =>{
+                console.log(res);
+                this.tutores=res.data;            
+                })
+                .catch(e => {
+                console.log(e.response);
+                })
+        },
 
         async RatioAsignado(){
             this.asignados=[];
@@ -212,6 +233,14 @@ export default {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             return date > today;
+        },
+        addTutor(){
+            this.tutorSelect.push(this.selectedTutor);
+            this.idTutores.push(this.selectedTutor.id_usuario);
+            for(var i in this.tutores)
+                if(this.selectedTutor.codigo==this.tutores[i].usuario.codigo) {
+                    this.tutores.splice(i,1);  
+                }
         },
 
         async RatioAtenciones(){
