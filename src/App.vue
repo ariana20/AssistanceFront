@@ -1,17 +1,17 @@
 <template>
 <!-- Para la barra principal parece -->
   <div id="app">
-    <HomeNavBar style="z-index:9000" v-if="this.$route.path === '/'"/>
-    <NavBar style="z-index:9000" v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'"/> 
+    <HomeNavBar style="z-index:9000" v-if="this.$route.path === '/' || this.$route.path == '/recuperarContrasena'"/>
+    <NavBar style="z-index:9000" v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/recuperarContrasena' && this.$route.path !== '/404'"/> 
     <SidebarAdministrador
 		:nav-links="$store.state.rutas"
     :image-path="require('./assets/images/assistance-logo.png')"
     background="#009892"
     link-color="#eee"
     hoverBackground="#026662"
-    v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404' && this.$route.path !== '/seleccion'"   />
+    v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/recuperarContrasena' && this.$route.path !== '/404' && this.$route.path !== '/seleccion'"   />
     <div style="height:60px"></div>
-    <div v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/404'" id="container" class="wrapper">
+    <div v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/recuperarContrasena' && this.$route.path !== '/404'" id="container" class="wrapper">
       <router-view/>
     </div>
     <router-view v-else/>

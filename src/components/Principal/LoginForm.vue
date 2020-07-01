@@ -31,12 +31,12 @@
                 </div>
               </fieldset>
               <div class="forms_buttons" style="margin-top:20%; font-size:15px;  font-family:'Brandon Bold'">
-                <!-- <a href="#openModal" type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</a> -->
                 <input type="submit" value="Ingresar" class="forms_buttons-action" style="width:100%">
               </div>
               
             </form>
               <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:15%;font-family:'Brandon Bold'">Ingresar con Google</button>
+              <a href="#openModal" type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</a>
           </div>
           <div class="user_forms-signup">
             <h2 class="forms_title">Usuario Nuevo</h2>
@@ -398,7 +398,7 @@ import emailjs from 'emailjs-com';
             .then(response=>{
               if(response.data.user){
                 window.location.href = '/login#close'
-                let direccion = "localhost:8000/login"
+                let direccion = "https://proyectosoftware20201front.vizcochitos.cloudns.cl/recuperarContrasena"
                 emailjs.send(
                   "gmail",
                   "template_bV7OIjEW",
@@ -408,9 +408,16 @@ import emailjs from 'emailjs-com';
                   "correo": response.data.user.correo
                   }, 'user_ySzIMrq3LRmXhtVkmpXAA')
                   .then((result) => {
-                      console.log('SUCCESS!', result.status, result.text);
+                    Swal.fire({
+                      text:"Se le envió las instrucciones al correo registrado",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                    })
+                    console.log('SUCCESS!', result.status, result.text);
                   }, (error) => {
-                      console.log('FAILED...', error);
+                    console.log('FAILED...', error);
                   });
               }
               else{
