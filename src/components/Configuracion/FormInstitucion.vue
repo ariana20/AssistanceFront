@@ -2,7 +2,7 @@
   <div class="FormInstitucion ">
     <div style="text-align: left;margin-left:5%;">
       <form v-on:submit.prevent="guardarInstitucion" >
-        <div class="row grid-divider" style="">
+        <div class="row grid-divider" style="width:95%">
           <div class="izq col-lg-6 col-xm-2 col-md-12">
             <h4 class="font-weight-bolder text-left institucion-title">Datos</h4><br>
             <div style="margin-bottom:5%">

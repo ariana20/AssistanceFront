@@ -172,7 +172,6 @@ export default {
           });
         },
         SolCancelar(){
-          console.log('Cancelar Cita')
           Swal.fire({
                 text:"¿Desea solicitar la cancelacion de esta cita?",
                 icon:"warning",
@@ -182,33 +181,67 @@ export default {
                 cancelButtonColor:'C4C4C4',
                 showCancelButton: true,
                 showConfirmButton: true,
-            }).then((result) => {
+            })
+              .then((result) => {
                 if (result.value) {
-                    const params={
-                      id_remitente: this.id_tutor,
-                      id_solicitante: this.$store.state.usuario.id_usuario,
-                      tipo_solicitud: 'Cita',
-                      descripcion: 'Solicitud para la cancelacion de una cita',
-                      id_programa: this.$store.state.programaActual.id_programa, 
-                      motivo: "Deseo cancelar mi cita con el tutor ",
-                      usuario_creacion: this.$store.state.usuario.id_usuario,
-                      id_usuario_relacionado: this.id_tutor,
-                    }
-                    axios.create()
-                    .post('/solicitudes/insertar', params)
-                    .then( response=>{
-                      Swal.fire({
-                      text:"Solicitud Enviada Exitosamente",
-                      icon:"success",
-                      confirmButtonText: 'OK',
-                      confirmButtonColor:'#0097A7',
-                      showConfirmButton: true,
+                  Swal.fire({
+                    title: 'Ingrese el motivo de la cancelación',
+                    input: 'text',
+                    inputAttributes: {
+                      autocapitalize: 'off'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Enviar',
+                    confirmButtonColor:'#0097A7',
+                    cancelButtonText: 'Cancelar',
+                    cancelButtonColor:'C4C4C4',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (login) => {
+                      const params={
+                        id_remitente: this.id_tutor,
+                        id_solicitante: this.$store.state.usuario.id_usuario,
+                        tipo_solicitud: 'Cita',
+                        descripcion: 'Solicitud para la cancelacion de una cita',
+                        id_programa: this.$store.state.programaActual.id_programa, 
+                        motivo: login,
+                        usuario_creacion: this.$store.state.usuario.id_usuario,
+                        usuario_actualizacion: this.$store.state.usuario.id_usuario,
+                        id_usuario_relacionado: this.id_tutor,
+                        id_cita: this.$store.state.idCita,
+                      }
+                      return axios.post('/solicitudes/insertar', params)
+                      .then( response=>{
+                        return response
                       })
-                      console.log(response)
-                    })
-                    .catch(e => {
+                      .catch(e => {
                         console.log(e.response);
-                    })
+                        Swal.showValidationMessage(
+                          `Request failed: ${e}`
+                        )
+                      })
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                  }).then((result) => {
+                    if(result.value.data.status == 'error'){
+                        Swal.fire({
+                        text:result.value.data.mensaje,
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                        })
+                      }
+                      else{
+                        Swal.fire({
+                        text:"Solicitud Enviada Exitosamente",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                        })
+                      }
+                  })
+                  
 
                 } 
             })

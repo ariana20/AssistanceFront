@@ -2,7 +2,7 @@
     <div class="row" style="text-align:left;">
         
         <div class="col-12 col-md-5">
-            <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo">
+            <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo" style="height:100%">
                     <img  :src="tutor.imagen" height="110px" width="110px" />		
             </figure>
             <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo">	

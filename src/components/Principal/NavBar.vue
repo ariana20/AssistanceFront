@@ -17,13 +17,13 @@
       </select>
 
       
-      <b-navbar-nav class="col-1 offset-md-11 offset-10" style="padding-left:5%">
+      <b-navbar-nav class="col-5 col-md-1 offset-md-11 offset-8" style="text-align:right;">
           <b-nav-item href="/login" v-if="this.$route.path != '/login' && (this.$store.state.usuario === null || this.$store.state.usuario === undefined)">
-            <a style="color:#000;font-weight:normal">Ingresar</a>
+            <a style="color:#000;font-weight:normal;margin-left:auto">Ingresar</a>
           </b-nav-item>
-          <b-nav-item-dropdown class="buttonnav" right v-if="this.$store.state.usuario !== null && this.$store.state.usuario !== undefined">
-              <template v-slot:button-content>
-                <em style="color:#000000;font-weight:normal;" >{{$store.state.usuario.nombre}}</em>
+          <b-nav-item-dropdown class="buttonnav" style=";margin-left:auto;width:100%;color:black" right v-if="this.$store.state.usuario !== null && this.$store.state.usuario !== undefined">
+              <template v-slot:button-content aria-expanded="false" style="overflow: hidden;color:black">
+                <em style="color:#000000;font-weight:normal;overflow: hidden;display:unset;width:10%" >{{$store.state.usuario.nombre}}</em>
               </template>
               <b-dropdown-item class="buttonnav btnnac" style="background:white"  v-on:click="logout()">
                 Cerrar Sesión
@@ -232,19 +232,17 @@ export default {
   .optionnav{
     width: 5vw;
   }
+
   .btnnac{
     width: 100%;
-    margin-left: -100px;
+    padding-left: 0%;
+    margin-top: -5%;
   }
 
-  .dropdown-menu{
-    margin-left: -100px;
+  .dropdown-item{
+    padding-left: 5%;
   }
 
-  .a{
-    color: #009892;
-  }
-  
   .selectf{
     top:2%;
     left:20%;

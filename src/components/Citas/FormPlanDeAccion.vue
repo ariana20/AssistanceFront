@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="row" style="margin-bottom:1%">
-        <div class="col-12 col-md-3 form-inline">
+        <div class="col-12 col-md-4 form-inline">
           <textarea  v-model="newTask" class="perso inp" id="subject" @keyup.enter="add" name="subject" placeholder="Ingresar Compromiso" style="resize: none;padding-top:2%;height:50px;width:100%"/>
         </div>
         <div class="col-12 col-md-1 form-inline">
@@ -66,7 +66,7 @@
             Añadir
           </b-button>
         </div>
-        <div class="col-md-2 offset-md-6 form-inline">
+        <div class="col-md-2 offset-md-5 form-inline">
           <b-button v-on:click="Guardar" style="background: #0097A7;border: 0px;width:100%;margin-left:1%">
             Guardar
           </b-button>
@@ -82,72 +82,76 @@
 
       <div class="row">
 
-        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
+        <div class="col-md-3" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Pendiente</h3>
             <draggable class="list-group kanban-column" :list="arrBacklog" group="tasks">
               <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrBacklog" :key="element.name">
-                <div class="row">
-                  <div class="col-8" style="color: #757575 !important;">
+                <div class="row tooltipx">
+                  <div class="contenido col-8">
                     {{element.name}} 
                   </div>
                   <div class="col-1">
                     <a class="btn" v-on:click="Eliminar(index,1)" style="padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;margin-left:1%">X</a>
                   </div>
+                  <span class="tooltiptext">{{element.name}} </span>
                 </div>
               </div>
             </draggable>
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
+        <div class="col-md-3" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> En Proceso</h3>
             <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
               <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrInProgress" :key="element.name">
-                <div class="row">
-                  <div class="col-8" style="color: #757575 !important;">
+                <div class="row tooltipx">
+                  <div class="contenido col-8">
                     {{element.name}} 
                   </div>
                   <div class="col-1">
                     <a class="btn" v-on:click="Eliminar(index,2)" style="padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;margin-left:1%">X</a>
                   </div>
+                  <span class="tooltiptext">{{element.name}} </span>
                 </div>
               </div>
             </draggable>
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
+        <div class="col-md-3" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Por Revisar</h3>
             <draggable class="list-group kanban-column" :list="arrTested" group="tasks">
               <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrTested" :key="element.name">
-                <div class="row">
-                  <div class="col-8" style="color: #757575 !important;">
+                <div class="row tooltipx">
+                  <div class="contenido col-8">
                     {{element.name}} 
                   </div>
                   <div class="col-1">
                     <a class="btn" v-on:click="Eliminar(index,3)" style="padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;margin-left:1%">X</a>
                   </div>
+                  <span class="tooltiptext">{{element.name}} </span>
                 </div>
               </div>
             </draggable>
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%;box-shadow: black 2px 2px 5px;">
+        <div class="col-md-3" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Hecho</h3>
             <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
               <div style="cursor: context-menu;" class="list-group-item" v-for="(element,index) in arrDone" :key="element.name">
-                <div class="row">
-                  <div class="col-8" style="color: #757575 !important;">
+                <div class="row tooltipx">
+                  <div class="contenido col-8">
                     {{element.name}} 
                   </div>
                   <div class="col-1">
                     <a class="btn" v-on:click="Eliminar(index,4)" style="padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;margin-left:1%">X</a>
                   </div>
+                  <span class="tooltiptext">{{element.name}} </span>
                 </div>
               </div>
             </draggable>
@@ -678,7 +682,8 @@ export default {
 
   .redondo{
     border-radius: 10px;
-    border:0.5px solid rgb(0, 152, 146)
+    border:0.5px solid rgb(0, 152, 146);
+    box-shadow: black 2px 2px 5px;
   }
 
   .inp{
@@ -691,4 +696,42 @@ export default {
     border-radius: 1.25rem;
     border: 0.5px solid #757575;
   }
+
+  .contenido{
+    color: #757575 !important;
+    overflow:hidden;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .tooltipx:hover .tooltiptext{
+    visibility: visible;
+  }
+
+  .tooltipx .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    min-width: 100%;
+    background-color:  #757575;
+    color: #fff;
+    text-align: center;
+    padding-left: 5%;
+    padding-right: 5%;
+    border-radius: 6px;
+    margin-left: 50%;
+    margin-top: -20%;
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+  }
+
+    
+  @media screen and (max-width: 600px) {
+    
+    .tooltipx .tooltiptext {
+      margin-left: 10%;
+    }
+  }
+
 </style>
