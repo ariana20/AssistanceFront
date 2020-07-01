@@ -47,12 +47,28 @@
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
+        <div class="row mt-5">
+            <div  v-if="atenciones.length>0">
+                <strong>Cantidad de Atenciones</strong>
+                <pie-chart :chartData="atenciones" :options="chartOp2" label='Alumnos atendidos'></pie-chart>
+            </div>
+            <div v-if="atencionesXFecha.length>0">
+                <strong>Atenciones por Fecha</strong>
+                <line-chart :chartData="atencionesXFecha" :options="chartOp" label='Satisfacción del alumno'></line-chart>
+            </div>
+        </div>
+        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
+        
         <div class="row">
             <div v-if="atencionesXTutor.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
                 <strong>Cantidad de Alumnos Atendidos por Tutor</strong>
                 <bar-chart :chartData="atencionesXTutor" :options="chartOp" label='Alumnos atendidos'></bar-chart>
             </div>
+        
+
+        
         </div>
+
 
       </div>
     
@@ -65,12 +81,16 @@
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
+import LineChart from '@/components/Reportes/LineChart.vue';
 import BarChart from '@/components/Reportes/BarChart.vue';
+import PieChart from '@/components/Reportes/PieChart.vue';
 import moment from 'moment';
 export default {
     components:{
         DatePicker, 
-        BarChart
+        BarChart,
+        PieChart,
+        LineChart,
     },
     data(){
         return{
@@ -119,7 +139,15 @@ export default {
                 },
                 responsive: true,
                 maintainAspectRatio:false
-            }
+            },
+            chartOp2:{
+                responsive: true,
+                pieceLabel: {
+                    mode: 'percentage',
+                    precision: 1
+                },
+                maintainAspectRatio:false
+            },
             
         }
 
@@ -144,9 +172,11 @@ export default {
     created(){
         this.periodo = [this.inicio,this.fin];
         //this.RatioAsignado();
-        this.RatioAtencionesXTutor();
+        //this.RatioAtencionesXTutor();
         this.listarTutores();
-        //this.listarFacultades();
+        this.RatioAtencionesXTutor();
+        this.RatioAtenciones();
+        this.RatioAtencionesXFecha();
     },
     methods:{
         listarFacultades(){
@@ -248,9 +278,53 @@ export default {
 
 
         },
+        async RatioAtenciones(){
+            this.atenciones=[];
+            const params = {
+                id_programa: this.$store.state.programaActual.id_programa,
+                id_tutores: this.idTutores,
+                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+            };
+            console.log(params.fecha_ini);
+            //fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
+            //hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
+            const { data } =await axios.post("programa/cantAtendidos", params);
+            console.log(data);
+            
+            data.forEach(d =>{
+                if(d.asistencia=="asi") this.atenciones.push({date:"Atendidos",total:d.cantalum});
+                else if(d.asistencia=="noa") this.atenciones.push({date:"No Atendidos",total:d.cantalum});
+                else if(d.asistencia=="pen") this.atenciones.push({date:"Pendientes",total:d.cantalum});   
+                else if(d.asistencia=="can") this.atenciones.push({date:"Cancelados",total:d.cantalum});                
+            })
+            console.log(this.atenciones);
+        },
+        async RatioAtencionesXFecha(){
+            
+            this.atencionesXFecha=[];
+            const params = {
+                id_programa:this.$store.state.programaActual.id_programa,
+                id_usuario:this.idTutores,
+                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+            };
+            
+            const { data } =await axios.post("programa/citasXDia", params);
+            console.log("Asistencia por día");
+            console.log(data);
+            
+            data.forEach(d =>{
+                this.atencionesXFecha.push({date:d.fecha,total:d.count});               
+            })
+            
+
+        },
 
         generarReporte(){
             this.RatioAtencionesXTutor();
+            this.RatioAtenciones();
+            this.RatioAtencionesXFecha();
         }
         
     }
