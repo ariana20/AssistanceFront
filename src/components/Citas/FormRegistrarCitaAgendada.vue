@@ -39,7 +39,7 @@
                     :showClearButton="false">
                 </ejs-autocomplete>
 
-                <ul class="col-sm-12 col-md-12" style="text-align:left;margin-left:-8px;">
+                <ul class="col-sm-12 col-md-11" style="text-align:left;margin-left:-8px;">
                     <li class="form-control" style="width:120%;text-align:center;margin-top:8px;"
                         v-for="(newAlumnoCod,alcIndex) in listAlumnosCod"  
                         :key="alcIndex">
@@ -61,7 +61,7 @@
                         v-for="(newAlumno,alIndex) in listAlumnosNom"  
                         :key="alIndex">
                         {{newAlumno}}    
-                        <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
+                        <!-- <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span>  -->
                     </li>
                 </ul>
             </div>
@@ -436,6 +436,7 @@ export default Vue.extend ({
             }
             
             if(this.alSeleccionado != 'Nombre del alumno' && !estaAl && this.sel.length == 8){ 
+
                 this.listAlumnosNom.push(this.alSeleccionado);
                 this.listAlumnosCod.push(this.sel);
                 this.listAlumnosCond.push(this.condSeleccionado);
@@ -513,17 +514,48 @@ export default Vue.extend ({
            let n=this.$store.state.citaDatos.alumnos.length;
            
            if(n==1){
+               
              this.listAlumnosNom.push(this.$store.state.citaDatos.alumnos[0].nombre +" " +this.$store.state.citaDatos.alumnos[0].apellidos);
              this.listAlumnosCod.push(this.$store.state.citaDatos.alumnos[0].codigo);
-             this.listAlumnosCond.push(this.$store.state.citaDatos.alumnos[0].cond);
+            //  this.listAlumnosCond.push(this.$store.state.citaDatos.alumnos[0].condicion_alumno);
              this.listAlumnosId.push(this.$store.state.citaDatos.alumnos[0].id_usuario);
+
+             ///////////////super if de condicion
+              if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="bic")
+                 this.listAlumnosCond.push("Bica");
+              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="tri")
+                 this.listAlumnosCond.push("Trica");
+              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="cua")
+                 this.listAlumnosCond.push("Carta");
+              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="reg")
+                 this.listAlumnosCond.push("Regular");
+              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="pri")
+                 this.listAlumnosCond.push("Cachimbo");  
+              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="egr")
+                 this.listAlumnosCond.push("Egresado"); 
            }
            else if(n>1){
+               console.log('als',this.$store.state.citaDatos.alumnos);
                 for(let i=0;i<n;i++){
                     this.listAlumnosNom.push(this.$store.state.citaDatos.alumnos[i].nombre+" " +this.$store.state.citaDatos.alumnos[i].apellidos);
                     this.listAlumnosCod.push(this.$store.state.citaDatos.alumnos[i].codigo);
-                    this.listAlumnosCond.push(this.$store.state.citaDatos.alumnos[i].cond);
+                    // this.listAlumnosCond.push(this.$store.state.citaDatos.alumnos[i].condicion_alumno);
                     this.listAlumnosId.push(this.$store.state.citaDatos.alumnos[i].id_usuario);
+
+             ///////////////super if de condicion
+                    if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="bic")
+                 this.listAlumnosCond.push("Bica");
+              else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="tri")
+                 this.listAlumnosCond.push("Trica");
+             else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="car")
+                 this.listAlumnosCond.push("Carta");
+                 else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="reg")
+                 this.listAlumnosCond.push("Regular");
+                 else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="pri")
+                 this.listAlumnosCond.push("Cachimbo");   
+                
+                 else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="egr")
+                 this.listAlumnosCond.push("Egresado");   
                 }
            }
         
