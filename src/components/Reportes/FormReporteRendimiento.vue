@@ -47,21 +47,24 @@
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
-        <div class="row mt-5">
-            <h5 class="font-weight-ligth text-left col-sm-12" v-if="this.nosemuestra===true" >No se ha generado ningún reporte </h5>
-            <h5 class="font-weight-ligth text-left col-sm-12" v-if="this.sinGrafico===true && this.nosemuestra===false" >No se ha generado un reporte con datos significativos </h5>
+        <div class="row mt-2">
+            <h6 class="font-weight-ligth text-left col-sm-12" v-if="this.nosemuestra===true" >
+                No se ha generado ningún reporte </h6>
+            <h6 class="font-weight-ligth text-left col-sm-12" 
+                v-if="this.sinGrafico===true && this.nosemuestra===false" >
+                No se ha generado un reporte con datos significativos </h6>
            
 
             <div v-if="alumnosBR.length>0 && this.sinGrafico===false">
-                <strong>Cantidad de alumnos que asistieron a sus citas</strong>
-                <bar-chart :chartData="alumnosBR" :options="chartOp" 
+                <strong style=";margin-left:10px">Cantidad de alumnos que asistieron a sus citas</strong>
+                <bar-chart :chartData="alumnosBR" :options="chartOp2" :type="horizontalBar"
                 label='Alumnos con Bajo Rendimiento'  style="display: block; width: 444px; height: 222px;"></bar-chart>
             </div>
-            <!-- <div v-if="alumnosBRPlan.length>0 && this.sinGrafico===false">
-                <strong>Cantidad de alumnos que asistieron a sus citas</strong>
-                <bar-chart :chartData="alumnosBRPlan" :options="chartOp" 
-                label='Alumnos con Plan de Acción terminado'  style="display: block; width: 444px; height: 222px;"></bar-chart>
-            </div> -->
+          <div v-if="alumnosBRPlan.length>0 && this.sinGrafico===false">
+                <strong style="margin-left:80px">Cantidad de alumnos que cumplieron su Plan de Acción</strong>
+                <bar-chart :chartData="alumnosBRPlan" :options="chartOp"  
+                label='Alumnos con Plan de Acción terminado'  style="display: block; width: 300px; height: 222px;margin-left:100px"></bar-chart>
+            </div> 
          
             
         </div>
@@ -148,12 +151,25 @@ export default {
                 maintainAspectRatio:false
             },
             chartOp2:{
-                responsive: true,
+                scales: {
+                    yAxes: [{
+                        stacked: true,
+                        ticks:{precision:0}
+                    }],
+                    xAxes: [{
+                        stacked: false,
+                    }]
+                },        
+                legend: {
+                    display: false
+                },
                 pieceLabel: {
                     mode: 'percentage',
                     precision: 1
                 },
-                maintainAspectRatio:false
+                responsive: true,
+                maintainAspectRatio:false,
+                 type: 'horizontalBar',
             },
              chartOp3:{
                 responsive: true,
@@ -174,7 +190,7 @@ export default {
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.height = "2.4em";
           this.periodo = [this.inicio,this.fin];
-        this.BajoRendimiento();
+      
         this.listarFacultades();
         this.filtrosSegunUsuario();
     },
@@ -265,10 +281,9 @@ export default {
            this.sinGrafico=false;
             console.log(this.selectedPrograma);
             if(this.selectedPrograma==null) this.hideModal();
-            this.bicas=[];
-            this.tricas=[];
-            this.cuartas=[];
+
             this.alumnosBR=[];
+            this.alumnosBRPlan=[];
             if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){            
                 var programas=[];
                 console.log(this.selectedPrograma);
@@ -290,9 +305,10 @@ export default {
                 };
                 console.log('params: ',params);
                 var data =await axios.post("usuarios/datosBajoRendimiento", params);
-                console.log('data:',data);
+                var dataPlan =await axios.post("usuarios/datosAlumnosPlan", params);
+                console.log('data2:',dataPlan);
                 // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
-                
+                //LLenado del gráfico de la izquierda
                 this.alumnosBR.push({date:"Asistieron >50%-Cuarta",total:data.data[4].total_alumnos});
                 this.alumnosBR.push({date:"Asistieron <50%-Cuarta",total:data.data[5].total_alumnos});
 
@@ -302,7 +318,12 @@ export default {
                 this.alumnosBR.push({date:"Asistieron >50%-Bica",total:data.data[0].total_alumnos});
                 this.alumnosBR.push({date:"Asistieron <50%-Bica",total:data.data[1].total_alumnos});
                 
+                //LLenado del gráfico de la derecha
+
                
+                this.alumnosBRPlan.push({date:"Cumplieron-Cuarta",total:dataPlan.data[2].total_alumnos});
+                 this.alumnosBRPlan.push({date:"Cumplieron-Trica",total:dataPlan.data[1].total_alumnos});
+                 this.alumnosBRPlan.push({date:"Cumplieron-Bica",total:dataPlan.data[0].total_alumnos});              
                
             }else{
                 this.sinGrafico=true;
@@ -320,10 +341,10 @@ export default {
 
         generarReporte(){
              
-            this.validaciones();
-            
+            this.validaciones();            
             this.nosemuestra=false;
             this.BajoRendimiento();
+            
                
         },
            filtrosSegunUsuario(){
