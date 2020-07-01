@@ -66,14 +66,14 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row mt-5">
-            <div v-if="asignados.length>0">
+            <div  v-if="asignados.length>0">
                 <strong>Cantidad de Alumnos Asignados</strong>
                 <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleAsignado()" >Ver más</button>
                 </div>
             </div>
-            <div v-if="atenciones.length>0">
+            <div class="col-6"  v-if="atenciones.length>0">
                 <strong>Cantidad de Atenciones</strong>
                 <line-chart :chartData="atenciones" :options="chartOp" label='Atenciones'></line-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
@@ -290,6 +290,13 @@ export default {
             const { data } =await axios.post("programa/asistenciaXPrograma", params);
             console.log("Asistencia por programa");
             console.log(data);
+            /*
+            data.forEach(d =>{
+                if(d.asistencia=="asi") this.atenciones.push({date:"Atendidos",total:d.cantalum});
+                else if(d.asistencia=="noa") this.atenciones.push({date:"No Atendidos",total:d.cantalum});
+                else if(d.asistencia=="pen") this.atenciones.push({date:"Pendientes",total:d.cantalum});   
+                else if(d.asistencia=="can") this.atenciones.push({date:"Cancelados",total:d.cantalum});                
+            })*/
             
 
         },
