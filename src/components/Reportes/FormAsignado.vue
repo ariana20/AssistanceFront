@@ -15,36 +15,46 @@
             </div>
             <div class="col-4">
                 <div class="row">
-                <div class="col"><h5>Tutor(a): </h5></div>
-                <div class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
+                    <div class="col"><h5>Tutor(a): </h5></div>
+                    <div class="col" style="text-align: right; top: 50%"><h6 style="top:50%;cursor:pointer;color:#17a2b8;" 
+                        :disabled="!this.selectedTutor"
+                        @click="addTutor" 
+                        >Seleccionar</h6>
+                    </div>
                 </div>
-                <select class="form-control"  v-model="selectedTutor" v-on:change="listarTutores()">
+                <select class="form-control"  v-model="selectedTutor">
                     <option disabled selected :value="null" focusable="false">Selecciona un(a) tutor(a)</option>
                     <option 
                         v-for="(tutor, index) in tutores" 
                         :key="index" 
                         :value="tutor">
-                        {{ tutor.nombre }}
+                        {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
                     </option>
                 </select>
                 <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
                     <li class="motivos-seleccionados list-group-item" style="text-align:left;"
                         v-for="(tutor,index) in tutorSelect"  
                         :key="index">
-                        {{tutor.nombre}}
-                        <span name="remove" class="close" @click="deleteTutor(index)" style="float:right;">&times;</span>           
+                        {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
+                        <span name="remove" class="close" @click="deleteTutor(index, tutor)" style="float:right;">&times;</span>           
                     </li>
                 </ul>
             </div>
-            <div class="botones" style="margin-bottom:10px;text-align: up;margin-right: 0px;">
+            <div class="botones" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
+        <div class="row">
+            <div v-if="asignadosXTutor.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
+                <strong>Cantidad de Alumnos Asignados por Tutor</strong>
+                <bar-chart :chartData="asignadosXTutor" :options="chartOp" label='Alumnos asignados'></bar-chart>
+            </div>
+        </div>
 
       </div>
-
+    
   </div>
 </template>
 
@@ -54,10 +64,12 @@
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
+import BarChart from '@/components/Reportes/BarChart.vue';
 import moment from 'moment';
 export default {
     components:{
-        DatePicker
+        DatePicker, 
+        BarChart
     },
     data(){
         return{
@@ -76,10 +88,8 @@ export default {
             idFacultades:[],
             idTutores:[],
             //graficos
-            satisfaccion:[],
-            planAccion:[],
             asignados:[],
-            atenciones:[],
+            asignadosXTutor:[],
             //datepicker
             inicio: new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
             fin: new Date(),
@@ -92,7 +102,8 @@ export default {
                         ticks:{precision:0}
                     }],
                     yAxes: [{
-                        stacked: false,
+                        stacked: true,
+                        ticks:{precision:0}
                     }]
                 },        
                 legend: {
@@ -104,15 +115,7 @@ export default {
                 },
                 responsive: true,
                 maintainAspectRatio:false
-            },
-            chartOp2:{
-                responsive: true,
-                pieceLabel: {
-                    mode: 'percentage',
-                    precision: 1
-                },
-                maintainAspectRatio:false
-            },
+            }
             
         }
 
@@ -136,9 +139,10 @@ export default {
     },
     created(){
         this.periodo = [this.inicio,this.fin];
-        this.RatioAsignado();
-        this.RatioAtenciones();
-        this.listarFacultades();
+        //this.RatioAsignado();
+        this.RatioAsignadoXTutor();
+        this.listarTutores();
+        //this.listarFacultades();
     },
     methods:{
         listarFacultades(){
@@ -180,6 +184,22 @@ export default {
             });
 
         },
+        listarTutores(){
+            const params = {
+                id_programa : this.$store.state.programaActual.id_programa,
+                nomFacu:this.$store.state.programaActual.facultad.nombre,
+                nombre: "",
+            };
+            axios
+            .post('/programa/tutoresListar', params)
+                .then(res =>{
+                console.log(res);
+                this.tutores=res.data;            
+                })
+                .catch(e => {
+                console.log(e.response);
+                })
+        },
 
         async RatioAsignado(){
             this.asignados=[];
@@ -200,11 +220,30 @@ export default {
 
             console.log("asignadosXUniversidad ");
             console.log(data);
-            this.asignados.push({date:"Asignados",total:data.data[0].asignados});
-            this.asignados.push({date:"No Asignados",total:data.data[1].noasignados});
+            
+
 
 
         },
+        async RatioAsignadoXTutor(){
+            this.asignadosXTutor=[];
+            const params = {
+                id_programa:this.$store.state.programaActual.id_programa,
+                id_tutores: this.idTutores,
+                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+            };
+            const { data } = await axios.post("registros/cantAlumnosXTutores", params);
+
+            console.log("asignadosXTutor");
+            console.log(data);
+            data.forEach(d =>{
+                this.asignadosXTutor.push({date:d.nombre+" "+d.apellidos,total:d.cantalum});             
+            })
+
+
+        },
+
         handlePeriodChange(periodo) {
             this.periodo = periodo;
         },
@@ -213,47 +252,26 @@ export default {
             today.setHours(0, 0, 0, 0);
             return date > today;
         },
-
-        async RatioAtenciones(){
-            /*
-            this.atenciones=[];
-            const params = {
-
-
-            };
-            
-            const { data } =await axios.post("", params);
-            console.log(data);
-            
-
-            console.log(this.atenciones);*/
+        addTutor(){
+            this.tutorSelect.push(this.selectedTutor);
+            this.idTutores.push(this.selectedTutor.usuario.id_usuario);
+            for(var i in this.tutores)
+                if(this.selectedTutor.usuario.codigo==this.tutores[i].usuario.codigo) {
+                    this.tutores.splice(i,1);  
+                }
+            this.selectedTutor=null;
+        },
+        deleteTutor(index, tutor) {
+            this.tutorSelect.splice(index,1);
+            this.idTutores.splice(index,1);
+            this.tutores.push(tutor);
         },
 
-        async RatioAtencionesOtraPantalla(){
-            this.atenciones=[];
-            const params = {
-                id_programa: this.$store.state.programaActual.id_programa,
-                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
-                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
-            };
-            console.log(params.fecha_ini);
-            //fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
-            //hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
-            const { data } =await axios.post("programa/cantAtendidos", params);
-            console.log(data);
-            
-            data.forEach(d =>{
-                if(d.asistencia=="asi") this.atenciones.push({date:"Atendidos",total:d.cantalum});
-                else if(d.asistencia=="noa") this.atenciones.push({date:"No Atendidos",total:d.cantalum});
-                else if(d.asistencia=="pen") this.atenciones.push({date:"Pendientes",total:d.cantalum});   
-                else if(d.asistencia=="can") this.atenciones.push({date:"Cancelados",total:d.cantalum});                
-            })
-            console.log(this.atenciones);
-        },
+
 
         generarReporte(){
             //this.RatioAtenciones();
-            this.RatioAsignado();
+            this.RatioAsignadoXTutor();
         }
         
     }
