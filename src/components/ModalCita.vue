@@ -43,11 +43,14 @@
                         <strong>Asistencia:</strong>
                     </div>
                     <div class="col-12 col-md-7" style="text-align:left">
-                        <div v-if="cita.pivot.asistencia">
-                            Asistio
+                        <div v-if="cita.pivot.asistencia == 'asi'">
+                            Asistió
+                        </div>
+                        <div v-else-if="cita.pivot.asistencia == 'noa'">
+                            No Asistió
                         </div>
                         <div v-else>
-                            No Asistio
+                            Pendiente
                         </div>
                     </div>
                 </div>
@@ -56,13 +59,18 @@
                         <strong>Motivo:</strong>
                     </div>
                     <div class="col-12 col-md-7" style="text-align:left">
-                        <div v-if="cita.sesion !=null">
+                        <div v-if="cita.sesion">
                             <div v-for="item in cita.sesion.motivo_consultas" :key="item">
                                 {{item.nombre}}
                             </div>
                         </div>
                         <div v-else>
-                            Sesion pendiente
+                            <div v-if="cita.pivot.asistencia == 'noa'">
+                                No Asistió a la sesión
+                            </div>
+                            <div v-else>
+                                Sesión Pendiente
+                            </div>
                         </div>
                     </div>
                 </div>
