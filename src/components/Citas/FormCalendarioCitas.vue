@@ -259,10 +259,12 @@ export default {
                 confirmButtonColor:'#0097A7',
                 showConfirmButton: true,
             }).then((result) => {
-                if(result) {
+                if(result.value) {
+                    
                     axios.post('disponibilidades/eliminar/' + arg.event.id)
                     .then((response) => {
                         if(response) {
+                            this.$store.commit("DELETE_EVENT", arg.event) 
                             Swal.fire({
                                 text:"La disponibilidad ha sido eliminada",
                                 icon:"success",
@@ -273,7 +275,7 @@ export default {
                         }
                     }).catch(e => {
                         console.log(e.response);
-                    }); 
+                    });
                 }     
             })
         },
@@ -293,7 +295,7 @@ export default {
                             //if(rd2[i]=='o' && response.data[3][i].length){
                             if(rd2[i]=='o' && response.data[3][i].length ) {
                                 if( rd4[i]!='l' && response.data[3][i].length == 1) {
-                                    if(rd4[i][0].pivot.asistencia!='noa') {
+                                    if(rd4[i][0].pivot.asistencia!='noa' || rd4[i][0].pivot.asistencia!='pen') {
                                         this.$store.commit("ADD_EVENT", {
                                             allow: rd[i].alumno,
                                             id: rd[i].id_disponibilidad,
@@ -333,7 +335,7 @@ export default {
                                     }
 
                                 } else if(rd4[i]!='l' && response.data[3][i].length > 1 ) {
-                                    if(rd4[i][0].pivot.asistencia!='noa') {
+                                    if(rd4[i][0].pivot.asistencia!='noa' || rd4[i][0].pivot.asistencia!='pen') {
                                         this.$store.commit("ADD_EVENT", {
                                             allow: rd[i].alumno,
                                             id: rd[i].id_disponibilidad,
