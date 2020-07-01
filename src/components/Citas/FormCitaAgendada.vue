@@ -23,7 +23,7 @@
                         <div class="list-data"><div id="left">Código:          </div> <div id="right"> {{ this.event.extendedProps.alumno.codigo }} </div></div>
                         <div class="list-data"><div id="left">Nombre:  </div> <div id="right"> {{ this.event.extendedProps.alumno.nombre }} </div></div>
                         <div class="list-data"><div id="left">Apellidos:     </div> <div id="right"> {{ this.event.extendedProps.alumno.apellidos }} </div></div>
-                        <div class="list-data"><div id="left">Condición: </div> <div v-if="us" id="right"> {{ us.cond }} </div></div>
+                        <div class="list-data"><div id="left">Condición: </div> <div v-if="us" id="right"> {{ this.$store.state.cond }} </div></div>
                     </div>
                     <div class="col center-block text-center">
                         <figure v-if="this.event.extendedProps.alumno.imagen!='' && this.event.extendedProps.alumno.imagen!=null" id="floated" class="image-logo" style="margin-bottom:15%">
@@ -199,7 +199,8 @@ export default Vue.extend ({
             unidadesApoyo: [],
             selectedUnidadApoyo: null,
             cita: this.$store.state.curSesion,
-            editar: false
+            editar: false,
+            us:null,
         }
     },
     mounted(){

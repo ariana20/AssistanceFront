@@ -62,6 +62,7 @@
                     </div>
                     
                 </div>
+                <div style="margin-top:10%;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>
             </div>
             <div class="der col-lg-6 col-xm col-md-12">
                 <div class="font-weight-bolder text-left">Resultado</div>
