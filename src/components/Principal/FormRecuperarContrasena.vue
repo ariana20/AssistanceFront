@@ -1,8 +1,9 @@
 <template>
   <div name='Recuperar Contrasena'>
-    <div class="container">
+    <div class="row"></div>
+    <div class="container" style="margin-top:5%;background:#0097A7;box-shadow: rgba(0, 0, 0, 0.1) 26px 26px 26px;height:70vh;width:90%" >
         <div class="row"/>
-        <div class="row" style="margin-top:5%;background:#757575;color:white">
+        <div class="row" style="margin-top:5%;color:white">
             <div class="col-12">
                 <h1>Ingrese su Correo</h1>
             </div>

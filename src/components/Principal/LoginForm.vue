@@ -14,7 +14,7 @@
           <div class="user_options-registered">
             <h2 class="user_registered-title">¿Ya se encuentra registrado?</h2><br>
             <p class="user_registered-text">Para poder sacar una cita entre a su cuenta con su correo institucional.</p>
-            <button v-on:click="loginbtn()" class="user_registered-login" id="login-button">Login</button>
+            <button v-on:click="loginbtn()" class="user_registered-login" id="login-button">Ingresar</button>
           </div>
         </div>
         
@@ -35,15 +35,18 @@
               </div>
               
             </form>
-              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:15%;font-family:'Brandon Bold'">Ingresar con Google</button>
-              <a href="#openModal" type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</a>
+              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:15%;margin-bottom:5%;font-family:'Brandon Bold'">Ingresar con Google</button>
+              <a href="#openModal" type="button" class="forms_buttons-forgot" >¿Olvidaste tu contraseña?</a>
           </div>
           <div class="user_forms-signup">
             <h2 class="forms_title">Usuario Nuevo</h2>
             <form v-on:submit.prevent="checkFormReg" class="forms_form">
               <fieldset class="forms_fieldset">
+                <div class="forms_field" style="margin-top:-7%">
+                  <input v-model="reg.codigo" type="text" placeholder="Código" class="forms_field-input" required autofocus onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165))"/>
+                </div>
                 <div class="forms_field">
-                  <input v-model="reg.nombre" type="text"  maxlength="100" placeholder="Nombre" class="forms_field-input" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )" required />
+                  <input v-model="reg.nombre" type="text"  maxlength="100" placeholder="Nombres" class="forms_field-input" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )" required />
                 </div>
                 <div class="forms_field">
                   <input v-model="reg.apellidos" type="text"  maxlength="100" placeholder="Apellidos" class="forms_field-input" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )" required />
@@ -196,6 +199,7 @@ import emailjs from 'emailjs-com';
           }
           else{
             const params ={
+              codigo: this.reg.codigo,
               nombre: this.reg.nombre,
               apellidos: this.reg.apellidos,
               correo: this.reg.email,
