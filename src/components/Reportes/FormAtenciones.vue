@@ -45,18 +45,22 @@
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
         </div>
+
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
-        
+        <div v-if="atenciones.length==0 && atencionesXFecha.length==0 && atencionesXTutor.length==0">
+        No se ha generado ningún reporte
+        </div>
         <div class="row mt-5">
-            <div  v-if="atenciones.length>0">
+            <div class="col-6" v-if="atenciones.length>0">
                 <strong>Cantidad de Atenciones</strong>
-                <pie-chart :chartData="atenciones" :options="chartOp2" label='Alumnos atendidos'></pie-chart>
+                <doughnut-chart :chartData="atenciones" :options="chartOp2" label='Alumnos atendidos'></doughnut-chart>
             </div>
-            <div v-if="atencionesXFecha.length>0">
+            <div class="col-6" v-if="atencionesXFecha.length>0">
                 <strong>Atenciones por Fecha</strong>
                 <line-chart :chartData="atencionesXFecha" :options="chartOp" label='Satisfacción del alumno'></line-chart>
             </div>
         </div>
+
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row">
@@ -83,13 +87,13 @@ import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import LineChart from '@/components/Reportes/LineChart.vue';
 import BarChart from '@/components/Reportes/BarChart.vue';
-import PieChart from '@/components/Reportes/PieChart.vue';
+import DoughnutChart from '@/components/Reportes/DoughnutChart.vue';
 import moment from 'moment';
 export default {
     components:{
         DatePicker, 
         BarChart,
-        PieChart,
+        DoughnutChart,
         LineChart,
     },
     data(){
@@ -228,7 +232,12 @@ export default {
             .post('/programa/tutoresListar', params)
                 .then(res =>{
                 console.log(res);
-                this.tutores=res.data;            
+                this.tutores=res.data;  
+                var tutor=new Object();
+                tutor.usuario=new Object();
+                tutor.usuario.nombre="Todos";
+                tutor.usuario.apellidos="";
+                this.tutores.push(tutor);    
                 })
                 .catch(e => {
                 console.log(e.response);
@@ -245,12 +254,24 @@ export default {
             return date > today;
         },
         addTutor(){
-            this.tutorSelect.push(this.selectedTutor);
-            this.idTutores.push(this.selectedTutor.usuario.id_usuario);
-            for(var i in this.tutores)
-                if(this.selectedTutor.usuario.codigo==this.tutores[i].usuario.codigo) {
-                    this.tutores.splice(i,1);  
+            console.log(this.selectedTutor.usuario.nombre);
+            if(!this.selectedTutor.usuario.codigo){
+                for(var tut in this.tutores){
+                    if(this.tutores[tut].usuario.codigo){
+                        this.tutorSelect.push(this.tutores[tut]);
+                        this.idTutores.push(this.tutores[tut].usuario.id_usuario);
+                    }
                 }
+
+                this.tutores=[];
+            }else{
+                this.tutorSelect.push(this.selectedTutor);
+                this.idTutores.push(this.selectedTutor.usuario.id_usuario);
+                for(var i in this.tutores)
+                    if(this.selectedTutor.usuario.codigo==this.tutores[i].usuario.codigo) {
+                        this.tutores.splice(i,1);  
+                    }
+            }
             this.selectedTutor=null;
         },
         deleteTutor(index, tutor) {
