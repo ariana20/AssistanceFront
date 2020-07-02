@@ -43,10 +43,10 @@
             <form v-on:submit.prevent="checkFormReg" class="forms_form">
               <fieldset class="forms_fieldset">
                 <div class="forms_field">
-                  <input v-model="reg.nombre" type="text"  maxlength="100" placeholder="Nombre" class="forms_field-input" onkeypress="return (event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122)" required />
+                  <input v-model="reg.nombre" type="text"  maxlength="100" placeholder="Nombre" class="forms_field-input" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )" required />
                 </div>
                 <div class="forms_field">
-                  <input v-model="reg.apellidos" type="text"  maxlength="100" placeholder="Apellidos" class="forms_field-input" onkeypress="return (event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122)" required />
+                  <input v-model="reg.apellidos" type="text"  maxlength="100" placeholder="Apellidos" class="forms_field-input" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )" required />
                 </div>
                 <div class="forms_field">
                   <input v-model="reg.email" type="email" maxlength="150"  placeholder="Correo" class="forms_field-input" required />
