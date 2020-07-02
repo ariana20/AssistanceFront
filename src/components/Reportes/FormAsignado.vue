@@ -139,10 +139,8 @@ export default {
     },
     created(){
         this.periodo = [this.inicio,this.fin];
-        //this.RatioAsignado();
         this.RatioAsignadoXTutor();
         this.listarTutores();
-        //this.listarFacultades();
     },
     methods:{
         listarFacultades(){
@@ -194,7 +192,13 @@ export default {
             .post('/programa/tutoresListar', params)
                 .then(res =>{
                 console.log(res);
-                this.tutores=res.data;            
+                this.tutores=res.data;   
+                var tutor=new Object();
+                tutor.usuario=new Object();
+                tutor.usuario.nombre="Todos";
+                tutor.usuario.codigo=0;
+                tutor.usuario.apellidos="";
+                this.tutores.push(tutor);         
                 })
                 .catch(e => {
                 console.log(e.response);
@@ -237,6 +241,7 @@ export default {
 
             console.log("asignadosXTutor");
             console.log(data);
+
             data.forEach(d =>{
                 this.asignadosXTutor.push({date:d.nombre+" "+d.apellidos,total:d.cantalum});             
             })
@@ -253,13 +258,26 @@ export default {
             return date > today;
         },
         addTutor(){
-            this.tutorSelect.push(this.selectedTutor);
-            this.idTutores.push(this.selectedTutor.usuario.id_usuario);
-            for(var i in this.tutores)
-                if(this.selectedTutor.usuario.codigo==this.tutores[i].usuario.codigo) {
-                    this.tutores.splice(i,1);  
+            console.log(this.selectedTutor.usuario.nombre);
+            if(!this.selectedTutor.usuario.codigo){
+                for(var tut in this.tutores){
+                    if(this.tutores[tut].usuario.codigo){
+                        this.tutorSelect.push(this.tutores[tut]);
+                        this.idTutores.push(this.tutores[tut].usuario.id_usuario);
+                    }
                 }
+
+                this.tutores=[];
+            }else{
+                this.tutorSelect.push(this.selectedTutor);
+                this.idTutores.push(this.selectedTutor.usuario.id_usuario);
+                for(var i in this.tutores)
+                    if(this.selectedTutor.usuario.codigo==this.tutores[i].usuario.codigo) {
+                        this.tutores.splice(i,1);  
+                    }
+            }
             this.selectedTutor=null;
+
         },
         deleteTutor(index, tutor) {
             this.tutorSelect.splice(index,1);
