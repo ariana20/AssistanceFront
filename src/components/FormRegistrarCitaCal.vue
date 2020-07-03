@@ -119,7 +119,6 @@ export default {
                         }
                     },
             },
-            nombre_usuario: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
             tutorSel: null,
             tutores: [],
             fechaIni:null,
@@ -147,9 +146,6 @@ export default {
         },
         rutaEvent (arg) {
            //Aquí me lleva a la cita agendada 
-          console.log('arg',arg);
-           
-           console.log('yo',this.$store.state.usuario);
            if(arg.event.backgroundColor!='gray') {
                 // disponible
                 
@@ -200,7 +196,6 @@ export default {
             axios
             .post('/programa/tutoresListar', params)
             .then(res =>{
-                console.log(res);
                 this.tutores=res.data;   
                 this.hideModal();  
                 if(this.$store.state.permisosUsuario.includes('Sesión de Tutoría')) {                  
@@ -224,26 +219,7 @@ export default {
                  this.$router.push('/registrarCita');
             })
         },
-         /*
-        handleClick (arg) {
-            //Ya no entro
-           
-            if(arg.event.backgroundColor!='gray') {
-                // aqui llamo y uso al modal
-                this.$modal.show(EventModal,{
-                    text: "This is from the component",
-                    event: arg.event,
-                    // nombre_usuario: this.nombre_usuario,
-                    id_tutor: this.tutorSel.id_usuario,
-                    isTutor: false,
-                    tutorSel: this.tutorSel
-                });
-            } else { 
-                return false
-            }
-            
 
-        },*/
         getReminders: function() {
          
                 this.calendar = this.$refs.fullCalendar.getApi();
@@ -257,11 +233,10 @@ export default {
                 .then((response) => {
                     
                     var rd = response.data[0];
-                    console.log('r',response);
+                   
 
                     var rd2 = response.data[1];
                     for(var i in rd) {
-                        //console.log('usuario_actualizacion',rd[i])
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
                             if(rd2[i]=='o' && rd[i].alumno.length>=1){

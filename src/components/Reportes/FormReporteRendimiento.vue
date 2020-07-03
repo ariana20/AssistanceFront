@@ -48,19 +48,19 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row mt-2">
-            <h6 class="font-weight-ligth text-left col-sm-12" v-if="this.nosemuestra===true" >
-                No se ha generado ningún reporte </h6>
+            <!-- <h6 class="font-weight-ligth text-left col-sm-12" v-if="this.nosemuestra===true" >
+                No se ha generado ningún reporte </h6> -->
             <h6 class="font-weight-ligth text-left col-sm-12" 
                 v-if="this.sinGrafico===true && this.nosemuestra===false" >
                 No se ha generado un reporte con datos significativos </h6>
            
 
-            <div v-if="alumnosBR.length>0 && this.sinGrafico===false">
+            <div v-if="alumnosBR.length>0">
                 <strong style=";margin-left:10px">Cantidad de alumnos que asistieron a sus citas</strong>
                 <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp2" 
                 label='Alumnos con Bajo Rendimiento'  style="display: block; width: 444px; height: 222px;"></horizontal-bar-chart>
             </div>
-          <div v-if="alumnosBRPlan.length>0 && this.sinGrafico===false">
+          <div v-if="alumnosBRPlan.length>0">
                 <strong style="margin-left:80px">Cantidad de alumnos que cumplieron su Plan de Acción</strong>
                 <bar-chart :chartData="alumnosBRPlan" :options="chartOp"  
                 label='Alumnos con Plan de Acción terminado'  style="display: block; width: 300px; height: 222px;margin-left:100px"></bar-chart>
@@ -192,9 +192,10 @@ export default {
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.height = "2.4em";
           this.periodo = [this.inicio,this.fin];
-      
+        this.BajoRendimiento();
         this.listarFacultades();
         this.filtrosSegunUsuario();
+        
     },
     computed: {
         
@@ -203,7 +204,7 @@ export default {
         }
     },
     created(){
-      
+      this.BajoRendimiento();
 
     },
  
@@ -221,22 +222,20 @@ export default {
             .then( response => {
                 this.hideModal();
                 this.mipermisosUsuario=this.$store.state.permisosUsuario;
-                console.log('perm',this.mipermisosUsuario);
+
                 this.facultades=response.data;
                 var facu=new Object();
                 facu.nombre="Todos";
                 facu.id_facultad=0;
                 facu.codigo="TODOS";
                 this.facultades.push(facu);
-                console.log(this.facultades);
                 //Manejo de permisos
           
                 if(this.mipermisosUsuario.includes("Usuarios")){
                    
-                    console.log('prog:',this.$store.state.programaActual);
+                    // console.log('prog:',this.$store.state.programaActual);
                     this.selectedPrograma=this.$store.state.programaActual.id_programa;
                     this.listarProgramas();
-                    console.log('selectedPrograma: ',this.selectedPrograma);
                     // document.getElementById("cbxProg").disabled = true;//inhabilita
                     
                 //Llenar el combo box con su programa y no mostrarlo
@@ -258,7 +257,6 @@ export default {
             
         },
         listarProgramas(){
-           // console.log(this.selectedFacultad);
             const params = {
                 id_facultad:this.$store.state.programaActual.id_facultad,
                 
@@ -267,28 +265,25 @@ export default {
             .then( response => {
                 this.programas=response.data;
                 this.programas.splice(0,1);
-                console.log(this.programas);
                 var prog=new Object();
                 prog.nombre="Todos";
                 prog.id_programa=0;
                 this.programas.push(prog);
             })
             .catch(e => {
-                console.log(e.response);
+                console.log('catch: ',e.response);
             });
 
         },
 
         async BajoRendimiento(){
            this.sinGrafico=false;
-            console.log(this.selectedPrograma);
             if(this.selectedPrograma==null) this.hideModal();
 
             this.alumnosBR=[];
             this.alumnosBRPlan=[];
             if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){            
                 var programas=[];
-                console.log(this.selectedPrograma);
                 if(this.selectedPrograma==0){
                     var n=this.programas.length;
                     for(let i=1;i<n-1;i++ ){                    
@@ -305,10 +300,10 @@ export default {
                     fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                     fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
                 };
-                console.log('params: ',params);
+                
                 var data =await axios.post("usuarios/datosBajoRendimiento", params);
                 var dataPlan =await axios.post("usuarios/datosAlumnosPlan", params);
-                console.log('data2:',dataPlan);
+                
                 // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
                 //LLenado del gráfico de la izquierda
                 this.alumnosBR.push({data:"Asistieron >50%-Cuarta",total:data.data[4].total_alumnos});
@@ -350,8 +345,6 @@ export default {
                
         },
            filtrosSegunUsuario(){
-               console.log('f');
-            
            
         },
      
@@ -364,7 +357,6 @@ export default {
         validaciones(){
             this.sinGrafico=false;
             this.nosemuestra=true;
-            console.log(this.periodo);
             if(this.selectedPrograma==null){
                 
                 Swal.fire({

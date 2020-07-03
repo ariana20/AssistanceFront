@@ -199,26 +199,25 @@ export default Vue.extend ({
         }
     },
     mounted(){
-        console.log('idCita: ',this.$store.state.idCita)
+       
         //LLENANDO LOS CAMPOS CUANDO HAY INFO EN LA SESION
-        console.log('editar status: ',this.editar)
-        console.log('obtuve la cita: ',this.$store.state.curSesion)
+     
         // if(this.cita[1] != "l") {
         //     this.descripcion = this.cita[1].resultado
         //     if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
         //         this.asistencia = true
         //     }
-        //     console.log('longitud for:', this.cita[1].motivo_consultas)
+        //   
         //     for(var i in this.cita[1].motivo_consultas) {
         //         this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
-        //         console.log('motivo selected: ', this.selectedMotivo)
+        //        
         //         this.addMotivos()
         //     }
         
-        //     console.log('motivos: ', this.listMotivos)
+        //    
         //     //si hay info de la sesion quiere decir que ha asistido a su 
         // }
-        console.log('cita  ', this.cita);
+      
         this.disableFields()
         
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
@@ -227,7 +226,7 @@ export default Vue.extend ({
         }).catch(e => {
             console.log(e.response);
         });
-        //console.log('evento actual: ', this.$store.state.programaActual);
+      
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
             .then(response => {
                 for(var i in response.data) {
@@ -263,19 +262,16 @@ export default Vue.extend ({
                     this.listAlumnosNom.push(this.cita[0].cita_x_usuarios[i].nombre+" " +this.cita[0].cita_x_usuarios[i].apellidos);
                      this.listAlumnosCod.push(this.cita[0].cita_x_usuarios[i].codigo);
                     this.listAlumnosId.push(this.cita[0].cita_x_usuarios[i].id_usuario);
-                }
-
-                console.log('cita_x_usuarios',this.cita[0].cita_x_usuarios)       
+                }             
             }
             if(this.cita[1] != "l") {
-            this.descripcion = this.cita[1].resultado
+            this.descripcion = this.cita[1].resultado;
             if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
-                this.asistencia = true
+                this.asistencia = true;
             }
-            console.log('longitud for:', this.cita[1].motivo_consultas)
+           
             for(var i in this.cita[1].motivo_consultas) {
-                this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
-                console.log('motivo selected: ', this.selectedMotivo)
+                this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
                 this.addMotivos()
             }
         }
@@ -336,8 +332,7 @@ export default Vue.extend ({
         guardar: function () {
             let array = []
             array.push(this.event.extendedProps.alumno.id_usuario);
-            console.log(array);
-            
+        
             const sesion_params = {
                 id_cita: this.$store.state.idCita,
                 resultado: this.descripcion,
@@ -355,7 +350,7 @@ export default Vue.extend ({
                                 }
                                 axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
-                                        console.log(response);
+                                       console.log(response);
                                         this.disableFields()
                                         Swal.fire({
                                             text:"Se ha registrado la sesión con éxito",
@@ -367,6 +362,13 @@ export default Vue.extend ({
                                     })  
                                     .catch(e => {
                                         console.log(e.response);
+                                        Swal.fire({
+                                                    text:"Estamos teniendo problemas al guardar la cita. Vuelve a intentar en unos minutos.",
+                                                    icon:"warning",
+                                                     confirmButtonText: 'Continuar',
+                                                     confirmButtonColor:'#0097A7',
+                                                     showConfirmButton: true,
+                                         });
                                     });
                                 }
                                 else {
@@ -396,12 +398,11 @@ export default Vue.extend ({
                 if(this.sel==this.codigos[i].codigo){
                     this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
                 }
-                console.log(this.alSeleccionado);
-                //break;   
+              
             }
         },
         addMotivos: function () {
-            console.log('la funcion addmotivos ha sido llamada',this.motivos)
+           
             for(var i in this.motivos)
                 if(this.selectedMotivo==this.motivos[i].id_motivo_consulta) {
                     this.listMotivos.push(this.motivos[i].nombre);
@@ -463,7 +464,7 @@ export default Vue.extend ({
         //METODOS PARA LLENAR ALUMNOS 
         llenarAlumnos(){
            // this.codigo  //Los alumnos que lista
-           //console.log('n: ',this.$store.state.citaDatos.alumnos.nombre);
+        
            let n=this.$store.state.citaDatos.alumnos.length;
            
            if(n==1){
@@ -487,7 +488,7 @@ export default Vue.extend ({
             var al=  this.listAlumnosCod.splice(index,1);
             this.listAlumnosNom.splice(index,1);
             this.listAlumnosId.splice(index,1);
-            console.log(al);
+          
             //revisar duplicado y no enviar correo a quien se agregó y eliminó de casualidad, pero como no estaba originalmente,no le envío correo
             if(estabaAntes==undefined)        
                  this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),false) //No estaba antes
@@ -533,8 +534,7 @@ export default Vue.extend ({
                      showConfirmButton: true,
                  }) 
             }
-            console.log(this.listAlumnosId);
-            
+          
             
         },
        
@@ -551,7 +551,7 @@ export default Vue.extend ({
                     }
                     this.hideModal();
                    this.mipermisosUsuario=this.$store.state.permisosUsuario;
-                   console.log('permisos:',this.mipermisosUsuario);
+                  
                 })
             .catch(e => {
                     console.log('catch',e.response);
