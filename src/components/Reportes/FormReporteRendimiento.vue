@@ -304,21 +304,21 @@ export default {
                 
                 // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
                 //LLenado del gráfico de la izquierda
-                this.alumnosBR.push({date:">50%-Carta",total:data.data[4].total_alumnos});
-                this.alumnosBR.push({date:"<50%-Carta",total:data.data[5].total_alumnos});
+                this.alumnosBR.push({data:"Asistieron >50%-Cuarta",total:data.data[4].total_alumnos});
+                this.alumnosBR.push({data:"Asistieron <50%-Cuarta",total:data.data[5].total_alumnos});
 
-                this.alumnosBR.push({date:">50%-Trica",total:data.data[2].total_alumnos});
-                this.alumnosBR.push({date:"<50%-Trica",total:data.data[3].total_alumnos});
+                this.alumnosBR.push({data:"Asistieron >50%-Trica",total:data.data[2].total_alumnos});
+                this.alumnosBR.push({data:"Asistieron <50%-Trica",total:data.data[3].total_alumnos});
                 
-                this.alumnosBR.push({date:">50%-Bica",total:data.data[0].total_alumnos});
-                this.alumnosBR.push({date:"<50%-Bica",total:data.data[1].total_alumnos});
+                this.alumnosBR.push({data:"Asistieron >50%-Bica",total:data.data[0].total_alumnos});
+                this.alumnosBR.push({data:"Asistieron <50%-Bica",total:data.data[1].total_alumnos});
                 
                 //LLenado del gráfico de la derecha
 
                
-                this.alumnosBRPlan.push({date:"Carta",total:dataPlan.data[2].total_alumnos});
-                 this.alumnosBRPlan.push({date:"Trica",total:dataPlan.data[1].total_alumnos});
-                 this.alumnosBRPlan.push({date:"Bica",total:dataPlan.data[0].total_alumnos});              
+                this.alumnosBRPlan.push({data:"Cumplieron-Cuarta",total:dataPlan.data[2].total_alumnos});
+                 this.alumnosBRPlan.push({data:"Cumplieron-Trica",total:dataPlan.data[1].total_alumnos});
+                 this.alumnosBRPlan.push({data:"Cumplieron-Bica",total:dataPlan.data[0].total_alumnos});              
                
             }else{
                 this.sinGrafico=true;

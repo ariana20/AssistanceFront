@@ -84,8 +84,8 @@
               <label>Código del Programa:*</label>
               </b-col>
               <b-col sm="9">
-              <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="codVerifP"></b-form-input>
-              <b-form-input v-else readonly id="nombre" v-model="codVerifP"></b-form-input>
+              <b-form-input v-if="nuevoProg==1 || editProg==1" id="codigoP" v-model="codVerifP"></b-form-input>
+              <b-form-input v-else readonly id="codigoP" v-model="codVerifP"></b-form-input>
               </b-col>
 
           </b-row>
@@ -94,8 +94,8 @@
               <label>Nombre del Programa:*</label>
               </b-col>
               <b-col sm="9">
-              <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombre" v-model="nombreVerifP"></b-form-input>
-              <b-form-input v-else readonly id="nombre" v-model="nombreVerifP"></b-form-input>
+              <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombreP" v-model="nombreVerifP"></b-form-input>
+              <b-form-input v-else readonly id="nombreP" v-model="nombreVerifP"></b-form-input>
               </b-col>
 
           </b-row>
@@ -288,8 +288,6 @@ export default {
         .post('/facultad/verificarNom/'+this.idFacultad,this.nombreVerifF)
           .then( response=>{
             this.existeNomF = response.data.success;
-            console.log(this.existeNomF)
-            console.log(response)
           })
           .catch(e => {
             console.log(e.response);
@@ -343,8 +341,10 @@ export default {
 
           axios.post('/facultad/coordinadorFacultad/'+this.facultad.id_programa)
             .then(response=>{
-              this.facultad.coordinador=response.data[0];
-              this.facultad.coordinador.nombCompleto=response.data[0].nombre+" "+response.data[0].apellidos;
+              if(response.data[0]){
+                this.facultad.coordinador=response.data[0];
+                this.facultad.coordinador.nombCompleto=response.data[0].nombre+" "+response.data[0].apellidos;
+              }
               this.hideModal();
             })
             .catch(e=>{

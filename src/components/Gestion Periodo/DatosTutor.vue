@@ -95,7 +95,6 @@ export default {
                             }) 
                         }
 
-                        console.log(response)
                     })
                     .catch(e => {
                         console.log(e.response);
