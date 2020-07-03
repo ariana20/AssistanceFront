@@ -123,12 +123,7 @@ export default {
     obtenerAlumnos(){
       axios.post('programa/alumnosProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
       .then( response => {
-          console.log("listado alumnos: ",response.data)
           this.codigos=response.data;
-          //for(var i in response.data){ 
-            //  this.codigos.push(response.data[i][0]);
-          //}
-          console.log(this.codigos);
       })
       .catch(e => {
           console.log(e.response);
@@ -153,7 +148,6 @@ export default {
       axios
       .post('/programa/tutoresListar', params)
         .then(res =>{
-          console.log(res);
           this.tutores=res.data;            
         })
         .catch(e => {
@@ -164,7 +158,6 @@ export default {
     listarTT(){
       if(this.tutorSeleccionado){
         this.tipoTutoria=this.tutorSeleccionado.usuario.tipo_tutorias;
-        console.log(this.tutorSeleccionado);
         const params = {
           id_tutor: this.tutorSeleccionado.usuario.id_usuario,
           id_programa: this.$store.state.programaActual.id_programa
@@ -173,7 +166,6 @@ export default {
         axios
         .post('/registros/listarAlumnos', params)
         .then(res =>{
-          console.log(res);
           this.alumnosAsig=res.data;            
         })
         .catch(e => {
@@ -184,8 +176,6 @@ export default {
     },
 
     addAlumno: function () {  
-        console.log(this.alSeleccionado);
-        console.log(this.alumnosAsig);
 
         const params = {
         id_tutor: this.tutorSeleccionado.usuario.id_usuario,
@@ -198,9 +188,7 @@ export default {
         axios
         .post('/registros/insertar', params)
         .then(res =>{
-            console.log(res);
             if(res.data.status=="error"){
-                //console.log(res.data.mensaje);
                 Swal.fire({
                     text:res.data.mensaje+", ¿desea asignar de todos modos?",
                     icon:"warning",
@@ -298,7 +286,7 @@ export default {
                 axios
                 .post('/registros/eliminar',params)
                 .then(response=>{
-                    console.log(response)
+                    console.log(response);
                     this.alumnosAsig.splice(index,1);
                     Swal.fire({
                         text:"Eliminación Exitosa",

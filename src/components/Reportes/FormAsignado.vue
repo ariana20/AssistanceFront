@@ -155,7 +155,6 @@ export default {
                 facu.id_facultad=0;
                 facu.codigo="TODOS";
                 this.facultades.push(facu);
-                console.log(this.facultades);
             })
             .catch(e => {
                 console.log(e.response);
@@ -163,7 +162,7 @@ export default {
 
         },
         listarProgramas(){
-            console.log(this.selectedFacultad);
+            
             const params = {
                 id_facultad:this.selectedFacultad.id_facultad
             };
@@ -175,7 +174,6 @@ export default {
                 prog.id_programa=0;
                 prog.codigo="TODOS";
                 this.programas.push(prog);
-                console.log(this.programas);
             })
             .catch(e => {
                 console.log(e.response);
@@ -191,7 +189,6 @@ export default {
             axios
             .post('/programa/tutoresListar', params)
                 .then(res =>{
-                console.log(res);
                 this.tutores=res.data;   
                 var tutor=new Object();
                 tutor.usuario=new Object();
@@ -222,11 +219,9 @@ export default {
             else
                 data =await axios.post("registros/asignadosXUniversidad", params);
 
-            console.log("asignadosXUniversidad ");
-            console.log(data);
-            
-
-
+            data.forEach(d =>{
+                this.asignados.push({data:d.nombre,total:d.cantalum});             
+            })
 
         },
         async RatioAsignadoXTutor(){
@@ -239,11 +234,10 @@ export default {
             };
             const { data } = await axios.post("registros/cantAlumnosXTutores", params);
 
-            console.log("asignadosXTutor");
-            console.log(data);
+
 
             data.forEach(d =>{
-                this.asignadosXTutor.push({date:d.nombre+" "+d.apellidos,total:d.cantalum});             
+                this.asignadosXTutor.push({data:d.nombre+" "+d.apellidos,total:d.cantalum});             
             })
 
 
@@ -258,7 +252,7 @@ export default {
             return date > today;
         },
         addTutor(){
-            console.log(this.selectedTutor.usuario.nombre);
+            
             if(!this.selectedTutor.usuario.codigo){
                 for(var tut in this.tutores){
                     if(this.tutores[tut].usuario.codigo){

@@ -144,7 +144,6 @@ export default {
 			axios
 			.post(url)
 				.then(res =>{
-					console.log(res.data);
 					this.facultades=res.data.tasks.data;
 					this.$store.state.facultades = res.data.tasks.data;
 					this.paginate=res.data.paginate;
@@ -169,7 +168,6 @@ export default {
 			axios
 			.post(url,params)
 				.then(res =>{
-					console.log(res.data);
 					this.facultades=res.data.tasks.data;
 					this.$store.state.facultades = res.data.tasks.data;
 					this.paginate=res.data.paginate;
