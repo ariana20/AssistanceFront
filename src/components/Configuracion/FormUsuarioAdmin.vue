@@ -123,7 +123,7 @@
             <button type="button" style="border-radius: 10px;border-color:gray;background-color:gray" @click="eliminarTipo" class="btn btn-info">Eliminar</button>
           </div>
         </div>
-        <div v-if="this.anadirNuevo==true && this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1" class="row" style="margin-top:2%">
+        <div v-if="this.anadirNuevo==true && this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario!=2" class="row" style="margin-top:2%">
           <div class="col-12 col-md-2" style="margin-top:0.8%">
             Programa:
           </div>
@@ -137,7 +137,21 @@
             </select>
           </div>
         </div>
-        <div class="row" >
+        <div v-else style="margin-top:2%">
+          <div v-if="this.anadirNuevo==true && this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1" class="row">
+            <div class="col-12 col-md-2" style="margin-top:0.8%">
+              Facultad:
+            </div>
+            <div class="col-12 col-md-8">
+              <select v-on:change="ProgramaSel" class="form-control"
+                v-model="progSeleccionadoInd">  <!--aqui guardo-->
+                <option selected disabled :value="null">Selecciona una facultad</option>
+                <option v-for="(prog, i) in facultades"  :key="i" :value="prog.id_programa"  > <!--falta agregar value, creo que abreviatura le mando-->
+                {{ prog.nombre }} 
+                </option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -181,6 +195,9 @@ export default {
       estado:"act",
       id_usuario_entrante:"",
       //id_usuario_entrante:this.$store.state.usuarioEscogido.id_usuario,
+      facultades:null,
+      facuSeleccionado:null,
+      facuSeleccionadoInd:null,
       programas:null,
       progSeleccionado:null,
       progSeleccionadoInd:null,
@@ -216,6 +233,7 @@ export default {
     this.listarTUsuarios();    
     this.listarCA();
     this.listarProgramas();
+    this.listarFacultades();
      //console.log("numero del path",parseInt((this.$route.path).substring(10,12),10));
     if(parseInt((this.$route.path).substring(10,12),10) ==0){
       this.id_usuario_entrante=0;
@@ -277,6 +295,15 @@ export default {
           console.log(e)
         })
     },
+    listarFacultades(){
+      this.axios.post('/programa/facultadesProg')
+        .then(response=>{
+          this.facultades = response.data
+        })
+        .catch(e=>{
+          console.log(e)
+        })
+    },
     ProgramaSel(){
       this.programas.forEach(element => {
         if(element.id_programa == this.progSeleccionadoInd){
@@ -333,6 +360,7 @@ export default {
           this.tiposUsuariosSel = element;
         }
       });
+      this.progSeleccionadoInd = null;
     },
     TipoUsEl(){
       for (let index = 0; index < this.usuario_entrante.usuario_x_programas.length; index++) {
@@ -904,7 +932,7 @@ export default {
               if(!existe){
                 let obj ={
                   id_tipo_usuario:this.tiposUsuariosselect, 
-                  id_programa:this.progSeleccionadoInd,
+                  id_programa:params2.id_programa,
                 }
                 this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
                   .then(response=>{
@@ -918,7 +946,7 @@ export default {
             else{
               let obj ={
                 id_tipo_usuario:this.tiposUsuariosselect, 
-                id_programa:this.progSeleccionadoInd,
+                id_programa:params2.id_programa,
               }
               this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
                 .then(response=>{

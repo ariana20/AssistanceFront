@@ -10,9 +10,6 @@
 				<div class="form-inline col-12 col-md-4">
 					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese nombre del coordinador">
 				</div>
-				<div class="form-inline col-12 col-md-2 offset-md-3 offset-lg-5">
-					<button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
-				</div>
 			</div>
 
       <div style="overflow: auto;width:100%;">
