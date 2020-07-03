@@ -64,7 +64,6 @@ export default {
         axios
         .post('/programa/tutores', params)
           .then(res =>{
-            console.log(res.data);
             this.loadMore($state, res);           
           })
           .catch(e => {
@@ -75,9 +74,9 @@ export default {
       if(res.data.tasks.data.length){
         this.tutores=this.tutores.concat(res.data.tasks.data);
         $state.loaded();
-        console.log(this.tutores.length)
+
         if(res.data.paginate.total==this.tutores.length){
-          console.log(this.tutores.length)
+          
           $state.complete();
         }
       }else{

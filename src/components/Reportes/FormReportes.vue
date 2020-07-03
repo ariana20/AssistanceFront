@@ -92,7 +92,7 @@
             </div>
             <div class="col-6" v-if="alumnosBR.length>0">
                 <strong>Asistencia Alumnos Bajo Rendimiento</strong>
-                <bar-chart :chartData="alumnosBR" :options="chartOp" label='Cumplimiento de Planes de Acción'></bar-chart>
+                <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp" label='Cumplimiento de Planes de Acción'></horizontal-bar-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleRendimiento()" >Ver más</button>
                 </div>
@@ -111,13 +111,13 @@ import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import LineChart from '@/components/Reportes/LineChart.vue'
 import PieChart from '@/components/Reportes/PieChart.vue'
-import BarChart from '@/components/Reportes/BarChart.vue'
+import HorizontalBarChart from '@/components/Reportes/HorizontalBarChart.vue'
 import moment from 'moment';
 export default {
     components:{
         LineChart,
         PieChart,
-        BarChart,
+        HorizontalBarChart,
         DatePicker
     },
     data(){
@@ -213,7 +213,6 @@ export default {
                 facu.id_facultad=0;
                 facu.codigo="TODOS";
                 this.facultades.push(facu);
-                console.log(this.facultades);
             })
             .catch(e => {
                 console.log(e.response);
@@ -221,7 +220,7 @@ export default {
 
         },
         listarProgramas(){
-            console.log(this.selectedFacultad);
+            
             const params = {
                 id_facultad:this.selectedFacultad.id_facultad
             };
@@ -233,7 +232,6 @@ export default {
                 prog.id_programa=0;
                 prog.codigo="TODOS";
                 this.programas.push(prog);
-                console.log(this.programas);
             })
             .catch(e => {
                 console.log(e.response);
@@ -259,10 +257,9 @@ export default {
             else
                 data =await axios.post("registros/asignadosXUniversidad", params);
 
-            console.log("asignadosXUniversidad ");
-            console.log(data);
-            this.asignados.push({date:"Asignados",total:data.data[0].asignados});
-            this.asignados.push({date:"No Asignados",total:data.data[1].noasignados});
+            
+            this.asignados.push({data:"Asignados",total:data.data[0].asignados});
+            this.asignados.push({data:"No Asignados",total:data.data[1].noasignados});
 
 
         },
@@ -285,11 +282,10 @@ export default {
             };
             
             const { data } =await axios.post("programa/citasXDiaTodos", params);
-            console.log("Asistencia por día");
-            console.log(data);
+            
             
             data.forEach(d =>{
-                this.atenciones.push({date:d.fecha,total:d.count});               
+                this.atenciones.push({data:d.fecha,total:d.count});               
             })
             
 
@@ -307,19 +303,19 @@ export default {
                 fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
-            console.log('params: ',params);
+
             var data =await axios.post("usuarios/datosBajoRendimiento", params);
            
             // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
             //LLenado del gráfico de la izquierda
-            this.alumnosBR.push({date:"Asistieron >50%-Cuarta",total:data.data[4].total_alumnos});
-            this.alumnosBR.push({date:"Asistieron <50%-Cuarta",total:data.data[5].total_alumnos});
+            this.alumnosBR.push({data:"Asistieron >50%-Cuarta",total:data.data[4].total_alumnos});
+            this.alumnosBR.push({data:"Asistieron <50%-Cuarta",total:data.data[5].total_alumnos});
 
-            this.alumnosBR.push({date:"Asistieron >50%-Trica",total:data.data[2].total_alumnos});
-            this.alumnosBR.push({date:"Asistieron <50%-Trica",total:data.data[3].total_alumnos});
+            this.alumnosBR.push({data:"Asistieron >50%-Trica",total:data.data[2].total_alumnos});
+            this.alumnosBR.push({data:"Asistieron <50%-Trica",total:data.data[3].total_alumnos});
             
-            this.alumnosBR.push({date:"Asistieron >50%-Bica",total:data.data[0].total_alumnos});
-            this.alumnosBR.push({date:"Asistieron <50%-Bica",total:data.data[1].total_alumnos});
+            this.alumnosBR.push({data:"Asistieron >50%-Bica",total:data.data[0].total_alumnos});
+            this.alumnosBR.push({data:"Asistieron <50%-Bica",total:data.data[1].total_alumnos});
                 
 
         },

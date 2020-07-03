@@ -2,9 +2,9 @@
     <div style="margin-left:5%">
          <!-- <div class="row grid-divider "> -->
             <div >
-                <router-link to="reporteRendimiento"> 
+                <!-- <router-link to="reporteRendimiento"> 
                   <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Reporte</button>
-                 </router-link> 
+                 </router-link>  -->
 
 
                 <section class="text-left" style="padding-top:0px">
@@ -102,6 +102,7 @@ export default Vue.extend ({
             reporte:[],
             isWrong:false,
             miprog:this.$store.state.programaActual, //this.miprog.id_programa;
+            miUsuario:null,
         }
     },
     mounted(){
@@ -110,7 +111,7 @@ export default Vue.extend ({
     
     Axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
         .then( response => {
-            //console.log("listado alumnos: ",response.data)
+            this.miUsuario=this.$store.state.usuario;
             for(var i in response.data){ 
                 this.codigos.push(response.data[i][0]);
                 
@@ -132,7 +133,7 @@ export default Vue.extend ({
                 if(this.sel==this.codigos[i].codigo){
                     this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
                 }
-                //console.log(this.alSeleccionado);
+               
                 //break;   
             }
         },
@@ -177,7 +178,7 @@ export default Vue.extend ({
                 this.alSeleccionado='Nombre del alumno';
                 this.sel= '';
             }
-            console.log(this.listAlumnosCod);
+           
             
             
         },
@@ -209,8 +210,7 @@ export default Vue.extend ({
         this.banderaReporte=false;
         
         let files=this.$refs.file.files;
-        console.log('archivoS',files);
-        //console.log('cods',this.listAlumnosCod);
+       
         this.formData= new FormData();           
         this.formData.append('_hidden','solojoh');
         //
@@ -230,6 +230,8 @@ export default Vue.extend ({
           }
 
           this.formData.append('files[' + i + ']', file);
+          this.formData.append('usuario_actualizacion', this.miUsuario.id_usuario);
+          
          
         }    
         if(this.isWrong==true) document.getElementById("btnsubir").disabled =true; //inhabilita
@@ -248,7 +250,7 @@ export default Vue.extend ({
                 'Content-Type': 'multipart/form-data'
             }})
               .then( response=>{
-                console.log('rptaM: ',response);//Subida terminada
+             
                 
                 if(response.data.status=="Se han encontrado errores"){
                     this.hideModal();
@@ -265,7 +267,7 @@ export default Vue.extend ({
                     document.getElementById("btnsubir").disabled = false;
                 }
                 else if(response.data.status=="Subida terminada"){ 
-                    console.log(response);
+                  
                      this.hideModal();
                     Swal.fire({
                         text:"Se guardaron los datos con éxito",
@@ -336,7 +338,7 @@ export default Vue.extend ({
       for (let index = 0; index < files.length; index++) {
         this.createFile(files[index]);
       }
-      console.log(this.selectedFiles);
+     
     },
     createFile(file) {
       let reader = new FileReader();
@@ -370,8 +372,7 @@ export default Vue.extend ({
                 'Content-Type': 'multipart/form-data'
             }})
           .then(res =>{
-            //this.$store.state.usuarios=res.data;
-            //res.data=='Subido'
+         console.log(res);
             this.hideModal();
             Swal.fire({
                     text:"Se guardaron los datos con éxito. Ningún archivo presentó errores",
@@ -380,7 +381,7 @@ export default Vue.extend ({
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });
-                  console.log('grupal:',res);
+                
                   this.$router.push('/ListaUsuarios'); 
                   this.$store.state.usuarioEscogido=null;//
                   this.$store.state.usuarios=null;
@@ -401,10 +402,8 @@ export default Vue.extend ({
     },
     
     File1by1(){
-        console.log('1x1');
-        this.file1x1=this.$refs.file.files[0];
-        console.log('archivos',this.file1x1);
-        //console.log('cods',this.listAlumnosCod);
+      
+        this.file1x1=this.$refs.file.files[0];     
         this.files[0]=this.file1x1;
     },
 

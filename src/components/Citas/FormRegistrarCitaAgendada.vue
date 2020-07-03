@@ -160,11 +160,7 @@ export default Vue.extend ({
         }
     },
     mounted(){
-        if(this.$store.state.usuario==null) this.$router.push('/login');
-        console.log(this.$store.state.citaDatos);
-       // this.listarUnidxProg();        
-        //this.listarMotivos();
-        
+        if(this.$store.state.usuario==null) this.$router.push('/login');        
         this.listarTT();
         this.resultadosCita();
         if(this.$store.state.citaDatos.isGray==true){
@@ -224,8 +220,9 @@ export default Vue.extend ({
            
             //Registra cita
                 axios.post('citas/registrarCitaCoord' ,params).then(response => {
-                  console.log('data', response.data);
-                  
+
+                 if(response.data.id_cita!=0){
+                   
                         Swal.fire({
                             text:"Registro Exitoso",
                             icon:"success",
@@ -233,7 +230,7 @@ export default Vue.extend ({
                             confirmButtonColor:'#0097A7',
                             showConfirmButton: true,
                           });
-                    if(this.mipermisosUsuario.includes("Registrar Cita")){
+                        if(this.mipermisosUsuario.includes("Registrar Cita")){
                             this.$router.push('/registrarCita');
                         }
                         else  if(this.mipermisosUsuario.includes("Calendario")){
@@ -241,9 +238,9 @@ export default Vue.extend ({
                                 this.$router.push('/calendariocitas');
                         }
 
-
+                 }
                 }).catch(e => {
-                         console.log(e);
+                         console.log('catch',e);
                          Swal.fire({
                                 text:"Estamos teniendo problemas al guardar la cita. Vuelve a intentar en unos minutos.",
                                 icon:"warning",
@@ -265,66 +262,6 @@ export default Vue.extend ({
   
 
 
-
-
-            //Se debe poder guardar sin todo lo del lado derecho
-            /*
-            let array = []
-            array.push(this.event.extendedProps.alumno.id_usuario);
-            console.log(array);
-            const sesion_params = {
-                resultado: this.descripcion,
-                idAlumnos: array,
-                id_cita: this.$store.state.idCita, 
-                asistencia: this.asistencia,
-                idMotivos: this.listMotivosId,
-            };
-                if(this.listMotivos.length > 0) {
-                        
-                            if(this.descripcion!=null) {
-                                if(this.selectedUnidadApoyo) {
-                                    //console.log('asdfasdf',this.selectedUnidadApoyo);
-                                    this.enviarCorreo(this.selectedUnidadApoyo)
-                                }
-                                
-                                axios.post('/sesiones/regSesionFormal',sesion_params)
-                                    .then( response=>{
-                                        console.log(response);
-                                        
-                                        Swal.fire({
-                                            text:"Se ha registrado la sesión con éxito",
-                                            icon:"success",
-                                            confirmButtonText: 'OK',
-                                            confirmButtonColor:'#0097A7',
-                                            showConfirmButton: true,
-                                        }) 
-                                    })  
-                                    .catch(e => {
-                                        console.log(e.response);
-                                       
-                                    });
-                                }
-                                else {
-                                    Swal.fire({
-                                        text:"Debe llenar el campo descripción",
-                                        icon:"error",
-                                        confirmButtonText: 'OK',
-                                        confirmButtonColor:'#0097A7',
-                                        showConfirmButton: true,
-                                    })
-                                }
-                }
-                else {
-                    Swal.fire({
-                        text:"Debe seleccionar por lo menos un motivo",
-                        icon:"error",
-                        confirmButtonText: 'OK',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                    })
-                }
-           */ 
-       
           
         },
         modificarCita(){
@@ -335,9 +272,9 @@ export default Vue.extend ({
                 id_usuario:this.listAlumnosId,
                 usuario_actualizacion:this.miUsuario.id_usuario,
             }
-             console.log(params);
+            
             axios.post('citas/editarCitaCoord' ,params).then(response => {
-                  console.log('datos cita ', response.data);
+               
                   if(response.data.status=="Cambios realizados" ){
                         Swal.fire({
                             text:"Registro Exitoso",
@@ -346,7 +283,7 @@ export default Vue.extend ({
                             confirmButtonColor:'#0097A7',
                             showConfirmButton: true,
                           });
-                          console.log('p:',this.mipermisosUsuario);
+                         
                         if(this.mipermisosUsuario.includes('Registrar Cita')){
                             this.$router.push('/registrarCita');
                         }
@@ -365,7 +302,7 @@ export default Vue.extend ({
                     }
                     
                 }).catch(e => {
-                         console.log(e);
+                         console.log('catch guardar cita ',e);
                          Swal.fire({
                                 text:"Ocurrió un problema al guardar la cita. Vuelve a intentar en unos minutos.",
                                 icon:"warning",
@@ -404,9 +341,7 @@ export default Vue.extend ({
                 if(this.sel==this.codigos[i].codigo){
                     this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;       
                     this.condSeleccionado = this.codigos[i].cond;     
-               }
-                console.log(this.alSeleccionado);
-                //break;   
+               }            
             }
         },
   
@@ -418,7 +353,7 @@ export default Vue.extend ({
             this.listAlumnosNom.splice(index,1);
             this.listAlumnosCond.splice(index,1);
             this.listAlumnosId.splice(index,1);
-            console.log(al);
+
             //revisar duplicado y no enviar correo a quien se agregó y eliminó de casualidad, pero como no estaba originalmente,no le envío correo
             if(estabaAntes==undefined)        
                  this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),false) //No estaba antes
@@ -467,7 +402,7 @@ export default Vue.extend ({
                      showConfirmButton: true,
                  }) 
             }
-            console.log(this.listAlumnosId);
+       
             
             
         },
@@ -485,7 +420,6 @@ export default Vue.extend ({
                     }
                     this.hideModal();
                    this.mipermisosUsuario=this.$store.state.permisosUsuario;
-                   console.log('permisos:',this.mipermisosUsuario);
                 })
             .catch(e => {
                     console.log('catch',e.response);
@@ -501,7 +435,7 @@ export default Vue.extend ({
                 });
         },
         listarTT(){
-            console.log('tttutor',this.$store.state.citaDatos.tttutorSel);
+        
             this.tt=this.$store.state.citaDatos.tttutorSel;
             
         },
@@ -510,7 +444,7 @@ export default Vue.extend ({
         },
         llenarAlumnos(){
            // this.codigo  //Los alumnos que lista
-           //console.log('n: ',this.$store.state.citaDatos.alumnos.nombre);
+       
            let n=this.$store.state.citaDatos.alumnos.length;
            
            if(n==1){
@@ -525,7 +459,7 @@ export default Vue.extend ({
                  this.listAlumnosCond.push("Bica");
               else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="tri")
                  this.listAlumnosCond.push("Trica");
-              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="cua")
+              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="car")
                  this.listAlumnosCond.push("Carta");
               else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="reg")
                  this.listAlumnosCond.push("Regular");
@@ -535,7 +469,7 @@ export default Vue.extend ({
                  this.listAlumnosCond.push("Egresado"); 
            }
            else if(n>1){
-               console.log('als',this.$store.state.citaDatos.alumnos);
+             
                 for(let i=0;i<n;i++){
                     this.listAlumnosNom.push(this.$store.state.citaDatos.alumnos[i].nombre+" " +this.$store.state.citaDatos.alumnos[i].apellidos);
                     this.listAlumnosCod.push(this.$store.state.citaDatos.alumnos[i].codigo);
@@ -543,19 +477,18 @@ export default Vue.extend ({
                     this.listAlumnosId.push(this.$store.state.citaDatos.alumnos[i].id_usuario);
 
              ///////////////super if de condicion
-                    if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="bic")
-                 this.listAlumnosCond.push("Bica");
-              else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="tri")
-                 this.listAlumnosCond.push("Trica");
-             else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="car")
-                 this.listAlumnosCond.push("Carta");
+                 if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="bic")
+                    this.listAlumnosCond.push("Bica");
+                 else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="tri")
+                    this.listAlumnosCond.push("Trica");
+                 else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="car")
+                    this.listAlumnosCond.push("Carta");
                  else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="reg")
-                 this.listAlumnosCond.push("Regular");
+                    this.listAlumnosCond.push("Regular");
                  else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="pri")
-                 this.listAlumnosCond.push("Cachimbo");   
-                
+                     this.listAlumnosCond.push("Cachimbo");                  
                  else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="egr")
-                 this.listAlumnosCond.push("Egresado");   
+                     this.listAlumnosCond.push("Egresado");   
                 }
            }
         
@@ -565,12 +498,9 @@ export default Vue.extend ({
                                 {idDisponibilidad:this.$store.state.citaDatos.id_disponibilidad})
           .then((response) => {
             this.idCita = response.data[0].id_cita;
-            console.log('tt',response.data[0].tipo_tutoria);
-            console.log('iddispo: ',this.$store.state.citaDatos.id_disponibilidad);
-
-           this.ttselect=response.data[0].tipo_tutoria.id_tipo_tutoria;
+            this.ttselect=response.data[0].tipo_tutoria.id_tipo_tutoria;
           }).catch(e => {
-            console.log(e.response);
+            console.log('catch ',e.response);
           });
         },
         analizarAlumnoEliminado(alumnito,estabaAntes){
@@ -581,15 +511,10 @@ export default Vue.extend ({
                    
                    //Si no está, lo agrego
                     this.alumnosEli.push(alumnito);
-                    console.log(this.alumnosEli);
+                 
                }
-               else if(estabaAntes==false){
-                   //No lo agrego,no le envío correo
-                   console.log(estabaAntes);
-               }
-               else if(esta!==undefined){
-                    console.log(esta);
-               }
+             
+              
 
 
 

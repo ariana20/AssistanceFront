@@ -195,7 +195,6 @@ export default {
                 facu.id_facultad=0;
                 facu.codigo="TODOS";
                 this.facultades.push(facu);
-                console.log(this.facultades);
             })
             .catch(e => {
                 console.log(e.response);
@@ -215,7 +214,6 @@ export default {
                 prog.id_programa=0;
                 prog.codigo="TODOS";
                 this.programas.push(prog);
-                console.log(this.programas);
             })
             .catch(e => {
                 console.log(e.response);
@@ -231,7 +229,6 @@ export default {
             axios
             .post('/programa/tutoresListar', params)
                 .then(res =>{
-                console.log(res);
                 this.tutores=res.data;  
                 var tutor=new Object();
                 tutor.usuario=new Object();
@@ -254,7 +251,6 @@ export default {
             return date > today;
         },
         addTutor(){
-            console.log(this.selectedTutor.usuario.nombre);
             if(!this.selectedTutor.usuario.codigo){
                 for(var tut in this.tutores){
                     if(this.tutores[tut].usuario.codigo){
@@ -285,16 +281,15 @@ export default {
             this.atencionesXTutor=[];
             const params = {
                 id_programa:this.$store.state.programaActual.id_programa,
-                id_usuario: this.idTutores,
+                id_tutores: this.idTutores,
                 fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
             const { data } = await axios.post("programa/asistenciaXTutores", params);
 
-            console.log("atencionesXTutor");
-            console.log(data);
+         
             data.forEach(d =>{
-                this.atencionesXTutor.push({date:d.nombre+" "+d.apellidos,total:d.cantalum});             
+                this.atencionesXTutor.push({data:d.nombre+" "+d.apellidos,total:d.cantalum});             
             })
 
 
@@ -307,36 +302,33 @@ export default {
                 fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
-            console.log(params.fecha_ini);
             //fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
             //hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
             const { data } =await axios.post("programa/cantAtendidos", params);
-            console.log(data);
+            
             
             data.forEach(d =>{
-                if(d.asistencia=="asi") this.atenciones.push({date:"Atendidos",total:d.cantalum});
-                else if(d.asistencia=="noa") this.atenciones.push({date:"No Atendidos",total:d.cantalum});
-                else if(d.asistencia=="pen") this.atenciones.push({date:"Pendientes",total:d.cantalum});   
-                else if(d.asistencia=="can") this.atenciones.push({date:"Cancelados",total:d.cantalum});                
+                if(d.asistencia=="asi") this.atenciones.push({data:"Atendidos",total:d.cantalum});
+                else if(d.asistencia=="noa") this.atenciones.push({data:"No Atendidos",total:d.cantalum});
+                else if(d.asistencia=="pen") this.atenciones.push({data:"Pendientes",total:d.cantalum});   
+                else if(d.asistencia=="can") this.atenciones.push({data:"Cancelados",total:d.cantalum});                
             })
-            console.log(this.atenciones);
+            
         },
         async RatioAtencionesXFecha(){
             
             this.atencionesXFecha=[];
             const params = {
                 id_programa:this.$store.state.programaActual.id_programa,
-                id_usuario:this.idTutores,
+                id_tutores:this.idTutores,
                 fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
             
             const { data } =await axios.post("programa/citasXDia", params);
-            console.log("Asistencia por día");
-            console.log(data);
             
             data.forEach(d =>{
-                this.atencionesXFecha.push({date:d.fecha,total:d.count});               
+                this.atencionesXFecha.push({data:d.fecha,total:d.count});               
             })
             
 
