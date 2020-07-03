@@ -137,7 +137,6 @@ import emailjs from 'emailjs-com';
 export default {
   name: 'FormUsuario',
   data(){
- 
     return{
       id_usuario:null,
       codigo:"",
@@ -190,7 +189,7 @@ export default {
       
     }
     else if (parseInt((this.$route.path).substring(9,15),10) !=0) {
-       this.showModal();console.log('show4');
+      this.showModal();console.log('show4');
       this.listarTT();
       
       this.id_usuario_entrante=this.$store.state.usuarioEscogido.id_usuario;
