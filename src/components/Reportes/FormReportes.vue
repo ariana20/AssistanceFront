@@ -92,7 +92,7 @@
             </div>
             <div class="col-6" v-if="alumnosBR.length>0">
                 <strong>Asistencia Alumnos Bajo Rendimiento</strong>
-                <bar-chart :chartData="alumnosBR" :options="chartOp" label='Cumplimiento de Planes de Acción'></bar-chart>
+                <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp" label='Cumplimiento de Planes de Acción'></horizontal-bar-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleRendimiento()" >Ver más</button>
                 </div>
@@ -111,13 +111,13 @@ import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import LineChart from '@/components/Reportes/LineChart.vue'
 import PieChart from '@/components/Reportes/PieChart.vue'
-import BarChart from '@/components/Reportes/BarChart.vue'
+import HorizontalBarChart from '@/components/Reportes/HorizontalBarChart.vue'
 import moment from 'moment';
 export default {
     components:{
         LineChart,
         PieChart,
-        BarChart,
+        HorizontalBarChart,
         DatePicker
     },
     data(){
