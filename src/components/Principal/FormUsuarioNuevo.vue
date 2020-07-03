@@ -1,7 +1,7 @@
 <template>
-	<div name="UsuarioNuevo" style="height:100%">
-		<div class="wrapper">
-			<div class="container" style="font-size:70px;margin-top:50px;margin-left:600px">
+	<div name="UsuarioNuevo">
+		<div class="wrapper margen">
+			<div class="container contenido">
 				<strong>Aún no te encuentras inscrito en un programa o no cuentas con permisos</strong>
 			</div>
 			
@@ -47,5 +47,25 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-    @import '../../assets/styles/noAsignado.less';
+	@import '../../assets/styles/noAsignado.less';
+	
+	.margen{
+		margin-top:-423px;
+	}
+
+	.contenido{
+		font-size:70px;margin-top:5%;margin-left:35%
+	}
+    @media only screen and (max-width: 600px) {
+		.margen{
+			margin-top:-323px;
+		}
+		
+		.contenido{
+			font-size:30px;
+			margin-top:25%;
+			margin-left:15%;
+			width: 70%;
+		}
+	}
 </style>

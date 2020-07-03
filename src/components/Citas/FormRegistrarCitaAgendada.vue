@@ -23,116 +23,64 @@
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
        
-          <div class="row ">
-            <div class="izq col-lg-6 col-xm-2 col-md-12">
-                <div class="font-weight-bolder text-left">Alumno(s)</div>
-                <div class="row">
-                    <div class="col-md-4 col-sm-4">
-                        <div class="col-sm-6"><label for="formGroupExampleInput">Código</label></div>
-                        <hr style="width:335%;">
-                        <ejs-autocomplete
-                            :dataSource='codigos' 
-                            :fields='campoCodigo' 
-                            placeholder="Código" 
-                            :change='onCodigoChange'
-                            v-model="sel"
-                            class="form-control"
-                            style="margin-bottom: 10px;"
-                            :showClearButton="false">
-                        </ejs-autocomplete>
+        <div class="font-weight-bolder text-left">Alumno(s)</div>
+        <div class="row">
+            <div class="col-md-4 col-sm-4">
+                <div class="col-sm-6"><label for="formGroupExampleInput">Código</label></div>
+                <hr style="width:335%;">
+                <ejs-autocomplete
+                    :dataSource='codigos' 
+                    :fields='campoCodigo' 
+                    placeholder="Código" 
+                    :change='onCodigoChange'
+                    v-model="sel"
+                    class="form-control"
+                    style="margin-bottom: 10px;"
+                    :showClearButton="false">
+                </ejs-autocomplete>
 
-                        <ul class="col-sm-12 col-md-12" style="text-align:left;margin-left:-8px;">
-                            <li class="form-control" style="width:120%;text-align:center;margin-top:8px;"
-                                v-for="(newAlumnoCod,alcIndex) in listAlumnosCod"  
-                                :key="alcIndex">
-                                {{newAlumnoCod}}           
-                            </li>
-                        </ul>
+                <ul class="col-sm-12 col-md-11" style="text-align:left;margin-left:-8px;">
+                    <li class="form-control" style="width:120%;text-align:center;margin-top:8px;"
+                        v-for="(newAlumnoCod,alcIndex) in listAlumnosCod"  
+                        :key="alcIndex">
+                        {{newAlumnoCod}}           
+                    </li>
+                </ul>
 
-                    </div>
-                    <div class="col">
-                        <div class="col" style="text-align:left;padding-bottom:30px;">
-                            <label for="formGroupExampleInput" style="margin-right:50px">Nombre y Apellidos</label>
-                            <button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:-3px;"
-                                    @click="addAlumno">Agregar
-                            </button>
-                        </div>
-                        <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{alSeleccionado}}</div>
-                        <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
-                            <li class="form-control list-group-item" style="padding: 0.4rem 0.5rem;"
-                                v-for="(newAlumno,alIndex) in listAlumnosNom"  
-                                :key="alIndex">
-                                {{newAlumno}}    
-                                <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
-                            </li>
-                        </ul>
-                    </div>
-                    
-                </div>
-                <div style="position:absolute; bottom:30px;">
-                    <!--<date-picker v-model="datetime" lang="es" type="datetime" format="YYYY-MM-DD HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
-                    <date-picker v-model="datetime" type="datetime" :time-picker-options="timePickerOptions" placeholder="Selecciona Hora y Fecha"></date-picker> -->
-                </div>
             </div>
-          </div>
-
-
-
-            
-<!--             
-            <div class="der col-lg-6 col-xm col-md-12">
-                <div class="font-weight-bolder text-left">Resultado</div>
-                 <div class="top-titulo" style="margin-bottom:20px;">
-                    <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
-                    <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="selectedMotivo">
-                        <option selected disabled :value="null" >Selecciona un motivo</option>
-                        <option
-                        v-for="(motivo, i) in motivos" 
-                        :key="i" 
-                        :value="motivo.id_motivo_consulta">
-                        {{ motivo.nombre }}
-                        </option>
-                    </select>
-                    <div class="botones">
-                    <button type="button" 
-                            :disabled="!this.selectedMotivo"
-                            class="btn btn-info" 
-                            @click="addMotivos(i)">Seleccionar</button>
-                    </div>
+            <div class="col-12 col-md-4 col-sm-4">
+                <div class="col" style="text-align:left;padding-bottom:30px;">
+                    <label for="formGroupExampleInput" style="margin-right:50px">Nombre y Apellidos</label>
+                    <button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:-3px;"
+                            @click="addAlumno">Agregar
+                    </button>
                 </div>
-                <div class="left-content" >
-                    <h5 style="color:black;font-weight:900;text-align:left;">Motivos Seleccionados</h5>
-                    <hr>
-                    <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
-                        <div v-if="listMotivos.length == 0">No tiene motivos seleccionados</div>
-                        <li class="motivos-seleccionados list-group-item" style="text-align:left;"
-                            v-for="(newMotivo,motivoIndex) in listMotivos"  
-                            :key="motivoIndex">
-                            {{newMotivo}}
-                            <span name="remove" class="close" @click="deleteMotivo(motivoIndex)" style="margin-right : 20px;float:right;">&times;</span>           
-                        </li>
-                    </ul>
-                    <hr>
-                    <div class="form-group" style="text-align:left;margin-bottom:20px;">
-                        <label for="descripcion">Descripción:</label>
-                        <textarea class="form-control" id="descripcion-motivo" rows="7" v-model="descripcion"></textarea>
-                    </div>
-                    <div class="top-titulo" style="text-align:left;">
-                    <div class="col-sm-4 derivar-dropdown-title">Derivar: </div>
-                    <select class="col-sm form-control" style="left:-40px;" v-model="selectedUnidadApoyo">
-                        <option selected disabled :value="null" >Seleccionar</option>
-                        <option
-                        v-for="(unidadApoyo, i) in unidadesApoyo" 
-                        :key="i" 
-                        :value="unidadApoyo">
-                        {{ unidadApoyo.nombre }}
-                        </option>
-                    </select>
-                    </div>
-                    
-                </div> 
-                               
-            </div> -->
+                <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{alSeleccionado}}</div>
+                <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
+                    <li class="form-control list-group-item" style="padding: 0.4rem 0.5rem;"
+                        v-for="(newAlumno,alIndex) in listAlumnosNom"  
+                        :key="alIndex">
+                        {{newAlumno}}    
+                        <!-- <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span>  -->
+                    </li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-4 col-sm-4">
+                <div class="col" style="text-align:left;padding-bottom:30px;">
+                    <label for="formGroupExampleInput" style="margin-right:50px">Condición</label>
+                </div>
+                <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{condSeleccionado}}</div>
+                <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
+                    <li class="form-control list-group-item" style="padding: 0.4rem 0.5rem;"
+                        v-for="(newAlumno,alIndex) in listAlumnosCond"  
+                        :key="alIndex">
+                        {{newAlumno}}    
+                        <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
          <!-- Modal de cargando -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
         <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
@@ -184,6 +132,7 @@ export default Vue.extend ({
             bordes:'borde-textbox',
             sel: '',
             alSeleccionado: 'Nombre del alumno',
+            condSeleccionado: 'Condición del alumno',
             codigos:[],
             campoCodigo: {value:'codigo'},    
             selectedTipoTutoria: null,
@@ -197,6 +146,7 @@ export default Vue.extend ({
             motivosBorrados:[],
             listAlumnosNom: [],
             listAlumnosCod: [],
+            listAlumnosCond: [],
             listAlumnosId: [],
             unidadesApoyo: [],
             selectedUnidadApoyo: null,
@@ -452,8 +402,8 @@ export default Vue.extend ({
             var i;
             for(i in this.codigos){
                 if(this.sel==this.codigos[i].codigo){
-                    this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
-                   
+                    this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;       
+                    this.condSeleccionado = this.codigos[i].cond;     
                }
                 console.log(this.alSeleccionado);
                 //break;   
@@ -466,6 +416,7 @@ export default Vue.extend ({
             //Si encuentra el código, estabaAntes es un objeto, si no, estabaAntes es undefined
             var al=  this.listAlumnosCod.splice(index,1);
             this.listAlumnosNom.splice(index,1);
+            this.listAlumnosCond.splice(index,1);
             this.listAlumnosId.splice(index,1);
             console.log(al);
             //revisar duplicado y no enviar correo a quien se agregó y eliminó de casualidad, pero como no estaba originalmente,no le envío correo
@@ -485,13 +436,16 @@ export default Vue.extend ({
             }
             
             if(this.alSeleccionado != 'Nombre del alumno' && !estaAl && this.sel.length == 8){ 
+
                 this.listAlumnosNom.push(this.alSeleccionado);
                 this.listAlumnosCod.push(this.sel);
+                this.listAlumnosCond.push(this.condSeleccionado);
                 for(var j in this.codigos){
                     if(this.sel == this.codigos[j].codigo)
                         this.listAlumnosId.push(this.codigos[j].id_usuario);
                 }
                 this.alSeleccionado='Nombre del alumno';
+                this.condSeleccionado='Condición del alumno';
                 this.sel= '';
             }
             else if(estaAl) {
@@ -560,15 +514,48 @@ export default Vue.extend ({
            let n=this.$store.state.citaDatos.alumnos.length;
            
            if(n==1){
+               
              this.listAlumnosNom.push(this.$store.state.citaDatos.alumnos[0].nombre +" " +this.$store.state.citaDatos.alumnos[0].apellidos);
              this.listAlumnosCod.push(this.$store.state.citaDatos.alumnos[0].codigo);
+            //  this.listAlumnosCond.push(this.$store.state.citaDatos.alumnos[0].condicion_alumno);
              this.listAlumnosId.push(this.$store.state.citaDatos.alumnos[0].id_usuario);
+
+             ///////////////super if de condicion
+              if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="bic")
+                 this.listAlumnosCond.push("Bica");
+              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="tri")
+                 this.listAlumnosCond.push("Trica");
+              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="cua")
+                 this.listAlumnosCond.push("Carta");
+              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="reg")
+                 this.listAlumnosCond.push("Regular");
+              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="pri")
+                 this.listAlumnosCond.push("Cachimbo");  
+              else if(this.$store.state.citaDatos.alumnos[0].condicion_alumno=="egr")
+                 this.listAlumnosCond.push("Egresado"); 
            }
            else if(n>1){
+               console.log('als',this.$store.state.citaDatos.alumnos);
                 for(let i=0;i<n;i++){
                     this.listAlumnosNom.push(this.$store.state.citaDatos.alumnos[i].nombre+" " +this.$store.state.citaDatos.alumnos[i].apellidos);
-                     this.listAlumnosCod.push(this.$store.state.citaDatos.alumnos[i].codigo);
+                    this.listAlumnosCod.push(this.$store.state.citaDatos.alumnos[i].codigo);
+                    // this.listAlumnosCond.push(this.$store.state.citaDatos.alumnos[i].condicion_alumno);
                     this.listAlumnosId.push(this.$store.state.citaDatos.alumnos[i].id_usuario);
+
+             ///////////////super if de condicion
+                    if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="bic")
+                 this.listAlumnosCond.push("Bica");
+              else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="tri")
+                 this.listAlumnosCond.push("Trica");
+             else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="car")
+                 this.listAlumnosCond.push("Carta");
+                 else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="reg")
+                 this.listAlumnosCond.push("Regular");
+                 else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="pri")
+                 this.listAlumnosCond.push("Cachimbo");   
+                
+                 else if(this.$store.state.citaDatos.alumnos[i].condicion_alumno=="egr")
+                 this.listAlumnosCond.push("Egresado");   
                 }
            }
         

@@ -14,7 +14,7 @@
           <div class="user_options-registered">
             <h2 class="user_registered-title">¿Ya se encuentra registrado?</h2><br>
             <p class="user_registered-text">Para poder sacar una cita entre a su cuenta con su correo institucional.</p>
-            <button v-on:click="loginbtn()" class="user_registered-login" id="login-button">Login</button>
+            <button v-on:click="loginbtn()" class="user_registered-login" id="login-button">Ingresar</button>
           </div>
         </div>
         
@@ -31,22 +31,25 @@
                 </div>
               </fieldset>
               <div class="forms_buttons" style="margin-top:20%; font-size:15px;  font-family:'Brandon Bold'">
-                <!-- <a href="#openModal" type="button" class="forms_buttons-forgot">¿Olvidaste tu contraseña?</a> -->
                 <input type="submit" value="Ingresar" class="forms_buttons-action" style="width:100%">
               </div>
               
             </form>
-              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:15%;font-family:'Brandon Bold'">Ingresar con Google</button>
+              <button @click="authenticate('google')" class="btn btn-lg btn-google btn-block" style="margin-top:15%;margin-bottom:5%;font-family:'Brandon Bold'">Ingresar con Google</button>
+              <a href="#openModal" type="button" class="forms_buttons-forgot" >¿Olvidaste tu contraseña?</a>
           </div>
           <div class="user_forms-signup">
             <h2 class="forms_title">Usuario Nuevo</h2>
             <form v-on:submit.prevent="checkFormReg" class="forms_form">
               <fieldset class="forms_fieldset">
-                <div class="forms_field">
-                  <input v-model="reg.nombre" type="text"  maxlength="100" placeholder="Nombre" class="forms_field-input" onkeypress="return (event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122)" required />
+                <div class="forms_field" style="margin-top:-7%">
+                  <input v-model="reg.codigo" type="text" placeholder="Código" class="forms_field-input" required autofocus onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165))"/>
                 </div>
                 <div class="forms_field">
-                  <input v-model="reg.apellidos" type="text"  maxlength="100" placeholder="Apellidos" class="forms_field-input" onkeypress="return (event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122)" required />
+                  <input v-model="reg.nombre" type="text"  maxlength="100" placeholder="Nombres" class="forms_field-input" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )" required />
+                </div>
+                <div class="forms_field">
+                  <input v-model="reg.apellidos" type="text"  maxlength="100" placeholder="Apellidos" class="forms_field-input" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )" required />
                 </div>
                 <div class="forms_field">
                   <input v-model="reg.email" type="email" maxlength="150"  placeholder="Correo" class="forms_field-input" required />
@@ -196,6 +199,7 @@ import emailjs from 'emailjs-com';
           }
           else{
             const params ={
+              codigo: this.reg.codigo,
               nombre: this.reg.nombre,
               apellidos: this.reg.apellidos,
               correo: this.reg.email,
@@ -398,7 +402,7 @@ import emailjs from 'emailjs-com';
             .then(response=>{
               if(response.data.user){
                 window.location.href = '/login#close'
-                let direccion = "localhost:8000/login"
+                let direccion = "https://proyectosoftware20201front.vizcochitos.cloudns.cl/recuperarContrasena"
                 emailjs.send(
                   "gmail",
                   "template_bV7OIjEW",
@@ -408,10 +412,21 @@ import emailjs from 'emailjs-com';
                   "correo": response.data.user.correo
                   }, 'user_ySzIMrq3LRmXhtVkmpXAA')
                   .then((result) => {
-                      console.log('SUCCESS!', result.status, result.text);
+                    console.log('SUCCESS!', result.status, result.text);
                   }, (error) => {
-                      console.log('FAILED...', error);
+                    console.log('FAILED...', error);
                   });
+                this.axios.post('/usuarios/modificar/'+response.data.user.id_usuario,{bloqueado: "2"})
+                  .then(response=>{
+                    response
+                    Swal.fire({
+                      text:"Se le envió las instrucciones al correo registrado",
+                      icon:"success",
+                      confirmButtonText: 'OK',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+                    })
+                  }) 
               }
               else{
                 window.location.href = '/login#close'

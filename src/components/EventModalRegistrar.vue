@@ -242,6 +242,7 @@ export default {
   mounted() {
     this.$store.state.curEvent = this.event;
     console.log(this.event.id);
+    console.log('Evento',this.event.extendedProps);
     this.getIdCita();
 
   }

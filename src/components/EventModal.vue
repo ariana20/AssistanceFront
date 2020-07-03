@@ -163,6 +163,7 @@ export default {
             this.idCita = response.data[0].id_cita;
             this.$store.state.idCita = response.data[0].id_cita;
             this.$store.state.curSesion = response.data
+            this.$store.state.cond = response.data[0].cond
             console.log('mostrarCita2: ',response.data)
             //this.idCita = response.data.cita[0].id_cita
             //console.log(response.data);
