@@ -57,8 +57,8 @@
 
             <div v-if="alumnosBR.length>0">
                 <strong style=";margin-left:10px">Cantidad de alumnos que asistieron a sus citas</strong>
-                <bar-chart :chartData="alumnosBR" :options="chartOp2"
-                label='Alumnos con Bajo Rendimiento'  style="display: block; width: 444px; height: 222px;"></bar-chart>
+                <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp2" 
+                label='Alumnos con Bajo Rendimiento'  style="display: block; width: 444px; height: 222px;"></horizontal-bar-chart>
             </div>
           <div v-if="alumnosBRPlan.length>0">
                 <strong style="margin-left:80px">Cantidad de alumnos que cumplieron su Plan de Acción</strong>
@@ -88,6 +88,7 @@ import 'vue2-datepicker/index.css'
 import axios from 'axios';
 // import LineChart from '@/components/Reportes/LineChart.vue'
 // import PieChart from '@/components/Reportes/PieChart.vue'
+import HorizontalBarChart from '@/components/Reportes/HorizontalBarChart.vue'
 import BarChart from '@/components/Reportes/BarChart.vue'
 // import DoughnutChart from '@/components/Reportes/DoughnutChart.vue'
 import moment from 'moment';
@@ -98,7 +99,8 @@ export default {
         // PieChart,
         // DoughnutChart,
         DatePicker,
-        BarChart,
+        HorizontalBarChart,
+        BarChart
     },
     data(){
         return{
