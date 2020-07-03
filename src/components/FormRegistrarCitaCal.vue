@@ -119,7 +119,6 @@ export default {
                         }
                     },
             },
-            nombre_usuario: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
             tutorSel: null,
             tutores: [],
             fechaIni:null,
@@ -220,26 +219,7 @@ export default {
                  this.$router.push('/registrarCita');
             })
         },
-         /*
-        handleClick (arg) {
-            //Ya no entro
-           
-            if(arg.event.backgroundColor!='gray') {
-                // aqui llamo y uso al modal
-                this.$modal.show(EventModal,{
-                    text: "This is from the component",
-                    event: arg.event,
-                    // nombre_usuario: this.nombre_usuario,
-                    id_tutor: this.tutorSel.id_usuario,
-                    isTutor: false,
-                    tutorSel: this.tutorSel
-                });
-            } else { 
-                return false
-            }
-            
 
-        },*/
         getReminders: function() {
          
                 this.calendar = this.$refs.fullCalendar.getApi();

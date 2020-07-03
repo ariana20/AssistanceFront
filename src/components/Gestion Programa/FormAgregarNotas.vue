@@ -102,6 +102,7 @@ export default Vue.extend ({
             reporte:[],
             isWrong:false,
             miprog:this.$store.state.programaActual, //this.miprog.id_programa;
+            miUsuario:null,
         }
     },
     mounted(){
@@ -110,7 +111,7 @@ export default Vue.extend ({
     
     Axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
         .then( response => {
-           
+            this.miUsuario=this.$store.state.usuario;
             for(var i in response.data){ 
                 this.codigos.push(response.data[i][0]);
                 
@@ -229,6 +230,8 @@ export default Vue.extend ({
           }
 
           this.formData.append('files[' + i + ']', file);
+          this.formData.append('usuario_actualizacion', this.miUsuario.id_usuario);
+          
          
         }    
         if(this.isWrong==true) document.getElementById("btnsubir").disabled =true; //inhabilita

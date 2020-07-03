@@ -172,6 +172,7 @@ export default {
       idTutor:0,
       idAlumno:0,
       idJP:0,
+      miUsuario:null,
     }
   },
 
@@ -183,6 +184,7 @@ export default {
     this.msgUsuario="Assistance"
     this.listarTUsuarios();    
     this.listarCA();  
+    this.miUsuario=this.$store.state.usuario;
     if(parseInt((this.$route.path).substring(9,11),10) ==0){
       this.id_usuario_entrante=0;
       //no hay usuario entrante, pero puede que aparezca 
@@ -326,7 +328,7 @@ export default {
             estado:this.estado,
             id_programaNuevo:this.miprog.id_programa,
             id_tipo_usuario:this.tiposUsuariosselect,  
-            
+            usuario_creacion:this.miUsuario.id_usuario, 
             //como es alumno inserto las condicioes
             condicion_alumno:this.condiAlumnosselect,//le doy el value
              
@@ -345,7 +347,8 @@ export default {
             password:"12345",
             estado:this.estado,
             id_programaNuevo:this.miprog.id_programa,
-            id_tipo_usuario:this.tiposUsuariosselect,  
+            id_tipo_usuario:this.tiposUsuariosselect,
+            usuario_creacion:this.miUsuario.id_usuario, 
             //ahora, si es tipo usuario 4 de tutor debe insertar el tipo de tutoria
             };
          
