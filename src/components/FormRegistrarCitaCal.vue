@@ -147,9 +147,6 @@ export default {
         },
         rutaEvent (arg) {
            //Aquí me lleva a la cita agendada 
-          console.log('arg',arg);
-           
-           console.log('yo',this.$store.state.usuario);
            if(arg.event.backgroundColor!='gray') {
                 // disponible
                 
@@ -200,7 +197,6 @@ export default {
             axios
             .post('/programa/tutoresListar', params)
             .then(res =>{
-                console.log(res);
                 this.tutores=res.data;   
                 this.hideModal();  
                 if(this.$store.state.permisosUsuario.includes('Sesión de Tutoría')) {                  
@@ -257,11 +253,10 @@ export default {
                 .then((response) => {
                     
                     var rd = response.data[0];
-                    console.log('r',response);
+                   
 
                     var rd2 = response.data[1];
                     for(var i in rd) {
-                        //console.log('usuario_actualizacion',rd[i])
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
                             if(rd2[i]=='o' && rd[i].alumno.length>=1){

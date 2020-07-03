@@ -171,7 +171,6 @@ export default {
     
     if(this.$store.state.usuario==null) this.$router.push('/login');
     
-    //console.log('Store state usuariosA',this.$store.state.usuariosA);
     this.criterio="";
     this.banderaVacio=false;
     this.listarUsuarios(); 
@@ -189,23 +188,21 @@ export default {
     
     listarUsuarios(page) {
     this.showModal();
-    console.log(this.$store.state.programaActual.id_programa);
+ 
     var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
     
-     if(this.$store.state.tipoActual.nombre!="Admin"){ console.log('196',page);//Para coordinador   
+     if(this.$store.state.tipoActual.nombre!="Admin"){//Para coordinador   
 
         axios.post(url) //Por ahora dsp será x program
         .then(res =>{
-         // console.log('Usuarios ',res.data.tasks.data);    
+         
           //ordenado por estado
           let par=res.data.tasks.data; 
           // this.$store.state.usuarios=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
           //this.$store.state.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
           this.usuarios=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
           this.paginate=res.data.paginate;
-          // this.$store.state.usuarios=res.data;
-          console.log(this.$store.state.tipoActual.nombre);
-            this.hideModal();
+          this.hideModal();
                    
         })
         .catch(e => {
@@ -230,23 +227,19 @@ export default {
     buscarUsuario(page){
       this.showModal();
       let paramsB;
-      // if(isNaN(this.criterio)){
-      //   //es código
-      //   this.criterio=parseInt(this.criterio);
-      //   console.log('es un numero');
-      // }
+
       paramsB={
         criterio:this.criterio,
       }
-      console.log('Entro a buscar',this.criterio);
+    
       var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
       
        if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador   
-        console.log('entro al if ');
+       
         axios.post(url,paramsB) //Por ahora dsp será x program
         .then(res =>{  
           //ordenado por estado
-           console.log('res',res);
+          
            if(res.data==""){
              this.hideModal();
              //No encontró al usuario
@@ -264,8 +257,6 @@ export default {
           
           this.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});   
           this.paginate=res.data.paginate;
-          console.log('res',res);
-          console.log(this.$store.state.usuarios);
           this.hideModal();
           }
                    
@@ -343,9 +334,7 @@ export default {
           })
    }, // eliminart
    llenarUsuarioEscogido(item){
-      console.log('usuario escogido :',item);
-      this.$store.state.usuarioEscogido=item;
-      console.log('usuario escogido en store:',this.$store.state.usuarioEscogido);
+      this.$store.state.usuarioEscogido=item;     
       this.usuarioEscogido=item;
    },
     showModal() {

@@ -70,7 +70,7 @@ export default {
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login');
-    console.log('mi programa actual: ',this.$store.state.programaActual);
+  
     if(this.$store.state.tipostutorias === null) this.listarTT(); //
     else this.tipostutorias = this.$store.state.tipostutorias; //
     this.nombre="";
@@ -101,11 +101,11 @@ computed:{
 
             // this.$store.state.tipostutorias = response.data; //
 
-            console.log('Listado de tt: ',this.$store.state.tipostutorias);
+       
             this.hideModal();
         })
         .catch(e=>{
-        console.log(e);
+        console.log('catch Listar',e);
         this.hideModal();
         //Swal de problema
          Swal.fire({
@@ -122,7 +122,7 @@ computed:{
     },
     
     eliminarTtutoria(item){
-        console.log('Id del tipo de tutoria a eliminar: ',item);
+    
       Swal.fire({
             text:'¿Desea eliminar el tipo de tutoria '+item.nombre+'?',
             icon:'warning',
@@ -147,7 +147,6 @@ computed:{
               Axios.post('/TipoTutoria/eliminar/'+item.id_tipo_tutoria)
                 .then(response=>{
                   console.log(response);
-                  console.log('eliminaré a :', this.$store.state.tipostutorias.id_tipo_tutoria);
                   let index = this.$store.state.tipostutorias.indexOf( //
                     function(element){
                       return element.id_tipo_tutoria === item.id_tipo_tutoria; //

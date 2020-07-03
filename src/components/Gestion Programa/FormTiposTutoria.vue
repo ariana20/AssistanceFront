@@ -226,23 +226,18 @@ export default Vue.extend( {
     }
   },
   created(){
-     console.log(this.tipotutoria.id_tipo_tutoria_entrante);
-    console.log(parseInt((this.$route.path).substring(16,18),10));
-      console.log(this.$store.state.tipostutorias);
-      console.log('mi programa ',this.tipotutoria.miprog);
   },
   mounted(){
     //Aquí lleno mis datos con la api
       if(this.$store.state.usuario==null) this.$router.push('/login')
        this.tipotutoria.id_tipo_tutoria_entrante=parseInt((this.$route.path).substring(16,18),10);
        this.tipotutoria.banderaTutores=false;
-       console.log('Id entrante en mounted ',this.tipotutoria.id_tipo_tutoria_entrante);
         if(this.tipotutoria.id_tipo_tutoria_entrante!=0 && this.tipotutoria.id_tipo_tutoria_entrante!=undefined ){
           this.showModal();
            Axios.create()
             .post('/TipoTutoria/mostrar/'+this.tipotutoria.id_tipo_tutoria_entrante).
             then( response =>{
-             console.log('Id del tipo tutoria ',response.data.id_tipo_tutoria);
+             
             this.tipotutoria.nombre= response.data.nombre;
             this.tipotutoria.descripcion=response.data.descripcion;
             this.tipotutoria.individual=response.data.individual;
@@ -286,7 +281,7 @@ export default Vue.extend( {
       }   
       else if (this.individual=="" ||  this.tipotutoria.obligatorio=="" || this.tipotutoria.tutorasignado=="" || this.tipotutoria.tutorfijo=="" ){
         this.hideModal();
-        console.log('Entro al elseif  de 4 condiciones');
+       
               Swal.fire({
               text:"Debe elegir 1 opción de cada condición.\n",
               icon:'error',
@@ -325,10 +320,9 @@ export default Vue.extend( {
               };
               this.showModal();
          Axios.create()
-         // http://18.232.253.212/Back-end-Software/public/api/      
-          .post('TipoTutoria/insertar',params)
+       .post('TipoTutoria/insertar',params)
           .then( response=>{
-            console.log(response);
+            console.log(response)
               this.hideModal();
                Swal.fire({
               text:"El nuevo tipo de tutoria fue guardada con exito",
@@ -400,8 +394,7 @@ export default Vue.extend( {
         }      
       
       }    
-      console.log('salio del if');
-
+     
     },
     Cancelar(){
       Swal.fire({
@@ -433,10 +426,9 @@ export default Vue.extend( {
             id_tipo_tutoria: this.tipotutoria.id_tipo_tutoria_entrante, //El nombre del parámetro está mal,pero funciona bien porque envío el id_tipo_tutoria
             id_tutor:item.id_usuario,
           }
-          console.log(item);
+         
           Axios.post('/TipoTutoria/eliminarTutor',paramsE)
                 .then(response=>{
-                  console.log(response);
                    
                    if(response.data.status.indexOf("Tutor Eliminado")!=-1){ //Encontró esa frase
                      Swal.fire({
@@ -483,7 +475,6 @@ export default Vue.extend( {
          Axios.create()   
         .post('TipoTutoria/tutoresAsignados',params)
           .then( response=>{
-            console.log(response);
             this.hideModal();
               
               if(response.data.indexOf("Excepción capturada:")!=-1){ 

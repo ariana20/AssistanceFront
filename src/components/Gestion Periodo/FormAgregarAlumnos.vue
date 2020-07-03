@@ -137,13 +137,12 @@ export default Vue.extend ({
         Axios.create()
               .post('/usuarios/condAlumno')
               .then( response=>{
-                console.log('condA: ',response.data);
                 this.condiAlumnos=response.data;    
                 this.hideModal();        
 
             }).catch(e => {
               console.log('catch condAlumno',e);
-              console.log(e);
+
               // this.hideModal();
                  Swal.fire({
                     text:"Estamos teniendo problemas al listar las condiciones del alumno. Vuelve a intentar en unos minutos.",
@@ -186,8 +185,6 @@ export default Vue.extend ({
         this.reporte=null;
         this.banderaReporte=false;
         let files=this.$refs.file.files;
-        console.log('archivoS',files);
-        //console.log('cods',this.listAlumnosCod);
         this.formData= new FormData();           
         this.formData.append('_hidden','solojohAl');   
         if(files[0].size>=2000000){
@@ -223,7 +220,7 @@ export default Vue.extend ({
                 'Content-Type': 'multipart/form-data'
             }})
               .then( response=>{
-                console.log('rptaM: ',response);//Subida terminada
+              
                 if(response.data==[]) {
                   Swal.fire({
                     text:"Estamos teniendo problemas al cargar los datos de los nuevos alumnos. Vuelve a intentar en unos minutos.",
@@ -260,7 +257,7 @@ export default Vue.extend ({
 
                   }
                 else if(response.data.status=="Subida terminada"){ 
-                    console.log(response);
+
                      this.hideModal();
                     Swal.fire({
                         text:"Se guardaron los datos con éxito",
@@ -301,7 +298,6 @@ export default Vue.extend ({
 
             }).catch(e => {
               console.log('catch masivo',e);
-              //console.log(e);
                this.hideModal();
                document.getElementById("btnsubir").disabled = false;
                  Swal.fire({
