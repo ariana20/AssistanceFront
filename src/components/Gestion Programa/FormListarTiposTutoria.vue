@@ -1,5 +1,5 @@
 <template>
-  <div class="FormRoles " style="margin-top:5px;margin-left:5%">  
+  <div class="FormRoles " style="margin-top:5px;margin-left:5%;padding-left:20px">  
     <div style="text-align: left" >
       
 			<div class="row" style="width:100%">
@@ -143,8 +143,10 @@ computed:{
                 confirmButtonColor:'#0097A7'
                 }
               )
+              let params ={usuario_actualizacion:this.miUsuario.id_usuario}
               //aqui iriía el eliminar
-              Axios.post('/TipoTutoria/eliminar/'+item.id_tipo_tutoria)
+
+              Axios.post('/TipoTutoria/eliminar/'+item.id_tipo_tutoria,params)
                 .then(response=>{
                   console.log(response);
                   let index = this.$store.state.tipostutorias.indexOf( //

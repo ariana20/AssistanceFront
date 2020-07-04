@@ -222,6 +222,7 @@ export default Vue.extend( {
         {value: '1',text: "Tutor fijo \t\t"},
         {value: '0',text: "Tutor variable"},
       ],
+     
     
     }
   },
@@ -246,6 +247,8 @@ export default Vue.extend( {
             this.tipotutoria.tutorfijo=response.data.tutor_fijo;
             this.tipotutoria.estado=response.data.estado;
             this.hideModal();
+            //mi usuario
+            this.miUsuario=this.$store.state.usuario;
             })
           .catch(e=>{
             console.log(e);
@@ -259,7 +262,7 @@ export default Vue.extend( {
                     showConfirmButton: true,
               });
         });
-
+        this.miUsuario=this.$store.state.usuario;
         //Si puso uno debe estar listado
        this.listarTutoresTT();
     }
@@ -316,6 +319,7 @@ export default Vue.extend( {
               tutor_fijo:this.tipotutoria.tutorfijo,
               estado:this.tipotutoria.estado,   
               id_programa:this.tipotutoria.miprog.id_programa, 
+              usuario_creacion:this.miUsuario.id_usuario,
               // id_programa:4,
               };
               this.showModal();
@@ -360,7 +364,8 @@ export default Vue.extend( {
               tutor_fijo:this.tipotutoria.tutorfijo,
               estado:this.tipotutoria.estado,   
               id_programa:this.tipotutoria.miprog.id_programa, 
-              // id_programa:4,           
+              usuario_actualizacion:this.miUsuario.id_usuario,
+                      
            };
            this.showModal();
           Axios.create()   

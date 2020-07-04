@@ -1,7 +1,7 @@
 <template>
     <div class="formagendarcita container">
         <div class="top-titulo " style="text-align:left;">
-            <!-- inicia combobox -->
+            <!-- inicia combobox de tutor -->
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
             <select class="col-sm-4 form-control" style="left:-160px;top:26px;cursor:pointer" v-model="tutorSel"  @change="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>

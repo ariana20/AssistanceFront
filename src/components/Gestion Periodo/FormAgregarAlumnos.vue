@@ -22,7 +22,7 @@
             
             <div class="font-weight-ligth text-left col-md-6" style="overflow: auto;width:100%;margin-top:2%">
               <tr>
-                <td style="text-indent:25px" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.abreviatura}}</td>
+                <td style="text-indent:25px" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.abreviatura + " = "+ item.nombre}} </td>
               </tr>
             </div>
              <!-- <h6 class="font-weight-ligth text-left col-md-6">Las condiciones de los alumnos no son obligatorias, por lo que si no coloca una, se asume que la condición del alumno es "Cachimbo"-pri</h6> -->
@@ -122,6 +122,7 @@ export default Vue.extend ({
             reporte:[],
             condiAlumnos:[],
             miprog:this.$store.state.programaActual, //this.miprog.id_programa;
+            miUsuario:null,
         }
     },
     mounted(){   
@@ -180,13 +181,14 @@ export default Vue.extend ({
    
     FileUpload(){
         document.getElementById("btnsubir").disabled =false; //habilita
-        
+         this.miUsuario=this.$store.state.usuario;
         //Para masivo
         this.reporte=null;
         this.banderaReporte=false;
         let files=this.$refs.file.files;
         this.formData= new FormData();           
         this.formData.append('_hidden','solojohAl');   
+        this.formData.append('usuario_creacion', this.miUsuario.id_usuario);   
         if(files[0].size>=2000000){
             Swal.fire({
                     text:"No puede subir el archivo "+files[0].name+", ya que es mayor de 2 MB.",

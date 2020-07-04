@@ -304,6 +304,11 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteRendimiento.vue')
   },
   {
+    path: '/reportePlanAccion',
+    name: 'Reporte PlanAccion',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReportePlanAccion.vue')
+  },
+  {
     path: '/reporteAsignado',
     name: 'Reporte Asignado',
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteAsignado.vue')
