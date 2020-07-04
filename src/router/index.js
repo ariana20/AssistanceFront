@@ -59,6 +59,15 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "about" */ '../views/Configuracion/ViewPrograma.vue')
     },
     {
+      path: '/perfilConf',
+      name: 'Perfil Usuario',
+      props: true,
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "ViewPerfil" */ '../views/Configuracion/ViewPerfil.vue')
+    },
+    {
       path: '/unidadesApoyo',
       name: 'Unidades de Apoyo',
       // route level code-splitting
