@@ -118,10 +118,8 @@ export default {
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
-    if(this.$store.state.usuariosA === null  ) { 
-      this.showModal();    
-      this.listarUsuarios(); 
-    } 
+    this.showModal();    
+    this.listarUsuarios();
   },
   methods:{
     listarUsuarios() {
