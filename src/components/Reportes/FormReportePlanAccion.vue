@@ -1,6 +1,6 @@
 <template>
   <div class="FormReportes">
-      <div class="contenedor">
+      <div class="container">
         <div  class="top-titulo" style="text-align:left;">
             <!-- inicia de las fechas -->
             <h5 class="font-weight-ligth text-left col-sm-2">Fechas:</h5>
@@ -24,7 +24,7 @@
                 <option 
                     v-for="(item, index) in tutores" 
                     :key="index" 
-                    :value="item.id_tutor">
+                    :value="item">
                     {{ item.usuario.nombre + " " + item.usuario.apellidos }}
                 </option>
             </select>
@@ -341,7 +341,7 @@ export default {
                     id_institucion: 1,
                     fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                     fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
-                    id_tutor:tutoresSeleccionados,
+                    id_tutor:this.tutorSel,
                 };
                 
                 var data =await axios.post("usuarios/datosBajoRendimiento", params);
