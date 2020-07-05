@@ -1,6 +1,6 @@
 <template>
   <div class="FormReportes">
-      <div class="container">
+      <div class="contenedor">
         <div  class="top-titulo" style="text-align:left;">
             <!-- inicia de las fechas -->
             <h5 class="font-weight-ligth text-left col-sm-2">Fechas:</h5>

@@ -70,7 +70,7 @@
             </div>   
           </div>
         </div>
-        <div class="col-sm-12 offset-sm-1"> 
+        <!-- <div class="col-sm-12 offset-sm-1"> 
           <div class="row">
             <div class="col-5 col-md-3 col-lg-2">
               <div class="row">
@@ -93,7 +93,7 @@
               </div>
             </div>   
           </div>
-        </div>
+        </div> -->
         <div class="col-sm-12 offset-sm-1"> 
           <div class="row">
             <div class="col-5 col-md-3 col-lg-2">
@@ -282,7 +282,7 @@ export default Vue.extend( {
               showConfirmButton: true,
         })        
       }   
-      else if (this.individual=="" ||  this.tipotutoria.obligatorio=="" || this.tipotutoria.tutorasignado=="" || this.tipotutoria.tutorfijo=="" ){
+      else if (this.individual=="" ||  this.tipotutoria.obligatorio=="" || this.tipotutoria.tutorfijo=="" ){
         this.hideModal();
        
               Swal.fire({
