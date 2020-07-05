@@ -402,7 +402,7 @@ export default {
         if(this.$store.state.facultadEscogida){
           this.showModal();
           //modifico la facultad, debo considerar progactualizar, progeliminar, progagregar
-          
+          this.facultad.usuario_actualizacion=this.$store.state.usuario.id_usuario;
           axios.create()
             .post('/facultad/modificar/'+this.facultad.id_facultad,this.facultad)
               .then( response=>{
@@ -630,8 +630,10 @@ export default {
         }).then((result) => {
           if (result.value) {
             this.programas.splice(ind,1 );
-            if(this.$store.state.facultadEscogida)
+            if(this.$store.state.facultadEscogida){
+              item.usuario_actualizacion=this.$store.state.usuario.id_usuario;
               this.progeliminar.push(item);
+            }
 
           }
         })

@@ -204,7 +204,11 @@ export default {
 				}).then((result) => {
 					if (result.value) {
 						this.showModal()
-						this.axios.post('/facultad/eliminar/'+item.id_facultad)
+						const params={
+							id:item.id_facultad,
+							usuario_actualizacion:this.$store.state.usuario.id_usuario
+						};
+						this.axios.post('/facultad/eliminar',params)
 							.then(response=>{
 								response
 								let index = this.$store.state.facultades.indexOf(
