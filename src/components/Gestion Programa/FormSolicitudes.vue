@@ -154,28 +154,28 @@ export default {
                   }
                   this.axios.post('/usuarios/nuevoPrograma/'+item.usuarioSolicitante.id_usuario,obj)
                       .then(response=>{
-                          response
-                          emailjs.send(
-                              "gmail",
-                              "template_bV7OIjEW",
-                              {
-                              "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
-                              "mensaje":mensaje,
-                              "correo": item.usuarioSolicitante.correo
-                              }, 'user_ySzIMrq3LRmXhtVkmpXAA')
-                          .then((result) => {
-                              console.log('SUCCESS!', result.status, result.text);
-                          }, (error) => {
-                              console.log('FAILED...', error);
-                          });
-                          this.hideModal();
-                          Swal.fire({
-                          text:"Aceptado exitosamente",
-                          icon:"success",
-                          confirmButtonText: 'OK',
-                          confirmButtonColor:'#0097A7',
-                          showConfirmButton: true,
-                          })
+                        response
+                        emailjs.send(
+                            "gmail",
+                            "template_bV7OIjEW",
+                            {
+                            "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                            "mensaje":mensaje,
+                            "correo": item.usuarioSolicitante.correo
+                            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                        .then((result) => {
+                            console.log('SUCCESS!', result.status, result.text);
+                        }, (error) => {
+                            console.log('FAILED...', error);
+                        });
+                        this.hideModal();
+                        Swal.fire({
+                        text:"Aceptado exitosamente",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                        })
                       })
                       .catch(e=>{
                         console.log(e)

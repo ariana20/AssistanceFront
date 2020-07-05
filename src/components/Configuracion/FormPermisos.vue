@@ -1,21 +1,21 @@
 <template>
   <div class="FormRoles">
     <div style="text-align: left;margin-left:5%">
-      <div class="row">
+      <div class="row" style="width:100%">
         <div class="col-11 col-sm-4 col-lg-2">
           <h4 style="margin-top:1%">Tipo Usuario: </h4>
         </div>
-        <div class="col-11 col-md-6 col-lg-3">
-          <input v-if="idRol" type="text" class="form-control-plaintext" style="font-size:25px;height:40px;width:65%" :value="nombreRol" readonly>
+        <div class="col-12 col-md-6 col-lg-4">
+          <input v-if="idRol" type="text" class="form-control-plaintext" style="font-size:25px;height:40px;width:100%" :value="nombreRol" readonly>
           <input v-else class="form-control" style="top:5%" v-model="nombre" placeholder="Ingrese un nombre">
         </div>
-        <div v-if="$store.state.visualizacion!=true" class="col-11 col-sm-12 col-lg-3 offset-lg-4">
+        <div v-if="$store.state.visualizacion!=true" class="col-11 col-sm-12 col-lg-3 offset-lg-3">
           <div class="botones" style="display: inline-flex;">
             <button type="button" class="btn btn-info" @click="Guardar()" >Guardar</button>
             <button type="button" class="btn btn-info" @click="Regresar()" style="border-color:gray;background-color:gray;">Cancelar</button>
           </div>
         </div>
-        <div v-else class="col-11 col-sm-12 col-lg-3 offset-lg-4">
+        <div v-else class="col-11 col-sm-12 col-lg-3 offset-lg-3">
           <div class="botones" style="display: inline-flex;">
             <button type="button" class="btn btn-info" @click="Regresar()" style="border-color:gray;background-color:gray;">Regresar</button>
           </div>

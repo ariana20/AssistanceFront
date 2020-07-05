@@ -25,6 +25,9 @@
               <template v-slot:button-content aria-expanded="false" style="overflow: hidden;color:black">
                 <em style="color:#000000;font-weight:normal;overflow: hidden;display:unset;width:10%" >{{$store.state.usuario.nombre}}</em>
               </template>
+              <b-dropdown-item class="buttonnav btnnac" style="background:white"  v-on:click="Perfil()">
+                Perfil
+              </b-dropdown-item>
               <b-dropdown-item class="buttonnav btnnac" style="background:white"  v-on:click="logout()">
                 Cerrar Sesión
               </b-dropdown-item>
@@ -160,6 +163,9 @@ export default {
             }
           }).catch( e=>console.log(e));
       }
+    },
+    Perfil(){
+      this.$router.push('/perfilConf');
     }
   }
 }

@@ -8,6 +8,9 @@
         <div class="form-inline col-12 col-md-4">
           <input v-on:change="Buscar(nombre)" class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese un nombre">
         </div>
+        <div class="form-inline col-12 col-md-2 offset-md-2 offset-lg-4">
+          <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
+        </div>
       </div>
 
       <br>
@@ -20,12 +23,16 @@
               <th scope="col" style="width:20%">Nombre</th>
               <th scope="col" style="width:25%">Correo</th>
               <th scope="col" style="width:25%">Programa (Tipo de Usuario)</th>
-              <!-- <th scope="col">Modif/Elim</th> -->
+              <th scope="col">Estado</th>
+              <th scope="col">Modif/Elim</th>
             </tr>
           </thead>
           <tbody v-if="$store.state.usuariosA!=null">
             <tr v-for="(item, index) in $store.state.usuariosA.data"  :key="index">
-              <th scope="row">{{item.codigo}}</th>
+              <td>
+                <div v-if="item.codigo!=null">{{item.codigo}}</div>
+                <div v-else>Pendiente</div>
+              </td>
               <td>{{item.nombre}} {{item.apellidos}}</td>
               <td>{{item.correo}}</td>   
               <!-- va a cambiar, me daran nombre -->
@@ -41,12 +48,16 @@
                   </div>
                 </div>  
               </td>
-              <!-- <td style="text-align: center">
+              <td style=";font-size:30px;text-align:center">
+                  <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
+                  <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;"/>
+              </td>
+              <td style="text-align: center">
                 <div class="row" style="width:115px">
-                  <button class="btn link"><b-icon icon="pencil"></b-icon></button>
-                  <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item.id_usuario)"></b-icon></button>
+                  <button class="btn link"><b-icon icon="pencil" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
+                  <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item)"></b-icon></button>
                 </div>              
-              </td> -->
+              </td>
             </tr>
           </tbody>
         </table>
@@ -107,10 +118,8 @@ export default {
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
-    if(this.$store.state.usuariosA === null  ) { 
-      this.showModal();    
-      this.listarUsuarios(); 
-    } 
+    this.showModal();    
+    this.listarUsuarios();
   },
   methods:{
     listarUsuarios() {
@@ -153,52 +162,52 @@ export default {
         this.hideModal()
       })
     },
+    llenarUsuarioEscogido(item){
+      this.$store.state.usuarioEscogido=item;
+      this.usuarioEscogido=item;
+      this.$router.push('/AUsuario/'+item.id_usuario)
+    },
     eliminarUsuario(id){
         Swal.fire({
-              text:'¿Desea eliminar?',
-              icon:'warning',
-              confirmButtonText: 'Eliminar',
-              confirmButtonColor:'#0097A7',
-              cancelButtonText: 'Cancelar',
-              cancelButtonColor:'C4C4C4',
-              showCancelButton: true,
-              showConfirmButton: true,
-              //html:' <div >Hello</div>',
+          text:'¿Desea eliminar?',
+          icon:'warning',
+          confirmButtonText: 'Eliminar',
+          confirmButtonColor:'#0097A7',
+          cancelButtonText: 'Cancelar',
+          cancelButtonColor:'C4C4C4',
+          showCancelButton: true,
+          showConfirmButton: true,
+          //html:' <div >Hello</div>',
 
-          }).then((result) => {
-              if (result.value) {
-                this.showModal()
-                //aqui iriía el eliminar
-                //ESte eliminar no debería estar.Debería ser un eliminar del programa
-                axios.post('/usuarios/eliminar/'+id)
-                .then(res =>{
-                  res
-                  let index = this.$store.state.usuarios.indexOf(
-                  function(element){
-                    return element.id_tipo_tutoria === id; 
-                  })
-                  this.$store.state.usuarios.splice(index, 1);
-                  this.hideModal()
-                  Swal.fire({
-                    icon:'success',
-                    text:'El usuario ha sido eliminado',
-                    confirmButtonText:'Confirmo' ,
-                    confirmButtonColor:'#0097A7'
-                    }
-                  )
-                })
-                .catch(e => {
-                  console.log(e.response);
-                  this.hideModal()
-                })
-              } 
-              else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire({
-                  text:'Se ha cancelado la eliminación',
-                  confirmButtonColor:'#0097A7',}
-                )
-              }
+        })
+        .then((result) => {
+          if (result.value) {
+            //this.showModal()
+            //aqui iriía el eliminar
+            //ESte eliminar no debería estar.Debería ser un eliminar del programa\
+            axios.post('/usuarios/eliminar/'+id.id_usuario)
+            .then(res =>{
+              res
+              let index = this.$store.state.usuariosA.data.indexOf(
+              function(element){
+                return element.id_usuario === id.id_usuario; 
+              })
+              this.$store.state.usuarios.splice(index, 1);
+              this.hideModal()
+              Swal.fire({
+                icon:'success',
+                text:'El usuario ha sido eliminado',
+                confirmButtonText:'Confirmo' ,
+                confirmButtonColor:'#0097A7'
+                }
+              )
             })
+            .catch(e => {
+              console.log(e.response);
+              this.hideModal()
+            })
+          }
+        })
     }, 
     onFileSelected(e){
       let files = e.target.files || e.dataTransfer.files;
@@ -230,6 +239,9 @@ export default {
           console.log(e.response);
           this.hideModal()
         })
+    },
+    nuevo(){
+      this.$router.push('/AUsuario/0');
     },
     showModal() {
       this.$refs['my-modal'].show()

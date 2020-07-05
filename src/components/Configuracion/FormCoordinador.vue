@@ -5,7 +5,7 @@
         Codigo: *
       </div>
       <div class="col-12 col-md-6 col-lg-5">
-        <input style="margin-top:2%" class=" form-control" type="text" v-model="codigo">
+        <input style="margin-top:2%" class=" form-control" type="text" v-model="codigo" onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165))">
       </div>
     </div>
     <div class="row">
@@ -13,7 +13,7 @@
         Nombres: *
       </div>
       <div class="col-12 col-md-6 col-lg-5">
-        <input style="margin-top:2%" class="form-control" type="text" v-model="nombre">
+        <input style="margin-top:2%" class="form-control" type="text" v-model="nombre" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )">
       </div>
     </div>
     <div class="row">
@@ -21,7 +21,7 @@
         Apellidos: *
       </div>
       <div class="col-12 col-md-6 col-lg-5">
-        <input style="margin-top:2%" class="form-control" type="text" v-model="apellidos">
+        <input style="margin-top:2%" class="form-control" type="text" v-model="apellidos" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )">
       </div>
     </div>
     <div class="row">
@@ -30,14 +30,6 @@
       </div>
       <div class="col-12 col-md-6 col-lg-5">
         <input style="margin-top:2%" class="form-control" type="text" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" v-model="telefono">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 col-md-4 col-lg-2 form-inline">
-        Codigo: *
-      </div>
-      <div class="col-12 col-md-6 col-lg-5">
-        <input style="margin-top:2%" class="form-control" type="text" v-model="codigo">
       </div>
     </div>
     <div class="row">

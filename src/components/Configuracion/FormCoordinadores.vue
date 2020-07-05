@@ -10,9 +10,6 @@
 				<div class="form-inline col-12 col-md-4">
 					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese nombre del coordinador">
 				</div>
-				<div class="form-inline col-12 col-md-2 offset-md-3 offset-lg-5">
-					<button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
-				</div>
 			</div>
 
       <div style="overflow: auto;width:100%;">
@@ -43,6 +40,12 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+    
+    <div v-if="coordinadoresFiltrados==null || coordinadoresFiltrados.length==0" class="row" style="width:100%">
+      <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
+        Ningún Registro de Coordinadores
       </div>
     </div>
 
