@@ -234,11 +234,12 @@ export default {
             };
             const { data } = await axios.post("registros/cantAlumnosXTutores", params);
 
-
-
+            this.asignadosXTutor=data;
+            /*
             data.forEach(d =>{
                 this.asignadosXTutor.push({data:d.nombre+" "+d.apellidos,total:d.cantalum});             
             })
+            */
 
 
         },
@@ -252,7 +253,7 @@ export default {
             return date > today;
         },
         addTutor(){
-            
+            //Verificamos si está seleccionando todos los tutores
             if(!this.selectedTutor.usuario.codigo){
                 for(var tut in this.tutores){
                     if(this.tutores[tut].usuario.codigo){
@@ -271,12 +272,29 @@ export default {
                     }
             }
             this.selectedTutor=null;
+            //verifico si el único que queda es "Todos"
+            if(!this.tutores[0].usuario.codigo){
+                this.tutores.splice(i,1); 
+            }
+
 
         },
         deleteTutor(index, tutor) {
             this.tutorSelect.splice(index,1);
             this.idTutores.splice(index,1);
-            this.tutores.push(tutor);
+            if(this.tutores.length){
+                this.tutores.splice(this.tutores.length-1, 0, tutor);
+                
+            }else{
+                this.tutores.push(tutor);
+                var tutorNulo=new Object();
+                tutorNulo.usuario=new Object();
+                tutorNulo.usuario.nombre="Todos";
+                tutorNulo.usuario.codigo=0;
+                tutorNulo.usuario.apellidos="";
+                this.tutores.push(tutorNulo);      
+            }
+            
         },
 
 

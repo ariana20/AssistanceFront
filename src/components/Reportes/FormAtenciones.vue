@@ -50,12 +50,12 @@
         <div v-if="atenciones.length==0 && atencionesXFecha.length==0 && atencionesXTutor.length==0">
         No se ha generado ningún reporte
         </div>
-        <div class="row mt-5">
-            <div class="col-6" v-if="atenciones.length>0">
+        <div class="row">
+            <div class="col-12 col-md-6" v-if="atenciones.length>0">
                 <strong>Cantidad de Atenciones</strong>
                 <doughnut-chart :chartData="atenciones" :options="chartOp2" label='Alumnos atendidos'></doughnut-chart>
             </div>
-            <div class="col-6" v-if="atencionesXFecha.length>0">
+            <div class="col-12 col-md-6" v-if="atencionesXFecha.length>0">
                 <strong>Atenciones por Fecha</strong>
                 <line-chart :chartData="atencionesXFecha" :options="chartOp" label='Satisfacción del alumno'></line-chart>
             </div>
@@ -64,11 +64,14 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row">
-            <div v-if="atencionesXTutor.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
+            <div class="col-12 col-md-6" v-if="atencionesXTutor.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
                 <strong>Cantidad de Alumnos Atendidos por Tutor</strong>
                 <bar-chart :chartData="atencionesXTutor" :options="chartOp" label='Alumnos atendidos'></bar-chart>
             </div>
-        
+            <div class="col-12 col-md-6" v-if="atencionesXTipoTutoria.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
+                <strong>Alumnos atendidos por Tipo de Tutoría</strong>
+                <pie-chart :chartData="atencionesXTipoTutoria" :options="chartOp2" label='Alumnos atendidos por Tipo de Tutoría'></pie-chart>
+            </div>
 
         
         </div>
@@ -88,6 +91,7 @@ import axios from 'axios';
 import LineChart from '@/components/Reportes/LineChart.vue';
 import BarChart from '@/components/Reportes/BarChart.vue';
 import DoughnutChart from '@/components/Reportes/DoughnutChart.vue';
+import PieChart from '@/components/Reportes/PieChart.vue';
 import moment from 'moment';
 export default {
     components:{
@@ -95,6 +99,7 @@ export default {
         BarChart,
         DoughnutChart,
         LineChart,
+        PieChart
     },
     data(){
         return{
@@ -181,6 +186,7 @@ export default {
         this.RatioAtencionesXTutor();
         this.RatioAtenciones();
         this.RatioAtencionesXFecha();
+        this.RatioAtencionesXTipoTutoria();
     },
     methods:{
         listarFacultades(){
@@ -251,6 +257,7 @@ export default {
             return date > today;
         },
         addTutor(){
+            //Verificamos si está seleccionando todos los tutores
             if(!this.selectedTutor.usuario.codigo){
                 for(var tut in this.tutores){
                     if(this.tutores[tut].usuario.codigo){
@@ -269,11 +276,29 @@ export default {
                     }
             }
             this.selectedTutor=null;
+            //verifico si el único que queda es "Todos"
+            if(!this.tutores[0].usuario.codigo){
+                this.tutores.splice(i,1); 
+            }
+
+
         },
         deleteTutor(index, tutor) {
             this.tutorSelect.splice(index,1);
             this.idTutores.splice(index,1);
-            this.tutores.push(tutor);
+            if(this.tutores.length){
+                this.tutores.splice(this.tutores.length-1, 0, tutor);
+                
+            }else{
+                this.tutores.push(tutor);
+                var tutorNulo=new Object();
+                tutorNulo.usuario=new Object();
+                tutorNulo.usuario.nombre="Todos";
+                tutorNulo.usuario.codigo=0;
+                tutorNulo.usuario.apellidos="";
+                this.tutores.push(tutorNulo);      
+            }
+            
         },
 
 
@@ -287,11 +312,12 @@ export default {
             };
             const { data } = await axios.post("programa/asistenciaXTutores", params);
 
-         
+            this.atencionesXTutor=data;
+            /*
             data.forEach(d =>{
                 this.atencionesXTutor.push({data:d.nombre+" "+d.apellidos,total:d.cantalum});             
             })
-
+            */
 
         },
         async RatioAtenciones(){
@@ -326,11 +352,32 @@ export default {
             };
             
             const { data } =await axios.post("programa/citasXDia", params);
-            
+            // verificar si ya no es necesario el bucle
+            // se cambió la función del back
+            this.atencionesXFecha=data;
+            /*
             data.forEach(d =>{
                 this.atencionesXFecha.push({data:d.fecha,total:d.count});               
-            })
+            })*/
             
+
+        },
+        
+        async RatioAtencionesXTipoTutoria(){
+            this.atencionesXTipoTutoria=[];
+            const params = {
+                id_programa:this.$store.state.programaActual.id_programa,
+                id_tutores:this.idTutores,
+                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+            };
+            
+            const { data } =await axios.post("TipoTutoria/asistenciaXTipoTutorias", params);
+            this.atencionesXTipoTutoria=data;
+            /*
+            data.forEach(d =>{
+                this.atencionesXTipoTutoria.push({data:d.fecha,total:d.count});               
+            })*/
 
         },
 
@@ -338,6 +385,7 @@ export default {
             this.RatioAtencionesXTutor();
             this.RatioAtenciones();
             this.RatioAtencionesXFecha();
+            this.RatioAtencionesXTipoTutoria();
         }
         
     }
