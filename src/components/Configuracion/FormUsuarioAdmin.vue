@@ -125,11 +125,11 @@
               </option>
             </select>
           </div>
-          <div class="col-12 col-md-2">
+          <div class="col-6 col-md-2">
             <button v-if="anadirNuevo==false"  type="button" style="border-radius: 10px" @click="anadirNuevo=true;tiposUsuariosselect='no';tiposUsuariosSel=null" class="btn btn-info">Añadir</button>
             <button v-else  type="button" style="border-radius: 10px;border-color:gray;background-color:gray" @click="anadirNuevo=false;tiposUsuariosselect='no';tiposUsuariosSel=null" class="btn btn-info">Cancelar</button>
           </div>
-          <div v-if="anadirNuevo==false && tiposUsuariosSel!=null" class="col-12 col-md-2">
+          <div v-if="anadirNuevo==false && tiposUsuariosSel!=null" class="col-6 col-md-2">
             <button type="button" style="border-radius: 10px;border-color:gray;background-color:gray" @click="eliminarTipo" class="btn btn-info">Eliminar</button>
           </div>
         </div>
@@ -163,7 +163,7 @@
             </div>
           </div>
         </div>
-        <div v-if="this.tiposUsuariosselect === 5 || (this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_tipo_usuario==5)" class="row">
+        <div v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.alumno==true" class="row">
           <div class="col-12 col-md-2" style="margin-top:0.8%">
             Condición del alumno:
           </div>
@@ -177,11 +177,11 @@
             </select>
           </div>
         </div>
-        <div v-if="this.tiposUsuariosselect === 4 && (this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_tipo_usuario==4)" class="row"> 
+        <div v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor==true" class="row"> 
           <div class="col-12 col-md-2" style="margin-top:0.8%">
             Tipos de tutorias:*
           </div>
-          <div class="col-12 col-md-8">
+          <div class="col-12 col-md-4">
             <select class="form-control" v-model="tipostutoriasselect" style="cursor:pointer">
               <option selected disabled value="no">Selecciona un tipo de tutoria</option>
               <option v-for="(tt, i) in tipostutorias"  :key="i"   :value="tt.id_tipo_tutoria">
@@ -189,8 +189,15 @@
               </option>
             </select>
           </div>
+          <div class="col-12 col-md-4">
+            <button  type="button" class="btn btn-info"                     
+              style="margin-left:10px;margin:5px;border-radius: 10px;"
+              @click="addMTT(i)">
+              Seleccionar
+            </button>
+          </div>
         </div>
-        <div v-if="this.tiposUsuariosselect === 4 && (this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_tipo_usuario==4)" class="row">
+        <div v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor==true" class="row">
           <div class="col-12 col-md-2" style="margin-top:0.8%">
             Tipos de tutoria seleccionados:
           </div>
@@ -302,6 +309,19 @@ export default {
         this.tiposUsuariosSel=this.usuario_entrante.usuario_x_programas[0].tipo_usuario;    
         this.progSeleccionadoInd=this.usuario_entrante.usuario_x_programas[0].programa.id_programa;   
         this.progSeleccionado=this.usuario_entrante.usuario_x_programas[0].programa;   
+        for (let i = 0; i < this.usuario_entrante.usuario_x_programas.length; i++) {
+            this.usuario_entrante.usuario_x_programas[i].tipo_usuario.alumno = false;
+            this.usuario_entrante.usuario_x_programas[i].tipo_usuario.tutor = false;
+          for (let index = 0; index < this.usuario_entrante.usuario_x_programas[i].tipo_usuario.permisos.length; index++) {
+            if(this.usuario_entrante.usuario_x_programas[i].tipo_usuario.permisos[index].nombre == "Tutores"){
+              this.usuario_entrante.usuario_x_programas[i].tipo_usuario.alumno = true;
+            }
+            if(this.usuario_entrante.usuario_x_programas[i].tipo_usuario.permisos[index].nombre == "Sesión de Tutoría"){
+              this.usuario_entrante.usuario_x_programas[i].tipo_usuario.tutor = true;
+              this.llenarTT();
+            }
+          }
+        }
         this.listarTT(this.usuario_entrante.usuario_x_programas[0].programa.id_programa);
       }
       Axios.create()
@@ -330,7 +350,7 @@ export default {
             confirmButtonColor:'#0097A7',
             showConfirmButton: true,
           }); 
-          this.$store.state.usuarios=null;
+          this.$store.state.usuariosA=null;
           //this.$router.push('/ListaUsuarios');          
         });
 
@@ -410,6 +430,7 @@ export default {
         .catch(e=>console.log('catch listarTipoT',e));
     },
     TipoUs(){
+      this.listTT = [];
       this.tiposUsuarios.forEach(element => {
         if(element.id_tipo_usuario == this.tiposUsuariosselect){
           this.tiposUsuariosSel = element;
@@ -631,14 +652,37 @@ export default {
       document.getElementById("btnGuarda").disabled = false; //habilita
       document.getElementById("btnCancela").disabled = false; //habilita
     },
-
+    llenarTT(){
+      this.axios.post('/usuarios/tutoriaTutor',{idTutor: this.usuario_entrante.id_usuario, id_programa:this.progSeleccionadoInd})
+        .then(response=>{
+          response.data.forEach(element => {
+            this.listTT.push(element.nombre)
+          });
+        })
+        .catch(e=>{
+          console.log(e)
+        })
+      
+    },
     listarTUsuarios() {
       this.axios.post('/tipoUsuarios/listarTodo')
         .then(res=>{
-              //Ordenadito
+          //Ordenadito
           let par=res.data;
-        //  console.log('TUsu:',res.data);
+          //  console.log('TUsu:',res.data);
           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+          this.tiposUsuarios.forEach(element => {
+            element.alumno = false;
+            element.tutor = false;
+            for (let index = 0; index < element.permisos.length; index++) {
+              if(element.permisos[index].nombre == "Tutores"){
+                element.alumno = true;
+              }
+              if(element.permisos[index].nombre == "Sesión de Tutoría"){
+                element.tutor = true;
+              }
+            }
+          });
           this.hideModal()
         })
         .catch(e=>{
@@ -721,29 +765,27 @@ export default {
     },
     addMTT: function () {
 
-            for(var i in this.tipostutorias)
-            if(this.tipostutoriasselect ==this.tipostutorias[i].id_tipo_tutoria){
-              this.listTT.push(this.tipostutorias[i].nombre);
-              this.listTTId.push(this.tipostutorias[i].id_tipo_tutoria);
-              this.listTTBorrados.push(this.tipostutorias[i]);
-              this.tipostutorias.splice(i,1);
-              this.tipostutoriasselect="no";
+      for(var i in this.tipostutorias)
+      if(this.tipostutoriasselect ==this.tipostutorias[i].id_tipo_tutoria){
+        this.listTT.push(this.tipostutorias[i].nombre);
+        this.listTTId.push(this.tipostutorias[i].id_tipo_tutoria);
+        this.listTTBorrados.push(this.tipostutorias[i]);
+        this.tipostutorias.splice(i,1);
+        this.tipostutoriasselect="no";
 
-            }
+      }
             
-        },
-     deleteTT: function (index) {
-  
-            var i;
-            for(i in this.listTTBorrados)
-              if(this.listTT[index]==this.listTTBorrados[i].nombre){
-                this.tipostutorias.push(this.listTTBorrados[i]);
-                break;
-              }
-              this.listTT.splice(index,1);
-              this.listTTId.splice(index,1);
-         
-        },
+    },
+    deleteTT: function (index) {
+      var i;
+      for(i in this.listTTBorrados)
+        if(this.listTT[index]==this.listTTBorrados[i].nombre){
+          this.tipostutorias.push(this.listTTBorrados[i]);
+          break;
+        }
+        this.listTT.splice(index,1);
+        this.listTTId.splice(index,1);
+    },
   
     actualizarTT(i){ //verifica si es tutor
       //Si es tutor
@@ -777,10 +819,10 @@ export default {
     },
     //Modal de cargando
     showModal() {
-      //this.$refs['my-modal'].show()
+      this.$refs['my-modal'].show()
     },
     hideModal() {
-      //this.$refs['my-modal'].hide()
+      this.$refs['my-modal'].hide()
     },
     verificarUsuariosCod(){
       //Cuando recién tenga 8 dígitos,analizo
@@ -969,7 +1011,7 @@ export default {
               showConfirmButton: true,
             }) 
             //Como se guardaron con éxito ahora agrego el titutoria
-            if(this.tiposUsuariosselect==4){
+            if(this.this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor==true){
               var idusuarionuevo=response.data["user"].id_usuario;
               // console.log('id del usuario nuevo: ',response.data["user"].id_usuario);
               this.actualizarTT(idusuarionuevo);//tiene hide?
@@ -1053,7 +1095,7 @@ export default {
                   })
               }
             }
-            if(this.tiposUsuariosselect==4 && (this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_tipo_usuario!=5)){
+            if(this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor!=false){
               this.actualizarTT(this.id_usuario_entrante);
               //  this.hideModal();
             }
@@ -1111,7 +1153,7 @@ export default {
                     showConfirmButton: true,
                   }) 
                   
-                  this.$store.state.usuarios=null;
+                  this.$store.state.usuariosA=null;
                   //Como se guardaron con éxito ahora agrego el titutoria, pero ya tengo el id usuario
                   if(this.tiposUsuariosselect==4){
                   this.actualizarTT(this.id_usuario_entrante);
@@ -1139,7 +1181,7 @@ export default {
                     showConfirmButton: true,
                   });  
                   
-                  this.$store.state.usuarios=null;
+                  this.$store.state.usuariosA=null;
                   //  this.$router.push('/ListaUsuarios');         
                 
                 

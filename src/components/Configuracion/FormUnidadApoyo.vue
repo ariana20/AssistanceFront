@@ -246,7 +246,7 @@ export default {
                     showConfirmButton: true,
                 })  
             }
-            else if(this.programaEl==null){
+            else if(this.programaEl==null  && this.facultadEl!=0){
                 Swal.fire({
                     text:"No ha escogido un Programa",
                     icon:"error",
@@ -267,11 +267,12 @@ export default {
                     }).then((result) => {
                         if (result.value) {
                             this.showModal();
-                            if(this.facultadEl == 0) this.general2 = true;
-                            if(this.programaEl == 0) this.general = true; 
                             let obj = this.unidad;
                             obj.usuario_creacion = this.$store.state.usuario.id_usuario;
-                            obj.id_programa = this.programaEl.id_programa;
+                            if(this.facultadEl == 0) this.general2 = true;
+                            if(this.programaEl == 0) this.general = true; 
+                            if (this.facultadEl!=0) obj.id_facultad = this.facultadEl.id_facultad;
+                            if (this.programaEl!=0) obj.id_programa = this.programaEl.id_programa;
                             obj.general = this.general;
                             obj.general2 = this.general2;
                             obj.tipo = this.$store.state.tipoActual.nombre;
