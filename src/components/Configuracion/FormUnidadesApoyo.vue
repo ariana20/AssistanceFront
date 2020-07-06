@@ -1,6 +1,6 @@
 <template>
-  <div class="FormUnidadesApoyo">
-    <div style="margin-left:5%;text-align: left;width:90%">  
+  <div class="FormUnidadesApoyo contenedor">
+    <div style="text-align: left">  
       <div class="row">
         <div class="form-inline col-12 col-md-2 col-lg-1">
           <h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>

@@ -1,6 +1,6 @@
 <template>
-  <div name="FormPrograma">
-    <div style="margin-left:5%;text-align: left;">
+  <div name="FormPrograma" class="contenedor">
+    <div style="text-align: left;">
       <div class="row" style="width:100%">
         <div class="form-inline col-12 col-md-2 col-lg-1">
           <h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
@@ -15,6 +15,7 @@
         <table class="table" style="margin-top:2%">
           <thead>
             <tr>
+              <th scope="col">Código</th>
               <th scope="col">Nombre</th>
               <th scope="col">Correo</th>
               <th scope="col">Coordinador</th>
@@ -23,10 +24,11 @@
           </thead>
           <tbody>
             <tr v-for="(item, index) in programasFiltrados" :key="index">
+              <td>{{item.programa.codigo}}</td>
               <td>{{item.programa.nombre}}</td>
               <td>{{item.programa.correo}}</td>
               <td>
-                <a style="font-weight:normal" v-if="item.coordinador">{{item.coordinador.nombre}}</a>
+                <a style="font-weight:normal" v-if="item.coordinador">{{item.coordinador.nombre + " " + item.coordinador.apellidos }}</a>
                 <a style="font-weight:normal" v-else>Sin Coordinador</a>
               </td>
               <td>

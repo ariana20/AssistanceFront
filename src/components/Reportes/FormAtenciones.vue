@@ -1,6 +1,6 @@
 <template>
   <div class="FormAtenciones">
-      <div class="container">
+      <div class="contenedor">
         <div class="top-titulo" style="text-align:left;">
             <div class="col-4">
                 <h5>Fechas:</h5>
