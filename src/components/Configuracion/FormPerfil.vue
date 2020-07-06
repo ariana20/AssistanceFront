@@ -30,7 +30,8 @@
             <div class=" col-12 col-md-8" style="margin-top:3%">
                 <div class="row" style="margin-bottom:2%;font-size:120%;width:100%" >
                     <div class="text-left col-12 col-md-3">Codigo: </div>
-                    <div class="col-12 col-md-9">{{usuario.codigo}}</div>
+                    <div class="col-12 col-md-9" v-if="usuario.codigo != null && usuario.codigo!=''">{{usuario.codigo}}</div>
+                    <div class="col-12 col-md-9" v-else>Pendiente</div>
                 </div>
                 <div class="row" style="margin-bottom:2%;font-size:120%;width:100%" >
                     <div class="text-left col-12 col-md-3">Correo: </div>
