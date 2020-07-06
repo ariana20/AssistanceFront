@@ -1,8 +1,8 @@
 <template>
-  <div class="FormListarUsuario"  >
+  <div class="FormListarUsuario contenedor"  >
     <!-- para que lo vea bien un coordinador -->
 
-    <div style="text-align: left;margin-left:5%;padding-left:20px" >  
+    <div >  
          
       <div class="row" style="width:100%">
         <div class="form-inline col-12 col-md-4 col-lg-2">
