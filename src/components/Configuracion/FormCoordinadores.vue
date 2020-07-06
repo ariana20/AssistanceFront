@@ -10,6 +10,24 @@
 				<div class="form-inline col-12 col-md-4">
 					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese nombre del coordinador">
 				</div>
+        <div class="form-inline col-12 col-md-3">
+          <select v-on:change="FacultadSel"  class="form-control" style="margin-top:4%"
+            v-model="facuSeleccionadoInd">  <!--aqui guardo-->
+            <option selected :value="null">Selecciona una facultad</option>
+            <option v-for="(prog, i) in facultades"  :key="i" :value="prog.id_programa"> 
+              {{ prog.nombre }} 
+            </option>
+          </select>
+        </div>
+        <div class="form-inline col-12 col-md-3">
+          <select v-on:change="ProgramaSel"  class="form-control" style="margin-top:4%"
+            v-model="progSeleccionadoInd">  <!--aqui guardo-->
+            <option selected :value="null">Selecciona un programa</option>
+            <option v-for="(prog, i) in programas"  :key="i" :value="prog.id_programa"> 
+              {{ prog.nombre }} 
+            </option>
+          </select>
+        </div>
 			</div>
 
       <div style="overflow: auto;width:100%;">
@@ -66,11 +84,19 @@ import { mapGetters } from 'vuex'
 export default {
   data(){
     return{
-      coordinadores:[]
+      coordinadores:[],
+      progSeleccionadoInd:null,
+      progSeleccionado:null,
+      facuSeleccionadoInd:null,
+      facuSeleccionado:null,
+      programas:null,
+      facultades:null,
     }
   },
   created(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
+    this.listarProgramas();
+    this.listarFacultades();
     if(this.$store.state.coordinadoresL == null) {
       
       this.listarCoordinadores();
@@ -87,11 +113,80 @@ export default {
           this.$store.commit('SET_QUERY',val);
       }
     },
+    filtroProg:{
+      get(){
+        return this.$store.state.filtro.programa;
+      },
+      set(val){
+        this.$store.commit('SET_Prog',val);
+      }
+    },
+    filtroFacu:{
+      get(){
+        return this.$store.state.filtro.facultad;
+      },
+      set(val){
+        this.$store.commit('SET_Facu',val);
+      }
+    },
     ...mapGetters({
       coordinadoresFiltrados: 'filtrarCoordinadoresL'
     })
   },
   methods:{
+    listarProgramas(){
+      this.axios.post('/programa/listarTodo')
+        .then(response=>{
+          this.programas = response.data
+        })
+        .catch(e=>{
+          console.log(e)
+        })
+    },
+    listarFacultades(){
+      this.axios.post('/programa/facultadesProg')
+        .then(response=>{
+          this.facultades = response.data
+        })
+        .catch(e=>{
+          console.log(e)
+        })
+    },
+    ProgramaSel(){
+      if(this.progSeleccionadoInd == null){
+        this.filtroProg = null;
+      }
+      else{
+        this.programas.forEach(element => {
+          if(element.id_programa == this.progSeleccionadoInd){
+            this.progSeleccionado = element;
+            this.filtroProg = element;
+          }
+        });
+      }
+    },
+    FacultadSel(){
+      this.progSeleccionadoInd = null;
+      this.filtroProg = null;
+      if(this.facuSeleccionadoInd == null){
+        this.filtroFacu = null;
+        this.listarProgramas();
+      }
+      else{
+        this.facultades.forEach(element => {
+          if(element.id_programa == this.facuSeleccionadoInd){
+            this.facuSeleccionado = element;
+            this.filtroFacu = element;
+          }
+        });
+        let aux = []
+        this.programas.forEach(element => {
+          if(element.id_facultad == this.facuSeleccionado.id_facultad) aux.push(element);
+        });
+        this.programas = aux
+        this.$store.state.filtroProgs = aux;
+      }
+    },
     listarCoordinadores() {
       this.showModal();
       this.axios.post('/facultad/coordinadoresPyF')

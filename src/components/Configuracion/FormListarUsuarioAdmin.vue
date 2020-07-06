@@ -63,24 +63,56 @@
         </table>
       </div>
       </div>
-      <div v-if="$store.state.usuariosA!=null">
-        
-        <div style="overflow: scroll;width:95%;">
-          <nav aria-label="Page navigation example">
+      <div v-if="$store.state.usuariosA!=null && $store.state.usuariosA.last_page!=1">
+          <nav aria-label="Page navigation example" class="paginar">
             <ul class="pagination justify-content-center">
               <li class="page-item" v-if="$store.state.usuariosA.current_page > 1">
                 <a class="page-link" href="#" tabindex="-1" @click.prevent="Page($store.state.usuariosA.current_page - 1)" style="color:rgb(0, 152, 146)">
                   <span>Anterior</span>
                 </a>
               </li>
-              <li class="page-item" v-for="page in $store.state.usuariosA.last_page" :key="page">
-                <a  v-if="page != $store.state.usuariosA.current_page" class="page-link" href="#" @click.prevent="Page(page)" style="color:rgb(0, 152, 146)">
+              <li class="page-item">
+                <a  v-if="$store.state.usuariosA.current_page!=1" class="page-link" href="#" @click.prevent="Page(1)" style="color:rgb(0, 152, 146)">
                   <span class="sr-only">(current_page)</span>
-                  {{ page }}
+                  {{ '1' }}
                 </a>
                 <a v-else class="page-link" href="#" style="color:rgb(0, 152, 146)">
                   <span class="sr-only">(current_page)</span>
-                  {{ page }}
+                  {{ '1' }}
+                </a>
+              </li>
+              <li class="page-item" v-if="$store.state.usuariosA.last_page > 3 && $store.state.usuariosA.current_page != 2 && ($store.state.usuariosA.current_page != 1 && $store.state.usuariosA.current_page != $store.state.usuariosA.last_page)">
+                <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ '...' }}
+                </a>
+              </li>
+              <li class="page-item" v-if="$store.state.usuariosA.last_page > 2 && ($store.state.usuariosA.current_page == 1 || $store.state.usuariosA.current_page == $store.state.usuariosA.last_page)">
+                <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ '...' }}
+                </a>
+              </li>
+              <li class="page-item" v-if="$store.state.usuariosA.current_page!=1 && $store.state.usuariosA.current_page!=$store.state.usuariosA.last_page">
+                <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ $store.state.usuariosA.current_page }}
+                </a>
+              </li>
+              <li class="page-item" v-if="$store.state.usuariosA.last_page > 3 && $store.state.usuariosA.current_page != $store.state.usuariosA.last_page-1 && ($store.state.usuariosA.current_page != 1 && $store.state.usuariosA.current_page != $store.state.usuariosA.last_page)">
+                <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ '...' }}
+                </a>
+              </li>
+              <li class="page-item" v-if="$store.state.usuariosA.last_page!=1">
+                <a  v-if="  $store.state.usuariosA.current_page!=$store.state.usuariosA.last_page" class="page-link" href="#" @click.prevent="Page($store.state.usuariosA.last_page)" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ $store.state.usuariosA.last_page }}
+                </a>
+                <a v-else class="page-link" href="#" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ $store.state.usuariosA.last_page }}
                 </a>
               </li>
               <li class="page-item" v-if="$store.state.usuariosA.current_page < $store.state.usuariosA.last_page">
@@ -90,7 +122,6 @@
               </li>
             </ul>
           </nav>
-        </div>
       </div>
     </div>
     
@@ -270,4 +301,11 @@ export default {
 .btn-derecha{
    margin-top: 0px;
 }  
+
+@media screen and (max-width: 800px) {
+  .paginar{
+    font-size: 65%;
+  }
+}
+
 </style>
