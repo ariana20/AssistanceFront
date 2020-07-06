@@ -1,110 +1,104 @@
 <template>
     <div class="FormRoles contenedor">
-<<<<<<< HEAD
-        <div style="text-align: left;margin-top:5%">
-=======
-        <div>
->>>>>>> origin/Ariana
-            <div class="row" >
-                <div class="col-12 col-md-4 col-lg-1 form-inline">
-                    Nombre: *
-                </div>
-                <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
-                    <input style="margin-top:2%" v-model="unidad.nombre" class="form-control" type="text" 
-                    onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90)
-                    ||  (event.charCode >= 97 && event.charCode <= 122)
-                    || (event.charCode >= 160 && event.charCode <= 165)
-                    || (event.charCode == 225 || event.charCode == 233 || event.charCode == 237 || event.charCode == 243 || event.charCode == 250))">
-                </div>
-                <div class="col-12 col-md-6 col-lg-5" v-else>
-                    <input disabled style="margin-top:2%" v-model="unidad.nombre" class="form-control" type="text" 
-                    onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90)
-                    ||  (event.charCode >= 97 && event.charCode <= 122)
-                    || (event.charCode >= 160 && event.charCode <= 165)
-                    || (event.charCode == 225 || event.charCode == 233 || event.charCode == 237 || event.charCode == 243 || event.charCode == 250))">
-                </div>
+        <div class="row" >
+            <div class="col-12 col-md-4 col-lg-1 form-inline">
+                Nombre: *
             </div>
-            <div class="row">
-                <div class="col-12 col-md-4 col-lg-1 form-inline">
-                    Nombre del Contacto: *
-                </div>
-                <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
-                    <input style="margin-top:2%" v-model="unidad.nombre_contacto" class="form-control" type="text" 
-                    onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90)
-                    ||  (event.charCode >= 97 && event.charCode <= 122)
-                    || (event.charCode >= 160 && event.charCode <= 165)
-                    || (event.charCode == 225 || event.charCode == 233 || event.charCode == 237 || event.charCode == 243 || event.charCode == 250))">
-                </div>
-                <div class="col-12 col-md-6 col-lg-5" v-else>
-                    <input disabled style="margin-top:2%" v-model="unidad.nombre_contacto" class="form-control" type="text"
-                    onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90)
-                    ||  (event.charCode >= 97 && event.charCode <= 122)
-                    || (event.charCode >= 160 && event.charCode <= 165)
-                    || (event.charCode == 225 || event.charCode == 233 || event.charCode == 237 || event.charCode == 243 || event.charCode == 250))">
-                </div>
+            <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
+                <input style="margin-top:2%" v-model="unidad.nombre" class="form-control" type="text" 
+                onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90)
+                ||  (event.charCode >= 97 && event.charCode <= 122)
+                || (event.charCode >= 160 && event.charCode <= 165)
+                || (event.charCode == 225 || event.charCode == 233 || event.charCode == 237 || event.charCode == 243 || event.charCode == 250))">
             </div>
-            <div class="row">
-                <div class="col-12 col-md-4 col-lg-1 form-inline">
-                    Correo del Contacto: *
-                </div>
-                <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
-                    <input style="margin-top:2%" v-model="unidad.correo_contacto" id="corr" class="form-control"  type="text">
-                </div>
-                <div class="col-12 col-md-6 col-lg-5" v-else>
-                    <input style="margin-top:2%" v-model="unidad.correo_contacto" id="corr" class="form-control"  type="text" disabled>
-                </div>
+            <div class="col-12 col-md-6 col-lg-5" v-else>
+                <input disabled style="margin-top:2%" v-model="unidad.nombre" class="form-control" type="text" 
+                onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90)
+                ||  (event.charCode >= 97 && event.charCode <= 122)
+                || (event.charCode >= 160 && event.charCode <= 165)
+                || (event.charCode == 225 || event.charCode == 233 || event.charCode == 237 || event.charCode == 243 || event.charCode == 250))">
             </div>
-            <div class="row">
-                <div class="col-12 col-md-4 col-lg-1 form-inline">
-                    Télefono del Contacto: *
-                </div>
-                <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
-                    <input style="margin-top:2%" v-model="unidad.telefono_contacto" type="text" class="form-control" value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
-                </div>
-                <div class="col-12 col-md-6 col-lg-5" v-else>
-                    <input disabled style="margin-top:2%" v-model="unidad.telefono_contacto" type="text" class="form-control" value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-4 col-lg-1 form-inline">
+                Nombre del Contacto: *
             </div>
-            <div v-if="$store.state.tipoActual.nombre == 'Admin' &&  $store.state.visualizacion!=true" class="row" >
-                <div class="col-12 col-md-4 col-lg-1 form-inline">
-                    Facultad a Asignar: *
-                </div>
-                <div class="col-12 col-md-6 col-lg-5">
-                    <select @change="Programas(facultadEl)" class= "form-control" style="color:gray;margin-top:2%" v-model="facultadEl">
-                        <option selected disabled :value="null">Elige una Facultad</option>
-                        <option v-if="$store.state.tipoActual.nombre == 'Admin'" :value="0">General</option>
-                        <option v-for="options in facultadesT" v-bind:key="options.id_facultad" :value="options">
-                        {{ options.nombre}}
-                        </option>
-                    </select>
-                </div>
+            <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
+                <input style="margin-top:2%" v-model="unidad.nombre_contacto" class="form-control" type="text" 
+                onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90)
+                ||  (event.charCode >= 97 && event.charCode <= 122)
+                || (event.charCode >= 160 && event.charCode <= 165)
+                || (event.charCode == 225 || event.charCode == 233 || event.charCode == 237 || event.charCode == 243 || event.charCode == 250))">
             </div>
-            <div v-if="(($store.state.tipoActual.nombre == 'Admin' && (prog) )|| $store.state.tipoActual.nombre == 'Coordinador Facultad') &&  $store.state.visualizacion!=true" class="row">
-                <div class="col-12 col-md-4 col-lg-1 form-inline">
-                    Programa a Asignar: *
-                </div>
-                <div class="col-12 col-md-6 col-lg-5">
-                    <select class= "form-control" style="color:gray;margin-top:2%" v-model="programaEl">
-                        <option selected disabled :value="null">Elige un Programa</option>
-                        <option v-if="$store.state.tipoActual.nombre == 'Admin' || $store.state.tipoActual.nombre == 'Coordinador Facultad'" :value="0">General Facultad</option>
-                        <option v-for="options in programasT" v-bind:key="options.id_programa" :value="options">
-                        {{ options.nombre}}
-                        </option>
-                    </select>
-                </div>
+            <div class="col-12 col-md-6 col-lg-5" v-else>
+                <input disabled style="margin-top:2%" v-model="unidad.nombre_contacto" class="form-control" type="text"
+                onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90)
+                ||  (event.charCode >= 97 && event.charCode <= 122)
+                || (event.charCode >= 160 && event.charCode <= 165)
+                || (event.charCode == 225 || event.charCode == 233 || event.charCode == 237 || event.charCode == 243 || event.charCode == 250))">
             </div>
-            <div class="row" style="margin-top:2%">
-                <div class="col-12 form-inline">
-                    * Campos obligatorios 
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-4 col-lg-1 form-inline">
+                Correo del Contacto: *
             </div>
-            <div  class="col-12 botones" style="text-align:center" v-if="$store.state.visualizacion!=true">   
-                <button type="button" style="margin:5px" class="btn btn-info" id="btnGuardar" v-on:click="Guardar()">Guardar</button>
-                <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="Regresar()">Cancelar</button>  
+            <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
+                <input style="margin-top:2%" v-model="unidad.correo_contacto" id="corr" class="form-control"  type="text">
             </div>
-            <div  class="col-12 botones" style="text-align:center" v-else>
-                <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="Regresar()">Regresar</button>  
+            <div class="col-12 col-md-6 col-lg-5" v-else>
+                <input style="margin-top:2%" v-model="unidad.correo_contacto" id="corr" class="form-control"  type="text" disabled>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-4 col-lg-1 form-inline">
+                Télefono del Contacto: *
+            </div>
+            <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
+                <input style="margin-top:2%" v-model="unidad.telefono_contacto" type="text" class="form-control" value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+            </div>
+            <div class="col-12 col-md-6 col-lg-5" v-else>
+                <input disabled style="margin-top:2%" v-model="unidad.telefono_contacto" type="text" class="form-control" value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+            </div>
+        </div>
+        <div v-if="$store.state.tipoActual.nombre == 'Admin' &&  $store.state.visualizacion!=true" class="row" >
+            <div class="col-12 col-md-4 col-lg-1 form-inline">
+                Facultad a Asignar: *
+            </div>
+            <div class="col-12 col-md-6 col-lg-5">
+                <select @change="Programas(facultadEl)" class= "form-control" style="color:gray;margin-top:2%" v-model="facultadEl">
+                    <option selected disabled :value="null">Elige una Facultad</option>
+                    <option v-if="$store.state.tipoActual.nombre == 'Admin'" :value="0">General</option>
+                    <option v-for="options in facultadesT" v-bind:key="options.id_facultad" :value="options">
+                    {{ options.nombre}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div v-if="(($store.state.tipoActual.nombre == 'Admin' && (prog) )|| $store.state.tipoActual.nombre == 'Coordinador Facultad') &&  $store.state.visualizacion!=true" class="row">
+            <div class="col-12 col-md-4 col-lg-1 form-inline">
+                Programa a Asignar: *
+            </div>
+            <div class="col-12 col-md-6 col-lg-5">
+                <select class= "form-control" style="color:gray;margin-top:2%" v-model="programaEl">
+                    <option selected disabled :value="null">Elige un Programa</option>
+                    <option v-if="$store.state.tipoActual.nombre == 'Admin' || $store.state.tipoActual.nombre == 'Coordinador Facultad'" :value="0">General Facultad</option>
+                    <option v-for="options in programasT" v-bind:key="options.id_programa" :value="options">
+                    {{ options.nombre}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top:2%">
+            <div class="col-12 form-inline">
+                * Campos obligatorios 
+            </div>
+        </div>
+        <div  class="col-12 botones" style="text-align:center" v-if="$store.state.visualizacion!=true">   
+            <button type="button" style="margin:5px" class="btn btn-info" id="btnGuardar" v-on:click="Guardar()">Guardar</button>
+            <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="Regresar()">Cancelar</button>  
+        </div>
+        <div  class="col-12 botones" style="text-align:center" v-else>
+            <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="Regresar()">Regresar</button>  
         </div>
         <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
             <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
@@ -292,7 +286,7 @@ export default {
                             if(this.facultadEl == 0) this.general2 = true;
                             if(this.programaEl == 0) this.general = true; 
                             if (this.facultadEl!=0) obj.id_facultad = this.facultadEl.id_facultad;
-                            if (this.programaEl!=0) obj.id_programa = this.programaEl.id_programa;
+                            if (this.programaEl!=0 && this.facultadEl!=0) obj.id_programa = this.programaEl.id_programa;
                             obj.general = this.general;
                             obj.general2 = this.general2;
                             obj.tipo = this.$store.state.tipoActual.nombre;
