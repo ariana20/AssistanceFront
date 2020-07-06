@@ -1,9 +1,5 @@
 <template>
-<<<<<<< HEAD
   <div name="FormPrograma contenedor">
-=======
-  <div name="FormPrograma" class="contenedor">
->>>>>>> origin/Ariana
     <div style="text-align: left;">
       <div class="row" style="width:100%">
         <div class="form-inline col-12 col-md-2 col-lg-1">
