@@ -2,7 +2,11 @@
   <!-- <div class="FormPrograma">
     <div class="container" style="left:60px;text-align: left"> -->
 	<div name="FormCoordinador" class="contenedor">
+<<<<<<< HEAD
 		<div style="text-align: left;">
+=======
+		<div>
+>>>>>>> origin/Ariana
 			<div class="row" style="width:100%">
 				<div class="form-inline col-12 col-md-2 col-lg-1">
 					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>

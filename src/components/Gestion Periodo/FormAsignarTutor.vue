@@ -1,6 +1,6 @@
 <template>
-  <div name="FormAsignarTutor">
-    <div style="text-align: center;margin-top:2%;margin-left:5%">
+  <div name="FormAsignarTutor" class="contenedor">
+    <div style="text-align: center;">
 
         <div class="row" style="text-align:left;">
             <h4 class="font-weight-bolder col-sm-2">Tutor: </h4>

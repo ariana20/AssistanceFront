@@ -58,11 +58,11 @@
               <b-form-input id="idCoordinadorF" readonly v-else></b-form-input>
               </b-col>
 
-              <b-col sm="1">
+              
               <b-col sm="1">
               <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>            
               </b-col>
-              </b-col>
+             
           </b-row>
           <b-row></b-row>
 

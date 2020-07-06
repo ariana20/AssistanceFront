@@ -1,6 +1,10 @@
 <template>
     <div class="FormRoles contenedor">
+<<<<<<< HEAD
         <div style="text-align: left;margin-top:5%">
+=======
+        <div>
+>>>>>>> origin/Ariana
             <div class="row" >
                 <div class="col-12 col-md-4 col-lg-1 form-inline">
                     Nombre: *
@@ -338,7 +342,7 @@ export default {
                                     response
                                     this.hideModal();
                                     Swal.fire({
-                                        text:"Modifiación Exitosa",
+                                        text:"Modificación Exitosa",
                                         icon:"success",
                                         confirmButtonText: 'OK',
                                         confirmButtonColor:'#0097A7',
