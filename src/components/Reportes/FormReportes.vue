@@ -1,6 +1,6 @@
 <template>
   <div class="FormReportes">
-      <div class="container">
+      <div class="contenedor">
         <div class="top-titulo" style="text-align:left;">
             <div class="col-4">
                 <h5>Fechas:</h5>
@@ -35,8 +35,8 @@
                         <span name="remove" class="close" @click="deleteFacu(index)" style="float:right;">&times;</span>           
                     </li>
                 </ul>
-            </div>
-            <div class="col-4">
+            </div-->
+            <!--div class="col-4">
                 <div class="row">
                     <div class="col"><h5>Programa: </h5></div>
                     <div  class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
@@ -63,34 +63,36 @@
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
         </div>
+
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row mt-5">
-            <div class="col-6" v-if="asignados.length>0">
+            <div class="col-12 col-md-6" v-if="asignados.length>0">
                 <strong>Cantidad de Alumnos Asignados</strong>
                 <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleAsignado()" >Ver más</button>
                 </div>
             </div>
-            <div class="col-6"  v-if="atenciones.length>0">
+            <div class="col-12 col-md-6"  v-if="atenciones.length>0">
                 <strong>Cantidad de Atenciones</strong>
                 <line-chart :chartData="atenciones" :options="chartOp" label='Atenciones'></line-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleAtenciones()" >Ver más</button>
                 </div>
             </div>
-        </div>
+        </div>     
+
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
-        <div class="row mt-5">
-            <div class="col-6" v-if="satisfaccion.length>0">
+        <div class="row">
+            <div class="col-12 col-md-6" v-if="satisfaccion.length>0">
                 <strong>Satisfacción del alumno</strong>
                 <pie-chart :chartData="satisfaccion" :options="chartOp2" label='Satisfacción del alumno'></pie-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleSatisfaccion()" >Ver más</button>
                 </div>
             </div>
-            <div class="col-6" v-if="alumnosBR.length>0">
+            <div class="col-12 col-md-6" v-if="alumnosBR.length>0">
                 <strong>Asistencia Alumnos Bajo Rendimiento</strong>
                 <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp" label='Cumplimiento de Planes de Acción'></horizontal-bar-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">

@@ -1,7 +1,7 @@
 <template>
-  <div class="FormCrearFacultad">
+  <div class="FormCrearFacultad contenedor">
 
-    <div style="text-align: left;margin-left:5%">
+    <div style="text-align: left">
       <!--<div class="top-title title-container" style="text-align:right">
         <button type="button" class="btn btn-info" style="margin-left:30px" v-on:click="guardarFacultad()">Guardar</button>
             
@@ -58,11 +58,11 @@
               <b-form-input id="idCoordinadorF" readonly v-else></b-form-input>
               </b-col>
 
-              <b-col sm="1">
+              
               <b-col sm="1">
               <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>            
               </b-col>
-              </b-col>
+             
           </b-row>
           <b-row></b-row>
 
@@ -402,7 +402,7 @@ export default {
         if(this.$store.state.facultadEscogida){
           this.showModal();
           //modifico la facultad, debo considerar progactualizar, progeliminar, progagregar
-          
+          this.facultad.usuario_actualizacion=this.$store.state.usuario.id_usuario;
           axios.create()
             .post('/facultad/modificar/'+this.facultad.id_facultad,this.facultad)
               .then( response=>{
@@ -630,8 +630,10 @@ export default {
         }).then((result) => {
           if (result.value) {
             this.programas.splice(ind,1 );
-            if(this.$store.state.facultadEscogida)
+            if(this.$store.state.facultadEscogida){
+              item.usuario_actualizacion=this.$store.state.usuario.id_usuario;
               this.progeliminar.push(item);
+            }
 
           }
         })

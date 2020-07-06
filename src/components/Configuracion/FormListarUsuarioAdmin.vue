@@ -1,6 +1,6 @@
 <template>
-  <div class="FormListarUsuario">
-    <div style="margin-left:5%;text-align: left">
+  <div class="FormListarUsuario contenedor">
+    <div style="text-align: left">
       <div class="row" style="width:100%">
         <div class="form-inline col-12 col-md-2 col-lg-1">
           <h5 style="margin-top:10%;margin-bottom:5%">Buscar: </h5>
@@ -118,10 +118,8 @@ export default {
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
-    if(this.$store.state.usuariosA === null  ) { 
-      this.showModal();    
-      this.listarUsuarios(); 
-    } 
+    this.showModal();    
+    this.listarUsuarios();
   },
   methods:{
     listarUsuarios() {

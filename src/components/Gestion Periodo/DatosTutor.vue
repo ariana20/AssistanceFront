@@ -70,6 +70,7 @@ export default {
                         id_tutor: this.tutor.id_usuario,
                         id_solicitante: this.$store.state.usuario.id_usuario,
                         id_programa: this.$store.state.programaActual.id_programa, 
+                        usuario_creacion: this.$store.state.usuario.id_usuario,
                         motivo: ""
                     }
                     axios.create()

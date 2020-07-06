@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="contenedor">
         <div class="top-info">
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>

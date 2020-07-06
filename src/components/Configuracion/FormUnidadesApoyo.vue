@@ -1,6 +1,6 @@
 <template>
-  <div class="FormUnidadesApoyo">
-    <div style="margin-left:5%;text-align: left;width:90%">  
+  <div class="FormUnidadesApoyo contenedor">
+    <div style="text-align: left">  
       <div class="row">
         <div class="form-inline col-12 col-md-2 col-lg-1">
           <h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
@@ -100,6 +100,13 @@
       </div>
       </div>
     </div>
+
+    <div v-if="unidadesFiltrados==null || unidadesFiltrados.length==0" class="row" style="width:100%">
+      <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
+        Ningún Registro de Unidades de Apoyo
+      </div>
+    </div>
+    
     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
         <b-spinner style="width: 3rem; height: 3rem;"/>

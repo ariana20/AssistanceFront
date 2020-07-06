@@ -1,8 +1,8 @@
 <template>
   <!-- <div class="FormPrograma">
     <div class="container" style="left:60px;text-align: left"> -->
-	<div name="FormCoordinador">
-		<div style="margin-left:5%;text-align: left;">
+	<div name="FormCoordinador" class="contenedor">
+		<div style="text-align: left;">
 			<div class="row" style="width:100%">
 				<div class="form-inline col-12 col-md-2 col-lg-1">
 					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
@@ -40,6 +40,12 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+    
+    <div v-if="coordinadoresFiltrados==null || coordinadoresFiltrados.length==0" class="row" style="width:100%">
+      <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
+        Ningún Registro de Coordinadores
       </div>
     </div>
 

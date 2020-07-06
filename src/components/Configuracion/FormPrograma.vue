@@ -1,6 +1,6 @@
 <template>
-  <div name="FormPrograma">
-    <div style="margin-left:5%;text-align: left;">
+  <div name="FormPrograma" class="contenedor">
+    <div style="text-align: left;">
       <div class="row" style="width:100%">
         <div class="form-inline col-12 col-md-2 col-lg-1">
           <h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
@@ -15,6 +15,7 @@
         <table class="table" style="margin-top:2%">
           <thead>
             <tr>
+              <th scope="col">Código</th>
               <th scope="col">Nombre</th>
               <th scope="col">Correo</th>
               <th scope="col">Coordinador</th>
@@ -23,10 +24,11 @@
           </thead>
           <tbody>
             <tr v-for="(item, index) in programasFiltrados" :key="index">
+              <td>{{item.programa.codigo}}</td>
               <td>{{item.programa.nombre}}</td>
               <td>{{item.programa.correo}}</td>
               <td>
-                <a style="font-weight:normal" v-if="item.coordinador">{{item.coordinador.nombre}}</a>
+                <a style="font-weight:normal" v-if="item.coordinador">{{item.coordinador.nombre + " " + item.coordinador.apellidos }}</a>
                 <a style="font-weight:normal" v-else>Sin Coordinador</a>
               </td>
               <td>
@@ -39,6 +41,12 @@
       </div>
     </div>
     
+    <div v-if="programasFiltrados==null || programasFiltrados.length==0" class="row" style="width:100%">
+      <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
+        Ningún Registro de Programas
+      </div>
+    </div>
+
     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
         <b-spinner style="width: 3rem; height: 3rem;"/>

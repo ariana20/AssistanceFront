@@ -2,7 +2,7 @@
   <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
       
       <select 
-        v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.cantProg !== null && this.$store.state.cantProg.length!=0"
+        v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.cantProg !== null && this.$store.state.cantProg.length!=0 && this.$store.state.cantProg.length!=1"
         class="col-5 col-md-2 form-control selectf"
         v-model="selectedPrograma"
         @change="cambiarProg()">
@@ -17,13 +17,15 @@
       </select>
 
       
-      <b-navbar-nav class="col-5 col-md-1 offset-md-11 offset-8" style="text-align:right;">
+      <b-navbar-nav class="col-5 col-md-2 offset-md-10 offset-8" style="text-align:right;">
           <b-nav-item href="/login" v-if="this.$route.path != '/login' && (this.$store.state.usuario === null || this.$store.state.usuario === undefined)">
             <a style="color:#000;font-weight:normal;margin-left:auto">Ingresar</a>
           </b-nav-item>
           <b-nav-item-dropdown class="buttonnav" style=";margin-left:auto;width:100%;color:black" right v-if="this.$store.state.usuario !== null && this.$store.state.usuario !== undefined">
               <template v-slot:button-content aria-expanded="false" style="overflow: hidden;color:black">
-                <em style="color:#000000;font-weight:normal;overflow: hidden;display:unset;width:10%" >{{$store.state.usuario.nombre}}</em>
+                <em style="color:#000000;font-weight:normal;overflow: hidden;display:unset;width:10%" >
+                  {{$store.state.usuario.nombre}}
+                </em>
               </template>
               <b-dropdown-item class="buttonnav btnnac" style="background:white"  v-on:click="Perfil()">
                 Perfil
@@ -33,6 +35,20 @@
               </b-dropdown-item>
           </b-nav-item-dropdown>
       </b-navbar-nav>
+      <figure v-if="(usuario!=null && usuario.imagen!='' && usuario.imagen!=null)" id="floated" class="image-logo" >
+        <img v-if="usuario!=null && usuario.imagen[0]!='u'" :src="usuario.imagen" alt="Foto"/>
+        <img v-else :src="'https://assisstanceproyecto20201.vizcochitos.cloudns.cl/'+usuario.imagen" alt="Foto" />
+      </figure>
+      <figure v-if="usuario!=null && (usuario.imagen=='' || usuario.imagen==null)" id="floated" class="image-logo">	
+        <b-avatar size="2rem" style="margin-left:-10px;width:40px"></b-avatar>		
+      </figure>
+      <figure v-if="usuario==null && $store.state.usuario!=null && $store.state.usuario.imagen!='' && $store.state.usuario.imagen!=null" id="floated" class="image-logo">	
+        <img v-if="$store.state.usuario.imagen[0]!='u'" :src="$store.state.usuario.imagen" alt="Foto"/>
+        <img v-else :src="'https://assisstanceproyecto20201.vizcochitos.cloudns.cl/'+$store.state.usuario.imagen" alt="Foto" />
+      </figure>
+      <figure v-if="usuario==null && $store.state.usuario!=null && ($store.state.usuario.imagen=='' || $store.state.usuario.imagen==null)" id="floated" class="image-logo">
+        <b-avatar size="2rem" style="margin-left:-10px;width:40px" ></b-avatar>		
+      </figure>
     </b-navbar>
 </template>
 
@@ -45,11 +61,16 @@ export default {
     return{
       nombre:null ,
       selectedPrograma: null,
+      usuario:null,
     }
   },
   mounted(){
     if(this.$store.state.usuario !== null && this.$store.state.usuario!== undefined){
       this.nombre = this.$store.state.usuario.nombre
+      this.axios.post('/usuarios/listar/'+this.$store.state.usuario.id_usuario)
+        .then(response=>{
+          this.usuario = response.data;
+        })
       let prog;
       if(this.$store.state.programaActual){
         prog = this.$store.state.programaActual.nombre;
@@ -218,7 +239,69 @@ export default {
   margin-left: 50px;
 }
 
-@media screen and (max-width: 600px) {
+
+#floated{
+    float: left;
+    width: 150px;
+    margin-top:15px;
+    text-align:center;
+}
+#botones {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+}
+.btn-enviar-msg { 
+    margin-left:540px;
+    background-color: white;
+    color: black;
+    border: 2px solid #17a2b8;
+}
+.btn:focus {
+    outline:none;
+    box-shadow: none;
+    border: 2.3px solid transparent;
+}
+select:focus {
+    outline:none;
+    box-shadow: none;
+}
+img {
+  border-radius: 50%;
+}
+.image-logo{
+  height:40px;
+  margin-left:-1%;
+  width: 20%;
+}
+
+.image-logo img{
+  margin-top:-10px;
+  margin-left:-50%;
+  height:40px;
+  width: 220%;
+}
+
+
+@media screen and (max-width: 1200px) {
+  .image-logo{
+    height:40px;
+    margin-left:-2%;
+    width: 20%;
+  }
+  .image-logo img{
+    margin-left:-50%;
+    height:40px;
+    width: 220%;
+  }
+
+  .image-logo b-avatar{
+    margin-left:-50%;
+    height:40px;
+    width: 220%;
+  }
+}
+@media screen and (max-width: 800px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
   .btn-navs{
@@ -252,6 +335,10 @@ export default {
   .selectf{
     top:2%;
     left:20%;
+  }
+
+  .image-logo{
+    visibility: hidden;
   }
 }
 </style>
