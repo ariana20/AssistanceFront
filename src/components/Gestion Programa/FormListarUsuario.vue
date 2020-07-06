@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <div style="overflow: auto;width:95%;margin-top:2%">
+      <div style="overflow: auto;margin-top:2%">
         <table responsive class="table" style="text-align:left" >
           <thead>
             <tr>

@@ -1,35 +1,19 @@
 <template>
-  <div class="FormReportes">
+  <div class="FormReportesRendimiento">
       <div class="contenedor">
-        <div  class="row top-titulo" style="text-align:left;">
+        <div  class="top-titulo" style="text-align:left;">
             <!-- inicia de las fechas -->
-            <!-- <div class="col-12 col-md-4 col-lg-2 form-inline"> -->
-            <!-- <div class="col-12 col-md-6">
-                <div class="row">
-                    <h5 class="">Fechas:</h5>
-                    <date-picker
-                     class="wide-date-example"
-                    v-model="periodo"
-                    width="100" lang="es" range
-                    placeholder="Selecciona Rango de Fechas"
-                    :disabled-date="disabledAfterToday"
-                    @input="handlePeriodChange"
-                    input-class="font-weight-ligth text-left  col-12 col-md-6 form-control">
-                    </date-picker>
-                </div>
-            </div> -->
-
-             <div class="col-12 col-md-6">
+             <div class="col-12 col-md-4">
               <div class="row">
-                <div  class="col-md-2">Fechas: </div>
-                <div  class=""> 
+                <div  class="col-12 col-md-2">Fechas: </div>
+                <div > 
                     <date-picker style="left:0px" class="wide-date-example"
                         v-model="periodo" 
-                        width="10" lang="es" range 
+                        width="20" lang="es" range 
                         placeholder="Selecciona Rango de Fechas"
                         :disabled-date="disabledAfterToday"
                         @input="handlePeriodChange"
-                        input-class="col-md-12 form-control">
+                        input-class="form-control">
                     </date-picker>
                 </div>
               </div>  <!-- fin de la mitad del row2 que divide fecha y selecc fecha -->
@@ -37,30 +21,31 @@
 
            
             <!-- inicia combobox de tutor -->
-            <!-- <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4> -->
             <div class="col-12 col-md-6">
               <div class="row">
                 <div  class="col-12 col-md-2">Tutor: </div>
-                <div  class="col-12 col-md-10"> 
+                <div  class="col-12 col-md-8"> 
                   <select class="form-control " style="left:-160px;top:26px;cursor:pointer" v-model="tutorSel"  >
                     <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                     <option
                         v-for="(item, index) in tutores"
                         :key="index"
-                        :value="item.id_tutor">
+                        :value="item.id_usuario">
                         {{ item.usuario.nombre + " " + item.usuario.apellidos }}
                     </option>
                   </select>
-                  <!-- <div class="col-12 col-md-2 botones" style="margin-bottom:10px">
-                        <button type="button" class=" btn btn-info"  @click="generarReporte()" >Generar</button>
-                  </div>   -->
-                                <!-- div del boton -->
+                
                 </div>   
                 
                 
               </div><!-- fin del row2 -->
 
+
             </div> <!-- fin de la mitad del row1 -->
+            <div class="col-12 col-md-2 botones" style="margin-bottom:10px">
+                   <button type="button" class="col-12 col-md-12 btn btn-info"  @click="generarReporte()" >Generar</button>
+             </div>   
+                                <!-- div del boton -->
          </div>  <!-- fin del top -row1 -->
         <div class="row" style="margin-left:1px;text-align:left;">
             <!-- <h4 v-if="this.isCoordinador===false">Facultad: </h4>
@@ -90,7 +75,7 @@
         <div class="row mt-2">
 
             <div v-if="alumnosBR.length>0">
-                <strong style=";margin-left:10px">Cantidad de alumnos que asistieron a sus citas</strong>
+                <strong style="margin-left:10px">Cantidad de alumnos que asistieron a sus citas</strong>
                 <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp2"
                 label='Alumnos con Bajo Rendimiento'  style="display: block; width: 444px; height: 222px;"></horizontal-bar-chart>
             </div>
@@ -149,7 +134,7 @@ export default {
             programas:[],
             selectedPrograma:null,
             tutores:[],
-            tutorSel:[],
+            tutorSel:null,
 
             //lista de identificadores
             idPogramas:[],
@@ -223,11 +208,11 @@ export default {
 
     },
     mounted(){
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.borderRadius = "1.25rem";
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.border= "0.5px solid #757575";
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontWeight = "300";
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontSize = "1rem";
-        document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.height = "2.4em";
+        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.borderRadius = "1.25rem";
+        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.border= "0.5px solid #757575";
+        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontWeight = "300";
+        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontSize = "1rem";
+        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.height = "2.4em";
         this.periodo = [this.inicio,this.fin];
         this.BajoRendimiento();
         this.listarFacultades();
@@ -250,6 +235,7 @@ export default {
             return this.programas.filter(i => i != null && i.codigo != this.selectedFacultad.codigo)
         },
         listarTutores(){
+            this.showModal();
             const params = {
                 id_programa : this.$store.state.programaActual.id_programa,
                 nomFacu:this.$store.state.programaActual.facultad.nombre,
@@ -259,16 +245,22 @@ export default {
             .post('/programa/tutoresListar', params)
             .then(res =>{
                 this.tutores=res.data;
-/*
-                //Agrego la opción de todos
-                var tTodos=new Object();
-                tTodos.usuario.nombre="Todos";
-                tTodos.usuario.id_programa=0;
-                this.tutores.push(tTodos);    */
+                this.hideModal();
+                console.log('tutores: ',this.tutores);
+                // this.tutores.splice(0,1);
+                // //Agrego la opción de todos
+                 var tTodos=new Object(), usuario=new Object;
+
+                 usuario.nombre="Todos";
+                 usuario.apellidos="";
+                 usuario.id_usuario=0;
+                 tTodos.usuario=usuario;
+                 tTodos.id_usuario=0;
+                 this.tutores.push(tTodos);    
             })
             .catch(e => {
-                console.log('catch',e.response);
-
+                console.log('catch',e);
+                this.hideModal();
                 Swal.fire({
                     text:"Estamos teniendo problemas al listar los tutores del programa. Vuelve a intentar en unos minutos.",
                     icon:"warning",
@@ -291,14 +283,9 @@ export default {
             .then( response => {
                 this.hideModal();
                 this.mipermisosUsuario=this.$store.state.permisosUsuario;
-                this.facultades=response.data;
-                var facu=new Object();
-                facu.nombre="Todos";
-                facu.id_facultad=0;
-                facu.codigo="TODOS";
-                this.facultades.push(facu);
+                this.facultades=response.data; //No lo uso
                 //Manejo de permisos
-
+                // console.log('permisos ',this.mipermisosUsuario);
                 if(this.mipermisosUsuario.includes("Usuarios")){
                     this.selectedPrograma=this.$store.state.programaActual.id_programa;
                     this.listarProgramas();
@@ -315,7 +302,7 @@ export default {
             })
             .catch(e => {
                 this.hideModal();
-                console.log('catch:',e.response);
+                console.log('catch:',e);
             });
 
         },
@@ -324,17 +311,19 @@ export default {
                 id_facultad:this.$store.state.programaActual.id_facultad,
 
             };
+            
             axios.post('facultad/listarProgramasDefault', params)
             .then( response => {
+                // console.log(response);
                 this.programas=response.data;
-                this.programas.splice(0,1);
-                var prog=new Object();
-                prog.nombre="Todos";
-                prog.id_programa=0;
-                this.programas.push(prog);
+                // this.programas.splice(0,1);
+                // var prog=new Object();
+                // prog.nombre="Todos";
+                // prog.id_programa=0;
+                // this.programas.push(prog);
             })
             .catch(e => {
-                console.log('catch: ',e.response);
+                console.log('catch: ',e);
             });
 
         },
@@ -345,16 +334,24 @@ export default {
 
             this.alumnosBR=[];
             this.alumnosBRPlan=[];
-            if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){
+            if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null && this.tutorSel!=null ){
                 var programas=[];
                 var tutoresSeleccionados=[];
                 if(this.selectedPrograma==0){
-                    var n=this.programas.length;
+                    //escogió todos los prog
+                    let n=this.programas.length;
                     for(let i=1;i<n-1;i++ ){
                         programas[i]=this.programas[i].id_programa;
-                        tutoresSeleccionados[i-1]=this.tutores[i].id_tutor;
+                        tutoresSeleccionados[i-1]=this.tutores[i].id_usuario;
                     }
-                }else{
+                }else if(this.tutorSel==0 && this.selectedPrograma!=0 ){
+                    let n=this.tutores.length;
+                    for(let i=0;i<n-1;i++ ){                       
+                        tutoresSeleccionados[i]=this.tutores[i].id_usuario;
+                    }
+                    programas[0]=this.selectedPrograma;
+                }else if(this.tutorSel!=0 && this.selectedPrograma!=0 ){
+                    tutoresSeleccionados[0]=this.tutorSel;                   
                     programas[0]=this.selectedPrograma;
                 }
 
@@ -366,12 +363,20 @@ export default {
                     fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
                     id_tutor:tutoresSeleccionados,
                 };
-
+                  const params2 = {
+                    id_programa: programas,
+                    id_facultad: this.$store.state.programaActual.id_facultad,
+                    id_institucion: 1,
+                    fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                    fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+                };
+                console.log(params);
                 var data =await axios.post("usuarios/datosBajoRendimiento", params);
-                var dataPlan =await axios.post("usuarios/datosAlumnosPlan", params);
+                var dataPlan =await axios.post("usuarios/datosAlumnosPlan", params2);
 
                 // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
                 //LLenado del gráfico de la izquierda
+                console.log('datos: ',data);
                 this.alumnosBR.push({data:">50%-Cuarta",total:data.data[4].total_alumnos});
                 this.alumnosBR.push({data:"<50%-Cuarta",total:data.data[5].total_alumnos});
 
@@ -436,6 +441,15 @@ export default {
             else if(this.periodo[0]==null && this.periodo[1]==null ){
                 Swal.fire({
                     text:"No ha seleccionado una fecha",
+                    icon:"warning",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+               })
+            }
+            if(this.tutorSel==null){
+                 Swal.fire({
+                    text:"No ha seleccionado un tutor.",
                     icon:"warning",
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
