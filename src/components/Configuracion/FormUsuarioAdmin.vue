@@ -1,5 +1,5 @@
 <template>
-  <div class="FormUsuario" style="margin-top:5px;margin-left:5%;margin-right:5%">
+  <div class="FormUsuario contenedor" style="margin-top:5px;">
     <div class="row grid-divider" style="margin-top:3%" >
       <div id="izquierdo" class="col-md-5">
         <table>

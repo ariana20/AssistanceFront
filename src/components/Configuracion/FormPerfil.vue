@@ -1,5 +1,5 @@
 <template>
-    <div name="Form Perfil" style="margin-left:5%">
+    <div name="Form Perfil" class="contenedor">
         <div class="font-weight-bolder text-left" style="font-size:180%">{{$store.state.usuario.nombre+" "+$store.state.usuario.apellidos}}</div>
         <div v-if="usuario!=null" class="row" style="text-align:left;">
             <div class="col-12 col-md-3" style="margin-top:3%">

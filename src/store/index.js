@@ -58,6 +58,16 @@ export default new Vuex.Store({
 		icon: 'ion-ios-person'
       },
       {
+        text: 'Datos Facultad',
+		path: '/datosFacultad',
+		icon: 'ion-ios-business'
+      },
+      {
+        text: 'Datos Programa',
+		path: '/datosPrograma',
+		icon: 'ion-ios-business'
+      },
+      {
         text: 'Tipos de Tutoria',
 		path: '/ListaTiposTutorias',
 		icon: 'ion-ios-bookmarks'

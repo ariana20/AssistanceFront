@@ -2,7 +2,7 @@
   <b-navbar toggleable="lg" type="dark" style="box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 26px;background:#FFFFFF;position: fixed;width:100%;margin-top:0;height:60px;">
       
       <select 
-        v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.cantProg !== null && this.$store.state.cantProg.length!=0"
+        v-if="this.$route.path != '/seleccion' && this.$route.path != '/login' && this.$store.state.cantProg !== null && this.$store.state.cantProg.length!=0 && this.$store.state.cantProg.length!=1"
         class="col-5 col-md-2 form-control selectf"
         v-model="selectedPrograma"
         @change="cambiarProg()">
@@ -35,12 +35,19 @@
               </b-dropdown-item>
           </b-nav-item-dropdown>
       </b-navbar-nav>
-      <figure v-if="(usuario.imagen!='' && usuario.imagen!=null)" id="floated" class="image-logo" >
-        <img v-if="usuario.imagen[0]!='u'" :src="usuario.imagen" alt="Foto"/>
+      <figure v-if="(usuario!=null && usuario.imagen!='' && usuario.imagen!=null)" id="floated" class="image-logo" >
+        <img v-if="usuario!=null && usuario.imagen[0]!='u'" :src="usuario.imagen" alt="Foto"/>
         <img v-else :src="'https://assisstanceproyecto20201.vizcochitos.cloudns.cl/'+usuario.imagen" alt="Foto" />
       </figure>
-      <figure v-if="usuario.imagen=='' || usuario.imagen==null" id="floated" class="image-logo">	
-        <b-avatar size="1rem" ></b-avatar>		
+      <figure v-if="usuario!=null && (usuario.imagen=='' || usuario.imagen==null)" id="floated" class="image-logo">	
+        <b-avatar size="2rem" style="margin-left:-10px;width:40px"></b-avatar>		
+      </figure>
+      <figure v-if="usuario==null && $store.state.usuario!=null && $store.state.usuario.imagen!='' && $store.state.usuario.imagen!=null" id="floated" class="image-logo">	
+        <img v-if="$store.state.usuario.imagen[0]!='u'" :src="$store.state.usuario.imagen" alt="Foto"/>
+        <img v-else :src="'https://assisstanceproyecto20201.vizcochitos.cloudns.cl/'+$store.state.usuario.imagen" alt="Foto" />
+      </figure>
+      <figure v-if="usuario==null && $store.state.usuario!=null && ($store.state.usuario.imagen=='' || $store.state.usuario.imagen==null)" id="floated" class="image-logo">
+        <b-avatar size="2rem" style="margin-left:-10px;width:40px" ></b-avatar>		
       </figure>
     </b-navbar>
 </template>
@@ -269,6 +276,7 @@ img {
 }
 
 .image-logo img{
+  margin-top:-10px;
   margin-left:-50%;
   height:40px;
   width: 220%;
@@ -282,6 +290,12 @@ img {
     width: 20%;
   }
   .image-logo img{
+    margin-left:-50%;
+    height:40px;
+    width: 220%;
+  }
+
+  .image-logo b-avatar{
     margin-left:-50%;
     height:40px;
     width: 220%;
@@ -323,8 +337,7 @@ img {
     left:20%;
   }
 
-  .image-logo img{
-    height:40px;
+  .image-logo{
     visibility: hidden;
   }
 }
