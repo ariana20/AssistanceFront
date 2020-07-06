@@ -1,5 +1,5 @@
 <template>
-    <div class="formcitaagendada container">
+    <div class="formcitaagendada contenedor">
         <div class="top-info" style="text-align:left;">
             <div id="botones">
                 <button type="button" class="btn btn-info" @click="guardar">Guardar</button>
@@ -27,7 +27,7 @@
         <div class="row">
             <div class="col-md-4 col-sm-4">
                 <div class="col-sm-6"><label for="formGroupExampleInput">Código</label></div>
-                <hr style="width:335%;">
+                <hr style="width:315%;">
                 <ejs-autocomplete
                     :dataSource='codigos' 
                     :fields='campoCodigo' 

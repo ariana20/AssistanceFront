@@ -1,5 +1,5 @@
 <template>
-    <div style="margin-left:5%">
+    <div class="contenedor">
          <!-- <div class="row grid-divider "> -->
             <div >
                 <!-- <router-link to="reporteRendimiento"> 

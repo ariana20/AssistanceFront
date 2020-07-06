@@ -1,5 +1,5 @@
 <template>
-    <div class="formagendarcita container">
+    <div class="formagendarcita contenedor">
         <div class="top-titulo " style="text-align:left;">
             <!-- inicia combobox de tutor -->
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
@@ -408,9 +408,8 @@ function addTimes (startTime, endTime) {
 }
 .fc-event { 
     background-color: #B2EBF2;
-    border-color: #B2EBF2;
-   
-    cursor: pointer;
+    border-color: #B2EBF2;   
+    cursor: pointer !important;
 
 }
 .vm--modal {
