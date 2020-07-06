@@ -1,5 +1,5 @@
 <template>
-    <div class="formcitaagendada container">
+    <div class="formcitaagendada contenedor">
         <div class="top-info" style="text-align:left;">
             <div id="botones">
                 <button v-if="this.cita[1]=='l' && !this.editar" type="button" class="btn btn-info" @click="editFields">Editar</button>
@@ -67,7 +67,7 @@
             <div class="der col-lg-6 col-xm col-md-12">
                 <div class="font-weight-bolder text-left">Resultado</div>
                  <div class="top-titulo" style="margin-bottom:20px;">
-                    <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
+                    <div class="col-sm-3 motivo-dropdown-title">Motivo:* </div>
                     <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="selectedMotivo">
                         <option selected disabled :value="null" >Selecciona un motivo</option>
                         <option
@@ -98,7 +98,7 @@
                     </ul>
                     <hr>
                     <div class="form-group" style="text-align:left;margin-bottom:20px;">
-                        <label for="descripcion">Descripción:</label>
+                        <label for="descripcion">Descripción:*</label>
                         <textarea class="form-control" id="descripcion-motivo" rows="7" v-model="descripcion"></textarea>
                     </div>
                     <div class="top-titulo" style="text-align:left;">
@@ -264,17 +264,17 @@ export default Vue.extend ({
                     this.listAlumnosId.push(this.cita[0].cita_x_usuarios[i].id_usuario);
                 }             
             }
-            if(this.cita[1] != "l") {
-            this.descripcion = this.cita[1].resultado;
-            if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
-                this.asistencia = true;
-            }
+            if(this.cita[1] != "l") {   
+                this.descripcion = this.cita[1].resultado;
+                if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
+                    this.asistencia = true;
+                }
            
-            for(var i in this.cita[1].motivo_consultas) {
-                this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
-                this.addMotivos()
+                for(var i in this.cita[1].motivo_consultas) {
+                    this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
+                    this.addMotivos()
+                }
             }
-        }
         },
         enableFields() {
             // let elems = document.getElementsByTagName('input')
@@ -330,15 +330,20 @@ export default Vue.extend ({
             
         },
         guardar: function () {
-            let array = []
-            array.push(this.event.extendedProps.alumno.id_usuario);
-        
+       
+            if(this.asistencia==true){
+                this.asistencia="asi"
+            }else{
+                this.asistencia="noa"
+            }
+
+            //varios un alumno
             const sesion_params = {
                 id_cita: this.$store.state.idCita,
                 resultado: this.descripcion,
                 usuario_creacion: this.cita[1].usuario_creacion,
                 usuario_actualizacion: this.cita[1].usuario_actualizacion,
-                idAlumnos: array,
+                idAlumnos: this.listAlumnosId,
                 asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
             };
@@ -348,6 +353,15 @@ export default Vue.extend ({
                                 if(this.selectedUnidadApoyo) {
                                     this.enviarCorreo(this.selectedUnidadApoyo)
                                 }
+
+                                /*
+                                "{"id_cita":4,
+                                "resultado":"No saben qué carrera escoger",
+                                "idAlumnos":[211],
+                                "asistencia":true,
+                                "idMotivos":[3]}"
+
+*/
                                 axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
                                        console.log(response);
@@ -359,6 +373,7 @@ export default Vue.extend ({
                                             confirmButtonColor:'#0097A7',
                                             showConfirmButton: true,
                                         }) 
+                                        //lo redirigo a los calendarios
                                     })  
                                     .catch(e => {
                                         console.log(e.response);
@@ -694,5 +709,7 @@ export default Vue.extend ({
         outline:none;
         box-shadow: none;
     }
-    
+ .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}   
 </style>

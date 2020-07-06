@@ -1,5 +1,5 @@
 <template>
-    <div style="margin-left:5%">
+    <div class ="contenedor">
       <div >
         <section class="text-left" style="padding-top:0px">
             <h5 class="font-weight-ligth text-left col-md-6" style="font-weight: bold;">Carga masiva de alumnos</h5>
