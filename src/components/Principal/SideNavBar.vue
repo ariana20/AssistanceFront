@@ -1,7 +1,7 @@
 <template>
 	<nav style="background: '#FFFFFF'">
 		<ul :style="{ background: background|| '#333'}" ref="nav">
-			<figure v-if="this.$store.state.usuario && this.$store.state.tipoActual.nombre=='Admin'" class="image-logo logs2" @click="toggleNav">
+			<figure v-if="this.$store.state.usuario && this.$store.state.tipoActual!=null && this.$store.state.tipoActual.nombre=='Admin'" class="image-logo logs2" @click="toggleNav">
 				<img :src="imagePath" height="65vh" width="65vw" style="margin-top:-5%;margin-left:-10%"  />		
 				<nobr class="logos2">ssistance</nobr>				
 			</figure>

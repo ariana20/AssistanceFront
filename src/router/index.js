@@ -43,6 +43,22 @@ Vue.use(VueRouter)
   component: () => import(/* webpackChunkName: "about" */ '../views/Configuracion/ViewFacultad.vue')
   },
   {
+  path: '/datosFacultad',
+  name: 'Datos Facultad',
+  // route level code-splitting
+  // this generates a separate chunk (about.[hash].js) for this route
+  // which is lazy-loaded when the route is visited.
+  component: () => import(/* webpackChunkName: "about" */ '../views/Configuracion/ViewDatosFacultad.vue')
+  },
+  {
+  path: '/datosPrograma',
+  name: 'Datos Programa',
+  // route level code-splitting
+  // this generates a separate chunk (about.[hash].js) for this route
+  // which is lazy-loaded when the route is visited.
+  component: () => import(/* webpackChunkName: "about" */ '../views/Configuracion/ViewDatosPrograma.vue')
+  },
+  {
     path: '/crearFacultad/:id?',
     name: 'CrearFacultad',
     // route level code-splitting
