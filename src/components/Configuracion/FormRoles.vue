@@ -1,5 +1,5 @@
 <template>
-  <div class="FormRoles" style="text-align: left;margin-left:5%">
+  <div class="FormRoles contenedor" style="text-align: left">
 
     <div class="row" style="width:100%">
       <div class="form-inline col-11 col-md-2 col-lg-1">

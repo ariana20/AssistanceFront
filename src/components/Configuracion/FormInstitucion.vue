@@ -1,6 +1,6 @@
 <template>
-  <div class="FormInstitucion ">
-    <div style="text-align: left;margin-left:5%;">
+  <div class="FormInstitucion contenedor">
+    <div style="text-align: left">
       <form v-on:submit.prevent="guardarInstitucion" >
         <div class="row grid-divider" style="width:95%">
           <div class="izq col-lg-6 col-xm-2 col-md-12">

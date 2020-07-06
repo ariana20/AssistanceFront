@@ -1,6 +1,6 @@
 <template>
-  <div class="FormRoles">
-    <div style="text-align: left;margin-left:5%">
+  <div class="FormRoles contenedor">
+    <div style="text-align: left">
       <div class="row" style="width:100%">
         <div class="col-11 col-sm-4 col-lg-2">
           <h4 style="margin-top:1%">Tipo Usuario: </h4>

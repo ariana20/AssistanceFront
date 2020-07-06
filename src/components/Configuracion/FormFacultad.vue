@@ -1,6 +1,6 @@
 <template>
-	<div name="FormFacultad container">
-		<div style="margin-left:5%;text-align: left;">
+	<div name="FormFacultad" class="contenedor">
+		<div style="text-align: left;">
 
 			<div class="row" style="width:100%">
 				<div class="form-inline col-12 col-md-2 col-lg-1">

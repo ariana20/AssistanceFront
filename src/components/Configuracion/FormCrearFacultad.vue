@@ -1,7 +1,7 @@
 <template>
-  <div class="FormCrearFacultad">
+  <div class="FormCrearFacultad contenedor">
 
-    <div style="text-align: left;margin-left:5%">
+    <div style="text-align: left">
       <!--<div class="top-title title-container" style="text-align:right">
         <button type="button" class="btn btn-info" style="margin-left:30px" v-on:click="guardarFacultad()">Guardar</button>
             
