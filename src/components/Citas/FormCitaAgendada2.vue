@@ -354,14 +354,6 @@ export default Vue.extend ({
                                     this.enviarCorreo(this.selectedUnidadApoyo)
                                 }
 
-                                /*
-                                "{"id_cita":4,
-                                "resultado":"No saben qué carrera escoger",
-                                "idAlumnos":[211],
-                                "asistencia":true,
-                                "idMotivos":[3]}"
-
-*/
                                 axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
                                        console.log(response);
