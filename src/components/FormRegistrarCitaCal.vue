@@ -207,7 +207,7 @@ export default {
                       
             })
             .catch(e => {
-                console.log(e.response);
+                console.log(e);
                 this.hideModal();
                 Swal.fire({
                     text:"Estamos teniendo problemas al listar los tutores del programa. Vuelve a intentar en unos minutos.",
@@ -297,7 +297,7 @@ export default {
                     }
                     
                 }).catch(e => {
-                    console.log(e.response);
+                    console.log(e);
                     
                     Swal.fire({
                         text:"Estamos teniendo problemas al mostrar la disponibilidad del tutor. Vuelve a intentar en unos minutos.",
