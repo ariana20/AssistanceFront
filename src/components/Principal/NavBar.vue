@@ -105,7 +105,9 @@ export default {
       }
     }
     else{
-      if (this.$route.path !== '/login' ) this.$router.push('/login')
+      if (this.$route.path !== '/login' &&  !this.$route.path.toString().includes('recuperar')) {
+        this.$router.push('/login')
+      }
     }
     
   },
