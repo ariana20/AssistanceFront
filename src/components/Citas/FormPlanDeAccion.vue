@@ -44,7 +44,7 @@
           <strong>Descripción:</strong>
         </div>
         <div class="col-12 col-md-7">
-          <div v-if="nuevo!=true" style="margin-left:2%">
+          <div v-if="nuevo!=true && this.planAccion && this.planAccion.descripcion" style="margin-left:2%">
             {{this.planAccion.descripcion}}
           </div>
           <div v-else>

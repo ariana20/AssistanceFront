@@ -8,7 +8,7 @@
         <div class="form-inline col-12 col-md-4">
           <input v-on:change="Buscar(nombre)" class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese un nombre">
         </div>
-        <div class="form-inline col-12 col-md-2 offset-md-2 offset-lg-4">
+        <div class="form-inline col-12 col-md-2 offset-md-2 offset-lg-5">
           <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
         </div>
       </div>
@@ -53,9 +53,9 @@
                   <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;"/>
               </td>
               <td style="text-align: center">
-                <div class="row" style="width:115px">
-                  <button class="btn link"><b-icon icon="pencil" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
-                  <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item)"></b-icon></button>
+                <div class="row" style="width:100%;margin-left:0px">
+                  <button class="btn link col-3" style="padding: 0px"><b-icon icon="pencil" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
+                  <button class="btn link col-3" style="padding: 0px;margin-left:10px"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item)"></b-icon></button>
                 </div>              
               </td>
             </tr>

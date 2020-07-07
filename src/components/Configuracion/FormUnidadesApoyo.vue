@@ -8,7 +8,7 @@
         <div class="form-inline col-12 col-md-2">
           <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
         </div>
-        <div class="form-inline col-12 col-md-2">
+        <div class="form-inline col-12 col-md-2" v-if="this.$store.state.tipoActual.nombre == 'Admin'">
           <select v-on:change="FacultadSel"  class="form-control"
             v-model="facuSeleccionadoInd">  <!--aqui guardo-->
             <option selected :value="null">Selecciona una facultad</option>
@@ -17,7 +17,7 @@
             </option>
           </select>
         </div>
-        <div class="form-inline col-12 col-md-2">
+        <div class="form-inline col-12 col-md-2" v-if="this.$store.state.tipoActual.nombre == 'Admin'">
           <select v-on:change="ProgramaSel"  class="form-control"
             v-model="progSeleccionadoInd">  <!--aqui guardo-->
             <option selected :value="null">Selecciona un programa</option>
@@ -26,7 +26,10 @@
             </option>
           </select>
         </div>
-        <div class="form-inline col-12 col-md-2 offset-md-1 offset-lg-3">
+        <div class="form-inline col-12 col-md-2 offset-md-1 offset-lg-3" v-if="this.$store.state.tipoActual.nombre == 'Admin'">
+          <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
+        </div>
+        <div class="form-inline col-12 col-md-2 offset-md-3 offset-lg-7" v-else>
           <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
         </div>
       </div>
