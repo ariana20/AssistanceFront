@@ -310,6 +310,7 @@ function addTimes (startTime, endTime) {
 .fc-event { 
     background-color: #B2EBF2;
     border-color: #B2EBF2;
+    cursor: pointer;
 }
 .vm--modal {
     border-radius: 25px;
