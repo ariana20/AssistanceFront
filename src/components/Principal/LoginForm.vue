@@ -410,9 +410,9 @@ import emailjs from 'emailjs-com';
                       "gmail",
                       "template_bV7OIjEW",
                       {
-                      "nombre":response.data.user.nombre,
+                      "nombre":response.data.nombre,
                       "mensaje":"Olvidaste tu contrasena?<br><br>Entra a este <a href="+direccion+">link</a> "+direccion,
-                      "correo": response.data.user.correo
+                      "correo": response.data.correo
                       }, 'user_ySzIMrq3LRmXhtVkmpXAA')
                       .then((result) => {
                         console.log('SUCCESS!', result.status, result.text);
