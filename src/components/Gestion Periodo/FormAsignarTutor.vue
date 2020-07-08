@@ -24,12 +24,10 @@
         </div>
         <div class="row" style="margin-top:2%">
             <div class="font-weight-bolder col-sm-2" style="text-align:left;">Alumnos</div>
-            <div class="font-weight-bolder col-sm-6" style="text-align:right;"><button  :disabled="!this.sel" type="button" class="btn btn-info" style="text-align:right;" @click="addAlumno">
-                Asignar
-            </button>
+            <div class="font-weight-bolder col-sm-6" style="text-align:right;">
             </div>
         </div>
-        <table class="table" style="text-align: left">
+        <table class="table" style="text-align: left; margin-top:15px">
             <thead>
                 <tr>
                     <th scope="col" style="width:150px">Código</th>
@@ -67,14 +65,14 @@
                         <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Condición Alumno</div>
                     </td>
                     <td scope="col">
-                        <button class="btn link" v-on:click="Cancelar"><b-icon icon="x-circle-fill"></b-icon></button>
+                        <button  :disabled="!this.sel" type="button" class="btn btn-info" style="text-align:right;" @click="addAlumno">Asignar</button>
                     </td>
                 </tr>
                 <tr v-for="(item,index) in alumnosAsig" :key="index">
                     <td v-if="item!=undefined">{{item.codigo}}</td>
                     <td v-if="item!=undefined">{{item.nombre+" "+item.apellidos}}</td>
                     <td v-if="item!=undefined">{{item.condicion}}</td>
-                    <td v-if="item!=undefined"><button class="btn link" v-on:click="Eliminar(item, index)"><b-icon icon="dash-circle-fill"></b-icon></button></td>
+                    <td v-if="item!=undefined"><button class="btn link" v-on:click="Eliminar(item, index)"><b-icon  style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"></b-icon></button></td>
                 </tr>
             </tbody>
         </table>

@@ -1,6 +1,50 @@
 <template>
   <div class="FormReportesRendimiento">
       <div class="contenedor">
+        <div class="top-titulo" style="text-align:left;">
+            <div class="col-12 col-md-4">
+                <h5>Fechas:</h5>
+                <date-picker style="left:0px" class="wide-date-example"
+                    v-model="periodo" 
+                    width="20" lang="es" range 
+                    placeholder="Selecciona Rango de Fechas"
+                    :disabled-date="disabledAfterToday"
+                    @input="handlePeriodChange"
+                    input-class="form-control">
+                </date-picker>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="row">
+                    <div class="col"><h5>Tutor(a): </h5></div>
+                    <div class="col" style="text-align: right; top: 50%">
+                        <h6 style="top:50%;cursor:pointer;color:#17a2b8;" 
+                        :disabled="!this.selectedTutor"
+                        @click="addTutor" 
+                        >Seleccionar</h6>
+                    </div>
+                </div>
+                <select class="form-control"  v-model="selectedTutor">
+                    <option disabled selected :value="null" focusable="false">Selecciona un(a) tutor(a)</option>
+                    <option 
+                        v-for="(tutor, index) in tutores" 
+                        :key="index" 
+                        :value="tutor">
+                        {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
+                    </option>
+                </select>
+                <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
+                    <li class="motivos-seleccionados list-group-item" style="text-align:left;"
+                        v-for="(tutor,index) in tutorSelect"  
+                        :key="index">
+                        {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
+                        <span name="remove" class="close" @click="deleteTutor(index, tutor)" style="float:right;">&times;</span>           
+                    </li>
+                </ul>
+            </div>
+            <div class="botones" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+                <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
+            </div>
+        </div>
         <div  class="top-titulo" style="text-align:left;">
             <!-- inicia de las fechas -->
              <div class="col-12 col-md-4">
@@ -135,10 +179,12 @@ export default {
             selectedPrograma:null,
             tutores:[],
             tutorSel:null,
-
+            selectedTutor:null,
+            tutorSelect:[],
             //lista de identificadores
             idPogramas:[],
             idFacultades:[],
+            idTutores:[],
             //graficos
             asignados:[],
             bicas:[],
@@ -208,11 +254,11 @@ export default {
 
     },
     mounted(){
-        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.borderRadius = "1.25rem";
-        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.border= "0.5px solid #757575";
-        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontWeight = "300";
-        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontSize = "1rem";
-        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.height = "2.4em";
+        document.querySelector("#container > div > div.FormReportesRendimiento > div > div:nth-child(1) > div:nth-child(1) > div > div > input").style.borderRadius = "1.25rem";
+        document.querySelector("#container > div > div.FormReportesRendimiento > div > div:nth-child(1) > div:nth-child(1) > div > div > input").style.border= "0.5px solid #757575";
+        document.querySelector("#container > div > div.FormReportesRendimiento > div > div:nth-child(1) > div:nth-child(1) > div > div > input").style.fontWeight = "300";
+        document.querySelector("#container > div > div.FormReportesRendimiento > div > div:nth-child(1) > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
+        document.querySelector("#container > div > div.FormReportesRendimiento > div > div:nth-child(1) > div:nth-child(1) > div > div > input").style.height = "2.4em";
         this.periodo = [this.inicio,this.fin];
         this.BajoRendimiento();
         this.listarFacultades();
@@ -457,7 +503,52 @@ export default {
                     showConfirmButton: true,
                })
             }
-        }
+        },
+        addTutor(){
+            //Verificamos si está seleccionando todos los tutores
+            if(!this.selectedTutor.usuario.codigo){
+                for(var tut in this.tutores){
+                    if(this.tutores[tut].usuario.codigo){
+                        this.tutorSelect.push(this.tutores[tut]);
+                        this.idTutores.push(this.tutores[tut].usuario.id_usuario);
+                    }
+                }
+
+                this.tutores=[];
+            }else{
+                this.tutorSelect.push(this.selectedTutor);
+                this.idTutores.push(this.selectedTutor.usuario.id_usuario);
+                for(var i in this.tutores)
+                    if(this.selectedTutor.usuario.codigo==this.tutores[i].usuario.codigo) {
+                        this.tutores.splice(i,1);  
+                    }
+            }
+            this.selectedTutor=null;
+            //verifico si el único que queda es "Todos"
+            if(this.tutores[0]&&!this.tutores[0].usuario.codigo){
+                this.tutores.splice(i,1); 
+            }
+
+
+        },
+        deleteTutor(index, tutor) {
+            this.tutorSelect.splice(index,1);
+            this.idTutores.splice(index,1);
+            if(this.tutores.length){
+                this.tutores.splice(this.tutores.length-1, 0, tutor);
+                
+            }else{
+                this.tutores.push(tutor);
+                var tutorNulo=new Object();
+                tutorNulo.usuario=new Object();
+                tutorNulo.usuario.nombre="Todos";
+                tutorNulo.usuario.codigo=0;
+                tutorNulo.usuario.apellidos="";
+                this.tutores.push(tutorNulo);      
+            }
+            
+        },
+
 
     }
 

@@ -49,7 +49,7 @@
                   
                 </router-link>              
                 
-                  <b-icon icon="dash-circle-fill" style="color:#757575;width:20px; height:20px;"  v-on:click="eliminarUsuario(item,index)"></b-icon>
+                  <b-icon icon="dash-circle-fill" style="color:#757575;width:20px; height:20px;cursor:pointer"  v-on:click="eliminarUsuario(item,index)"></b-icon>
                   
                 
               </td>
