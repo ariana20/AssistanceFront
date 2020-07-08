@@ -401,31 +401,31 @@ import emailjs from 'emailjs-com';
           axios.post('/vueuser',{usuario: {correo:this.emailRec}})
             .then(response=>{
               if(response.data.user){
-                window.location.href = '/login#close'
-                let direccion = "https://proyectosoftware20201front.vizcochitos.cloudns.cl/recuperarContrasena"
-                emailjs.send(
-                  "gmail",
-                  "template_bV7OIjEW",
-                  {
-                  "nombre":response.data.user.nombre,
-                  "mensaje":"Olvidaste tu contrasena?<br><br>Entra a este <a href="+direccion+">link</a> "+direccion,
-                  "correo": response.data.user.correo
-                  }, 'user_ySzIMrq3LRmXhtVkmpXAA')
-                  .then((result) => {
-                    console.log('SUCCESS!', result.status, result.text);
-                  }, (error) => {
-                    console.log('FAILED...', error);
-                  });
-                this.axios.post('/usuarios/modificar/'+response.data.user.id_usuario,{bloqueado: "2"})
+                this.axios.post('/usuarios/modificar/'+response.data.user.id_usuario,{bloqueado: "2",recuperar:true})
                   .then(response=>{
                     response
-                    Swal.fire({
-                      text:"Se le envió las instrucciones al correo registrado",
-                      icon:"success",
-                      confirmButtonText: 'OK',
-                      confirmButtonColor:'#0097A7',
-                      showConfirmButton: true,
-                    })
+                    window.location.href = '/login#close'
+                    let direccion = "https://proyectosoftware20201front.vizcochitos.cloudns.cl/recuperarContrasena/"+response.data.token_recuperacion
+                    emailjs.send(
+                      "gmail",
+                      "template_bV7OIjEW",
+                      {
+                      "nombre":response.data.nombre,
+                      "mensaje":"Olvidaste tu contrasena?<br><br>Entra a este <a href="+direccion+">link</a> "+direccion,
+                      "correo": response.data.correo
+                      }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                      .then((result) => {
+                        console.log('SUCCESS!', result.status, result.text);
+                        Swal.fire({
+                          text:"Se le envió las instrucciones al correo registrado",
+                          icon:"success",
+                          confirmButtonText: 'OK',
+                          confirmButtonColor:'#0097A7',
+                          showConfirmButton: true,
+                        })
+                      }, (error) => {
+                        console.log('FAILED...', error);
+                      });
                   }) 
               }
               else{
@@ -466,6 +466,7 @@ import emailjs from 'emailjs-com';
     font-size: 1vw;
     margin-left: 0px;
     margin-right: 0px;
+    border-radius: 10px;
   }
   .btn-google2 {
     color: white;
@@ -482,6 +483,7 @@ import emailjs from 'emailjs-com';
     margin-left:18%;
     width:41.01%;
     overflow: auto;
+    border-radius: 10px;
   }
   .form-control {
     border-radius: 1.25rem;

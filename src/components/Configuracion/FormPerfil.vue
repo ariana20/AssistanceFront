@@ -88,6 +88,7 @@ export default {
         return{
             usuario: null,
             selectedFile:null,
+            telefono:"",
         }
     },
     mounted(){

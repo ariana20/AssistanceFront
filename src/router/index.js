@@ -19,7 +19,7 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "about" */ '../views/Principal/About.vue')
   },
   {
-    path: '/recuperarContrasena',
+    path: '/recuperarContrasena/:token?',
     name: 'Recuperar Contrasena',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

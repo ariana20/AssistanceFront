@@ -2,7 +2,7 @@
   <div class="FormInstitucion contenedor">
     <div v-if="programa!=null"  style="width:95%;text-align: left">
     <div class="row">
-        <div class="col-12" style="text-align:center;margin-top:20px;margin-bottom:5%">
+        <div class="col-12" style="text-align:center;margin-top:20px;margin-bottom:2%">
             <h4 class="font-weight-bolder text-left institucion-title">Información del Programa</h4>
         </div>
     </div>
@@ -51,8 +51,12 @@
             Bloque Horario: *
         </div>
         <div class="col-12 col-md-6" style="margin-bottom:2%">
-            <input class="borde-textbox inp" v-model="programa.hora_bloque" required
-            maxlength="2" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+            <select class= "borde-textbox inp" v-model="programa.hora_bloque">
+              <option selected disabled hidden :value="null">Elige un Tamaño de Bloque</option>
+              <option v-for="options in intervalos" v-bind:key="options.valor" :value="options.valor">
+              {{ options.nombre}}
+              </option>
+            </select>
         </div>
     </div>
     <div class="row">
@@ -64,7 +68,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-12" style="text-align:left;margin-top:20px;margin-bottom:5%">
+        <div class="col-12" style="text-align:left;margin-top:20px;margin-bottom:2%">
             * Campos obligatorios 
         </div>
         <div class="col-12" style="text-align:center;margin-top:20px;margin-bottom:5%">
@@ -87,7 +91,13 @@ import Swal from 'sweetalert2'
 export default {
   data(){
     return{
-        programa:null,
+      programa:null,
+      intervalos: [
+        {nombre: '15 min' , valor:15},
+        {nombre: '20 min' , valor:20},
+        {nombre: '30 min' , valor:30},
+        {nombre: '60 min' , valor:60},
+      ]
     }
   },
   mounted(){

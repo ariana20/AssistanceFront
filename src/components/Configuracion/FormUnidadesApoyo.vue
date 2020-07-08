@@ -5,17 +5,36 @@
         <div class="form-inline col-12 col-md-2 col-lg-1">
           <h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
         </div>
-        <div class="form-inline col-12 col-md-4">
+        <div class="form-inline col-12 col-md-2">
           <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
         </div>
-        <div class="form-inline col-12 col-md-2 offset-md-3 offset-lg-5">
+        <div class="form-inline col-12 col-md-2" v-if="this.$store.state.tipoActual.nombre == 'Admin'">
+          <select v-on:change="FacultadSel"  class="form-control"
+            v-model="facuSeleccionadoInd">  <!--aqui guardo-->
+            <option selected :value="null">Selecciona una facultad</option>
+            <option v-for="(prog, i) in facultades"  :key="i" :value="prog.id_programa"> 
+              {{ prog.nombre }} 
+            </option>
+          </select>
+        </div>
+        <div class="form-inline col-12 col-md-2" v-if="this.$store.state.tipoActual.nombre == 'Admin'">
+          <select v-on:change="ProgramaSel"  class="form-control"
+            v-model="progSeleccionadoInd">  <!--aqui guardo-->
+            <option selected :value="null">Selecciona un programa</option>
+            <option v-for="(prog, i) in programas"  :key="i" :value="prog.id_programa"> 
+              {{ prog.nombre }} 
+            </option>
+          </select>
+        </div>
+        <div class="form-inline col-12 col-md-2 offset-md-1 offset-lg-3" v-if="this.$store.state.tipoActual.nombre == 'Admin'">
+          <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
+        </div>
+        <div class="form-inline col-12 col-md-2 offset-md-3 offset-lg-7" v-else>
           <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
         </div>
       </div>
       
-      <br>
-      <div style="width: 100%;display:block ruby;margin-right:0px">
-      <div style="overflow: auto;width:100%;">
+      <div style="overflow: auto;width:100%;margin-top:2%">
         <table class="table">
           <thead>
             <tr>
@@ -98,7 +117,6 @@
           </tbody>
         </table>
       </div>
-      </div>
     </div>
 
     <div v-if="unidadesFiltrados==null || unidadesFiltrados.length==0" class="row" style="width:100%">
@@ -123,7 +141,13 @@ import Swal from 'sweetalert2'
 export default {
   data(){
     return{
-      unidades:[]
+      unidades:[],
+      progSeleccionadoInd:null,
+      progSeleccionado:null,
+      facuSeleccionadoInd:null,
+      facuSeleccionado:null,
+      programas:null,
+      facultades:null,
     }
   },
   mounted(){
@@ -133,6 +157,8 @@ export default {
       this.listarUnidades();
     }
     else this.unidades = this.$store.state.unidades;
+    this.listarProgramas();
+    this.listarFacultades();
     this.nombre="";
   },
   computed:{
@@ -144,11 +170,77 @@ export default {
         this.$store.commit('SET_QUERY',val);
       }
     },
+    filtroProg:{
+      get(){
+        return this.$store.state.filtro.programa;
+      },
+      set(val){
+        this.$store.commit('SET_Prog',val);
+      }
+    },
+    filtroFacu:{
+      get(){
+        return this.$store.state.filtro.facultad;
+      },
+      set(val){
+        this.$store.commit('SET_Facu',val);
+      }
+    },
     ...mapGetters({
       unidadesFiltrados: 'filtrarUnidades'
     })
   },
   methods:{
+    listarProgramas(){
+      this.axios.post('/programa/listarTodo')
+        .then(response=>{
+          this.programas = response.data
+        })
+        .catch(e=>{
+          console.log(e)
+        })
+    },
+    listarFacultades(){
+      this.axios.post('/programa/facultadesProg')
+        .then(response=>{
+          this.facultades = response.data
+        })
+        .catch(e=>{
+          console.log(e)
+        })
+    },
+    ProgramaSel(){
+      if(this.progSeleccionadoInd == null){
+        this.filtroProg = null;
+      }
+      else{
+        this.programas.forEach(element => {
+          if(element.id_programa == this.progSeleccionadoInd){
+            this.progSeleccionado = element;
+            this.filtroProg = element;
+          }
+        });
+      }
+    },
+    FacultadSel(){
+      if(this.facuSeleccionadoInd == null){
+        this.filtroFacu = null;
+        this.listarProgramas();
+      }
+      else{
+        this.facultades.forEach(element => {
+          if(element.id_programa == this.facuSeleccionadoInd){
+            this.facuSeleccionado = element;
+            this.filtroFacu = element;
+          }
+        });
+        let aux = []
+        this.programas.forEach(element => {
+          if(element.id_facultad == this.facuSeleccionado.id_facultad) aux.push(element);
+        });
+        this.programas = aux
+      }
+    },
     listarUnidades() {
       if (this.$store.state.tipoActual.nombre == 'Admin') {
         this.showModal()

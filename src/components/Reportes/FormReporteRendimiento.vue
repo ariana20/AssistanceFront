@@ -255,6 +255,7 @@ export default {
                  usuario.apellidos="";
                  usuario.id_usuario=0;
                  tTodos.usuario=usuario;
+                 
                  tTodos.id_usuario=0;
                  this.tutores.push(tTodos);    
             })

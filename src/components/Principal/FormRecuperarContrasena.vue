@@ -20,8 +20,11 @@
             <div v-if="usuario.bloqueado!='2'" class="col-12 col-md-2">
                 No se ha solicitado el cambio de contraseña
             </div>
+            <div v-if="usuario.token_recuperacion!=token_rec" class="col-12 col-md-2">
+                El link de acceso no es válido
+            </div>
         </div>
-        <div v-if="usuario!=null && usuario.bloqueado=='2'" class="row" style="margin-top:5%;text-align:left">
+        <div v-if="usuario!=null && usuario.bloqueado=='2' && usuario.token_recuperacion==token_rec" class="row" style="margin-top:5%;text-align:left">
             <div class="col-12 col-md-2">
                 Nueva contraseña:
             </div>
@@ -29,7 +32,7 @@
                 <input class="borde-textbox inp" type="password" placeholder="Nueva contraseña"  v-model="nuevaContrasena"/>
             </div>
         </div>
-        <div v-if="usuario!=null && usuario.bloqueado=='2'" class="row" style="margin-top:5%;text-align:left">
+        <div v-if="usuario!=null && usuario.bloqueado=='2' && usuario.token_recuperacion==token_rec" class="row" style="margin-top:5%;text-align:left">
             <div class="col-12 col-md-2">
                 Confirmar contraseña:
             </div>
@@ -37,7 +40,7 @@
                 <input class="borde-textbox inp" type="password" placeholder="Confirmar contraseña"  v-model="nuevaContrasenaConfirmar"/>
             </div>
         </div>
-        <div v-if="usuario!=null && usuario.bloqueado=='2'" class="row" style="margin-top:5%;text-align:center">
+        <div v-if="usuario!=null && usuario.bloqueado=='2' && usuario.token_recuperacion==token_rec" class="row" style="margin-top:5%;text-align:center">
             <div class="col-12 col-md-6"> 
                 <button type="submit" class="btn btn-info" v-on:click="cambiarContrasena()">Cambiar Contraseña</button>
             </div>
@@ -49,7 +52,10 @@
 <script>
 import Swal from 'sweetalert2'
 export default {
-    name: 'Recuperar Contrasena',
+    name: 'RecuperarContrasena',
+    props: {
+        token_rec: String,
+    },
     data() {
         return {
             correo:null,
@@ -95,7 +101,7 @@ export default {
                     cancelButtonText: 'Cancelar',
                 }).then((result) => {
                     result
-                    this.axios.post('/usuarios/modificar/'+this.usuario.id_usuario,{password: this.nuevaContrasena,bloqueado: "0"})
+                    this.axios.post('/usuarios/modificar/'+this.usuario.id_usuario,{password: this.nuevaContrasena,bloqueado: "0",token_recuperacion:""})
                         .then(response=>{
                             response
                             Swal.fire({
