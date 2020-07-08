@@ -17,7 +17,7 @@
                 <li><span class="citareservada"></span> Cita Resevada </li>
             </ul>
         </div>
-        <div class="top-titulo" style="text-align:left;">
+        <div class="top-titulo" style="text-align:left;" v-if="bloque!=null">
             <Fullcalendar ref="fullCalendar"
                           :plugins = "calendarPlugins"
                           defaultView = "timeGridWeek"
@@ -33,6 +33,7 @@
                               center: '',
                               right: ''
                           }"
+                          :slotDuration="'00:'+bloque+':00'"
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
@@ -79,6 +80,7 @@ export default {
                 ListPlugin,
                 momentPlugin
             ],
+            bloque: null,
             columnFormat: 'ddd D/M',
             titleFormat: 'MMMM YYYY',
             calendar: null,
@@ -220,6 +222,7 @@ export default {
     mounted() {
         //console.log('prog actual: ',this.$store.state.programaActual.id_programa);
         this.listarTutores();
+        this.bloque = this.$store.state.programaActual.hora_bloque;
         //this.calendar = this.$refs.fullCalendar.getApi();
         //idUsuario: this.$store.state.usuario.id_usuario
         /*axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
