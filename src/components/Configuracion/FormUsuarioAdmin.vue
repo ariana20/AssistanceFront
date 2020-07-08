@@ -1025,7 +1025,7 @@ export default {
                 })
             }
             //Como se guardaron con éxito ahora agrego el titutoria
-            if(this.this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor==true){
+            if(this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor==true){
               var idusuarionuevo=response.data["user"].id_usuario;
               // console.log('id del usuario nuevo: ',response.data["user"].id_usuario);
               this.actualizarTT(idusuarionuevo);//tiene hide?
