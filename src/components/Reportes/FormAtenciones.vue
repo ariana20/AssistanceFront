@@ -278,7 +278,7 @@ export default {
             }
             this.selectedTutor=null;
             //verifico si el único que queda es "Todos"
-            if(!this.tutores[0].usuario.codigo){
+            if(this.tutores[0]&&!this.tutores[0].usuario.codigo){
                 this.tutores.splice(i,1); 
             }
 
@@ -312,13 +312,9 @@ export default {
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
             const { data } = await axios.post("programa/asistenciaXTutores", params);
-
+            
             this.atencionesXTutor=data;
-            /*
-            data.forEach(d =>{
-                this.atencionesXTutor.push({data:d.nombre+" "+d.apellidos,total:d.cantalum});             
-            })
-            */
+            
 
         },
         async RatioAtenciones(){
