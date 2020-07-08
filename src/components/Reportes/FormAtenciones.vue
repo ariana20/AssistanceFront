@@ -2,7 +2,7 @@
   <div class="FormAtenciones">
       <div class="contenedor">
         <div class="top-titulo" style="text-align:left;">
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <h5>Fechas:</h5>
                 <date-picker style="left:0px" class="wide-date-example"
                     v-model="periodo" 
@@ -13,7 +13,7 @@
                     input-class="form-control">
                 </date-picker>
             </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <div class="row">
                     <div class="col"><h5>Tutor(a): </h5></div>
                     <div class="col" style="text-align: right; top: 50%">
@@ -55,22 +55,23 @@
                 <strong>Cantidad de Atenciones</strong>
                 <doughnut-chart :chartData="atenciones" :options="chartOp2" label='Alumnos atendidos'></doughnut-chart>
             </div>
-            <div class="col-12 col-md-6" v-if="atencionesXFecha.length>0">
-                <strong>Atenciones por Fecha</strong>
-                <line-chart :chartData="atencionesXFecha" :options="chartOp" label='Satisfacción del alumno'></line-chart>
+            <div class="col-12 col-md-6" v-if="atencionesXTipoTutoria.length>0">
+                <strong>Alumnos atendidos por Tipo de Tutoría</strong>
+                <pie-chart :chartData="atencionesXTipoTutoria" :options="chartOp2" label='Alumnos atendidos por Tipo de Tutoría'></pie-chart>
             </div>
+
         </div>
 
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row">
-            <div class="col-12 col-md-6" v-if="atencionesXTutor.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
+            <div class="col-12" v-if="atencionesXTutor.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
                 <strong>Cantidad de Alumnos Atendidos por Tutor</strong>
                 <bar-chart :chartData="atencionesXTutor" :options="chartOp" label='Alumnos atendidos'></bar-chart>
             </div>
-            <div class="col-12 col-md-6" v-if="atencionesXTipoTutoria.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
-                <strong>Alumnos atendidos por Tipo de Tutoría</strong>
-                <pie-chart :chartData="atencionesXTipoTutoria" :options="chartOp2" label='Alumnos atendidos por Tipo de Tutoría'></pie-chart>
+            <div class="col-12" v-if="atencionesXFecha.length>0">
+                <strong>Atenciones por Fecha</strong>
+                <line-chart :chartData="atencionesXFecha" :options="chartOp" label='Alumnos atendidos'></line-chart>
             </div>
 
         
@@ -277,7 +278,7 @@ export default {
             }
             this.selectedTutor=null;
             //verifico si el único que queda es "Todos"
-            if(!this.tutores[0].usuario.codigo){
+            if(this.tutores[0]&&!this.tutores[0].usuario.codigo){
                 this.tutores.splice(i,1); 
             }
 
@@ -311,13 +312,9 @@ export default {
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
             const { data } = await axios.post("programa/asistenciaXTutores", params);
-
+            
             this.atencionesXTutor=data;
-            /*
-            data.forEach(d =>{
-                this.atencionesXTutor.push({data:d.nombre+" "+d.apellidos,total:d.cantalum});             
-            })
-            */
+            
 
         },
         async RatioAtenciones(){
@@ -334,11 +331,12 @@ export default {
             
             
             data.forEach(d =>{
-                if(d.asistencia=="asi") this.atenciones.push({data:"Atendidos",total:d.cantalum});
-                else if(d.asistencia=="noa") this.atenciones.push({data:"No Atendidos",total:d.cantalum});
-                else if(d.asistencia=="pen") this.atenciones.push({data:"Pendientes",total:d.cantalum});   
-                else if(d.asistencia=="can") this.atenciones.push({data:"Cancelados",total:d.cantalum});                
+                if(d.data=="asi") this.atenciones.push({data:"Atendidos",total:d.total});
+                else if(d.data=="noa") this.atenciones.push({data:"No Atendidos",total:d.total});
+                else if(d.data=="pen") this.atenciones.push({data:"Pendientes",total:d.total});   
+                else if(d.data=="can") this.atenciones.push({data:"Cancelados",total:d.total});                
             })
+            console.log(this.atenciones);
             
         },
         async RatioAtencionesXFecha(){
@@ -355,6 +353,7 @@ export default {
             // verificar si ya no es necesario el bucle
             // se cambió la función del back
             this.atencionesXFecha=data;
+            console.log(this.atencionesXFecha);
             /*
             data.forEach(d =>{
                 this.atencionesXFecha.push({data:d.fecha,total:d.count});               

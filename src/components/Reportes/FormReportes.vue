@@ -285,10 +285,9 @@ export default {
             
             const { data } =await axios.post("programa/citasXDiaTodos", params);
             
+            this.atenciones=data;
             
-            data.forEach(d =>{
-                this.atenciones.push({data:d.fecha,total:d.count});               
-            })
+           
             
 
         },
