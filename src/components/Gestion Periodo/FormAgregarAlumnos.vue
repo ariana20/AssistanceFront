@@ -8,33 +8,31 @@
             <li class="font-weight-ligth text-left  col-12 col-md-12">El tamaño máximo permitido para el archivo es el siguiente: 2MB. </li>
             <li class="font-weight-ligth text-left  col-12 col-md-12">El formato del archivo debe incluir una cabecera en la primera linea. </li>
             
-            <li class="font-weight-ligth text-left col-12 col-md-12">El orden de las columnas permitidas para la cabecera es el siguiente:</li>  
-            <ol >
-              <li class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>agregar </strong> alumnos nuevos, llenar los campos obligatorios en las columnas y dejar vacíos los campos que no desea agregar:</li>  
+            <li class="font-weight-ligth text-left col-12 col-md-12">El contenido de las columnas permitidas para la cabecera es el siguiente:</li>  
+            
+              <li type="circle" style="text-indent:40px"  class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>agregar </strong> alumnos nuevos, llenar los campos obligatorios en las columnas y dejar vacíos los campos que no desea agregar:</li>  
               <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%"> 
-                      <td style="text-indent: 25px">Codigo*</td>
-                      <td style="text-indent: 25px">Correo*</td>
+                      <td style="text-indent: 25px">Codigo*</td>                     
                       <td style="text-indent: 25px" >Nombres*</td>
                       <td style="text-indent: 25px" >Apellidos*</td>
+                       <td style="text-indent: 25px">Correo*</td>
                       <td style="text-indent: 25px">Celular</td>
                       <td style="text-indent: 25px" >Condicion</td>                            
         
               </div>
-              <div class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> Si no especifica la condicion del alumno, se asignará como Cachimbo.</div> 
+              <div class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> Si no especifica la condicion del alumno, se asignará como Cachimbo. * Columnas con datos obligatorios. Además, no incluir * en la cabecera.</div> 
              
-              <li class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>modificar  </strong> alumnos de su programa, llenar los campos obligatorios en las columnas y dejar vacíos las columnas que no desea modificar:</li> 
-              <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%"> 
-                      <td style="text-indent: 25px">Codigo*</td>
-                      <td style="text-indent: 25px">Correo*</td>
+              <li type="circle" style="text-indent:40px"  class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>modificar  </strong> alumnos de su programa, llenar los campos obligatorios en las columnas y dejar vacíos las columnas que no desea modificar:</li> 
+              <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%;"> 
+                      <td style="text-indent: 25px">Codigo*</td>                      
                       <td style="text-indent: 25px" >Nombres</td>
                       <td style="text-indent: 25px" >Apellidos</td>
+                      <td style="text-indent: 25px">Correo*</td>
                       <td style="text-indent: 25px">Celular</td>
                       <td style="text-indent: 25px" >Condicion</td>    
               </div> 
-              <div class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> No se pueden modificar los datos de las columnas obligatorias.</div> 
-             
-            
-            </ol>
+              <div class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> No se pueden modificar los datos de las columnas obligatorias. * Columnas con datos obligatorios.Además, no incluir * en la cabecera.</div> 
+          
             
             <li class="font-weight-ligth text-left col-12 col-md-12">Las condiciones de los alumnos se identifican con 3 letras válidas. Son las siguientes:</li>
             </ol>
@@ -47,7 +45,7 @@
                <button type="button" style="margin:5px;border-radius: 10px;text-align:center;padding:0px" id="btnsubir" class="col-10 col-md-3  btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
                 <button type="button"  class="col-10 col-md-3  btn btn-info" style="padding:0px;border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
             
-                <h6 class="col-12" >* Columnas con datos obligatorios-No incluir * en la cabecera</h6>
+                <h6 class="col-12" ></h6>
              
             
             </div>
