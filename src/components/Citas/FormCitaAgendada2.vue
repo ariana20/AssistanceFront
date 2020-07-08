@@ -42,7 +42,7 @@
                                 v-for="(newAlumno,alIndex) in listAlumnosNom"  
                                 :key="alIndex">
                                 {{newAlumno.nombres}}    
-                                <input id="asis" type="checkbox" style="height:20px;width:20px;" v-model="newAlumno.asistencia" />                                  
+                                <input id="asis" type="checkbox" style="height:20px;width:20px;text-indent: 25px" v-model="newAlumno.asistencia" />                                  
                             </li>
  
                              
@@ -274,8 +274,7 @@ export default Vue.extend ({
             }
         },
         enableFields() {
-            // let elems = document.getElementsByTagName('input')
-            // elems[0].disabled = false;
+
             let elems2 = document.getElementsByTagName('select');
             for(let i = 0; i < elems2.length; i++) {
                 elems2[i].disabled = false;
@@ -284,16 +283,13 @@ export default Vue.extend ({
             elems3[0].disabled = false;
         },
         disableFields() {
-            //let elems = document.getElementsByTagName('input')
-            //elems[0].disabled = true;
+
             let elems2 = document.getElementsByTagName('select');
             for(let i = 0; i < elems2.length; i++) {
                 elems2[i].disabled = true;
             }
             let elems3 = document.getElementsByTagName('textarea');
             elems3[0].disabled = true;
-
-             document.getElementById("asis").disabled = true;
 
         },
         cancelar: function(){
