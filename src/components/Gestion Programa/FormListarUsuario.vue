@@ -31,7 +31,8 @@
           </thead>
           <tbody>
             <tr v-for="(item, index) in usuarios"  :key="index">
-              <td v-if="item!=undefined">{{item.codigo}}</td>
+              <td v-if="item.codigo!=undefined">{{item.codigo}}</td>
+              <td v-else>Pendiente</td>
               <!-- <td v-if="item!=undefined">{{item.nombre}} {{item.apellidos}}</td> -->
               <td v-if="item!=undefined">{{item.nombre}}</td> 
             <td v-if="item!=undefined"> {{item.apellidos}}</td> 
@@ -179,8 +180,9 @@ export default {
   methods:{
 		changePage: function(page){
 			this.paginate.current_page=page;
-			this.listarUsuarios(page);//trae un nuevo listadp
-			event.preventDefault();
+			this.buscarUsuario(page);//trae un nuevo listadp
+      event.preventDefault();
+      
 		},
     //4 es el id del programa de admin
     //1 es el id tipo usuario de admin
