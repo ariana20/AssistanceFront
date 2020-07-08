@@ -19,7 +19,7 @@
                 <!-- <li><span class="citareservada"></span> Cita Resevada </li> -->
             </ul>
         </div>
-        <div class="top-titulo" style="text-align:left">
+        <div class="top-titulo" style="text-align:left" v-if="bloque!=null">
             <Fullcalendar ref="fullCalendar"
                           :plugins = "calendarPlugins"
                           defaultView = "timeGridWeek"
@@ -35,6 +35,7 @@
                               center: '',
                               right: ''
                           }"
+                          :slotDuration="'00:'+bloque+':00'"
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
@@ -124,6 +125,7 @@ export default {
             fechaIni:null,
             miUsuario:this.$store.state.permisosUsuario,
             isTutor:null,
+            bloque:null,
         }
     },
     computed: {
@@ -132,10 +134,12 @@ export default {
     mounted() {     
          
         this.listarTutores();
+         this.bloque = this.$store.state.programaActual.hora_bloque;
         if (this.tutorSel)
             this.showCalendar();
         else
-            this.$store.state.events=[];            
+            this.$store.state.events=[];      
+             
     },
     methods: {
         showCalendar() {
