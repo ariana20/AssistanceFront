@@ -41,7 +41,7 @@
                   <div v-for="(itema,index) in item.usuario_x_programas" :key="index" style="text-align:center;margin-left:2%">
                     <div v-if="index!=item.usuario_x_programas.length-1 && itema.programa">{{itema.programa.nombre+" ("+itema.tipo_usuario.nombre+")"+","+" "}}</div>
                     <div v-else-if="itema.programa">{{itema.programa.nombre+" ("+itema.tipo_usuario.nombre+")"}}</div>
-                    <div v-else> Sin Asignar </div>
+                    <div v-else> {{"Sin Asignar ("+itema.tipo_usuario.nombre+")"}} </div>
                   </div>  
                   <div v-if="item.usuario_x_programas.length == 0" style="text-align:center;margin-left:2%">
                     <span> Sin Asignar </span>

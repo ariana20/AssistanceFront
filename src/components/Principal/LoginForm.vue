@@ -466,6 +466,7 @@ import emailjs from 'emailjs-com';
     font-size: 1vw;
     margin-left: 0px;
     margin-right: 0px;
+    border-radius: 10px;
   }
   .btn-google2 {
     color: white;
@@ -482,6 +483,7 @@ import emailjs from 'emailjs-com';
     margin-left:18%;
     width:41.01%;
     overflow: auto;
+    border-radius: 10px;
   }
   .form-control {
     border-radius: 1.25rem;

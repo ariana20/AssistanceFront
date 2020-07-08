@@ -47,9 +47,12 @@
               <td>{{item.nombre}}</td>
               <td>{{item.correo}}</td>
               <td>
-                  <div v-for="(lugar,ind) in item.lugares" :key="ind">
-                      <a style="font-weight:normal">{{lugar}}</a>
-                  </div>
+                <div v-for="(lugar,ind) in item.lugares" :key="ind">
+                    <a style="font-weight:normal">{{lugar}}</a>
+                </div>
+                <div v-if="item.lugares.length==0">
+                  <a style="font-weight:normal">Sin Asignar</a>
+                </div>
               </td>
               <td style=";font-size:30px">
                   <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
@@ -95,14 +98,10 @@ export default {
   },
   created(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
+    this.showModal();
     this.listarProgramas();
     this.listarFacultades();
-    if(this.$store.state.coordinadoresL == null) {
-      
-      this.listarCoordinadores();
-    }
-    else this.coordinadores = this.$store.state.coordinadoresL;
-    console.log('a',this.$refs)
+    this.listarCoordinadores();
   },
   computed:{
     nombre:{
@@ -188,7 +187,6 @@ export default {
       }
     },
     listarCoordinadores() {
-      this.showModal();
       this.axios.post('/facultad/coordinadoresPyF')
         .then(res =>{
           this.$store.state.coordinadoresL = res.data;
@@ -241,10 +239,10 @@ export default {
       this.$router.push('/coordinador/'+0);
     },
     showModal() {
-      //this.$refs['my-modal'].show()
+      if (this.$refs['my-modal']) this.$refs['my-modal'].show()
     },
     hideModal() {
-      //this.$refs['my-modal'].hide()
+      if (this.$refs['my-modal']) this.$refs['my-modal'].hide()
     },
   }
 }
