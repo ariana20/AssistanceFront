@@ -42,7 +42,7 @@
                                 v-for="(newAlumno,alIndex) in listAlumnosNom"  
                                 :key="alIndex">
                                 {{newAlumno.nombres}}    
-                                <input type="checkbox" style="height:20px;width:20px;" v-model="newAlumno.asistencia" />                                  
+                                <input id="asis" type="checkbox" style="height:20px;width:20px;" v-model="newAlumno.asistencia" />                                  
                             </li>
  
                              
@@ -292,6 +292,9 @@ export default Vue.extend ({
             }
             let elems3 = document.getElementsByTagName('textarea');
             elems3[0].disabled = true;
+
+             document.getElementById("asis").disabled = true;
+
         },
         cancelar: function(){
             Swal.fire({
@@ -349,10 +352,12 @@ export default Vue.extend ({
                 asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
             };
-                
+                console.log(this.listMotivos.length);
                 if(this.listMotivos.length > 0) {
-
-                            if(this.descripcion!=null  && this.faltaron==false ) {
+                       
+                            
+                            if(this.descripcion!=null  && faltaron==false ) {
+                               
                                 if(this.selectedUnidadApoyo) {
                                     this.enviarCorreo(this.selectedUnidadApoyo)
                                 }
