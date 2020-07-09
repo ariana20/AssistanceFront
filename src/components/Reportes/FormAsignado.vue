@@ -273,7 +273,7 @@ export default {
             }
             this.selectedTutor=null;
             //verifico si el único que queda es "Todos"
-            if(!this.tutores[0].usuario.codigo){
+            if(this.tutores[0]&&!this.tutores[0].usuario.codigo){
                 this.tutores.splice(i,1); 
             }
 

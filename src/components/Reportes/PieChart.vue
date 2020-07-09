@@ -29,7 +29,7 @@ export default {
            }]
 
         },
-        this.options
+        this.options,
         );
     }
     

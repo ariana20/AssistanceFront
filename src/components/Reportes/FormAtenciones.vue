@@ -51,15 +51,18 @@
         No se ha generado ningún reporte
         </div>
         <div class="row">
-            <div class="col-12 col-md-6" v-if="atenciones.length>0">
+            <div class="col-12 col-md-4" v-if="atenciones.length>0">
                 <strong>Cantidad de Atenciones</strong>
                 <doughnut-chart :chartData="atenciones" :options="chartOp2" label='Alumnos atendidos'></doughnut-chart>
             </div>
-            <div class="col-12 col-md-6" v-if="atencionesXTipoTutoria.length>0">
+            <div class="col-12 col-md-4" v-if="atencionesXTipoTutoria.length>0">
                 <strong>Alumnos atendidos por Tipo de Tutoría</strong>
                 <pie-chart :chartData="atencionesXTipoTutoria" :options="chartOp2" label='Alumnos atendidos por Tipo de Tutoría'></pie-chart>
             </div>
-
+            <div class="col-12 col-md-4" v-if="atencionesXMotivoConsulta.length>0">
+                <strong>Alumnos atendidos por Motivo de Consulta</strong>
+                <bar-chart :chartData="atencionesXMotivoConsulta" :options="chartOp" label='Alumnos atendidos por Motivo de Consulta'></bar-chart>
+            </div>
         </div>
 
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
@@ -184,10 +187,10 @@ export default {
         //this.RatioAsignado();
         //this.RatioAtencionesXTutor();
         this.listarTutores();
-        this.RatioAtencionesXTutor();
-        this.RatioAtenciones();
-        this.RatioAtencionesXFecha();
-        this.RatioAtencionesXTipoTutoria();
+        //this.RatioAtencionesXTutor();
+        //this.RatioAtenciones();
+        //this.RatioAtencionesXFecha();
+        //this.RatioAtencionesXTipoTutoria();
     },
     methods:{
         listarFacultades(){
@@ -373,14 +376,24 @@ export default {
             
             const { data } =await axios.post("TipoTutoria/asistenciaXTipoTutorias", params);
             this.atencionesXTipoTutoria=data;
-            /*
-            data.forEach(d =>{
-                this.atencionesXTipoTutoria.push({data:d.fecha,total:d.count});               
-            })*/
+
+        },
+        async RatioAtencionesXMotivoConsulta(){
+            this.atencionesXMotivoConsulta=[];
+            const params = {
+                id_programa:this.$store.state.programaActual.id_programa,
+                id_tutores:this.idTutores,
+                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+            };
+            
+            const { data } =await axios.post("motivosConsulta/asistencia", params);
+            this.atencionesXMotivoConsulta=data;
 
         },
 
         generarReporte(){
+            this.RatioAtencionesXMotivoConsulta();
             this.RatioAtencionesXTutor();
             this.RatioAtenciones();
             this.RatioAtencionesXFecha();
