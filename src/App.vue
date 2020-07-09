@@ -30,10 +30,11 @@ import Chart from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(MultiSelectPlugin);
-Chart.plugins.unregister(ChartDataLabels);
+Chart.plugins.register(ChartDataLabels);
 Chart.defaults.global.defaultFontStyle = 'bold';
 Chart.defaults.global.defaultFontSize = 15;
 Chart.defaults.global.defaultFontFamily='Brandon Bold';
+Chart.defaults.global.plugins.datalabels.align='end';
 
 export default {
   name: 'App',
