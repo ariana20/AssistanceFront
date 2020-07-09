@@ -13,7 +13,7 @@
                 <input class="borde-textbox inp" type="text" placeholder="Correo Electrónico"  @keyup.enter="Verificar" v-model="correo"/>
             </div>
         </div>
-        <div v-if="usuario!=null" class="row" style="margin-top:5%;text-align:left">
+        <div v-if="usuario!=null" class="row" style="margin-left:5%;margin-top:5%;text-align:left;color:white">
             <div class="col-12 col-md-4" style="font-size:150%">
                 {{usuario.nombre + " " + usuario.apellidos}}
             </div>
@@ -24,7 +24,7 @@
                 El link de acceso no es válido
             </div>
         </div>
-        <div v-if="usuario!=null && usuario.bloqueado=='2' && usuario.token_recuperacion==token_rec" class="row" style="margin-top:5%;text-align:left">
+        <div v-if="usuario!=null && usuario.bloqueado=='2' && usuario.token_recuperacion==token_rec" class="row" style="margin-left:5%;margin-top:5%;text-align:left;color:white">
             <div class="col-12 col-md-2">
                 Nueva contraseña:
             </div>
@@ -32,7 +32,7 @@
                 <input class="borde-textbox inp" type="password" placeholder="Nueva contraseña"  v-model="nuevaContrasena"/>
             </div>
         </div>
-        <div v-if="usuario!=null && usuario.bloqueado=='2' && usuario.token_recuperacion==token_rec" class="row" style="margin-top:5%;text-align:left">
+        <div v-if="usuario!=null && usuario.bloqueado=='2' && usuario.token_recuperacion==token_rec" class="row" style="margin-left:5%;margin-top:5%;text-align:left;color:white">
             <div class="col-12 col-md-2">
                 Confirmar contraseña:
             </div>
@@ -40,7 +40,7 @@
                 <input class="borde-textbox inp" type="password" placeholder="Confirmar contraseña"  v-model="nuevaContrasenaConfirmar"/>
             </div>
         </div>
-        <div v-if="usuario!=null && usuario.bloqueado=='2' && usuario.token_recuperacion==token_rec" class="row" style="margin-top:5%;text-align:center">
+        <div v-if="usuario!=null && usuario.bloqueado=='2' && usuario.token_recuperacion==token_rec" class="row" style="margin-left:5%;margin-top:5%;text-align:center">
             <div class="col-12 col-md-6"> 
                 <button type="submit" class="btn btn-info" v-on:click="cambiarContrasena()">Cambiar Contraseña</button>
             </div>
@@ -90,7 +90,7 @@ export default {
             })          
         },
         cambiarContrasena(){
-            if(this.nuevaContrasena == this.nuevaContrasenaConfirmar){
+            if(this.nuevaContrasena == this.nuevaContrasenaConfirmar && this.nuevaContrasena!=''){
                 Swal.fire({
                     text: '¿Desea modificar su contraseña?',
                     icon: 'warning',
@@ -116,13 +116,24 @@ export default {
                 })
             }
             else{
-                Swal.fire({
-                  text:"Las contraseñas ingresadas no coinciden",
-                  icon:"error",
-                  confirmButtonText: 'OK',
-                  confirmButtonColor:'#0097A7',
-                  showConfirmButton: true,
-                })
+                if(this.nuevaContrasena==''){
+                    Swal.fire({
+                    text:"Los campos estan vacíos",
+                    icon:"error",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                    })
+                }
+                else{
+                    Swal.fire({
+                    text:"Las contraseñas ingresadas no coinciden",
+                    icon:"error",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                    })
+                }
             }
         }
   }

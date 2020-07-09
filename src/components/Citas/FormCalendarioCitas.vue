@@ -2,7 +2,7 @@
     <div class="formagendarcita container">
         <div class="top-titulo ">
             <div style="width:30%;"><ul class="legend">
-                <li><span class="ocupado"></span> Ocupado </li>
+                <li><span class="ocupado"></span> Realizado </li>
                 <li><span class="pendiente"></span> Pendiente </li>
                 <li><span class="disponible"></span> Disponible </li>
             </ul></div>

@@ -1,5 +1,6 @@
 <template>
 <!-- Para la barra principal parece -->
+  
   <div id="app">
     <HomeNavBar style="z-index:9000" v-if="this.$route.path === '/' || this.$route.path == '/recuperarContrasena'"/>
     <NavBar style="z-index:9000" v-if="this.valor && this.$route.path !== '/' && this.$route.path !== '/recuperarContrasena' && this.$route.path !== '/404'"/> 
@@ -17,6 +18,7 @@
     <router-view v-else/>
 
   </div>
+  
 </template>
 
 <script>
@@ -24,8 +26,15 @@ import HomeNavBar from '@/components/Principal/HomeNavBar.vue'
 import NavBar from '@/components/Principal/NavBar.vue'
 import SidebarAdministrador from '@/components/Principal/SideNavBar'
 import Vue from 'vue'
+import Chart from 'chart.js'
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(MultiSelectPlugin);
+Chart.plugins.register(ChartDataLabels);
+Chart.defaults.global.defaultFontStyle = 'bold';
+Chart.defaults.global.defaultFontSize = 15;
+Chart.defaults.global.defaultFontFamily='Brandon Bold';
+Chart.defaults.global.plugins.datalabels.align='end';
 
 export default {
   name: 'App',

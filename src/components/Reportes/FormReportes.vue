@@ -67,14 +67,14 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row mt-5">
-            <div class="col-12 col-md-6" v-if="asignados.length>0">
+            <div class="col-12 col-md-5" v-if="asignados.length>0">
                 <strong>Cantidad de Alumnos Asignados</strong>
                 <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleAsignado()" >Ver más</button>
                 </div>
             </div>
-            <div class="col-12 col-md-6"  v-if="atenciones.length>0">
+            <div class="col-12 col-md-7"  v-if="atenciones.length>0">
                 <strong>Cantidad de Atenciones</strong>
                 <line-chart :chartData="atenciones" :options="chartOp" label='Atenciones'></line-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
@@ -85,6 +85,11 @@
 
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         <div class="row">
+            <!--canvas id="planet-chart"></canvas-->
+            <!--canvas id="myChart" width="400" height="400"></canvas-->
+            <!--canvas id="pie-chart" width="323" height="500" class="chartjs-render-monitor" style="display: block; height: 400px; width: 259px;"></canvas>
+            <canvas id="pie-chart" width="397" height="500" class="chartjs-render-monitor" style="display: block; height: 400px; width: 318px;"></canvas>
+            <canvas id="pie-chart"></canvas-->
             <div class="col-12 col-md-6" v-if="satisfaccion.length>0">
                 <strong>Satisfacción del alumno</strong>
                 <pie-chart :chartData="satisfaccion" :options="chartOp2" label='Satisfacción del alumno'></pie-chart>
@@ -99,16 +104,23 @@
                     <button type="button" class="btn btn-info"  @click="verDetalleRendimiento()" >Ver más</button>
                 </div>
             </div>
+            
         </div>
+        
       </div>
+      
 
   </div>
 </template>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+<script src="@/components/Reportes/prueba2.js">
+</script>
 
-
-<script>
+<script >
 import DatePicker from 'vue2-datepicker'
+import planetChartData from '@/components/Reportes/chart-data.js';
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import LineChart from '@/components/Reportes/LineChart.vue'
@@ -120,10 +132,12 @@ export default {
         LineChart,
         PieChart,
         HorizontalBarChart,
-        DatePicker
+        DatePicker,
+        
     },
     data(){
         return{
+            planetChartData: planetChartData,
             //filtros
             facultades:[],
             selectedFacultad:null,
@@ -153,7 +167,10 @@ export default {
                     yAxes: [{
                         stacked: true,
                         ticks:{precision:0}
-                    }]
+                    }],
+                    pointLabels :{
+                        fontStyle: "bold",
+                    }
                 },        
                 legend: {
                     display: false
@@ -163,7 +180,8 @@ export default {
                     precision: 1
                 },
                 responsive: true,
-                maintainAspectRatio:false
+                maintainAspectRatio:false,
+                
             },
             chartOp2:{
                 responsive: true,
@@ -171,7 +189,27 @@ export default {
                     mode: 'percentage',
                     precision: 1
                 },
-                maintainAspectRatio:false
+                maintainAspectRatio:false,
+                legend:{
+                    position: 'right'
+                },
+                tooltips: {
+                    enabled: true
+                },
+                plugins: {
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            let sum = 0;
+                            let dataArr = ctx.chart.data.datasets[0].data;
+                            dataArr.map(data => {
+                                sum += data;
+                            });
+                            let percentage = (value*100 / sum).toFixed(2)+"%";
+                            return percentage;
+                        }
+                    }
+                }
+                            
             },
             
         }
@@ -184,7 +222,8 @@ export default {
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontWeight = "400";
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
-  
+        
+        this.createChart('planet-chart', this.planetChartData);
     },
     computed: {
         progSinDefault: function () {
@@ -203,6 +242,52 @@ export default {
         //this.listarFacultades();
     },
     methods:{
+        createChart(chartId, chartData) {
+            console.log(chartId+" "+chartData);
+            const ctx = document.getElementById(chartId);
+            const dates = this.atenciones.map(d=>d.data).reverse();
+            const totals = this.atenciones.map(d=> d.total).reverse();
+            console.log(this.atenciones);
+            console.log(dates);
+            console.log(dates);
+            const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+            labels:dates,
+                datasets: [
+                    { // one line graph
+                    label: 'cosas',
+                    data: totals,
+                    backgroundColor: [
+                        'rgba(54,73,93,.5)', // Blue
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)'
+                    ],
+                    borderColor: [
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                    ],
+                    borderWidth: 3
+                    }
+                    ]
+            },
+                options: {
+                responsive: true,
+
+                }
+            });
+        },
         listarFacultades(){
             const params = {
                 id_institucion:1,
@@ -296,13 +381,14 @@ export default {
         async BajoRendimiento(){
 
             this.alumnosBR=[];
-
+            
             const params = {
                 id_programa: this.idPogramas,
                 id_facultad: this.$store.state.programaActual.id_facultad,
                 id_institucion: 1,
                 fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+                id_tutor:[],
             };
 
             var data =await axios.post("usuarios/datosBajoRendimiento", params);

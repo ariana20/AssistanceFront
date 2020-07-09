@@ -81,9 +81,6 @@ export default {
           }
         },
         removeEvent() {
-          //console.log('idDisponibilidad: ',this.event.id);
-          //console.log('usuario actualizando: ', this.$store.state.usuario.id_usuario);
-          //console.log(this.idCita);
           Swal.fire({
           text:'¿Estás seguro que desea cancelar al cita?',
           icon:"warning",
@@ -99,21 +96,21 @@ export default {
               idDisponibilidad:this.event.id,
               usuario_actualizacion:this.$store.state.usuario.id_usuario})
             .then((response) => {
-              console.log('cancelar cita: ',response);
-              this.$store.commit("UPDATE_EVENT", {
-                id: this.event.id,
-                title: 'Disponible',
-                start: this.event.start,
-                color:'#B2EBF2',
-              });
-              Swal.fire({
-                text:"La cita ha sido cancelada",
-                icon:"success",
-                confirmButtonText: 'Aceptar',
-                confirmButtonColor:'#0097A7',
-                showConfirmButton: true,
-              });
-              
+              if(response) {
+                this.$store.commit("UPDATE_EVENT", {
+                  id: this.event.id,
+                  title: 'Disponible',
+                  start: this.event.start,
+                  color:'#B2EBF2',
+                });
+                Swal.fire({
+                  text:"La cita ha sido cancelada",
+                  icon:"success",
+                  confirmButtonText: 'Aceptar',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+                });
+              }
             }).catch(e => {
               console.log(e.response);
             });
@@ -123,7 +120,6 @@ export default {
         },
         updateEvent () {
           this.isDisabled = true;
-          //console.log(this.event.extendedProps);
           if(this.motivoSel){
             this.$store.commit("UPDATE_EVENT", {
                 id: this.event.id,
@@ -142,15 +138,16 @@ export default {
               usuario_actualizacion: this.$store.state.usuario.id_usuario,
               idUsuario: this.$store.state.usuario.id_usuario,
             }).then(response => {
-              console.log('registrarCitaAl response: ', response.data);
-              Swal.fire({
-                      text:"Registro Exitoso",
-                      icon:"success",
-                      confirmButtonText: 'Continuar',
-                      confirmButtonColor:'#0097A7',
-                      showConfirmButton: true,
-                    });
-                    this.$emit('close');
+              if(response) {
+                Swal.fire({
+                        text:"Registro Exitoso",
+                        icon:"success",
+                        confirmButtonText: 'Continuar',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                      });
+                      this.$emit('close');
+              }
             }).catch(e => {
                 console.log(e.response);
             });
@@ -164,10 +161,6 @@ export default {
             this.$store.state.idCita = response.data[0].id_cita;
             this.$store.state.curSesion = response.data
             this.$store.state.cond = response.data[0].cond
-            console.log('mostrarCita2: ',response.data)
-            //this.idCita = response.data.cita[0].id_cita
-            //console.log(response.data);
-            //console.log(response.data.cita[0].id_cita);
           }).catch(e => {
             console.log(e.response);
           });
