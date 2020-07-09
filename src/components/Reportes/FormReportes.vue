@@ -85,6 +85,7 @@
 
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         <div class="row">
+            <!--canvas id="planet-chart"></canvas-->
             <!--canvas id="myChart" width="400" height="400"></canvas-->
             <!--canvas id="pie-chart" width="323" height="500" class="chartjs-render-monitor" style="display: block; height: 400px; width: 259px;"></canvas>
             <canvas id="pie-chart" width="397" height="500" class="chartjs-render-monitor" style="display: block; height: 400px; width: 318px;"></canvas>
@@ -119,6 +120,7 @@
 
 <script >
 import DatePicker from 'vue2-datepicker'
+import planetChartData from '@/components/Reportes/chart-data.js';
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import LineChart from '@/components/Reportes/LineChart.vue'
@@ -130,10 +132,12 @@ export default {
         LineChart,
         PieChart,
         HorizontalBarChart,
-        DatePicker
+        DatePicker,
+        
     },
     data(){
         return{
+            planetChartData: planetChartData,
             //filtros
             facultades:[],
             selectedFacultad:null,
@@ -220,7 +224,7 @@ export default {
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
         
-        
+        this.createChart('planet-chart', this.planetChartData);
     },
     computed: {
         progSinDefault: function () {
@@ -239,6 +243,52 @@ export default {
         //this.listarFacultades();
     },
     methods:{
+        createChart(chartId, chartData) {
+            console.log(chartId+" "+chartData);
+            const ctx = document.getElementById(chartId);
+            const dates = this.atenciones.map(d=>d.data).reverse();
+            const totals = this.atenciones.map(d=> d.total).reverse();
+            console.log(this.atenciones);
+            console.log(dates);
+            console.log(dates);
+            const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+            labels:dates,
+                datasets: [
+                    { // one line graph
+                    label: 'cosas',
+                    data: totals,
+                    backgroundColor: [
+                        'rgba(54,73,93,.5)', // Blue
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)',
+                        'rgba(54,73,93,.5)'
+                    ],
+                    borderColor: [
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                        '#36495d',
+                    ],
+                    borderWidth: 3
+                    }
+                    ]
+            },
+                options: {
+                responsive: true,
+
+                }
+            });
+        },
         listarFacultades(){
             const params = {
                 id_institucion:1,
