@@ -164,6 +164,7 @@ export default {
                         //console.log('usuario_actualizacion',rd[i])
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
+                            
                             if(rd2[i]=='o'){
                                 if(rd[i].alumno[0].id_usuario == this.$store.state.usuario.id_usuario){
                                     this.$store.commit("ADD_EVENT", {
@@ -313,6 +314,7 @@ function addTimes (startTime, endTime) {
 .fc-event { 
     background-color: #B2EBF2;
     border-color: #B2EBF2;
+    cursor: pointer;
 }
 .vm--modal {
     border-radius: 25px;
