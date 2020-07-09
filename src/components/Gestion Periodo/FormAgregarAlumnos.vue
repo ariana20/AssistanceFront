@@ -6,35 +6,35 @@
             <ol start=1>
             <li class="font-weight-ligth text-left col-12 col-md-12">El formato permitido para el archivo es el siguiente: CSV(delimitado por comas)</li>
             <li class="font-weight-ligth text-left  col-12 col-md-12">El tamaño máximo permitido para el archivo es el siguiente: 2MB. </li>
-            <li class="font-weight-ligth text-left  col-12 col-md-12">El formato del archivo debe incluir una cabecera en la primera linea. </li>
+            <li class="font-weight-ligth text-left  col-12 col-md-12">El formato del archivo debe incluir una cabecera de 6 columnas en la primera linea. </li>
             
-            <li class="font-weight-ligth text-left col-12 col-md-12">El contenido de las columnas permitidas para la cabecera es el siguiente:</li>  
-            
+            <li class="font-weight-ligth text-left col-12 col-md-12">El contenido de las 6 columnas permitidas para la cabecera es el siguiente:</li>  
+            </ol>
               <li type="circle" style="text-indent:40px"  class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>agregar </strong> alumnos nuevos, llenar los campos obligatorios en las columnas y dejar vacíos los campos que no desea agregar:</li>  
               <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%"> 
-                      <td style="text-indent: 25px">Codigo*</td>                     
-                      <td style="text-indent: 25px" >Nombres*</td>
+                      <td style="text-indent: 70px">Codigo*</td>                     
+                      <td style="text-indent: 25px" >Nombre*</td>
                       <td style="text-indent: 25px" >Apellidos*</td>
                        <td style="text-indent: 25px">Correo*</td>
-                      <td style="text-indent: 25px">Celular</td>
+                      <td style="text-indent: 25px">Telefono</td>
                       <td style="text-indent: 25px" >Condicion</td>                            
         
               </div>
-              <div class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> Si no especifica la condicion del alumno, se asignará como Cachimbo. * Columnas con datos obligatorios. Además, no incluir * en la cabecera.</div> 
+              <div style="text-indent:40px" class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> Si no especifica la condicion del alumno, se asignará como Cachimbo. * Columnas con datos obligatorios. Además, no incluir * en la cabecera.</div> 
              
               <li type="circle" style="text-indent:40px"  class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>modificar  </strong> alumnos de su programa, llenar los campos obligatorios en las columnas y dejar vacíos las columnas que no desea modificar:</li> 
-              <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%;"> 
-                      <td style="text-indent: 25px">Codigo*</td>                      
-                      <td style="text-indent: 25px" >Nombres</td>
+              <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%"> 
+                      <td style="text-indent: 70px">Codigo*</td>                      
+                      <td style="text-indent: 25px" >Nombre</td>
                       <td style="text-indent: 25px" >Apellidos</td>
                       <td style="text-indent: 25px">Correo*</td>
-                      <td style="text-indent: 25px">Celular</td>
+                      <td style="text-indent: 25px">Telefono</td>
                       <td style="text-indent: 25px" >Condicion</td>    
               </div> 
-              <div class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> No se pueden modificar los datos de las columnas obligatorias. * Columnas con datos obligatorios.Además, no incluir * en la cabecera.</div> 
+              <div style="text-indent:40px" class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> No se pueden modificar los datos de las columnas obligatorias. * Columnas con datos obligatorios.Además, no incluir * en la cabecera.</div> 
           
-            
-            <li class="font-weight-ligth text-left col-12 col-md-12">Las condiciones de los alumnos se identifican con 3 letras válidas. Son las siguientes:</li>
+            <ol start=5>
+              <li class="font-weight-ligth text-left col-12 col-md-12">Las condiciones de los alumnos se identifican con 3 letras válidas. Son las siguientes:</li>
             </ol>
             <div class="col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%">
                <li type="circle" style="text-indent:40px" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.abreviatura + " = "+ item.nombre}} </li>
@@ -234,7 +234,7 @@ export default Vue.extend ({
                 'Content-Type': 'multipart/form-data'
             }})
               .then( response=>{
-              
+                console.log(response);
                 if(response.data==[]) {
                   Swal.fire({
                     text:"Estamos teniendo problemas al cargar los datos de los nuevos alumnos. Vuelve a intentar en unos minutos.",
@@ -243,6 +243,17 @@ export default Vue.extend ({
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   }); 
+                }
+                else if (response.data.status.indexOf("No se ha encontrado")!=-1){
+                  this.hideModal();
+             
+                    Swal.fire({
+                        text:response.data.status,
+                        icon:"warning",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
                 }
                 else if(response.data.status.indexOf("Se han encontrado errores")!=-1){
                     this.hideModal();

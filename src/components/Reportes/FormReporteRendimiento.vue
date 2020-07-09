@@ -45,52 +45,7 @@
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
         </div>
-        <div  class="top-titulo" style="text-align:left;">
-            <!-- inicia de las fechas -->
-             <div class="col-12 col-md-4">
-              <div class="row">
-                <div  class="col-12 col-md-2">Fechas: </div>
-                <div > 
-                    <date-picker style="left:0px" class="wide-date-example"
-                        v-model="periodo" 
-                        width="20" lang="es" range 
-                        placeholder="Selecciona Rango de Fechas"
-                        :disabled-date="disabledAfterToday"
-                        @input="handlePeriodChange"
-                        input-class="form-control">
-                    </date-picker>
-                </div>
-              </div>  <!-- fin de la mitad del row2 que divide fecha y selecc fecha -->
-            </div> <!-- fin de la mitad del row1 -->
-
-           
-            <!-- inicia combobox de tutor -->
-            <div class="col-12 col-md-6">
-              <div class="row">
-                <div  class="col-12 col-md-2">Tutor: </div>
-                <div  class="col-12 col-md-8"> 
-                  <select class="form-control " style="left:-160px;top:26px;cursor:pointer" v-model="tutorSel"  >
-                    <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
-                    <option
-                        v-for="(item, index) in tutores"
-                        :key="index"
-                        :value="item.id_usuario">
-                        {{ item.usuario.nombre + " " + item.usuario.apellidos }}
-                    </option>
-                  </select>
-                
-                </div>   
-                
-                
-              </div><!-- fin del row2 -->
-
-
-            </div> <!-- fin de la mitad del row1 -->
-            <div class="col-12 col-md-2 botones" style="margin-bottom:10px">
-                   <button type="button" class="col-12 col-md-12 btn btn-info"  @click="generarReporte()" >Generar</button>
-             </div>   
-                                <!-- div del boton -->
-         </div>  <!-- fin del top -row1 -->
+        <!-- aqui estaba mi cabcera -->
         <div class="row" style="margin-left:1px;text-align:left;">
             <!-- <h4 v-if="this.isCoordinador===false">Facultad: </h4>
             <select  class="col-sm-3 form-control" v-if="this.isCoordinador===false" v-model="selectedFacultad" v-on:change="listarProgramas()">
@@ -281,7 +236,7 @@ export default {
             return this.programas.filter(i => i != null && i.codigo != this.selectedFacultad.codigo)
         },
         listarTutores(){
-            this.showModal();
+           
             const params = {
                 id_programa : this.$store.state.programaActual.id_programa,
                 nomFacu:this.$store.state.programaActual.facultad.nombre,
@@ -291,7 +246,7 @@ export default {
             .post('/programa/tutoresListar', params)
             .then(res =>{
                 this.tutores=res.data;
-                this.hideModal();
+               
                 console.log('tutores: ',this.tutores);
                 // this.tutores.splice(0,1);
                 // //Agrego la opción de todos
@@ -303,11 +258,12 @@ export default {
                  tTodos.usuario=usuario;
                  
                  tTodos.id_usuario=0;
-                 this.tutores.push(tTodos);    
+                 this.tutores.push(tTodos); 
+              
             })
             .catch(e => {
                 console.log('catch',e);
-                this.hideModal();
+              
                 Swal.fire({
                     text:"Estamos teniendo problemas al listar los tutores del programa. Vuelve a intentar en unos minutos.",
                     icon:"warning",
@@ -322,13 +278,13 @@ export default {
 
         },
         listarFacultades(){
-            this.showModal();
+        
             const params = {
                 id_institucion:1,
             };
             axios.post('facultad/listarFacultades', params)
             .then( response => {
-                this.hideModal();
+              
                 this.mipermisosUsuario=this.$store.state.permisosUsuario;
                 this.facultades=response.data; //No lo uso
                 //Manejo de permisos
@@ -348,7 +304,7 @@ export default {
 
             })
             .catch(e => {
-                this.hideModal();
+                
                 console.log('catch:',e);
             });
 
@@ -377,28 +333,28 @@ export default {
 
         async BajoRendimiento(){
            this.sinGrafico=false;
-            // if(this.selectedPrograma==null) this.hideModal();
-
+          
+            console.log('reporte');
             this.alumnosBR=[];
             this.alumnosBRPlan=[];
-            if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null && this.tutorSel!=null ){
+            console.log('t: ',this.idTutores);
+            this.selectedPrograma=this.$store.state.programaActual.id_programa;
+            if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){
+                 console.log('func reporte');
                 var programas=[];
-                var tutoresSeleccionados=[];
+              
                 if(this.selectedPrograma==0){
                     //escogió todos los prog
                     let n=this.programas.length;
                     for(let i=1;i<n-1;i++ ){
                         programas[i]=this.programas[i].id_programa;
-                        tutoresSeleccionados[i-1]=this.tutores[i].id_usuario;
+                     
                     }
-                }else if(this.tutorSel==0 && this.selectedPrograma!=0 ){
-                    let n=this.tutores.length;
-                    for(let i=0;i<n-1;i++ ){                       
-                        tutoresSeleccionados[i]=this.tutores[i].id_usuario;
-                    }
+                }else if(this.idTutores==0 && this.selectedPrograma!=0 ){
+                   
                     programas[0]=this.selectedPrograma;
-                }else if(this.tutorSel!=0 && this.selectedPrograma!=0 ){
-                    tutoresSeleccionados[0]=this.tutorSel;                   
+                }else if(this.idTutores!=0 && this.selectedPrograma!=0 ){
+                  
                     programas[0]=this.selectedPrograma;
                 }
 
@@ -408,7 +364,8 @@ export default {
                     id_institucion: 1,
                     fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                     fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
-                    id_tutor:tutoresSeleccionados,
+                    // id_tutor:tutoresSeleccionados,
+                     id_tutor:this.idTutores,
                 };
                   const params2 = {
                     id_programa: programas,
@@ -440,9 +397,8 @@ export default {
                  this.alumnosBRPlan.push({data:"Cumplieron-Trica",total:dataPlan.data[1].total_alumnos});
                  this.alumnosBRPlan.push({data:"Cumplieron-Bica",total:dataPlan.data[0].total_alumnos});
 
-            }else{
-                this.sinGrafico=true;
             }
+         
 
         },
         handlePeriodChange(periodo) {
@@ -494,9 +450,10 @@ export default {
                     showConfirmButton: true,
                })
             }
-            if(this.tutorSel==null){
+            else if(this.idTutores.length==0){
+                
                  Swal.fire({
-                    text:"No ha seleccionado un tutor.",
+                    text:"No ha seleccionado un tutor, pero se muestrarán los reportes con todos los tutores.",
                     icon:"warning",
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
