@@ -195,7 +195,6 @@ export default Vue.extend ({
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontWeight = "400";
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.height = "2.4em";
-<<<<<<< HEAD
         axios.post('/programa/listar/'+this.$store.state.programaActual.id_programa)
             .then( response=>{
                 this.bloque = response.data.hora_bloque
@@ -204,9 +203,6 @@ export default Vue.extend ({
             .catch(e => {
                 console.log(e.response);
             });
-=======
-    
->>>>>>> origin/emmaraq
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
             .then(response => {
                 for(var i in response.data) {
