@@ -3,6 +3,14 @@
       <div >
         <section class="text-left" style="padding-top:0px">
             <h5 class="font-weight-ligth text-left col-12 col-md-12" style="font-weight: bold;">Carga masiva de alumnos</h5>
+             <div class="row form-controlT" style="margin:20px;" >
+                <input type="file" style="margin-top:10px" id="get-files" ref="file" name="client-file"  class="col-12 col-md-4" v-on:change="FileUpload" />
+                <button type="button" style="margin-top:10px;border-radius: 10px;text-align:center;padding:0px" id="btnsubir" class="col-10 col-md-3  btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
+                <button type="button"  class="col-10 col-md-3  btn btn-info" style="margin-top:10px;padding:0px;border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
+                <h6 class="col-12" ></h6>
+             
+            
+            </div>
             <ol start=1>
             <li class="font-weight-ligth text-left col-12 col-md-12">El formato permitido para el archivo es el siguiente: CSV(delimitado por comas)</li>
             <li class="font-weight-ligth text-left  col-12 col-md-12">El tamaño máximo permitido para el archivo es el siguiente: 2MB. </li>
@@ -27,7 +35,7 @@
                       <td style="text-indent: 70px">Codigo*</td>                      
                       <td style="text-indent: 25px" >Nombre</td>
                       <td style="text-indent: 25px" >Apellidos</td>
-                      <td style="text-indent: 25px">Correo*</td>
+                      <td style="text-indent: 25px">Correo</td>
                       <td style="text-indent: 25px">Telefono</td>
                       <td style="text-indent: 25px" >Condicion</td>    
               </div> 
@@ -40,15 +48,7 @@
                <li type="circle" style="text-indent:40px" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.abreviatura + " = "+ item.nombre}} </li>
             </div>
              
-            <div class="row form-controlT" style="margin:20px;" >
-                <input type="file" style="margin-top:5px" id="get-files" ref="file" name="client-file"  class="col-12 col-md-4" v-on:change="FileUpload" />
-               <button type="button" style="margin:5px;border-radius: 10px;text-align:center;padding:0px" id="btnsubir" class="col-10 col-md-3  btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
-                <button type="button"  class="col-10 col-md-3  btn btn-info" style="padding:0px;border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
-            
-                <h6 class="col-12" ></h6>
-             
-            
-            </div>
+           
            
 
 
@@ -61,7 +61,7 @@
                   <tr>
                     <th scope="col">N°</th>
                       <th scope="col">Codigo</th>
-                      <th scope="col">Nombres</th>
+                      <th  scope="col">Nombres</th>
                       <th scope="col">Correo</th>
                       <th scope="col">Descripcion</th>
                     </tr>
@@ -70,7 +70,8 @@
                     <tr v-for="(item, index) in reporte" :key="index">
                       <th scope="row">{{index+1}}</th>
                       <td>{{item.codigo}}</td>        
-                      <td>{{item.nombre + " "+ item.apellido  }}</td>     
+                      <td v-if="item.nombre!=undefined"  >{{item.nombre + " -"+ item.apellido  }}</td>     
+                      <td v-else >{{item.linea  }}</td>     
                       <td>{{item.correo}}</td>     
                       <td>{{item.error}}</td>    
                     </tr>
