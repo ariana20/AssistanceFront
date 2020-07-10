@@ -1,6 +1,6 @@
 <template>
-  <div class="FormTiposTutoria container" style="margin-top:2%">
-    <div style="margin-left:5%" >
+  <div class="FormTiposTutoria contenedor" style="margin-top:2%">
+    <div style="margin-left:1%" >
       <div class="row">
         <div class="col-12 col-md-4 col-lg-1 form-inline">
           Nombre:*
@@ -14,17 +14,17 @@
           Descripción:
         </div>
         <div class="col-11 col-md-6 col-lg-5">
-          <textarea rows=3 cols=40 class="form-control" type="text" v-model="tipotutoria.descripcion"/> 
+          <textarea rows=3 cols=40 class="form-control" type="text" v-model="tipotutoria.descripcion"/>
         </div>
       </div>
-      
+
       <div class="row" style="margin-top:1%;text-align:left">
         <div class="col-12 col-md-6 col-lg-1">
           Condiciones:*
         </div>
         <div class="col-sm-12 offset-sm-1" style="margin-top:2%">
           <div class="row">
-            <div class="col-5 col-md-3 col-lg-2">
+            <div class="col-5 col-md-4 col-lg-3">
               <div class="row">
                 <div class="col-1">
                   <input type="radio" style="font-size: 22px;" id="yes" value="1" v-model="tipotutoria.individual">
@@ -34,21 +34,21 @@
                 </div>
               </div>
             </div>
-            <div class="col-5 col-md-4 col-lg-2">  
+            <div class="col-5 col-sm-6 col-md-4 col-lg-3">
               <div class="row">
-                <div class="col-1">               
+                <div class="col-1">
                   <input  type="radio" id="no" value="0" v-model="tipotutoria.individual">
                 </div>
                 <div class="col-10">
                   <label style="text-indent:5px" >{{indgru[1].text}}</label>
                 </div>
               </div>
-            </div>   
+            </div>
           </div>
         </div>
         <div class="col-sm-12 offset-sm-1">
           <div class="row">
-            <div class="col-5 col-md-3 col-lg-2">
+            <div class="col-5 col-md-4 col-lg-3">
               <div class="row">
                 <div class="col-1">
                   <input type="radio" id="yes" value="1" v-model="tipotutoria.obligatorio">
@@ -58,45 +58,26 @@
                 </div>
               </div>
             </div>
-            <div class="col-5 col-md-4 col-lg-2"> 
+            <div class="col-5 col-md-4 col-lg-3">
               <div class="row">
-                <div class="col-1">        
+                <div class="col-1">
                   <input  type="radio" id="no" value="0" v-model="tipotutoria.obligatorio">
                 </div>
                 <div class="col-10">
                   <label style="text-indent:5px" >{{oblopc[1].text}}</label>
                 </div>
               </div>
-            </div>   
+            </div>
           </div>
         </div>
-        <!-- <div class="col-sm-12 offset-sm-1"> 
+        <div  class="col-sm-12 offset-sm-1">
           <div class="row">
-            <div class="col-5 col-md-3 col-lg-2">
-              <div class="row">
-                <div class="col-1">
-                  <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorasignado">
-                </div>
-                <div class="col-10">
-                  <label style="text-indent:5px" >{{asigsol[0].text}}</label>
-                </div>
-              </div>
-            </div>
-            <div class="col-5 col-md-4 col-lg-2">    
-              <div class="row">
-                <div class="col-1">
-                  <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorasignado">
-                </div>
-                <div class="col-10">
-                  <label style="text-indent:5px" >{{asigsol[1].text}}</label>
-                </div>
-              </div>
-            </div>   
+             <!-- aqui iba el tutor asignado -->
           </div>
-        </div> -->
-        <div class="col-sm-12 offset-sm-1"> 
+        </div>
+        <div class="col-sm-12 offset-sm-1">
           <div class="row">
-            <div class="col-5 col-md-3 col-lg-2">
+            <div class="col-5 col-md-4 col-lg-3">
               <div class="row">
                 <div class="col-1">
                   <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorfijo">
@@ -106,35 +87,79 @@
                 </div>
               </div>
             </div>
-            <div class="col-5 col-md-4 col-lg-2"> 
+            <div class="col-5 col-md-4 col-lg-3">
               <div class="row">
-                <div class="col-1">               
+                <div class="col-1">
                   <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorfijo">
                 </div>
                 <div class="col-10">
                   <label style="text-indent:5px" >{{fijvar[1].text}}</label>
                 </div>
               </div>
-            </div>   
+            </div>
+             <div  v-if="tipotutoria.tutorfijo==1" class="col-5 col-md-4 col-lg-3">
+              <div class="row">
+                <div class="col-1">
+                  <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorasignado">
+                </div>
+                <div class="col-10">
+                  <label style="text-indent:5px" >{{asigsol[0].text}}</label>
+                </div>
+              </div>
+            </div>
+            <div   v-if="tipotutoria.tutorfijo==1" class="col-5 col-md-4 col-lg-3">
+              <div class="row">
+                <div class="col-1">
+                  <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorasignado">
+                </div>
+                <div class="col-10">
+                  <label style="text-indent:5px" >{{asigsol[1].text}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 offset-sm-1">
+          <div class="row">
+            <div class="col-5 col-md-4 col-lg-3">
+              <div class="row">
+                <div class="col-1">
+                  <input type="radio" id="yes" value="1" v-model="tipotutoria.bajorend" >
+                </div>
+                <div class="col-10">
+                  <label style="text-indent:5px" >{{bajorend[0].text}}</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-5 col-md-4 col-lg-3">
+              <div class="row">
+                <div class="col-1">
+                  <input  type="radio" id="no" value="0" v-model="tipotutoria.bajorend" >
+                </div>
+                <div class="col-10">
+                  <label style="text-indent:5px" >{{bajorend[1].text}}</label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
 
       <br>
-      <div class="row col-sm-6 " style="margin-left:80px;" > 
+      <div class="row col-sm-6 " style="margin-left:80px;" >
       <b-form-checkbox v-model="tipotutoria.estado" value="act" unchecked-value="ina" checked> Activo</b-form-checkbox></div>
-    </div>      
+    </div>
       <button type="button" class="btn btn-info" style="border-radius: 10px" v-on:click="guardarTipoTutoria()">Guardar</button>
       <button type="button" style="border-radius: 10px;margin-left:50px"  class="btn btn-secondary" v-on:click="Cancelar()">Cancelar</button>
       <div style="margin-left:10px;margin-top:10px;bottom:25px">
-      * Campos obligatorios   
+      * Campos obligatorios
      </div >
      <div style="overflow: auto;width:100%">
-       <div v-if="this.banderaTutores==false">No hay ningún tutor asociado a este tipo de tutoria</div> 
-   
+       <div v-if="this.banderaTutores==false">No hay ningún tutor asociado a este tipo de tutoria</div>
+
      <!-- listado de los tutores -->
-     
+
       <table v-else class="table" style="text-align:left" >
         <thead>
           <tr>
@@ -144,19 +169,19 @@
             <th scope="col" style="text-align: center">Acciones</th>
           </tr>
         </thead>
-              
+
         <tbody>
-           
+
           <tr v-for="(item, index) in tipotutoria.tutoresTT" :key="index">
-             <td>{{item.codigo}}</td>        
-            <td>{{item.nombre}}</td>        
-            <td>{{item.apellidos}}</td>        
-                
-            <td  style="text-align: center">                               
+             <td>{{item.codigo}}</td>
+            <td>{{item.nombre}}</td>
+            <td>{{item.apellidos}}</td>
+
+            <td  style="text-align: center">
                   <b-icon v-on:click="eliminarTtutor(item)" style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"/>
-              
+
             </td>
-          
+
           </tr>
         </tbody>
       </table>
@@ -165,7 +190,7 @@
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
         <b-spinner style="width: 3rem; height: 3rem;"/>
-        <br >Cargando... 
+        <br >Cargando...
       </div>
       </b-modal>
   </div>
@@ -181,24 +206,27 @@ Vue.use(MultiSelectPlugin);
 import Swal from 'sweetalert2'
 
 export default Vue.extend( {
- 
+
   props: {
-      id: String,  
+      id: String,
   },
   data(){
 
     return{
       miUsuario:this.$store.state.usuario,
-      tipotutoria: { 
+      tipotutoria: {
         nombre:"",
         descripcion:"",
-        obligatorio:"",  
-        individual:"",         
+        //condiciones
+        obligatorio:"",
+        individual:"",
         tutorasignado:"",
         tutorfijo:"",
+        bajorend:"",
+
         estado:"act",
         tutoresrelacionados:null,
-        condiciones:"",
+    
         id_tipo_tutoria_entrante:undefined,
         miprog:this.$store.state.programaActual,
         //id_tipo_tutoria_entrante:this.id,
@@ -207,11 +235,11 @@ export default Vue.extend( {
       },
       banderaTutores:false,
       indgru:[
-        {value: '1',text: "Individual"+"\t"+" "+" "+" "+" "+" "}, //guardo el value
+        {value: '1',text: "Individual"}, //guardo el value
         {value: '0',text: "Grupal"},
       ],
       oblopc:[
-        {value: '1',text: "Obligatorio \t\t"},
+        {value: '1',text: "Obligatorio"},
         {value: '0',text: "Opcional"},
       ],
       asigsol:[
@@ -222,8 +250,12 @@ export default Vue.extend( {
         {value: '1',text: "Tutor fijo \t\t"},
         {value: '0',text: "Tutor variable"},
       ],
-     
-    
+      bajorend:[
+        {value: '1',text: "Bajo Rendimiento"},
+        {value: '0',text: "No es de Bajo rendimiento"},
+      ],
+
+
     }
   },
   created(){
@@ -238,7 +270,7 @@ export default Vue.extend( {
            Axios.create()
             .post('/TipoTutoria/mostrar/'+this.tipotutoria.id_tipo_tutoria_entrante).
             then( response =>{
-             
+
             this.tipotutoria.nombre= response.data.nombre;
             this.tipotutoria.descripcion=response.data.descripcion;
             this.tipotutoria.individual=response.data.individual;
@@ -269,7 +301,7 @@ export default Vue.extend( {
 
   },
   methods:{
-    
+
     guardarTipoTutoria() {
         //aqui inicia
       if( this.tipotutoria.nombre==""   ){
@@ -280,11 +312,11 @@ export default Vue.extend( {
               confirmButtonText: 'OK',
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
-        })        
-      }   
+        })
+      }
       else if (this.individual=="" ||  this.tipotutoria.obligatorio=="" || this.tipotutoria.tutorfijo=="" ){
         this.hideModal();
-       
+
               Swal.fire({
               text:"Debe elegir 1 opción de cada condición.\n",
               icon:'error',
@@ -292,33 +324,33 @@ export default Vue.extend( {
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
               })
-        
-      }  
+
+      }
       else{
         if(this.tipotutoria.id_tipo_tutoria_entrante==0){
           //tt nuevo
-           if(this.tipotutoria.estado=="ina"){      
+           if(this.tipotutoria.estado=="ina"){
              this.hideModal();
                 Swal.fire({
               text:"No puede crear un tipo de tutoría como inactivo.",
               icon:"warning",
               confirmButtonText: 'Sí',
-              confirmButtonColor:'#0097A7',              
+              confirmButtonColor:'#0097A7',
               showConfirmButton: true,
              });
 
            }
            else{
            const params = {
-              nombre: this.tipotutoria.nombre, 
+              nombre: this.tipotutoria.nombre,
               descripcion: this.tipotutoria.descripcion,
-              obligatorio:this.tipotutoria.obligatorio,  
-              individual:this.tipotutoria.individual, 
-              planificado:this.tipotutoria.planificado, 
+              obligatorio:this.tipotutoria.obligatorio,
+              individual:this.tipotutoria.individual,
+              planificado:this.tipotutoria.planificado,
               tutor_asignado:this.tipotutoria.tutorasignado,
               tutor_fijo:this.tipotutoria.tutorfijo,
-              estado:this.tipotutoria.estado,   
-              id_programa:this.tipotutoria.miprog.id_programa, 
+              estado:this.tipotutoria.estado,
+              id_programa:this.tipotutoria.miprog.id_programa,
               usuario_creacion:this.miUsuario.id_usuario,
               // id_programa:4,
               };
@@ -349,26 +381,26 @@ export default Vue.extend( {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });
-            
+
             });
            }
         }
         else{
           const params = {
-              nombre: this.tipotutoria.nombre, 
+              nombre: this.tipotutoria.nombre,
               descripcion: this.tipotutoria.descripcion,
-              obligatorio:this.tipotutoria.obligatorio,  
-              individual:this.tipotutoria.individual, 
-              planificado:this.tipotutoria.planificado, 
+              obligatorio:this.tipotutoria.obligatorio,
+              individual:this.tipotutoria.individual,
+              planificado:this.tipotutoria.planificado,
               tutor_asignado:this.tipotutoria.tutorasignado,
               tutor_fijo:this.tipotutoria.tutorfijo,
-              estado:this.tipotutoria.estado,   
-              id_programa:this.tipotutoria.miprog.id_programa, 
+              estado:this.tipotutoria.estado,
+              id_programa:this.tipotutoria.miprog.id_programa,
               usuario_actualizacion:this.miUsuario.id_usuario,
-                      
+
            };
            this.showModal();
-          Axios.create()   
+          Axios.create()
         .post('TipoTutoria/modificar/'+this.tipotutoria.id_tipo_tutoria_entrante,params)
           .then( response=>{
             console.log(response);
@@ -382,7 +414,7 @@ export default Vue.extend( {
               });
               this.$router.push('/ListaTiposTutorias');
                this.$store.state.tipostutorias=null;
-              
+
           })
            .catch(e => {
                   console.log(e.response);
@@ -396,10 +428,10 @@ export default Vue.extend( {
               });
               //No lo redirigo porque perdería sus cambios
                 });
-        }      
-      
-      }    
-     
+        }
+
+      }
+
     },
     Cancelar(){
       Swal.fire({
@@ -415,8 +447,8 @@ export default Vue.extend( {
             if (result.value) {
               //lo redirigo
               this.$router.push('/ListaTiposTutorias');
-              
-            } 
+
+            }
           })
     },
     showModal() {
@@ -431,10 +463,10 @@ export default Vue.extend( {
             id_tipo_tutoria: this.tipotutoria.id_tipo_tutoria_entrante, //El nombre del parámetro está mal,pero funciona bien porque envío el id_tipo_tutoria
             id_tutor:item.id_usuario,
           }
-         
+
           Axios.post('/TipoTutoria/eliminarTutor',paramsE)
                 .then(response=>{
-                   
+
                    if(response.data.status.indexOf("Tutor Eliminado")!=-1){ //Encontró esa frase
                      Swal.fire({
                          text:"Se han guardado los cambios",
@@ -445,8 +477,8 @@ export default Vue.extend( {
                        });
                     this.$router.push('/tiposdeTutoria/'+this.tipotutoria.id_tipo_tutoria_entrante); //
                    }
-                
-                  else if(response.data.indexOf("Excepción capturada:")!=-1){ 
+
+                  else if(response.data.indexOf("Excepción capturada:")!=-1){
                      Swal.fire({
                     text:"Estamos teniendo problemas al eliminar este tutor. Vuelve a intentar en unos minutos.",
                     icon:"warning",
@@ -477,14 +509,14 @@ export default Vue.extend( {
           // id_tipo_tutoria: this.tipotutoria.id_tipo_tutoria_entrante,
           id_programa: this.tipotutoria.id_tipo_tutoria_entrante, //El nombre del parámetro está mal,pero funciona bien
         }
-         Axios.create()   
+         Axios.create()
         .post('TipoTutoria/tutoresAsignados',params)
           .then( response=>{
             this.hideModal();
-              
-              if(response.data.indexOf("Excepción capturada:")!=-1){ 
-              // let par=response.data; 
-              // this.tipotutoria.tutoresTT=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});   
+
+              if(response.data.indexOf("Excepción capturada:")!=-1){
+              // let par=response.data;
+              // this.tipotutoria.tutoresTT=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
                 Swal.fire({
                     text:"Ocurrió un incoveniente al listar los tutores asociados. Vuelva a intentar en unos minutos.",
                     icon:'error',
@@ -492,15 +524,15 @@ export default Vue.extend( {
                     confirmButtonColor:'#0097A7',
                    showConfirmButton: true,
               });
-                
+
                 }
-                else{ 
+                else{
                     this.tipotutoria.tutoresTT=response.data;
                     this.banderaTutores=true;
                 }
-                
-                  
-              
+
+
+
           })
            .catch(e => {
                   console.log(e.response);
@@ -531,11 +563,11 @@ export default Vue.extend( {
     margin-bottom: 20px;
 }
 .form-control {
-    border-radius: 1.25rem;  
+    border-radius: 1.25rem;
     border: 1px solid #757575;
     margin-bottom: 10px;
     /* width: 100%; */
-    
+
 }
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}
