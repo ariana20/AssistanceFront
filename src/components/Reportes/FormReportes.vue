@@ -239,6 +239,7 @@ export default {
         this.RatioAsignado();
         this.RatioAtenciones();
         this.BajoRendimiento();
+        this.Encuestas();
         //this.listarFacultades();
     },
     methods:{
@@ -407,11 +408,36 @@ export default {
 
         },
 
+        async Encuestas(){
+
+            this.satisfaccion=[];
+            
+            const params = {
+                id_programa: this.idPogramas,
+                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+            };
+
+            var data =await axios.post("encuesta/reporteEncuesta", params);
+           
+            // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
+            //LLenado del gráfico de la izquierda
+            data.data.forEach(element => {
+                if(element.id_encuesta == 1){
+                    element.data = element.nombre
+                    this.satisfaccion.push(element)
+                }
+            });
+                
+
+        },
+
         generarReporte(){
             //this.RatioAtenciones();
             this.RatioAsignado();
             this.BajoRendimiento();
             this.RatioAtenciones();
+            this.Encuestas();
         },
         verDetalleAsignado(){
             this.$router.push('/reporteAsignado');
@@ -421,7 +447,7 @@ export default {
 
         },
         verDetalleSatisfaccion(){
-            this.$router.push('/reporteSatisfaccion');
+            this.$router.push('/reporteencuestas');
 
         },
         verDetalleRendimiento(){
