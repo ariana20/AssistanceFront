@@ -5,7 +5,7 @@
             <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo" style="height:100%">
                     <img  :src="tutor.imagen" height="110px" width="110px" />		
             </figure>
-            <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo">	
+            <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo" style="height:100%">	
                     <b-avatar size="7rem" ></b-avatar>		
             </figure>
         </div>

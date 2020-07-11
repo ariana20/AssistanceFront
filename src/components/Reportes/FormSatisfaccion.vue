@@ -1,19 +1,21 @@
 <template>
   <div name="FormSatisfaccion">
       <div class="contenedor">
-        <div class="top-titulo" style="text-align:left;">
+        <div class="row" style="text-align:left;">
             <div class="col-12 col-md-4">
-                <h5>Fechas:</h5>
-                <date-picker style="left:0px" class="wide-date-example"
-                    v-model="periodo" 
-                    width="20" lang="es" range 
-                    placeholder="Selecciona Rango de Fechas"
-                    :disabled-date="disabledAfterToday"
-                    @input="handlePeriodChange"
-                    input-class="form-control">
-                </date-picker>
+                <div class="row">
+                    <h5 class="col-12 col-md-3">Fechas:</h5>
+                    <date-picker class="wide-date-example col-12 col-md-8"
+                        v-model="periodo" 
+                        width="20" lang="es" range 
+                        placeholder="Selecciona Rango de Fechas"
+                        :disabled-date="disabledAfterToday"
+                        @input="handlePeriodChange"
+                        input-class="form-control" style="left:10px;width:50%">
+                    </date-picker>
+                </div>
             </div>
-            <div class="botones" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+            <div class="col-12 col-md-2 offset-md-6" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
         </div>
@@ -147,12 +149,6 @@ export default {
 
     },
     mounted(){
-        
-        document.querySelector("#container > div > div.FormAtenciones > div > div.top-titulo > div:nth-child(1) > div > div > input").style.borderRadius = "1.25rem"; 
-        document.querySelector("#container > div > div.FormAtenciones > div > div.top-titulo > div:nth-child(1) > div > div > input").style.border= "0.5px solid #757575";    
-        document.querySelector("#container > div > div.FormAtenciones > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontWeight = "400";
-        document.querySelector("#container > div > div.FormAtenciones > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
-        document.querySelector("#container > div > div.FormAtenciones > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
   
     },
     computed: {
@@ -245,7 +241,7 @@ export default {
 @import '../../assets/styles/material.css';
 
 .wide-date-example {
-    width: 100% !important;
+    margin-top: -5px;
 }
 
 .list-group-item {

@@ -78,14 +78,14 @@
     </section>
     
     <div id="openModal" class="modalbg">
-      <div class="dialog" >
+      <div class="dialog col-10">
         <a href="#close" title="Close" class="close" style="height:40px;margin-top:5%;left:92.7%;text-align:left">X</a>
         <h1>¿Olvidaste tu contraseña?</h1><br>
         <div style="margin-left:-40%">
           <div style="text-align:center;margin-left:-140px">
             <strong >Email</strong><br>
           </div>
-          <input v-model="emailRec" type="email" style="margin-left:30%;width:55%;border-radius: 1.25rem;border: 2px solid #757575;padding:10px;margin-bottom:3%" required><br>
+          <input @keyup.enter="OlvidarContra" v-model="emailRec" type="email" style="margin-left:30%;width:55%;border-radius: 1.25rem;border: 2px solid #757575;padding:10px;margin-bottom:3%" required><br>
         </div>
         <div >
           <button v-on:click="OlvidarContra" style="border-radius: 1.2rem;background: #0097A7;width:40%;height:40px;color:white;line-height: 40px">Recuperar Contraseña</button>

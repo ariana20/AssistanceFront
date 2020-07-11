@@ -58,8 +58,8 @@
                             </svg>
                         </div>
                         <div id="botones" v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')">
-                            <button type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Historico de Citas</button>
-                            <button v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" type="button" class="btn btn-info" @click="Perfil(2)">Historico de Notas</button>
+                            <button type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Histórico de Citas</button>
+                            <button v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" type="button" class="btn btn-info" @click="Perfil(2)">Histórico del Alumno</button>
                             <button type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
                         </div>
                         <div v-else>

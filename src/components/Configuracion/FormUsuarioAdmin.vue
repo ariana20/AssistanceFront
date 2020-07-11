@@ -2,31 +2,57 @@
   <div class="FormUsuario contenedor" style="margin-top:5px;">
     <div class="row grid-divider" style="margin-top:3%" >
       <div id="izquierdo" class="col-md-5">
-        <table>
-          <tbody >
-            <td >
-              <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) ||( event.charCode== 239) || (event.charCode== 130) || (event.charCod==144 ) || (event.charCod==181) || (event.charCod==214) || (event.charCod==233) || (event.charCod==224))"   -->
-              <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) || event.charCode== 130 || event.charCod==144 ||event.charCod==181 || event.charCod==214 || event.charCod==233 || event.charCod==224)" -->
-              <tr style="text-align:left"><td style="width:80px;">Codigo:*</td>   <td> <input class="form-control" style="width: 180%;" type="text" maxlength="8"    id="cod" v-on:keyup="verificarUsuariosCod();"   v-model="codigo"></td></tr> 
-              <tr style="text-align:left"><td style="width:80px;">Nombre:*</td>   <td> <input class="form-control" style="width: 180%;" type="text"  id="nomb" maxlength="100"   v-model="nombre"></td></tr>
-              <tr style="text-align:left"><td style="width:80px;">Apellidos:*</td>   <td> <input class="form-control" style="width: 180%;" type="text" id="apel" maxlength="100"   v-model="apellidos"></td></tr>
-              <tr style="text-align:left"><td style="width:80px;">Celular:</td>   <td>   <input  type="text" class="form-control" style="width: 180%;"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
-              <tr style="text-align:left"><td style="width:80px;">Correo:*</td>   <td> <input id="corr" class="form-control" style="width: 180%;"  type="text" v-model="correo" v-on:keyup="verificarUsuariosCorreo();" ></td></tr>
-              <tr style="text-align:left"><td style="width:80px;"></td></tr>
-               
-              <tr class="" style="bottom:0px;margin-left:0px;" > 
-                <b-form-checkbox v-model="estado" value="act" unchecked-value="ina" > Activo</b-form-checkbox>
-              </tr>
-              <tr>
-                <td ></td>
-                <h5  v-if="this.IsmsgUsuario==false"   style="color:white;text-align:right;margin-left:50px">{{msgUsuario}}</h5>               
-                <h5  v-else  style="color:#009892;text-align:right;margin-left:50px">
-                    {{msgUsuario}}
-                </h5>
-              </tr> 
-            </td> 
-          </tbody>
-        </table>
+        <div class="row" style="text-align:left">
+          <div class="col-12 col-md-3" style=";margin-bottom:10px">
+            Codigo:*
+          </div>
+          <div class=" col-12 col-md-9" style=";margin-bottom:10px">
+            <input class="form-control col-12" style="width: 180%;" type="text" maxlength="8"    id="cod" v-on:keyup="verificarUsuariosCod();"   v-model="codigo">
+          </div>
+        </div> 
+        <div class="row" style="text-align:left">
+          <div class="col-12 col-md-3" style=";margin-bottom:10px">
+            Nombre:*
+          </div>
+          <div class=" col-12 col-md-9" style=";margin-bottom:10px">
+            <input class="form-control col-12" style="width: 180%;" type="text"  id="nomb" maxlength="100"   v-model="nombre">
+          </div>
+        </div> 
+        <div class="row" style="text-align:left">
+          <div class="col-12 col-md-3" style=";margin-bottom:10px">
+            Apellidos:*
+          </div>
+          <div class=" col-12 col-md-9" style=";margin-bottom:10px">
+            <input class="form-control col-12" style="width: 180%;" type="text" id="apel" maxlength="100"   v-model="apellidos">
+          </div>
+        </div> 
+        <div class="row" style="text-align:left">
+          <div class="col-12 col-md-3" style=";margin-bottom:10px">
+            Celular:
+          </div>
+          <div class=" col-12 col-md-9" style=";margin-bottom:10px">
+            <input  type="text" class="form-control col-12" style="width: 180%;"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+          </div>
+        </div> 
+        <div class="row" style="text-align:left">
+          <div class="col-12 col-md-3" style=";margin-bottom:10px">
+            Correo:*
+          </div>
+          <div class=" col-12 col-md-9" style=";margin-bottom:10px">
+            <input id="corr" class="form-control col-12" style="width: 180%;"  type="text" v-model="correo" v-on:keyup="verificarUsuariosCorreo();" >
+          </div>
+        </div> 
+        <div class="row" style="text-align:left">
+          <div class="col-12" style=";margin-bottom:10px">
+            <b-form-checkbox v-model="estado" value="act" unchecked-value="ina" > Activo</b-form-checkbox>
+          </div>
+        </div> 
+
+        <div v-if="this.IsmsgUsuario==true" class="row" style="text-align:left">            
+          <h5 style="color:#009892;text-align:right;margin-left:50px">
+            {{msgUsuario}}
+          </h5>
+        </div>
       </div>
 
       <div id="medio" class="col-md-1">
@@ -44,8 +70,8 @@
           </tr>
         <div style="margin-bottom:20px;" >
           <tr>      
-            <td style="width:110px;" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario!=2" >Programa: </td>
-            <select v-on:change="ProgramaSel" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario!=2" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
+            <td style="width:35%;text-align:left" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario!=2" >Programa: </td>
+            <select v-on:change="ProgramaSel" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario!=2" class="col-sm-12 form-control" style="margin-top:5px"
               v-model="progSeleccionadoInd">  <!--aqui guardo-->
               <option selected :value="null">Selecciona un programa</option>
               <option v-for="(prog, i) in programas"  :key="i" :value="prog.id_programa"  > <!--falta agregar value, creo que abreviatura le mando-->
@@ -54,8 +80,8 @@
             </select>
           </tr>
           <tr>      
-            <td style="width:110px;" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario==2" >Facultad: </td>
-            <select v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario==2" v-on:change="ProgramaSel" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
+            <td style="width:35%;text-align:left" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario==2" >Facultad: </td>
+            <select v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario==2" v-on:change="ProgramaSel" class="col-sm-11 form-control" style="margin-top:5px;margin-left:-25px"
               v-model="progSeleccionadoInd">  <!--aqui guardo-->
               <option selected :value="null">Selecciona una facultad</option>
               <option v-for="(prog, i) in facultades"  :key="i" :value="prog.id_programa"  > <!--falta agregar value, creo que abreviatura le mando-->
@@ -78,8 +104,8 @@
               Seleccionar
             </button>
           <tr>      
-            <td style="width:110px;" v-if="this.tiposUsuariosselect === 5" >Condición del alumno: </td>
-            <select v-if="this.tiposUsuariosselect === 5" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
+            <td style="width:35%;text-align:left" v-if="this.tiposUsuariosselect === 5" >Condición del alumno: </td>
+            <select v-if="this.tiposUsuariosselect === 5" class="col-sm-12 form-control" style="margin-top:5px"
               v-model="condiAlumnosselect">  <!--aqui guardo-->
               <option selected disabled hidden :value="null">Selecciona una condición</option>
               <option v-for="(condi, i) in condiAlumnos"  :key="i" :value="condi.abreviatura"  > <!--falta agregar value, creo que abreviatura le mando-->
@@ -863,6 +889,7 @@ export default {
                 
                 this.msgUsuario="Usuario existente";
                 this.IsmsgUsuario=true;
+                this.tiposUsuariosselect="no";
                 // this.hideModal();
 
              }
@@ -940,8 +967,9 @@ export default {
               this.estado=response.data.usuario[0].estado; 
               // console.log('existente: ',this.usuario_entrante);
               //tipo de usuarip
-                this.msgUsuario="Usuario existente";
+              this.msgUsuario="Usuario existente";
               this.IsmsgUsuario=true;
+              this.tiposUsuariosselect="no";
               // this.hideModal();
 
             }
