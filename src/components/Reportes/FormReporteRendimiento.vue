@@ -73,12 +73,12 @@
 
         <div class="row mt-2">
 
-            <div v-if="alumnosBR.length>0">
+            <div class="col-12 col-md-6" v-if="alumnosBR.length>0">
                 <strong style="margin-left:10px">Cantidad de alumnos que asistieron a sus citas</strong>
                 <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp2"
                 label='Alumnos con Bajo Rendimiento'  ></horizontal-bar-chart>
             </div>
-            <div v-if="alumnosBRPlan.length>0">
+            <div class="col-12 col-md-6" v-if="alumnosBRPlan.length>0">
                 <strong style="margin-left:80px">Cantidad de alumnos que cumplieron su Plan de Acción</strong>
                 <bar-chart :chartData="alumnosBRPlan" :options="chartOp"
                 label='Alumnos con Plan de Acción terminado' ></bar-chart>
