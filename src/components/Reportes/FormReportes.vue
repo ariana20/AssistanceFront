@@ -2,7 +2,7 @@
   <div class="FormReportes">
       <div class="contenedor">
         <div class="top-titulo" style="text-align:left;">
-            <div class="col-4">
+            <div class="col-8 col-md-4">
                 <h5>Fechas:</h5>
                 <date-picker style="left:0px" class="wide-date-example"
                     v-model="periodo" 
@@ -13,52 +13,6 @@
                     input-class="form-control">
                 </date-picker>
             </div>
-            <!--div class="col-4"> Filtros que pondré posteriormente ewe
-                <div class="row">
-                <div class="col"><h5>Facultad: </h5></div>
-                <div class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
-                </div>
-                <select class="form-control"  v-model="selectedFacultad" v-on:change="listarProgramas()">
-                    <option disabled selected :value="null" focusable="false">Selecciona una facultad</option>
-                    <option 
-                        v-for="(facultad, index) in facultades" 
-                        :key="index" 
-                        :value="facultad">
-                        {{ facultad.nombre }}
-                    </option>
-                </select>
-                <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
-                    <li class="motivos-seleccionados list-group-item" style="text-align:left;"
-                        v-for="(facultad,index) in facultadesSelect"  
-                        :key="index">
-                        {{facultad.nombre}}
-                        <span name="remove" class="close" @click="deleteFacu(index)" style="float:right;">&times;</span>           
-                    </li>
-                </ul>
-            </div-->
-            <!--div class="col-4">
-                <div class="row">
-                    <div class="col"><h5>Programa: </h5></div>
-                    <div  class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
-                </div>
-                <select class="form-control"  v-model="selectedPrograma">
-                    <option disabled selected :value="null" focusable="false">Selecciona un programa</option>
-                    <option 
-                        v-for="(programa, index) in progSinDefault"
-                        :key="index" 
-                        :value="programa" >
-                        {{ programa.nombre }}
-                    </option>
-                </select>
-                <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
-                    <li class="motivos-seleccionados list-group-item" style="text-align:left;"
-                        v-for="(programa,index) in programasSelect"  
-                        :key="index">
-                        {{programa.nombre}}
-                        <span name="remove" class="close" @click="deleteProg(index)" style="float:right;">&times;</span>        
-                    </li>
-                </ul>
-            </div-->
             <div class="botones" style="margin-bottom:10px;margin-right: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
@@ -67,14 +21,14 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row mt-5">
-            <div class="col-12 col-md-5" v-if="asignados.length>0">
+            <div class="col-12 col-md-6" v-if="asignados.length>0">
                 <strong>Cantidad de Alumnos Asignados</strong>
                 <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleAsignado()" >Ver más</button>
                 </div>
             </div>
-            <div class="col-12 col-md-7"  v-if="atenciones.length>0">
+            <div class="col-12 col-md-6"  v-if="atenciones.length>0">
                 <strong>Cantidad de Atenciones</strong>
                 <line-chart :chartData="atenciones" :options="chartOp" label='Atenciones'></line-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
@@ -85,11 +39,6 @@
 
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         <div class="row">
-            <!--canvas id="planet-chart"></canvas-->
-            <!--canvas id="myChart" width="400" height="400"></canvas-->
-            <!--canvas id="pie-chart" width="323" height="500" class="chartjs-render-monitor" style="display: block; height: 400px; width: 259px;"></canvas>
-            <canvas id="pie-chart" width="397" height="500" class="chartjs-render-monitor" style="display: block; height: 400px; width: 318px;"></canvas>
-            <canvas id="pie-chart"></canvas-->
             <div class="col-12 col-md-6" v-if="satisfaccion.length>0">
                 <strong>Satisfacción del alumno</strong>
                 <pie-chart :chartData="satisfaccion" :options="chartOp2" label='Satisfacción del alumno'></pie-chart>
@@ -113,14 +62,9 @@
   </div>
 </template>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
-<script src="@/components/Reportes/prueba2.js">
-</script>
 
 <script >
 import DatePicker from 'vue2-datepicker'
-import planetChartData from '@/components/Reportes/chart-data.js';
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import LineChart from '@/components/Reportes/LineChart.vue'
@@ -137,7 +81,6 @@ export default {
     },
     data(){
         return{
-            planetChartData: planetChartData,
             //filtros
             facultades:[],
             selectedFacultad:null,
@@ -223,7 +166,7 @@ export default {
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
         
-        this.createChart('planet-chart', this.planetChartData);
+        
     },
     computed: {
         progSinDefault: function () {
@@ -243,52 +186,7 @@ export default {
         //this.listarFacultades();
     },
     methods:{
-        createChart(chartId, chartData) {
-            console.log(chartId+" "+chartData);
-            const ctx = document.getElementById(chartId);
-            const dates = this.atenciones.map(d=>d.data).reverse();
-            const totals = this.atenciones.map(d=> d.total).reverse();
-            console.log(this.atenciones);
-            console.log(dates);
-            console.log(dates);
-            const myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-            labels:dates,
-                datasets: [
-                    { // one line graph
-                    label: 'cosas',
-                    data: totals,
-                    backgroundColor: [
-                        'rgba(54,73,93,.5)', // Blue
-                        'rgba(54,73,93,.5)',
-                        'rgba(54,73,93,.5)',
-                        'rgba(54,73,93,.5)',
-                        'rgba(54,73,93,.5)',
-                        'rgba(54,73,93,.5)',
-                        'rgba(54,73,93,.5)',
-                        'rgba(54,73,93,.5)'
-                    ],
-                    borderColor: [
-                        '#36495d',
-                        '#36495d',
-                        '#36495d',
-                        '#36495d',
-                        '#36495d',
-                        '#36495d',
-                        '#36495d',
-                        '#36495d',
-                    ],
-                    borderWidth: 3
-                    }
-                    ]
-            },
-                options: {
-                responsive: true,
-
-                }
-            });
-        },
+        
         listarFacultades(){
             const params = {
                 id_institucion:1,
@@ -396,14 +294,14 @@ export default {
            
             // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
             //LLenado del gráfico de la izquierda
-            this.alumnosBR.push({data:"Asistieron >50%-Cuarta",total:data.data[4].total_alumnos});
-            this.alumnosBR.push({data:"Asistieron <50%-Cuarta",total:data.data[5].total_alumnos});
+            this.alumnosBR.push({data:">50%-Cuarta",total:data.data[4].total_alumnos});
+            this.alumnosBR.push({data:"<50%-Cuarta",total:data.data[5].total_alumnos});
 
-            this.alumnosBR.push({data:"Asistieron >50%-Trica",total:data.data[2].total_alumnos});
-            this.alumnosBR.push({data:"Asistieron <50%-Trica",total:data.data[3].total_alumnos});
+            this.alumnosBR.push({data:">50%-Trica",total:data.data[2].total_alumnos});
+            this.alumnosBR.push({data:"<50%-Trica",total:data.data[3].total_alumnos});
             
-            this.alumnosBR.push({data:"Asistieron >50%-Bica",total:data.data[0].total_alumnos});
-            this.alumnosBR.push({data:"Asistieron <50%-Bica",total:data.data[1].total_alumnos});
+            this.alumnosBR.push({data:">50%-Bica",total:data.data[0].total_alumnos});
+            this.alumnosBR.push({data:"<50%-Bica",total:data.data[1].total_alumnos});
                 
 
         },

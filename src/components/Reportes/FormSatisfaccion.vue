@@ -148,11 +148,11 @@ export default {
     },
     mounted(){
         
-        document.querySelector("#container > div > div.FormAtenciones > div > div.top-titulo > div:nth-child(1) > div > div > input").style.borderRadius = "1.25rem"; 
-        document.querySelector("#container > div > div.FormAtenciones > div > div.top-titulo > div:nth-child(1) > div > div > input").style.border= "0.5px solid #757575";    
-        document.querySelector("#container > div > div.FormAtenciones > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontWeight = "400";
-        document.querySelector("#container > div > div.FormAtenciones > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
-        document.querySelector("#container > div > div.FormAtenciones > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
+        document.querySelector("#container > div > div:nth-child(2) > div > div.top-titulo > div.col-12.col-md-4 > div > div > input").style.borderRadius = "1.25rem"; 
+        document.querySelector("#container > div > div:nth-child(2) > div > div.top-titulo > div.col-12.col-md-4 > div > div > input").style.border= "0.5px solid #757575";    
+        document.querySelector("#container > div > div:nth-child(2) > div > div.top-titulo > div.col-12.col-md-4 > div > div > input").style.fontWeight = "400";
+        document.querySelector("#container > div > div:nth-child(2) > div > div.top-titulo > div.col-12.col-md-4 > div > div > input").style.fontSize = "1rem";
+        document.querySelector("#container > div > div:nth-child(2) > div > div.top-titulo > div.col-12.col-md-4 > div > div > input").style.height = "2.4em";
   
     },
     computed: {

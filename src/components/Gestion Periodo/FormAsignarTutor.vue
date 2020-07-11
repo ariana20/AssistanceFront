@@ -4,26 +4,32 @@
 
         <div class="row" style="text-align:left;">
             <h4 class="font-weight-bolder col-sm-2">Tutor: </h4>
-            <select class="col-sm-5 form-control" v-model="tutorSeleccionado"  @click="listarTT()" >
+            <select class="col-12 col-md-5 form-control" v-model="tutorSeleccionado"  v-on:change="listarTT()" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
                     :key="index" 
                     :value="item">
-                    {{ item.usuario.nombre + " " + item.usuario.apellidos }}
+                    {{ item.nombre + " " + item.apellidos }}
                 </option>
             </select>
         </div>
-        <div class="row" >
-          <div class="font-weight-bolder col-sm-2" style="text-align:left;">Temas: </div>
-          <div>
-              <label v-for="(item,index) in tipoTutoria" :key="index">
-                  {{item.nombre}}<label v-if="index<tipoTutoria.length-1" style="margin-right:5px">, </label>
-              </label>
+        <div class="row" style="text-align:left;">
+          <div class="font-weight-bolder col-2" style="text-align:left;">Temas: </div>
+          <div class="col-12 col-md-5" style="padding-left: 0px; padding-right: 0px;">
+            <select class="form-control" v-model="tutoriaSeleccionada"  v-on:change="listarAlumnos()" >
+                <option disabled selected :value="null" focusable="false">Selecciona un Tipo de Tutoria</option>
+                <option 
+                    v-for="(item, index) in tipoTutoria" 
+                    :key="index" 
+                    :value="item">
+                    {{ item.nombre}}
+                </option>
+            </select>
           </div>
         </div>
         <div class="row" style="margin-top:2%">
-            <div class="font-weight-bolder col-sm-2" style="text-align:left;">Alumnos</div>
+            <div class="font-weight-bolder col-sm-3" style="text-align:left;">Alumnos Asignados</div>
             <div class="font-weight-bolder col-sm-6" style="text-align:right;">
             </div>
         </div>
@@ -32,17 +38,14 @@
                 <tr>
                     <th scope="col" style="width:150px">Código</th>
                     <th scope="col" style="width:500px">Nombre y Apellidos</th>
-                    <th scope="col" style="width:400px">Condición</th>
-                    <th scope="col" >    
-                    <!--button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:-3px;" @click="addAlumno">
-                        Agregar
-                    </button-->
+                    <th scope="col" style="width:400px">Tipo de Tutoría</th>
+                    <th scope="col" > 
                     </th>
                 </tr>
             </thead>
    
             <tbody>
-                <tr>
+                <tr v-if="tutoriaSeleccionada">
                     <td scope="col" style="width:150px">
                         <ejs-autocomplete
                             :enabled="this.tutorSeleccionado"
@@ -61,8 +64,17 @@
                         <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >Nombre Alumno</div>
                     </td>
                     <td scope="col" style="width:400px">
-                        <div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >{{alSeleccionado.condicion}}</div>
-                        <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Condición Alumno</div>
+                        <select v-if="alSeleccionado!=null" class="form-control" v-model="tutoriaAlumno" >
+                            <option disabled selected :value="null" focusable="false">Selecciona un Tipo de Tutoria</option>
+                            <option 
+                                v-for="(item, index) in tipoTutoria" 
+                                :key="index" 
+                                :value="item">
+                                {{ item.nombre}}
+                            </option>
+                        </select>
+                        <!--div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >{{alSeleccionado.condicion}}</div-->
+                        <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Tipo de Tutoría</div>
                     </td>
                     <td scope="col">
                         <button  :disabled="!this.sel" type="button" class="btn btn-info" style="text-align:right;" @click="addAlumno">Asignar</button>
@@ -71,7 +83,7 @@
                 <tr v-for="(item,index) in alumnosAsig" :key="index">
                     <td v-if="item!=undefined">{{item.codigo}}</td>
                     <td v-if="item!=undefined">{{item.nombre+" "+item.apellidos}}</td>
-                    <td v-if="item!=undefined">{{item.condicion}}</td>
+                    <td v-if="item!=undefined">pendiente{{item.tipo_tutoria}}</td>
                     <td v-if="item!=undefined"><button class="btn link" v-on:click="Eliminar(item, index)"><b-icon  style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"></b-icon></button></td>
                 </tr>
             </tbody>
@@ -94,7 +106,9 @@ export default {
   data(){
     return{
         tutores:[],
+        tutoriaAlumno:null,
         tutorSeleccionado:null,
+        tutoriaSeleccionada:null,
         tipoTutoria:[],
         alumnos:[],
         alumnosAsig:[],
@@ -144,9 +158,10 @@ export default {
         nombre: "",
       };
       axios
-      .post('/programa/tutoresListar', params)
+      .post('/programa/tutoresAsignar', params)
         .then(res =>{
-          this.tutores=res.data;            
+          this.tutores=res.data; 
+          console.log(res);           
         })
         .catch(e => {
           console.log(e.response);
@@ -155,22 +170,36 @@ export default {
 
     listarTT(){
       if(this.tutorSeleccionado){
-        this.tipoTutoria=this.tutorSeleccionado.usuario.tipo_tutorias;
-        const params = {
-          id_tutor: this.tutorSeleccionado.usuario.id_usuario,
-          id_programa: this.$store.state.programaActual.id_programa
-        };
-        //Falta corregir por caro!!!
-        axios
-        .post('/registros/listarAlumnos', params)
-        .then(res =>{
-          this.alumnosAsig=res.data;            
-        })
-        .catch(e => {
-          console.log(e.response);
-        })
+        this.tipoTutoria=null;
+        this.tipoTutoria=this.tutorSeleccionado.tipo_tutorias;
+        var tipo= new Object();
+        tipo.nombre="Todos";
+        tipo.id_tipo_tutoria=0;
+        this.tipoTutoria.push(tipo);
       }
+      this.tutoriaSeleccionada=null;
+      this.tutoriaAlumno=null;
+    },
 
+    listarAlumnos(){
+        
+        if(this.tutoriaSeleccionada || this.tutoriaSeleccionada==0){
+            const params = {
+            id_tutor: this.tutorSeleccionado.id_usuario,
+            id_programa: this.$store.state.programaActual.id_programa,
+            id_tipo_tutoria: this.tutoriaSeleccionada.id_tipo_tutoria
+            };
+            //si te doy tipo de tutoría 0, me listas a todos los alumnos con sus tipos de tutorías
+            axios
+            .post('/registros/listarAlumnos', params)
+            .then(res =>{
+            this.alumnosAsig=res.data;
+            console.log(res);            
+            })
+            .catch(e => {
+            console.log(e.response);
+            })
+        }
     },
 
     addAlumno: function () {  
@@ -180,6 +209,7 @@ export default {
         id_programa: this.$store.state.programaActual.id_programa,
         id_alumno: this.alSeleccionado.id_usuario,
         usuario_creacion: this.$store.state.usuario.id_usuario,
+        id_tipo_tutoria: this.tutoriaAlumno.id_tipo_tutoria,
         usuario_actualizacion: this.$store.state.usuario.id_usuario,
         cambiar:this.cambiar,
         };
@@ -282,6 +312,7 @@ export default {
                 id_programa: this.$store.state.programaActual.id_programa,
                 usuario_actualizacion: this.$store.state.usuario.id_usuario,
                 id_alumno: item.id_usuario,
+                id_tipo_tutoria:item.tipoTutoria.id_tipo_tutoria,
                 };
                 axios
                 .post('/registros/eliminar',params)

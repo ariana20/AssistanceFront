@@ -1,6 +1,6 @@
 <template>
   <div name="FormTutoresDisponibles">
-    <div class="container" style="left:60px;text-align: left;">
+    <div class="contenedor" style="left:60px;text-align: left;">
 
 			<div class="row">
         <div class="col-2">
@@ -13,8 +13,8 @@
 
       <div v-for="(item,index) in tutores" :key="index">
         <datosTutor
-        :tutor="item.usuario"
-        :tipoTutoria="item.usuario.tipo_tutorias" />
+        :tutor="item"
+        :tipoTutoria="item.tipo_tutorias" />
       </div>
       <infinite-loading spinner="spiral" :identifier="infiniteId" @infinite="infiniteHandler">
         <div slot="no-more">No hay más tutores</div>
@@ -60,22 +60,25 @@ export default {
           id_programa : this.$store.state.programaActual.id_programa,
           nomFacu:this.$store.state.programaActual.facultad.nombre,
           nombre: this.nomb,
+          id_alumno: this.$store.state.usuario.id_usuario
         };
         axios
-        .post('/programa/tutores', params)
+        .post('/programa/tutoresAlumnoPaginado', params)
           .then(res =>{
-            this.loadMore($state, res);           
+            console.log(res);
+            this.loadMore($state, res); 
+            console.log(this.tutores);          
           })
           .catch(e => {
             console.log(e.response);
           })
     },
     loadMore: function($state, res){
-      if(res.data.tasks.data.length){
-        this.tutores=this.tutores.concat(res.data.tasks.data);
+      if(res.data.paginado.data.length){
+        this.tutores=this.tutores.concat(res.data.paginado.data);
         $state.loaded();
 
-        if(res.data.paginate.total==this.tutores.length){
+        if(res.data.paginado.total==this.tutores.length){
           
           $state.complete();
         }

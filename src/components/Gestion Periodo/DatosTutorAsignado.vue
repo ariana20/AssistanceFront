@@ -11,6 +11,7 @@
 		</figure>
         </div>
         <div class="descripcion-tutor">
+            <div class="font-weight-bolder">Tutor Asignado</div>
             <div class="font-weight-bolder">{{tutor.nombre + " " + tutor.apellidos}}</div>
             <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
             <div class="font-weight-bolder">Temas: </div>
@@ -22,12 +23,6 @@
             <div style="text-align: right" id="botones" >
                 <button type="button"
                 class="btn btn-info" v-on:click="verDisponibilidad()">Ver disponibilidad</button>
-                <!--button type="button"
-                class="btn btn-info">Ver Perfil</button> 
-                <button type="button"
-                class="btn btn-info btn-enviar-msg">Enviar Mensaje</button-->
-                <button type="button" style="align: right" v-if="tutor.solicitado"
-                class="btn btn-info" v-on:click="solicitarTutor()">Solicitar Tutor</button> 
             </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
