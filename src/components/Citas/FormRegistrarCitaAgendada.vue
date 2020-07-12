@@ -25,9 +25,10 @@
        
         <div class="font-weight-bolder text-left">Alumno(s)</div>
         <div class="row">
-            <div class="col-md-4 col-sm-4">
+            <div class="col-12 col-sm-4 col-md-3">
                 <div class="col-sm-6"><label for="formGroupExampleInput">Código</label></div>
-                <hr style="width:315%;">
+                <hr style="width:355%;">
+                <!-- combo box para seleccionar alumnos -->
                 <ejs-autocomplete
                     :dataSource='codigos' 
                     :fields='campoCodigo' 
@@ -38,8 +39,8 @@
                     style="margin-bottom: 10px;"
                     :showClearButton="false">
                 </ejs-autocomplete>
-
-                <ul class="col-sm-12 col-md-11" style="text-align:left;margin-left:-8px;">
+                <!-- codigos seleccionados -->
+                <ul class="col-12 col-sm-12 col-md-11" style="text-align:left;margin-left:-8px;">
                     <li class="form-control" style="width:120%;text-align:center;margin-top:8px;"
                         v-for="(newAlumnoCod,alcIndex) in listAlumnosCod"  
                         :key="alcIndex">
@@ -48,15 +49,14 @@
                 </ul>
 
             </div>
-            <div class="col-12 col-md-4 col-sm-4">
+            <div class="col-12 col-sm-4 col-md-4 ">
                 <div class="col" style="text-align:left;padding-bottom:30px;">
                     <label for="formGroupExampleInput" style="margin-right:50px">Nombre y Apellidos</label>
-                    <button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:-3px;"
-                            @click="addAlumno">Agregar
-                    </button>
+                    
                 </div>
                 <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{alSeleccionado}}</div>
                 <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
+                   <!-- nombres seleccionados -->
                     <li class="form-control list-group-item" style="padding: 0.4rem 0.5rem;"
                         v-for="(newAlumno,alIndex) in listAlumnosNom"  
                         :key="alIndex">
@@ -65,12 +65,23 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-12 col-md-4 col-sm-4">
-                <div class="col" style="text-align:left;padding-bottom:30px;">
+            <div class="col-12  col-sm-4 col-md-5">
+
+                <div  style="text-align:left;padding-bottom:30px;">
                     <label for="formGroupExampleInput" style="margin-right:50px">Condición</label>
                 </div>
-                <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{condSeleccionado}}</div>
-                <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
+                <div class ="row" style="margin-left:5px">
+                    <div type="text" class="form-control col-12  col-sm-4 col-md-6" placeholder="Condicion" style="color: white;background:#BEBEBE;margin-bottom:10px;" >{{condSeleccionado}}
+                    </div>
+                    <div class="col-12  col-sm-4 col-md-4">
+                        <button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:0px;"
+                                    @click="addAlumno">Agregar
+                                </button>                     
+                    </div>
+                </div>
+                
+                <ul class="col-12  col-sm-4 col-md-7" style="text-align:center;margin-left:-10px;padding-right:0px;">
+                    <!-- condiciones seleccionadas -->
                     <li class="form-control list-group-item" style="padding: 0.4rem 0.5rem;"
                         v-for="(newAlumno,alIndex) in listAlumnosCond"  
                         :key="alIndex">
@@ -79,6 +90,7 @@
                     </li>
                 </ul>
             </div>
+  
             
         </div>
          <!-- Modal de cargando -->
@@ -132,7 +144,7 @@ export default Vue.extend ({
             bordes:'borde-textbox',
             sel: '',
             alSeleccionado: 'Nombre del alumno',
-            condSeleccionado: 'Condición del alumno',
+            condSeleccionado: 'Condición',
             codigos:[],
             campoCodigo: {value:'codigo'},    
             selectedTipoTutoria: null,
@@ -435,8 +447,8 @@ export default Vue.extend ({
                 });
         },
         listarTT(){
-        
-            this.tt=this.$store.state.citaDatos.tttutorSel;
+            this.tt=this.$store.state.citaDatos.tttutorSel.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
+            // this.tt=this.$store.state.citaDatos.tttutorSel;
             
         },
         resultadosCita(){

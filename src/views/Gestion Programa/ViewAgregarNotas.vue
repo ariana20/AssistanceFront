@@ -1,7 +1,7 @@
 
 <template>
   <div class="Notas">
-    <CabezeraTitulo msg="Notas de los alumnos"
+    <CabezeraTitulo msg="Histórico de los alumnos"
     :image-path="require('@/assets/images/person-writing.jpg')"/>
     <FormAgregarNotas/>
   </div>

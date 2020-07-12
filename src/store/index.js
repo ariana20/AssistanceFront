@@ -109,6 +109,8 @@ export default new Vuex.Store({
         icon: 'ion-ios-person-add'
       },
       {
+        // text: 'Agregar Documento',
+        // path: '/agregardocumentos',
         text: 'Agregar Notas',
         path: '/agregarNotas',
         icon: 'ion-ios-document'

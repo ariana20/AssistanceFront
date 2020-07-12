@@ -124,7 +124,7 @@ export default {
             tutores: [],
             fechaIni:null,
             miUsuario:this.$store.state.permisosUsuario,
-            isTutor:null,
+           
             bloque:null,
         }
     },
@@ -200,14 +200,12 @@ export default {
             axios
             .post('/programa/tutoresListar', params)
             .then(res =>{
-                this.tutores=res.data;   
+                //Ordenadito
+                this.tutores=res.data.sort((a, b) => { return  a.usuario.nombre.localeCompare(b.usuario.nombre);});
+                 // this.tutores=res.data;  
+                
                 this.hideModal();  
-                if(this.$store.state.permisosUsuario.includes('Sesión de Tutoría')) {                  
-                    this.isTutor=true; //tiene tutorías- es tutor o es coordinador                    
-                }else  {
-                    //Es secretaria 
-                    this.isTutor=false;
-                }
+            
                       
             })
             .catch(e => {
