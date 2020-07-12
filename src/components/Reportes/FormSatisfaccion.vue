@@ -182,7 +182,7 @@ export default {
             this.recomendado=[];
             
             const params = {
-                id_programa: this.idPogramas,
+                id_programa: [this.$store.state.programaActual.id_programa],
                 fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };

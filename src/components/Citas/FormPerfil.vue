@@ -54,7 +54,7 @@
             <div class="container" style="width:100%">
                 <div v-if="usuario.notas!=null && usuario.notas!=''">
                     <!-- {{usuario.notas}} -->
-                    <embed class="toolb" :src="usuario.notas+'#toolbar=0&navpanes=0&scroll=0'" height="400vh" style="width:85%;overflow:auto"/>
+                    <embed class="toolb" :src="'https://assisstanceproyecto20201.vizcochitos.cloudns.cl/usuarios/'+usuario.notas+'#toolbar=0&navpanes=0&scroll=0'" height="400vh" style="width:85%;overflow:auto"/>
                 </div>
                 <div v-else>
                     <h2>No tiene notas registradas actualmente</h2>
