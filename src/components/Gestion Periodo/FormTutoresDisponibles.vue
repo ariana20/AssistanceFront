@@ -25,23 +25,21 @@
                     {{ tema.nombre}}
                 </option>
             </select>
-          
-
-
-            <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
+            
+            <!--ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
                 <li class="motivos-seleccionados list-group-item" style="text-align:left;"
                     v-for="(tema,index) in temaSelect"  
                     :key="index">
                     {{ tema.nombre }}
                     <span name="remove" class="close" @click="deleteTema(index, tema)" style="float:right;">&times;</span>           
                 </li>
-            </ul>
+            </ul-->
             </div>
-            <div class="col-12 col-lg-2" style="text-align: right; top: 50%;padding-top: 6px;"><h6 style="top:50%;cursor:pointer;color:#17a2b8;" 
+            <!--div class="col-12 col-lg-2" style="text-align: right; top: 50%;padding-top: 6px;"><h6 style="top:50%;cursor:pointer;color:#17a2b8;" 
                 :disabled="!this.selectedTema"
                 @click="addTema" 
                 >Seleccionar</h6>
-            </div>
+            </div-->
           </div>
         </div>
         
@@ -54,7 +52,7 @@
       </div>
       <infinite-loading spinner="spiral" :identifier="infiniteId" @infinite="infiniteHandler">
         <div slot="no-more">No hay más tutores</div>
-        <div slot="no-results">No hay tutores con ese nombre</div>
+        <div slot="no-results">No hay tutores con esas condiciones</div>
       </infinite-loading>
     </div>
 
@@ -107,9 +105,10 @@ export default {
         .post('/programa/tiposTutoriaAlumno', params)
           .then(res =>{
             this.temas=res.data;
-            for(var i=0; i<this.temas.length; i++){
-                if(this.temas[i].tutor_asignado) this.temas.splice(i,1);  
-            }
+            var tema= new Object();
+            tema.id_tipo_tutoria=0;
+            tema.nombre="Todos";
+            this.temas.push(tema);
             console.log(res);         
           })
           .catch(e => {
@@ -125,9 +124,9 @@ export default {
     },
     infiniteHandler: function($state){
       //$state.reset();
-      var idT;
-      if(this.selectedTema) idT=this.selectedTema.id_tipo_tutoria;
-
+      var idT=null;
+      if(this.selectedTema && this.selectedTema.id_tipo_tutoria!=0) idT=this.selectedTema.id_tipo_tutoria;
+      
       let limit = this.tutores.length / 10 + 1;
       const params = {
         page: limit,
