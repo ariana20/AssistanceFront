@@ -40,7 +40,7 @@
             </div>
         </div>
         
-        <div v-if="encuestas==null || encuestas.length==0" class="row" style="width:100%">
+        <div v-if="alumnos==null || alumnos.length==0" class="row" style="width:100%">
             <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
                 Ningún Alumno Pendiente
             </div>
