@@ -1,9 +1,10 @@
 <template>
     <div class="formagendarcita container">
         <div class="top-titulo ">
-            <div style="width:30%;"><ul class="legend">
-                <li><span class="ocupado"></span> Realizado </li>
+            <div style="width:50%;"><ul class="legend">
+                <li><span class="realizado"></span> Realizado </li>
                 <li><span class="pendiente"></span> Pendiente </li>
+                <li><span class="proximo"></span> Próximo </li>
                 <li><span class="disponible"></span> Disponible </li>
             </ul></div>
             <div style="text-align:right;">
@@ -19,15 +20,11 @@
                           :locales="locales"
                           locale="es"
                           :header ="{
-                              left: 'prev',
-                              center: 'title',
-                              right: 'next'
-                          }"
-                          :footer ="{
-                              left: 'timeGridWeek, timeGridDay, listWeek',
+                              left: 'title',
                               center: '',
-                              right: ''
+                              right: 'prev today next'
                           }"
+                          
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
@@ -138,64 +135,68 @@ export default {
         
         handleSelect (arg) {
             console.log(arg)
-            axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(arg.start).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
-            .then((response) => {
-                console.log(response.data)
-                if(response.data == 'l') {
-                    Swal.fire({
-                        html:'Se registrará una nueva disponibilidad el día <br> ' +  moment(arg.start).format("YYYY-MM-DD") + ' a las ' + moment(arg.start).format(" hh:mm a"),
-                        icon:"warning",
-                        confirmButtonText: 'Continuar',
-                        showCancelButton: true,
-                        cancelButtonText: 'Cancelar',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                    }).then((result) => {
-                        if(result.value) {
-                            axios.post('disponibilidades/insertar',{
-                                id_usuario:this.$store.state.usuario.id_usuario,
-                                id_programa: this.$store.state.programaActual.id_programa,
-                                fecha:moment(arg.start).format("YYYY-MM-DD"),
-                                usuario_creacion: this.$store.state.usuario.id_usuario,
-                                usuario_actualizacion: this.$store.state.usuario.id_usuario,
-                                tipo_disponibilidad: 'fij',
-                                hora_inicio:moment(arg.start).format('HH:mm:ss')
-                            })
-                            .then((response) => {
-                                
-                                if(response.data){
-                                    this.$store.commit("ADD_EVENT", {
-                                        title: "Disponible",
-                                        start: arg.start,
-                                        end: arg.end,
-                                    })
-                                    Swal.fire({
-                                        text:"Se registró una nueva disponibilidad",
-                                        icon:"success",
-                                        confirmButtonText: 'Continuar',
-                                        confirmButtonColor:'#0097A7',
-                                        showConfirmButton: true,
-                                    });
-                                }
-                                this.getReminders();   
-                            }).catch(e => {
-                            console.log(e.response);
-                            });
-                        }
-                    })
-                } else {
-                    Swal.fire({
-                        text:"Ya tiene registrado en otro programa este horario",
-                        icon:"error",
-                        confirmButtonText: 'OK',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                    })
-                }
-            }).catch(e => {
-                    console.log(e.response);
-                });
-                //this.calendar.render();
+            var today = new Date()
+            var date = arg.start
+            if(date>today) {
+                axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(arg.start).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
+                .then((response) => {
+                    console.log(response.data)
+                    if(response.data == 'l') {
+                        Swal.fire({
+                            html:'Se registrará una nueva disponibilidad el día <br> ' +  moment(arg.start).format("YYYY-MM-DD") + ' a las ' + moment(arg.start).format(" hh:mm a"),
+                            icon:"warning",
+                            confirmButtonText: 'Continuar',
+                            showCancelButton: true,
+                            cancelButtonText: 'Cancelar',
+                            confirmButtonColor:'#0097A7',
+                            showConfirmButton: true,
+                        }).then((result) => {
+                            if(result.value) {
+                                axios.post('disponibilidades/insertar',{
+                                    id_usuario:this.$store.state.usuario.id_usuario,
+                                    id_programa: this.$store.state.programaActual.id_programa,
+                                    fecha:moment(arg.start).format("YYYY-MM-DD"),
+                                    usuario_creacion: this.$store.state.usuario.id_usuario,
+                                    usuario_actualizacion: this.$store.state.usuario.id_usuario,
+                                    tipo_disponibilidad: 'fij',
+                                    hora_inicio:moment(arg.start).format('HH:mm:ss')
+                                })
+                                .then((response) => {
+                                    
+                                    if(response.data){
+                                        this.$store.commit("ADD_EVENT", {
+                                            title: "Disponible",
+                                            start: arg.start,
+                                            end: arg.end,
+                                        })
+                                        Swal.fire({
+                                            text:"Se registró una nueva disponibilidad",
+                                            icon:"success",
+                                            confirmButtonText: 'Continuar',
+                                            confirmButtonColor:'#0097A7',
+                                            showConfirmButton: true,
+                                        });
+                                    }
+                                    this.getReminders();   
+                                }).catch(e => {
+                                console.log(e.response);
+                                });
+                            }
+                        })
+                    } else {
+                        Swal.fire({
+                            text:"Ya tiene registrado en otro programa este horario",
+                            icon:"error",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor:'#0097A7',
+                            showConfirmButton: true,
+                        })
+                    }
+                }).catch(e => {
+                        console.log(e.response);
+                    });
+                    //this.calendar.render();
+            }
             
         },
         modificarDisp () {
@@ -289,17 +290,19 @@ export default {
                     var rd2 = response.data[1];
                     var rd3 = response.data[2];
                     var rd4 = response.data[3];
-                    console.log('llenado de cal disponibilidades:', response.data)
+                    var today = new Date()
                     for(var i in response.data[0]) {
                         var start_hour = rd[i].hora_inicio;
-                        
-                            //SI ESTA OCUPADO 
+                        var date = rd[i].fecha + " " + rd[i].hora_inicio
+                        var date1 = new Date(date)
+                            //SI ESTA OCUPADO
+                            
                             if(rd2[i]=='o') {
                                 //SI ES UNA CITA INDIVIDUAL
                                 if(response.data[3][i].length == 1) {
                                     //SI YA SE REGISTRO RESULTADO DE LA CITA
                                     console.log('alumno:',rd4[i][0].nombre,'asiste:',rd4[i][0].pivot.asistencia)
-                                    if(rd4[i][0].pivot.asistencia!='noa' && rd4[i][0].pivot.asistencia!='pen') {
+                                    if(rd4[i][0].pivot.asistencia!='noa' && rd4[i][0].pivot.asistencia!='pen' ) {
                                         this.$store.commit("ADD_EVENT", {
                                             allow: rd[i].alumno,
                                             id: rd[i].id_disponibilidad,
@@ -311,7 +314,7 @@ export default {
                                             horaIni: rd[i].hora_inicio, 
                                             end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
                                             tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                            color: 'gray',
+                                            color: '#009892',
                                             usuario_creacion: rd[i].usuario_creacion,
                                             id_usuario_tutor: rd[i].id_usuario,
                                             usuario_actualizacion: rd[i].usuario_actualizacion,
@@ -319,25 +322,44 @@ export default {
                                         })   
                                     }
                                     else {
-                                        this.$store.commit("ADD_EVENT", {
-                                            allow: rd[i].alumno,
-                                            id: rd[i].id_disponibilidad,
-                                            title: rd4[i][0].nombre + ' ' + rd4[i][0].apellidos,
-                                            description: rd3[i].nombre,
-                                            alumno: rd4[i][0],
-                                            start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                            fecha: rd[i].fecha,
-                                            horaIni: rd[i].hora_inicio, 
-                                            end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                            tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                            color: '#FFC107',
-                                            usuario_creacion: rd[i].usuario_creacion,
-                                            id_usuario_tutor: rd[i].id_usuario,
-                                            usuario_actualizacion: rd[i].usuario_actualizacion,
-                                            motivo: rd3[i].nombre
-                                        })
+                                        if(date1>today) {
+                                            this.$store.commit("ADD_EVENT", {
+                                                allow: rd[i].alumno,
+                                                id: rd[i].id_disponibilidad,
+                                                title: rd4[i][0].nombre + ' ' + rd4[i][0].apellidos,
+                                                description: rd3[i].nombre,
+                                                alumno: rd4[i][0],
+                                                start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                                fecha: rd[i].fecha,
+                                                horaIni: rd[i].hora_inicio, 
+                                                end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                                tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                                color: '#FFC107',
+                                                usuario_creacion: rd[i].usuario_creacion,
+                                                id_usuario_tutor: rd[i].id_usuario,
+                                                usuario_actualizacion: rd[i].usuario_actualizacion,
+                                                motivo: rd3[i].nombre
+                                            })
+                                        } else {
+                                            this.$store.commit("ADD_EVENT", {
+                                                allow: rd[i].alumno,
+                                                id: rd[i].id_disponibilidad,
+                                                title: rd4[i][0].nombre + ' ' + rd4[i][0].apellidos,
+                                                description: rd3[i].nombre,
+                                                alumno: rd4[i][0],
+                                                start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                                fecha: rd[i].fecha,
+                                                horaIni: rd[i].hora_inicio, 
+                                                end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                                tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                                color: 'red',
+                                                usuario_creacion: rd[i].usuario_creacion,
+                                                id_usuario_tutor: rd[i].id_usuario,
+                                                usuario_actualizacion: rd[i].usuario_actualizacion,
+                                                motivo: rd3[i].nombre
+                                            })
+                                        }
                                     }
-
                                 }
                                 //SI ES UNA CITA GRUPAL
                                 else  {                               
@@ -353,7 +375,7 @@ export default {
                                             horaIni: rd[i].hora_inicio, 
                                             end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
                                             tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                            color: 'gray',
+                                            color: '#009892',
                                             usuario_creacion: rd[i].usuario_creacion,
                                             id_usuario_tutor: rd[i].id_usuario,
                                             usuario_actualizacion: rd[i].usuario_actualizacion,
@@ -361,42 +383,68 @@ export default {
                                         })   
                                     }
                                     else {
-                                        this.$store.commit("ADD_EVENT", {
-                                            allow: rd[i].alumno,
-                                            id: rd[i].id_disponibilidad,
-                                            title: 'Cita Grupal',
-                                            description: rd3[i].nombre,
-                                            alumno: rd4[i][0],
-                                            start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                            fecha: rd[i].fecha,
-                                            horaIni: rd[i].hora_inicio, 
-                                            end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                            tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                            color: '#FFC107',
-                                            usuario_creacion: rd[i].usuario_creacion,
-                                            id_usuario_tutor: rd[i].id_usuario,
-                                            usuario_actualizacion: rd[i].usuario_actualizacion,
-                                            motivo: rd3[i].nombre
-                                        })
+                                        if(date1>today) {
+                                            this.$store.commit("ADD_EVENT", {
+                                                allow: rd[i].alumno,
+                                                id: rd[i].id_disponibilidad,
+                                                title: 'Cita Grupal',
+                                                description: rd3[i].nombre,
+                                                alumno: rd4[i][0],
+                                                start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                                fecha: rd[i].fecha,
+                                                horaIni: rd[i].hora_inicio, 
+                                                end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                                tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                                color: '#FFC107',
+                                                usuario_creacion: rd[i].usuario_creacion,
+                                                id_usuario_tutor: rd[i].id_usuario,
+                                                usuario_actualizacion: rd[i].usuario_actualizacion,
+                                                motivo: rd3[i].nombre
+                                            })
+
+                                        }
+                                        else {
+                                            this.$store.commit("ADD_EVENT", {
+                                                allow: rd[i].alumno,
+                                                id: rd[i].id_disponibilidad,
+                                                title: 'Cita Grupal',
+                                                description: rd3[i].nombre,
+                                                alumno: rd4[i][0],
+                                                start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                                fecha: rd[i].fecha,
+                                                horaIni: rd[i].hora_inicio, 
+                                                end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                                tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                                color: 'red',
+                                                usuario_creacion: rd[i].usuario_creacion,
+                                                id_usuario_tutor: rd[i].id_usuario,
+                                                usuario_actualizacion: rd[i].usuario_actualizacion,
+                                                motivo: rd3[i].nombre
+                                            })
+
+                                        }
                                     }
                                                                         
                                 }
-                                                           
+                                                        
                             } 
+                            
                             else {
-                                this.$store.commit("ADD_EVENT", {
-                                    id: rd[i].id_disponibilidad,
-                                    title: 'Disponible',
-                                    description:'',
-                                    start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                    end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                    tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                    color: '#B2EBF2',
-                                    editable:false,
-                                    usuario_creacion: rd[i].usuario_creacion,
-                                    id_usuario_tutor: rd[i].id_usuario,
-                                    usuario_actualizacion: rd[i].usuario_actualizacion
-                                });
+                                if(date1>today) {
+                                    this.$store.commit("ADD_EVENT", {
+                                        id: rd[i].id_disponibilidad,
+                                        title: 'Disponible',
+                                        description:'',
+                                        start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                        tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                        color: '#B2EBF2',
+                                        editable:false,
+                                        usuario_creacion: rd[i].usuario_creacion,
+                                        id_usuario_tutor: rd[i].id_usuario,
+                                        usuario_actualizacion: rd[i].usuario_actualizacion
+                                    });
+                                }
                             }
                     }
                     this.hideModal()

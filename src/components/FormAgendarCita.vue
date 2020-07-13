@@ -2,8 +2,9 @@
     <div class="formagendarcita container">
         <div class="top-titulo " style="text-align:left;">
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @click="showCalendar" >
-                <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
+            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" >
+                <option v-if="tutorSel2==null" disabled selected :value="null" focusable="false">Selecciona un tutor</option>
+                <option v-else disabled selected :value="null" focusable="false">{{this.tutorSel2.nombre + ' ' + this.tutorSel2.apellidos}}</option>
                 <option 
                     v-for="(item, index) in tutores" 
                     :key="index" 
@@ -24,15 +25,11 @@
                           :locales= "locales"
                           locale="es"
                           :header ="{
-                              left: 'prev',
-                              center: 'title',
-                              right: 'next'
-                          }"
-                          :footer ="{
-                              left: 'today',
+                              left: 'title',
                               center: '',
-                              right: ''
+                              right: 'prev today next'
                           }"
+                          
                           :slotDuration="'00:'+bloque+':00'"
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
@@ -97,7 +94,9 @@ export default {
                         click: () => {
                             let calendar = this.$refs.fullCalendar.getApi();
                             calendar.prev();
-                            this.getReminders();
+                            if(this.tutorSel) {
+                                this.getReminders();
+                            }
                         }
                     },
                     next: {
@@ -105,12 +104,16 @@ export default {
                         click: () => {
                             let calendar = this.$refs.fullCalendar.getApi();
                             calendar.next();
-                            this.getReminders();
+                            if(this.tutorSel) {
+                                this.getReminders();
+                            }
                         }
                     },
             },
             nombre_usuario: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
-            tutorSel: this.$store.state.tutorDisponibilidad,
+            tutorSel:null,
+            tutorSel2:null,
+            //tutorSel2: this.$store.state.tutorDisponibilidad,
             tutores: [],
         }
     },
@@ -119,9 +122,7 @@ export default {
     },
     methods: {
         showCalendar() {
-            if(this.tutorSel) {
-                this.getReminders();
-            }
+            this.getReminders();
         },
         listarTutores() {
         const params = {
@@ -132,7 +133,6 @@ export default {
         axios
         .post('/programa/tutoresListar', params)
             .then(res =>{
-            console.log(res);
             this.tutores=res.data;            
             })
             .catch(e => {
@@ -154,14 +154,19 @@ export default {
             }
         },
         getReminders: function() {
+            if(this.$store.state.tutorDisponibilidad) { this.tutorSel = this.tutorSel2}
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
+                console.log('tutorSel', this.tutorSel)
                 axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
+                    //console.log('getreminders',response.data)
                     var rd = response.data[0]; 
                     var rd2 = response.data[1];
+                    var today = new Date()
                     for(var i in rd) {
-                        //console.log('usuario_actualizacion',rd[i])
+                        var date = rd[i].fecha + " " + rd[i].hora_inicio
+                        var date1 = new Date(date)
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
                             
@@ -186,27 +191,28 @@ export default {
                                         start: rd[i].fecha + " " + rd[i].hora_inicio,
                                         end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
                                         tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                        color: 'gray',
+                                        color: 'red',
                                         usuario_creacion: rd[i].usuario_creacion,
                                         id_usuario_tutor: rd[i].id_usuario,
                                         usuario_actualizacion: rd[i].usuario_actualizacion,
-                                       
+                                    
                                     });
                                 }
                             } else {
-                                this.$store.commit("ADD_EVENT", {
-                                    id: rd[i].id_disponibilidad,
-                                    title: 'Disponible',
-                                    start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                    end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                    tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                    usuario_creacion: rd[i].usuario_creacion,
-                                    id_usuario_tutor: rd[i].id_usuario,
-                                    usuario_actualizacion: rd[i].usuario_actualizacion,
-                                    
-                                });
+                                if(date1>today) {
+                                    this.$store.commit("ADD_EVENT", {
+                                        id: rd[i].id_disponibilidad,
+                                        title: 'Disponible',
+                                        start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                        tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                        usuario_creacion: rd[i].usuario_creacion,
+                                        id_usuario_tutor: rd[i].id_usuario,
+                                        usuario_actualizacion: rd[i].usuario_actualizacion,
+                                        
+                                    });
+                                }
                             }
-
                         //});
                     }
                 }).catch(e => {
@@ -221,12 +227,14 @@ export default {
         }
     },
     mounted() {
-        //console.log('prog actual: ',this.$store.state.programaActual.id_programa);
+        if(this.$store.state.tutorDisponibilidad) {
+            this.tutorSel2 = this.$store.state.tutorDisponibilidad
+        }  
         this.listarTutores();
         this.bloque = this.$store.state.programaActual.hora_bloque;
-        //this.calendar = this.$refs.fullCalendar.getApi();
-        //idUsuario: this.$store.state.usuario.id_usuario
-        /*axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
+
+        /*let calendar = this.$refs.fullCalendar.getApi();
+        axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:calendar.view.activeStart,horaInicio:calendar.view.activeEnd })
         .then(response => {
             this.dispSemanalVistaAl = response.data;
 
@@ -234,7 +242,7 @@ export default {
         }).catch(e => {
             console.log(e.response);
         });*/
-    }
+    }   
     
 }
 function addTimes (startTime, endTime) {

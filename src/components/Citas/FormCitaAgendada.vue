@@ -285,6 +285,7 @@ export default Vue.extend ({
             }
             let elems3 = document.getElementsByTagName('textarea');
             elems3[0].disabled = false;
+            
         },
         disableFields() {
             let elems = document.getElementsByTagName('input')
@@ -295,6 +296,7 @@ export default Vue.extend ({
             }
             let elems3 = document.getElementsByTagName('textarea');
             elems3[0].disabled = true;
+            document.querySelector("#app > nav.navbar.navbar-dark.navbar-expand-lg > select").disabled = false
         },
         cancelar: function(){
             Swal.fire({

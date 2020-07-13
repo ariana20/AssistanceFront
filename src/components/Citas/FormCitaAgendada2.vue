@@ -290,7 +290,6 @@ export default Vue.extend ({
             }
             let elems3 = document.getElementsByTagName('textarea');
             elems3[0].disabled = true;
-
         },
         cancelar: function(){
             Swal.fire({
