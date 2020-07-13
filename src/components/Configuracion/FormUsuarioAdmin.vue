@@ -1,5 +1,5 @@
 <template>
-  <div class="FormUsuario" style="margin-top:5px;margin-left:5%;margin-right:5%">
+  <div class="FormUsuario contenedor" style="margin-top:5px;">
     <div class="row grid-divider" style="margin-top:3%" >
       <div id="izquierdo" class="col-md-5">
         <table>
@@ -44,11 +44,21 @@
           </tr>
         <div style="margin-bottom:20px;" >
           <tr>      
-            <td style="width:110px;" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1" >Programa: </td>
-            <select v-on:change="ProgramaSel" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
+            <td style="width:110px;" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario!=2" >Programa: </td>
+            <select v-on:change="ProgramaSel" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario!=2" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
               v-model="progSeleccionadoInd">  <!--aqui guardo-->
               <option selected disabled :value="null">Selecciona un programa</option>
               <option v-for="(prog, i) in programas"  :key="i" :value="prog.id_programa"  > <!--falta agregar value, creo que abreviatura le mando-->
+              {{ prog.nombre }} 
+              </option>
+            </select>
+          </tr>
+          <tr>      
+            <td style="width:110px;" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario==2" >Facultad: </td>
+            <select v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario==2" v-on:change="ProgramaSel" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
+              v-model="progSeleccionadoInd">  <!--aqui guardo-->
+              <option selected disabled :value="null">Selecciona una facultad</option>
+              <option v-for="(prog, i) in facultades"  :key="i" :value="prog.id_programa"  > <!--falta agregar value, creo que abreviatura le mando-->
               {{ prog.nombre }} 
               </option>
             </select>
@@ -115,11 +125,11 @@
               </option>
             </select>
           </div>
-          <div class="col-12 col-md-2">
+          <div class="col-6 col-md-2">
             <button v-if="anadirNuevo==false"  type="button" style="border-radius: 10px" @click="anadirNuevo=true;tiposUsuariosselect='no';tiposUsuariosSel=null" class="btn btn-info">Añadir</button>
             <button v-else  type="button" style="border-radius: 10px;border-color:gray;background-color:gray" @click="anadirNuevo=false;tiposUsuariosselect='no';tiposUsuariosSel=null" class="btn btn-info">Cancelar</button>
           </div>
-          <div v-if="anadirNuevo==false && tiposUsuariosSel!=null" class="col-12 col-md-2">
+          <div v-if="anadirNuevo==false && tiposUsuariosSel!=null" class="col-6 col-md-2">
             <button type="button" style="border-radius: 10px;border-color:gray;background-color:gray" @click="eliminarTipo" class="btn btn-info">Eliminar</button>
           </div>
         </div>
@@ -151,6 +161,58 @@
                 </option>
               </select>
             </div>
+          </div>
+        </div>
+        <div v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.alumno==true" class="row">
+          <div class="col-12 col-md-2" style="margin-top:0.8%">
+            Condición del alumno:
+          </div>
+          <div class="col-12 col-md-8">
+            <select class="form-control"
+              v-model="condiAlumnosselect">  <!--aqui guardo-->
+              <option selected disabled :value="null">Selecciona una condición</option>
+              <option v-for="(condi, i) in condiAlumnos"  :key="i" :value="condi.abreviatura"  > <!--falta agregar value, creo que abreviatura le mando-->
+              {{ condi.nombre }} 
+              </option>
+            </select>
+          </div>
+        </div>
+        <div v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor==true" class="row"> 
+          <div class="col-12 col-md-2" style="margin-top:0.8%">
+            Tipos de tutorias:*
+          </div>
+          <div class="col-12 col-md-4">
+            <select class="form-control" v-model="tipostutoriasselect" style="cursor:pointer">
+              <option selected disabled value="no">Selecciona un tipo de tutoria</option>
+              <option v-for="(tt, i) in tipostutorias"  :key="i"   :value="tt.id_tipo_tutoria">
+              {{ tt.nombre}}
+              </option>
+            </select>
+          </div>
+          <div class="col-12 col-md-4">
+            <button  type="button" class="btn btn-info"                     
+              style="margin-left:10px;margin:5px;border-radius: 10px;"
+              @click="addMTT(i)">
+              Seleccionar
+            </button>
+          </div>
+        </div>
+        <div v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor==true" class="row">
+          <div class="col-12 col-md-2" style="margin-top:0.8%">
+            Tipos de tutoria seleccionados:
+          </div>
+          <div class="col-12 col-md-8">
+            <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
+              <div v-if="listTT.length == 0">No tiene tipos de tutorias seleccionados</div>
+              <li class="motivos-seleccionados list-group-item" style="text-align:left;"
+                v-for="(newTT,ttIndex) in listTT"  
+                :key="ttIndex">
+                {{newTT}}
+                <span name="remove" class="close" @click="deleteTT(ttIndex)" style="margin-right:20px;float:right;">
+                  &times;
+                </span>           
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -247,6 +309,19 @@ export default {
         this.tiposUsuariosSel=this.usuario_entrante.usuario_x_programas[0].tipo_usuario;    
         this.progSeleccionadoInd=this.usuario_entrante.usuario_x_programas[0].programa.id_programa;   
         this.progSeleccionado=this.usuario_entrante.usuario_x_programas[0].programa;   
+        for (let i = 0; i < this.usuario_entrante.usuario_x_programas.length; i++) {
+            this.usuario_entrante.usuario_x_programas[i].tipo_usuario.alumno = false;
+            this.usuario_entrante.usuario_x_programas[i].tipo_usuario.tutor = false;
+          for (let index = 0; index < this.usuario_entrante.usuario_x_programas[i].tipo_usuario.permisos.length; index++) {
+            if(this.usuario_entrante.usuario_x_programas[i].tipo_usuario.permisos[index].nombre == "Tutores"){
+              this.usuario_entrante.usuario_x_programas[i].tipo_usuario.alumno = true;
+            }
+            if(this.usuario_entrante.usuario_x_programas[i].tipo_usuario.permisos[index].nombre == "Sesión de Tutoría"){
+              this.usuario_entrante.usuario_x_programas[i].tipo_usuario.tutor = true;
+              this.llenarTT();
+            }
+          }
+        }
         this.listarTT(this.usuario_entrante.usuario_x_programas[0].programa.id_programa);
       }
       Axios.create()
@@ -275,7 +350,7 @@ export default {
             confirmButtonColor:'#0097A7',
             showConfirmButton: true,
           }); 
-          this.$store.state.usuarios=null;
+          this.$store.state.usuariosA=null;
           //this.$router.push('/ListaUsuarios');          
         });
 
@@ -355,6 +430,7 @@ export default {
         .catch(e=>console.log('catch listarTipoT',e));
     },
     TipoUs(){
+      this.listTT = [];
       this.tiposUsuarios.forEach(element => {
         if(element.id_tipo_usuario == this.tiposUsuariosselect){
           this.tiposUsuariosSel = element;
@@ -420,11 +496,20 @@ export default {
         })  
       }
       //Si escogió el tipo de usuario tutor
-      else if( this.tiposUsuariosselect==4 &&  this.listTTId.length==0 ){
+      else if( this.tiposUsuariosselect==4 &&  this.listTTId.length==0 && (this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_tipo_usuario!=5)){
         // this.hideModal();
          //evito que deje en 0 los tipos de tutoria al que pertenece el tutor
         Swal.fire({
           text:"Falta elegir un tipo de tutoria",
+          icon:"error",
+          confirmButtonText: 'OK',
+          confirmButtonColor:'#0097A7',
+          showConfirmButton: true,
+        })
+      }
+      else if(this.progSeleccionadoInd==null){
+        Swal.fire({
+          text:"Falta elegir un programa",
           icon:"error",
           confirmButtonText: 'OK',
           confirmButtonColor:'#0097A7',
@@ -500,36 +585,65 @@ export default {
             else{
               id_prog = this.progSeleccionadoInd
             }
-            //primero evaluo si es alumno
-            if(this.tiposUsuariosselect==5){
-              const params2 = {
-                codigo:this.codigo.trim().replace(/\s+/g, ' '), 
-                nombre:this.nombre.trim().replace(/\s+/g, ' '),
-                apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
-                estado:this.estado,
-                telefono:this.telefono,    
-                // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
-                id_tipo_usuario_Nuevo:this.tiposUsuariosselect, 
-                id_programa:id_prog,
-                //como es alumno inserto las condicioes
-                condicion_alumno:this.condiAlumnosselect,//le doy el value
-              };
-              this.modificarUsuario(params2);
+            if(this.anadirNuevo!=true && this.usuario_entrante.usuario_x_programas!=null && this.usuario_entrante.usuario_x_programas[0]!=null){
+              //primero evaluo si es alumno
+              if(this.tiposUsuariosSel.id_tipo_usuario==5){
+                const params2 = {
+                  codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+                  nombre:this.nombre.trim().replace(/\s+/g, ' '),
+                  apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                  estado:this.estado,
+                  telefono:this.telefono,
+                  //como es alumno inserto las condicioes
+                  condicion_alumno:this.condiAlumnosselect,//le doy el value
+                };
+                this.modificarUsuario(params2);
+              }
+              else{
+                const params2 = {
+                  //Parametros modificados de usuario
+                  codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+                  nombre:this.nombre.trim().replace(/\s+/g, ' '),
+                  apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                  estado:this.estado,
+                  telefono:this.telefono,
+                };
+                this.modificarUsuario(params2);
+              }
             }
             else{
-              const params2 = {
-                //Parametros modificados de usuario
-                codigo:this.codigo.trim().replace(/\s+/g, ' '), 
-                nombre:this.nombre.trim().replace(/\s+/g, ' '),
-                apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
-                estado:this.estado,
-                telefono:this.telefono,    
-                // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
-                id_tipo_usuario_Nuevo:this.tiposUsuariosselect, 
-                id_programa:id_prog,
-              };
-              this.modificarUsuario(params2);
+              //primero evaluo si es alumno
+              if(this.tiposUsuariosselect==5){
+                const params2 = {
+                  codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+                  nombre:this.nombre.trim().replace(/\s+/g, ' '),
+                  apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                  estado:this.estado,
+                  telefono:this.telefono,    
+                  // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
+                  id_tipo_usuario_Nuevo:this.tiposUsuariosselect, 
+                  id_programa:id_prog,
+                  //como es alumno inserto las condicioes
+                  condicion_alumno:this.condiAlumnosselect,//le doy el value
+                };
+                this.modificarUsuario(params2);
+              }
+              else{
+                const params2 = {
+                  //Parametros modificados de usuario
+                  codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+                  nombre:this.nombre.trim().replace(/\s+/g, ' '),
+                  apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                  estado:this.estado,
+                  telefono:this.telefono,    
+                  // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
+                  id_tipo_usuario_Nuevo:this.tiposUsuariosselect, 
+                  id_programa:id_prog,
+                };
+                this.modificarUsuario(params2);
+              }
             }
+            
           }
           
       }
@@ -538,14 +652,37 @@ export default {
       document.getElementById("btnGuarda").disabled = false; //habilita
       document.getElementById("btnCancela").disabled = false; //habilita
     },
-
+    llenarTT(){
+      this.axios.post('/usuarios/tutoriaTutor',{idTutor: this.usuario_entrante.id_usuario, id_programa:this.progSeleccionadoInd})
+        .then(response=>{
+          response.data.forEach(element => {
+            this.listTT.push(element.nombre)
+          });
+        })
+        .catch(e=>{
+          console.log(e)
+        })
+      
+    },
     listarTUsuarios() {
       this.axios.post('/tipoUsuarios/listarTodo')
         .then(res=>{
-              //Ordenadito
+          //Ordenadito
           let par=res.data;
-        //  console.log('TUsu:',res.data);
+          //  console.log('TUsu:',res.data);
           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+          this.tiposUsuarios.forEach(element => {
+            element.alumno = false;
+            element.tutor = false;
+            for (let index = 0; index < element.permisos.length; index++) {
+              if(element.permisos[index].nombre == "Tutores"){
+                element.alumno = true;
+              }
+              if(element.permisos[index].nombre == "Sesión de Tutoría"){
+                element.tutor = true;
+              }
+            }
+          });
           this.hideModal()
         })
         .catch(e=>{
@@ -628,29 +765,27 @@ export default {
     },
     addMTT: function () {
 
-            for(var i in this.tipostutorias)
-            if(this.tipostutoriasselect ==this.tipostutorias[i].id_tipo_tutoria){
-              this.listTT.push(this.tipostutorias[i].nombre);
-              this.listTTId.push(this.tipostutorias[i].id_tipo_tutoria);
-              this.listTTBorrados.push(this.tipostutorias[i]);
-              this.tipostutorias.splice(i,1);
-              this.tipostutoriasselect="no";
+      for(var i in this.tipostutorias)
+      if(this.tipostutoriasselect ==this.tipostutorias[i].id_tipo_tutoria){
+        this.listTT.push(this.tipostutorias[i].nombre);
+        this.listTTId.push(this.tipostutorias[i].id_tipo_tutoria);
+        this.listTTBorrados.push(this.tipostutorias[i]);
+        this.tipostutorias.splice(i,1);
+        this.tipostutoriasselect="no";
 
-            }
+      }
             
-        },
-     deleteTT: function (index) {
-  
-            var i;
-            for(i in this.listTTBorrados)
-              if(this.listTT[index]==this.listTTBorrados[i].nombre){
-                this.tipostutorias.push(this.listTTBorrados[i]);
-                break;
-              }
-              this.listTT.splice(index,1);
-              this.listTTId.splice(index,1);
-         
-        },
+    },
+    deleteTT: function (index) {
+      var i;
+      for(i in this.listTTBorrados)
+        if(this.listTT[index]==this.listTTBorrados[i].nombre){
+          this.tipostutorias.push(this.listTTBorrados[i]);
+          break;
+        }
+        this.listTT.splice(index,1);
+        this.listTTId.splice(index,1);
+    },
   
     actualizarTT(i){ //verifica si es tutor
       //Si es tutor
@@ -684,10 +819,10 @@ export default {
     },
     //Modal de cargando
     showModal() {
-      //this.$refs['my-modal'].show()
+      this.$refs['my-modal'].show()
     },
     hideModal() {
-      //this.$refs['my-modal'].hide()
+      this.$refs['my-modal'].hide()
     },
     verificarUsuariosCod(){
       //Cuando recién tenga 8 dígitos,analizo
@@ -876,7 +1011,7 @@ export default {
               showConfirmButton: true,
             }) 
             //Como se guardaron con éxito ahora agrego el titutoria
-            if(this.tiposUsuariosselect==4){
+            if(this.this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor==true){
               var idusuarionuevo=response.data["user"].id_usuario;
               // console.log('id del usuario nuevo: ',response.data["user"].id_usuario);
               this.actualizarTT(idusuarionuevo);//tiene hide?
@@ -922,14 +1057,31 @@ export default {
             // console.log('params2 ',params2.id_tipo_usuario_Nuevo);
             //Si es tutor actualizo el tt
             if(this.usuario_entrante.usuario_x_programas[0]){
-              let existe = false;
-              for (let index = 0; index < this.usuario_entrante.usuario_x_programas.length; index++) {
-                if(this.usuario_entrante.usuario_x_programas[index].id_programa == this.progSeleccionadoInd){
-                  existe = true;
-                  break;
+              if(params2.id_programa){
+                let existe = false;
+                for (let index = 0; index < this.usuario_entrante.usuario_x_programas.length; index++) {
+                  if(this.usuario_entrante.usuario_x_programas[index].id_programa == this.progSeleccionadoInd){
+                    existe = true;
+                    break;
+                  }
+                }
+                if(!existe){
+                  let obj ={
+                    id_tipo_usuario:this.tiposUsuariosselect, 
+                    id_programa:params2.id_programa,
+                  }
+                  this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
+                    .then(response=>{
+                      response
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                    })
                 }
               }
-              if(!existe){
+            }
+            else{
+              if(params2.id_programa){
                 let obj ={
                   id_tipo_usuario:this.tiposUsuariosselect, 
                   id_programa:params2.id_programa,
@@ -943,20 +1095,7 @@ export default {
                   })
               }
             }
-            else{
-              let obj ={
-                id_tipo_usuario:this.tiposUsuariosselect, 
-                id_programa:params2.id_programa,
-              }
-              this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
-                .then(response=>{
-                  response
-                })
-                .catch(e=>{
-                  console.log(e)
-                })
-            }
-            if(this.tiposUsuariosselect==4){
+            if(this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor!=false){
               this.actualizarTT(this.id_usuario_entrante);
               //  this.hideModal();
             }
@@ -1014,7 +1153,7 @@ export default {
                     showConfirmButton: true,
                   }) 
                   
-                  this.$store.state.usuarios=null;
+                  this.$store.state.usuariosA=null;
                   //Como se guardaron con éxito ahora agrego el titutoria, pero ya tengo el id usuario
                   if(this.tiposUsuariosselect==4){
                   this.actualizarTT(this.id_usuario_entrante);
@@ -1042,7 +1181,7 @@ export default {
                     showConfirmButton: true,
                   });  
                   
-                  this.$store.state.usuarios=null;
+                  this.$store.state.usuariosA=null;
                   //  this.$router.push('/ListaUsuarios');         
                 
                 

@@ -237,11 +237,12 @@ export default {
     
     guardarUsuario() { //Para usuarios nuevecitos más que nada, si no, se van a una función
       
+     
       document.getElementById("btnGuarda").disabled = true; //inhabilita
       document.getElementById("btnCancela").disabled = true; //inhabilita
 
       var   expresion2=/\w+@\w+\.+edu.pe/;
-       var   expresion1=/\w+@\w+\.+pe/;
+      var   expresion1=/\w+@\w+\.+pe/;
       if(this.nombre=="" ||this.apellidos=="" || this.codigo=="" || this.codigo===null || this.correo=="" || this.estado===null   ){
           // this.hideModal();
       //Cuando está vacio todo
@@ -367,38 +368,62 @@ export default {
               //primero evaluo si es alumno
               if(this.tiposUsuariosselect==5){
                   const params2 = {
-                  codigo:this.codigo.trim().replace(/\s+/g, ' '), 
-                  nombre:this.nombre.trim().replace(/\s+/g, ' '),
-                  apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
-                  estado:this.estado,
-                  telefono:this.telefono,    
-                  // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
-                  id_tipo_usuario_Nuevo:this.tiposUsuariosselect, 
-                  id_programa:this.miprog.id_programa,
+                      codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+                      nombre:this.nombre.trim().replace(/\s+/g, ' '),
+                      apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                      estado:this.estado,
+                      telefono:this.telefono,    
+                      // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
+                      id_tipo_usuario_Nuevo:this.tiposUsuariosselect, 
+                      id_programa:this.miprog.id_programa,
             
                 //como es alumno inserto las condicioes
-                  condicion_alumno:this.condiAlumnosselect,//le doy el value
+                      condicion_alumno:this.condiAlumnosselect,//le doy el value
+
+                      //si debería pasarte, el usuario actualizacion cuando es alumno
+                      usuario_actualizacion:this.miUsuario.id_usuario,
 
                 };
                 this.modificarUsuario(params2);
               }
               else{
-            
+                //aqui verifico
+                  
+
+
 
                   const params2 = {
               //Parametros modificados de usuario
-                   codigo:this.codigo.trim().replace(/\s+/g, ' '), 
-                  nombre:this.nombre.trim().replace(/\s+/g, ' '),
-                  apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
-                 estado:this.estado,
-                  telefono:this.telefono,    
-                 // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
-                 id_tipo_usuario_Nuevo:this.tiposUsuariosselect, 
-                 id_programa:this.miprog.id_programa,
+                    codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+                    nombre:this.nombre.trim().replace(/\s+/g, ' '),
+                    apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                    estado:this.estado,
+                    telefono:this.telefono,    
+                    // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
+                    id_tipo_usuario_Nuevo:this.tiposUsuariosselect, 
+                    id_programa:this.miprog.id_programa,
                  };
-        
+                 if(this.telefono== this.usuario_entrante.telefono && 
+                    this.nombre == this.usuario_entrante.nombre && 
+                    this.apellidos== this.usuario_entrante.apellidos && 
+                    this.estado==this.usuario_entrante.estado  && 
+                    this.codigo== this.usuario_entrante.codigo)   this.modificarUsuario(params2);
+                  else {
+                       let params4 = {
+                        //Parametros modificados de usuario
+                             codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+                             nombre:this.nombre.trim().replace(/\s+/g, ' '),
+                             apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                             estado:this.estado,
+                             telefono:this.telefono,    
+                              // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
+                             id_tipo_usuario_Nuevo:this.tiposUsuariosselect, 
+                             id_programa:this.miprog.id_programa,
+                             usuario_actualizacion:this.miUsuario.id_usuario,
+                      };
+                      this.modificarUsuario(params4);
+                  }
 
-                  this.modificarUsuario(params2);
               }
             } 
             else{

@@ -1,7 +1,7 @@
 <template>
-    <div class="formagendarcita container">
+    <div class="formagendarcita contenedor">
         <div class="top-titulo " style="text-align:left;">
-            <!-- inicia combobox -->
+            <!-- inicia combobox de tutor -->
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
             <select class="col-sm-4 form-control" style="left:-160px;top:26px;cursor:pointer" v-model="tutorSel"  @change="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
@@ -207,7 +207,7 @@ export default {
                       
             })
             .catch(e => {
-                console.log(e.response);
+                console.log(e);
                 this.hideModal();
                 Swal.fire({
                     text:"Estamos teniendo problemas al listar los tutores del programa. Vuelve a intentar en unos minutos.",
@@ -297,7 +297,7 @@ export default {
                     }
                     
                 }).catch(e => {
-                    console.log(e.response);
+                    console.log(e);
                     
                     Swal.fire({
                         text:"Estamos teniendo problemas al mostrar la disponibilidad del tutor. Vuelve a intentar en unos minutos.",
@@ -408,9 +408,8 @@ function addTimes (startTime, endTime) {
 }
 .fc-event { 
     background-color: #B2EBF2;
-    border-color: #B2EBF2;
-   
-    cursor: pointer;
+    border-color: #B2EBF2;   
+    cursor: pointer !important;
 
 }
 .vm--modal {

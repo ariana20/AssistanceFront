@@ -1,8 +1,8 @@
 <template>
-  <div class="FormListarUsuario"  >
+  <div class="FormListarUsuario contenedor"  >
     <!-- para que lo vea bien un coordinador -->
 
-    <div style="text-align: left;margin-left:5%" >  
+    <div >  
          
       <div class="row" style="width:100%">
         <div class="form-inline col-12 col-md-4 col-lg-2">
@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <div style="overflow: auto;width:95%;margin-top:2%">
+      <div style="overflow: auto;margin-top:2%">
         <table responsive class="table" style="text-align:left" >
           <thead>
             <tr>

@@ -1,5 +1,5 @@
 <template>
-  <div name="FormSolicitudes" style="text-align: left;margin-left:5%">
+  <div name="FormSolicitudes" style="text-align: left" class="contenedor">
       
     <div class="row" style="width:100%">
       <div class="form-inline col-12 col-md-2 col-lg-1">

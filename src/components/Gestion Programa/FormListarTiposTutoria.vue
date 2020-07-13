@@ -1,5 +1,5 @@
 <template>
-  <div class="FormRoles " style="margin-top:5px;margin-left:5%">  
+  <div class="FormRoles contenedor ">  
     <div style="text-align: left" >
       
 			<div class="row" style="width:100%">
@@ -65,7 +65,7 @@ export default {
     return{
       tipostutorias:[], //
       miprog:this.$store.state.programaActual,
-    
+      miUsuario:null,
     }
   },
   mounted(){
@@ -100,7 +100,7 @@ computed:{
            this.$store.state.tipostutorias=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
 
             // this.$store.state.tipostutorias = response.data; //
-
+           this.miUsuario=this.$store.state.usuario;
        
             this.hideModal();
         })
@@ -143,8 +143,10 @@ computed:{
                 confirmButtonColor:'#0097A7'
                 }
               )
+              let params ={usuario_actualizacion:this.miUsuario.id_usuario}
               //aqui iriía el eliminar
-              Axios.post('/TipoTutoria/eliminar/'+item.id_tipo_tutoria)
+
+              Axios.post('/TipoTutoria/eliminar/'+item.id_tipo_tutoria,params)
                 .then(response=>{
                   console.log(response);
                   let index = this.$store.state.tipostutorias.indexOf( //
@@ -152,8 +154,8 @@ computed:{
                       return element.id_tipo_tutoria === item.id_tipo_tutoria; //
                    })
                   this.$store.state.tipostutorias.splice(index, 1); //  
-                  this.$router.push('/ListaTiposTutorias'); //
-                  
+                  //this.$router.push('/ListaTiposTutorias'); //
+                  this.$store.state.tipostutorias=null;                 
 
                 })
                 .catch(e=>{

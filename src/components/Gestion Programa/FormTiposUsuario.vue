@@ -1,5 +1,5 @@
 <template>
-	<div class="formUsuario container" style="margin-top:2em;">
+	<div class="formUsuario contenedor" style="margin-top:2em;">
     <div class="row">
       <div class="col-md-4 col-sm-4" style="text-align: left">
         <div class="title-field">Codigo</div>

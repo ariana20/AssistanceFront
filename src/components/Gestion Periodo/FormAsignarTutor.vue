@@ -1,6 +1,6 @@
 <template>
-  <div name="FormAsignarTutor">
-    <div style="text-align: center;margin-top:2%;margin-left:5%">
+  <div name="FormAsignarTutor" class="contenedor">
+    <div style="text-align: center;">
 
         <div class="row" style="text-align:left;">
             <h4 class="font-weight-bolder col-sm-2">Tutor: </h4>
@@ -181,7 +181,8 @@ export default {
         id_tutor: this.tutorSeleccionado.usuario.id_usuario,
         id_programa: this.$store.state.programaActual.id_programa,
         id_alumno: this.alSeleccionado.id_usuario,
-        id_usuario_creacion: this.$store.state.usuario.id_usuario,
+        usuario_creacion: this.$store.state.usuario.id_usuario,
+        usuario_actualizacion: this.$store.state.usuario.id_usuario,
         cambiar:this.cambiar,
         };
         
@@ -281,6 +282,7 @@ export default {
                 const params = {
                 id_tutor: this.tutorSeleccionado.usuario.id_usuario,
                 id_programa: this.$store.state.programaActual.id_programa,
+                usuario_actualizacion: this.$store.state.usuario.id_usuario,
                 id_alumno: item.id_usuario,
                 };
                 axios

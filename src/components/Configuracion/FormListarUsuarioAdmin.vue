@@ -1,6 +1,6 @@
 <template>
-  <div class="FormListarUsuario">
-    <div style="margin-left:5%;text-align: left">
+  <div class="FormListarUsuario contenedor">
+    <div style="text-align: left">
       <div class="row" style="width:100%">
         <div class="form-inline col-12 col-md-2 col-lg-1">
           <h5 style="margin-top:10%;margin-bottom:5%">Buscar: </h5>
@@ -8,7 +8,7 @@
         <div class="form-inline col-12 col-md-4">
           <input v-on:change="Buscar(nombre)" class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese un nombre">
         </div>
-        <div class="form-inline col-12 col-md-2 offset-md-2 offset-lg-4">
+        <div class="form-inline col-12 col-md-2 offset-md-2 offset-lg-5">
           <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
         </div>
       </div>
@@ -53,9 +53,9 @@
                   <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;"/>
               </td>
               <td style="text-align: center">
-                <div class="row" style="width:115px">
-                  <button class="btn link"><b-icon icon="pencil" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
-                  <button class="btn link"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item)"></b-icon></button>
+                <div class="row" style="width:100%;margin-left:0px">
+                  <button class="btn link col-3" style="padding: 0px"><b-icon icon="pencil" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
+                  <button class="btn link col-3" style="padding: 0px;margin-left:10px"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item)"></b-icon></button>
                 </div>              
               </td>
             </tr>
@@ -63,24 +63,56 @@
         </table>
       </div>
       </div>
-      <div v-if="$store.state.usuariosA!=null">
-        
-        <div style="overflow: scroll;width:95%;">
-          <nav aria-label="Page navigation example">
+      <div v-if="$store.state.usuariosA!=null && $store.state.usuariosA.last_page!=1">
+          <nav aria-label="Page navigation example" class="paginar">
             <ul class="pagination justify-content-center">
               <li class="page-item" v-if="$store.state.usuariosA.current_page > 1">
                 <a class="page-link" href="#" tabindex="-1" @click.prevent="Page($store.state.usuariosA.current_page - 1)" style="color:rgb(0, 152, 146)">
                   <span>Anterior</span>
                 </a>
               </li>
-              <li class="page-item" v-for="page in $store.state.usuariosA.last_page" :key="page">
-                <a  v-if="page != $store.state.usuariosA.current_page" class="page-link" href="#" @click.prevent="Page(page)" style="color:rgb(0, 152, 146)">
+              <li class="page-item">
+                <a  v-if="$store.state.usuariosA.current_page!=1" class="page-link" href="#" @click.prevent="Page(1)" style="color:rgb(0, 152, 146)">
                   <span class="sr-only">(current_page)</span>
-                  {{ page }}
+                  {{ '1' }}
                 </a>
                 <a v-else class="page-link" href="#" style="color:rgb(0, 152, 146)">
                   <span class="sr-only">(current_page)</span>
-                  {{ page }}
+                  {{ '1' }}
+                </a>
+              </li>
+              <li class="page-item" v-if="$store.state.usuariosA.last_page > 3 && $store.state.usuariosA.current_page != 2 && ($store.state.usuariosA.current_page != 1 && $store.state.usuariosA.current_page != $store.state.usuariosA.last_page)">
+                <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ '...' }}
+                </a>
+              </li>
+              <li class="page-item" v-if="$store.state.usuariosA.last_page > 2 && ($store.state.usuariosA.current_page == 1 || $store.state.usuariosA.current_page == $store.state.usuariosA.last_page)">
+                <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ '...' }}
+                </a>
+              </li>
+              <li class="page-item" v-if="$store.state.usuariosA.current_page!=1 && $store.state.usuariosA.current_page!=$store.state.usuariosA.last_page">
+                <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ $store.state.usuariosA.current_page }}
+                </a>
+              </li>
+              <li class="page-item" v-if="$store.state.usuariosA.last_page > 3 && $store.state.usuariosA.current_page != $store.state.usuariosA.last_page-1 && ($store.state.usuariosA.current_page != 1 && $store.state.usuariosA.current_page != $store.state.usuariosA.last_page)">
+                <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ '...' }}
+                </a>
+              </li>
+              <li class="page-item" v-if="$store.state.usuariosA.last_page!=1">
+                <a  v-if="  $store.state.usuariosA.current_page!=$store.state.usuariosA.last_page" class="page-link" href="#" @click.prevent="Page($store.state.usuariosA.last_page)" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ $store.state.usuariosA.last_page }}
+                </a>
+                <a v-else class="page-link" href="#" style="color:rgb(0, 152, 146)">
+                  <span class="sr-only">(current_page)</span>
+                  {{ $store.state.usuariosA.last_page }}
                 </a>
               </li>
               <li class="page-item" v-if="$store.state.usuariosA.current_page < $store.state.usuariosA.last_page">
@@ -90,7 +122,6 @@
               </li>
             </ul>
           </nav>
-        </div>
       </div>
     </div>
     
@@ -118,10 +149,8 @@ export default {
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
-    if(this.$store.state.usuariosA === null  ) { 
-      this.showModal();    
-      this.listarUsuarios(); 
-    } 
+    this.showModal();    
+    this.listarUsuarios();
   },
   methods:{
     listarUsuarios() {
@@ -272,4 +301,11 @@ export default {
 .btn-derecha{
    margin-top: 0px;
 }  
+
+@media screen and (max-width: 800px) {
+  .paginar{
+    font-size: 65%;
+  }
+}
+
 </style>

@@ -78,7 +78,9 @@ input:focus {outline: none;box-shadow: none;}
 .legend span { border-radius: 4px; border: 1px solid #ccc; float: left; width: 20px; height: 20px; margin: 2px; }
 /* your colors */
 .legend .ocupado { background-color: red; }
-.legend .pendiente { background-color: #FFC107; }
+.legend .realizado { background-color: #009892; }
+.legend .proximo { background-color: #FFC107; }
+.legend .pendiente { background-color: red; }
 .legend .disponible { background-color: #B2EBF2; }
 .legend .citareservada { background-color: #009892; }
 
@@ -89,3 +91,15 @@ input:focus {outline: none;box-shadow: none;}
     margin-top:15px;
     text-align:center;
 }
+.contenedor{
+    margin-left:40px;
+    margin-right:40px;
+}
+@media screen and (max-width: 600px) {
+    
+    .contenedor{
+        margin-left:20px;
+        margin-right:20px;
+    }
+
+  }

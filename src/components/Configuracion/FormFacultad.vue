@@ -1,10 +1,10 @@
 <template>
-	<div name="FormFacultad container">
-		<div style="margin-left:5%;text-align: left;">
+	<div name="FormFacultad" class="contenedor">
+		<div style="text-align: left;">
 
 			<div class="row" style="width:100%">
 				<div class="form-inline col-12 col-md-2 col-lg-1">
-					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
+				<h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
 				</div>
 				<div class="form-inline col-12 col-md-4">
 					<input class="form-control" style="margin-top:3%" v-on:keyup.enter="buscarFacultades(nomb)" v-model="nomb" placeholder="Ingrese nombre de la facultad">
@@ -19,7 +19,7 @@
 					<thead>
 						<tr>
 							<th scope="col" style="width:100px">Código</th>
-							<th scope="col" style="width:200px">Nombre</th>
+							<th scope="col" style="width:350px">Nombre</th>
 							<th scope="col" style="width:200px">Coordinador</th>
 							<th scope="col" style="width:250px">Correo</th>
 							<th scope="col" style="text-align: center">N° Programas</th>
@@ -204,7 +204,11 @@ export default {
 				}).then((result) => {
 					if (result.value) {
 						this.showModal()
-						this.axios.post('/facultad/eliminar/'+item.id_facultad)
+						const params={
+							id:item.id_facultad,
+							usuario_actualizacion:this.$store.state.usuario.id_usuario
+						};
+						this.axios.post('/facultad/eliminar',params)
 							.then(response=>{
 								response
 								let index = this.$store.state.facultades.indexOf(

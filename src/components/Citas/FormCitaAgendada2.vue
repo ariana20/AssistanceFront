@@ -1,5 +1,5 @@
 <template>
-    <div class="formcitaagendada container">
+    <div class="formcitaagendada contenedor">
         <div class="top-info" style="text-align:left;">
             <div id="botones">
                 <button v-if="this.cita[1]=='l' && !this.editar" type="button" class="btn btn-info" @click="editFields">Editar</button>
@@ -23,17 +23,6 @@
                     <div class="col-md-4 col-sm-4">
                         <div class="col-sm-6"><label for="formGroupExampleInput">Código</label></div>
                         <hr style="width:335%;">
-                        <!-- <ejs-autocomplete
-                            :dataSource='codigos' 
-                            :fields='campoCodigo' 
-                            placeholder="Código" 
-                            :change='onCodigoChange'
-                            v-model="sel"
-                            class="form-control"
-                            style="margin-bottom: 10px;"
-                            :showClearButton="false">
-                        </ejs-autocomplete> -->
-
                         <ul class="col-sm-12 col-md-12" style="text-align:left;margin-left:-8px;">
                             <li class="form-control" style="width:120%;text-align:center;margin-top:8px;"
                                 v-for="(newAlumnoCod,alcIndex) in listAlumnosCod"  
@@ -42,32 +31,33 @@
                             </li>
                         </ul>
 
-                    </div>
-                    <div class="col">
+                    </div>  <!-- termina la columa de codigos -->
+                    <div class="col-md-8 col-xs-4">
                         <div class="col" style="text-align:left;padding-bottom:30px;">
                             <label for="formGroupExampleInput" style="margin-right:50px">Nombre y Apellidos</label>
-                            <!-- <button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:-3px;"
-                                    @click="addAlumno">Agregar
-                            </button> -->
+                            <label for="formGroupExampleInput">Asistencia</label>
                         </div>
-                        <!-- <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{alSeleccionado}}</div> -->
-                        <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
+                        <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-top:4px;">
                             <li class="form-control list-group-item" style="padding: 0.4rem 0.5rem;"
                                 v-for="(newAlumno,alIndex) in listAlumnosNom"  
                                 :key="alIndex">
-                                {{newAlumno}}    
-                                <!-- <span name="remove" style="color:red" class="close" @click="deleteAl(alIndex)">&times;</span>  -->
+                                {{newAlumno.nombres}}    
+                                <input type="checkbox" style="height:20px;width:20px;" v-model="newAlumno.asistencia" />                                  
                             </li>
+ 
+                             
                         </ul>
-                    </div>
+                        
+                    </div> 
+                     <!-- termina la columna de nombres -->
                     
-                </div>
-                <div style="margin-top:10%;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>
-            </div>
+                </div> <!-- termina row1 que es todos los alumnos -->
+                <!-- <div style="margin-top:10%;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div> -->
+            </div>  <!-- termina     LADO IZQUIERDO -->
             <div class="der col-lg-6 col-xm col-md-12">
                 <div class="font-weight-bolder text-left">Resultado</div>
                  <div class="top-titulo" style="margin-bottom:20px;">
-                    <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
+                    <div class="col-sm-3 motivo-dropdown-title">Motivo:* </div>
                     <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="selectedMotivo">
                         <option selected disabled :value="null" >Selecciona un motivo</option>
                         <option
@@ -98,7 +88,7 @@
                     </ul>
                     <hr>
                     <div class="form-group" style="text-align:left;margin-bottom:20px;">
-                        <label for="descripcion">Descripción:</label>
+                        <label for="descripcion">Descripción:*</label>
                         <textarea class="form-control" id="descripcion-motivo" rows="7" v-model="descripcion"></textarea>
                     </div>
                     <div class="top-titulo" style="text-align:left;">
@@ -176,9 +166,9 @@ export default Vue.extend ({
             selectedTipoTutoria: null,
             tiposTutoria: [],
             selectedMotivo: null,
-            motivos: [],
+            motivos: null,
             newMotivo: null,
-            asistencia:false,
+            asistencia:[],
             listMotivos:[],
             listMotivosId: [],
             motivosBorrados:[],
@@ -257,24 +247,31 @@ export default Vue.extend ({
     },
     methods: {
         fillFields() {
-            if(this.cita[0].cita_x_usuarios.length > 1) {
+            console.log('cita: ',this.cita);
+            if(this.cita[0].cita_x_usuarios.length > 1) { //Solo muestro varios alumnos
                 for(let i in this.cita[0].cita_x_usuarios){
-                    this.listAlumnosNom.push(this.cita[0].cita_x_usuarios[i].nombre+" " +this.cita[0].cita_x_usuarios[i].apellidos);
                      this.listAlumnosCod.push(this.cita[0].cita_x_usuarios[i].codigo);
                     this.listAlumnosId.push(this.cita[0].cita_x_usuarios[i].id_usuario);
-                }             
+                    var infoAlumno=new Object();
+                    if(this.cita[0].cita_x_usuarios[i].pivot.asistencia == 'asi') {
+                        infoAlumno.asistencia = true;
+                    }
+                    else if(this.cita[0].cita_x_usuarios[i].pivot.asistencia == 'noa' || this.cita[0].cita_x_usuarios[i].pivot.asistencia == 'pen' ) {
+                        infoAlumno.asistencia = false;
+                    }                    
+                    infoAlumno.nombres=this.cita[0].cita_x_usuarios[i].nombre+" " +this.cita[0].cita_x_usuarios[i].apellidos;
+                    this.listAlumnosNom.push(infoAlumno);
+                    //Podría hacerlo más responsive si todo lo junto en un solo arreglo e imprimo por i
+                   }             
             }
-            if(this.cita[1] != "l") {
-            this.descripcion = this.cita[1].resultado;
-            if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
-                this.asistencia = true;
+
+            if(this.cita[1] != "l") {   
+                this.descripcion = this.cita[1].resultado;    
+                for(var i in this.cita[1].motivo_consultas) {
+                    this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
+                    this.addMotivos()
+                }
             }
-           
-            for(var i in this.cita[1].motivo_consultas) {
-                this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
-                this.addMotivos()
-            }
-        }
         },
         enableFields() {
             // let elems = document.getElementsByTagName('input')
@@ -295,6 +292,7 @@ export default Vue.extend ({
             }
             let elems3 = document.getElementsByTagName('textarea');
             elems3[0].disabled = true;
+            document.querySelector("#app > nav.navbar.navbar-dark.navbar-expand-lg > select").disabled = false
         },
         cancelar: function(){
             Swal.fire({
@@ -330,28 +328,40 @@ export default Vue.extend ({
             
         },
         guardar: function () {
-            let array = []
-            array.push(this.event.extendedProps.alumno.id_usuario);
-        
+
+            let faltaron=false;            
+            for(let i in this.listAlumnosNom ){
+                if(this.listAlumnosNom[i].asistencia==true)            this.asistencia[i]="asi";
+                else if(this.listAlumnosNom[i].asistencia==null || this.listAlumnosNom[i].asistencia==false  )  { 
+                    this.asistencia[i]="noa"; 
+                     faltaron=true; //Por lo menos faltó uno
+                     console.log('o es false o el null');
+                }
+                
+            }
+            console.log(faltaron);
+            //varios un alumno
             const sesion_params = {
                 id_cita: this.$store.state.idCita,
                 resultado: this.descripcion,
                 usuario_creacion: this.cita[1].usuario_creacion,
                 usuario_actualizacion: this.cita[1].usuario_actualizacion,
-                idAlumnos: array,
+                idAlumnos: this.listAlumnosId,
                 asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
             };
+                
                 if(this.listMotivos.length > 0) {
-                        
-                            if(this.descripcion!=null) {
+
+                            if(this.descripcion!=null  && this.faltaron==false ) {
                                 if(this.selectedUnidadApoyo) {
                                     this.enviarCorreo(this.selectedUnidadApoyo)
                                 }
+
                                 axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
                                        console.log(response);
-                                        this.disableFields()
+                                        this.disableFields();
                                         Swal.fire({
                                             text:"Se ha registrado la sesión con éxito",
                                             icon:"success",
@@ -359,6 +369,8 @@ export default Vue.extend ({
                                             confirmButtonColor:'#0097A7',
                                             showConfirmButton: true,
                                         }) 
+                                        //lo redirigo a los calendarios
+                                        this.$router.push('/calendariocitas');
                                     })  
                                     .catch(e => {
                                         console.log(e.response);
@@ -370,8 +382,8 @@ export default Vue.extend ({
                                                      showConfirmButton: true,
                                          });
                                     });
-                                }
-                                else {
+                            }
+                            else if(this.descripcion==null) {
                                     Swal.fire({
                                         text:"Debe llenar el campo descripción",
                                         icon:"error",
@@ -379,7 +391,50 @@ export default Vue.extend ({
                                         confirmButtonColor:'#0097A7',
                                         showConfirmButton: true,
                                     })
-                                }
+                            }
+                            else if (faltaron){
+                                    Swal.fire({
+                                        text:"Por lo menos un alumno no asisitó a la cita. ¿Está seguro que desea guardar",
+                                        icon:"warning",
+                                        confirmButtonText: 'Sí',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+
+                                        cancelButtonText: 'No',
+                                        cancelButtonColor:'C4C4C4',
+                                        showCancelButton: true,
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            axios.post('/sesiones/regSesionFormal',sesion_params)
+                                            .then( response=>{
+                                                   console.log(response);
+                                                    this.disableFields();
+                                                    Swal.fire({
+                                                        text:"Se ha registrado la sesión con éxito",
+                                                        icon:"success",
+                                                        confirmButtonText: 'OK',
+                                                        confirmButtonColor:'#0097A7',
+                                                        showConfirmButton: true,
+                                                    }) 
+                                                 //lo redirigo a los calendarios
+                                                 this.$router.push('/calendariocitas');
+                                             })  .catch(e => {
+                                                 console.log(e.response);
+                                                 Swal.fire({
+                                                             text:"Estamos teniendo problemas al guardar la cita. Vuelve a intentar en unos minutos.",
+                                                             icon:"warning",
+                                                              confirmButtonText: 'Continuar',
+                                                              confirmButtonColor:'#0097A7',
+                                                              showConfirmButton: true,
+                                                  });
+                                             });
+
+                                        }   //fin del if result.value
+                                    
+                                    }) //fin del then re
+                          
+                    }
+                
                 }
                 else {
                     Swal.fire({
@@ -410,6 +465,7 @@ export default Vue.extend ({
                     this.motivosBorrados.push(this.motivos[i]);
                     this.motivos.splice(i,1);  
                 }
+            this.selectedMotivo=null;
         },
         deleteMotivo: function (index) {
             var i;
@@ -694,5 +750,7 @@ export default Vue.extend ({
         outline:none;
         box-shadow: none;
     }
-    
+ .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}   
 </style>

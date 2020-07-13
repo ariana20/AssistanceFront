@@ -39,7 +39,7 @@ export default {
   },
   methods:{
     listarCoordinadores() {
-      this.axios.post('/facultad/coordinadoresPyF')
+      this.axios.post('/facultad/coordinadoresProg')
         .then(res =>{
           this.$store.state.coordinadores = res.data
           this.coordinadores=res.data;

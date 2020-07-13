@@ -1,8 +1,8 @@
 <template>
   <!-- <div class="FormPrograma">
     <div class="container" style="left:60px;text-align: left"> -->
-	<div name="FormCoordinador">
-		<div style="margin-left:5%;text-align: left;">
+	<div name="FormCoordinador" class="contenedor">
+		<div style="text-align: left;">
 			<div class="row" style="width:100%">
 				<div class="form-inline col-12 col-md-2 col-lg-1">
 					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
@@ -10,6 +10,24 @@
 				<div class="form-inline col-12 col-md-4">
 					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese nombre del coordinador">
 				</div>
+        <div class="form-inline col-12 col-md-3">
+          <select v-on:change="FacultadSel"  class="form-control" style="margin-top:4%"
+            v-model="facuSeleccionadoInd">  <!--aqui guardo-->
+            <option selected :value="null">Selecciona una facultad</option>
+            <option v-for="(prog, i) in facultades"  :key="i" :value="prog.id_programa"> 
+              {{ prog.nombre }} 
+            </option>
+          </select>
+        </div>
+        <div class="form-inline col-12 col-md-3">
+          <select v-on:change="ProgramaSel"  class="form-control" style="margin-top:4%"
+            v-model="progSeleccionadoInd">  <!--aqui guardo-->
+            <option selected :value="null">Selecciona un programa</option>
+            <option v-for="(prog, i) in programas"  :key="i" :value="prog.id_programa"> 
+              {{ prog.nombre }} 
+            </option>
+          </select>
+        </div>
 			</div>
 
       <div style="overflow: auto;width:100%;">
@@ -42,6 +60,12 @@
         </table>
       </div>
     </div>
+    
+    <div v-if="coordinadoresFiltrados==null || coordinadoresFiltrados.length==0" class="row" style="width:100%">
+      <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
+        Ningún Registro de Coordinadores
+      </div>
+    </div>
 
     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
@@ -60,11 +84,19 @@ import { mapGetters } from 'vuex'
 export default {
   data(){
     return{
-      coordinadores:[]
+      coordinadores:[],
+      progSeleccionadoInd:null,
+      progSeleccionado:null,
+      facuSeleccionadoInd:null,
+      facuSeleccionado:null,
+      programas:null,
+      facultades:null,
     }
   },
   created(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
+    this.listarProgramas();
+    this.listarFacultades();
     if(this.$store.state.coordinadoresL == null) {
       
       this.listarCoordinadores();
@@ -81,11 +113,80 @@ export default {
           this.$store.commit('SET_QUERY',val);
       }
     },
+    filtroProg:{
+      get(){
+        return this.$store.state.filtro.programa;
+      },
+      set(val){
+        this.$store.commit('SET_Prog',val);
+      }
+    },
+    filtroFacu:{
+      get(){
+        return this.$store.state.filtro.facultad;
+      },
+      set(val){
+        this.$store.commit('SET_Facu',val);
+      }
+    },
     ...mapGetters({
       coordinadoresFiltrados: 'filtrarCoordinadoresL'
     })
   },
   methods:{
+    listarProgramas(){
+      this.axios.post('/programa/listarTodo')
+        .then(response=>{
+          this.programas = response.data
+        })
+        .catch(e=>{
+          console.log(e)
+        })
+    },
+    listarFacultades(){
+      this.axios.post('/programa/facultadesProg')
+        .then(response=>{
+          this.facultades = response.data
+        })
+        .catch(e=>{
+          console.log(e)
+        })
+    },
+    ProgramaSel(){
+      if(this.progSeleccionadoInd == null){
+        this.filtroProg = null;
+      }
+      else{
+        this.programas.forEach(element => {
+          if(element.id_programa == this.progSeleccionadoInd){
+            this.progSeleccionado = element;
+            this.filtroProg = element;
+          }
+        });
+      }
+    },
+    FacultadSel(){
+      this.progSeleccionadoInd = null;
+      this.filtroProg = null;
+      if(this.facuSeleccionadoInd == null){
+        this.filtroFacu = null;
+        this.listarProgramas();
+      }
+      else{
+        this.facultades.forEach(element => {
+          if(element.id_programa == this.facuSeleccionadoInd){
+            this.facuSeleccionado = element;
+            this.filtroFacu = element;
+          }
+        });
+        let aux = []
+        this.programas.forEach(element => {
+          if(element.id_facultad == this.facuSeleccionado.id_facultad) aux.push(element);
+        });
+        this.programas = aux
+        this.$store.state.filtroProgs = aux;
+      }
+    },
     listarCoordinadores() {
       this.showModal();
       this.axios.post('/facultad/coordinadoresPyF')
