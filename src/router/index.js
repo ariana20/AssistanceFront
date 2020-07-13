@@ -339,6 +339,17 @@ Vue.use(VueRouter)
     name: 'Reporte Satisfaccion',
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteSatisfaccion.vue')
   },
+  {
+    path: '/encuestas',
+    name: 'Encuestas',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewEncuesta.vue')
+  },
+  {
+    path: '/respuesta/:id',
+    name: 'Responder Encuesta',
+    props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewRespuesta.vue')
+  },
 ]
 const router = new VueRouter({
   mode: 'history',

@@ -121,8 +121,6 @@ export default {
     logout(){
       axios.post('/vuelogout', null).then(response=>{
           if(response.data.status=='success') {
-            this.$store.state.usuario=null;
-            this.nombre = null;
             Swal.fire({
                 text:"Cierre de Sesión Exitoso",
                 icon:"success",
@@ -131,6 +129,8 @@ export default {
                 showConfirmButton: true,
             }).then((result)=>{
               console.log(result)
+              this.$store.state.usuario=null;
+              this.nombre = null;
               localStorage.setItem('usuarioActual', null)
               localStorage.setItem('programaSel', null)
               this.$store.state.programaActual = null;
