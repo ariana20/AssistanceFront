@@ -315,6 +315,12 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewCitaAgendada2.vue')
   },
   {
+    path: '/asignarTipoTutoria',
+    name: 'Asignar Tipo de Tutoría',
+    // props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Gestion Periodo/ViewAsignarTipoTutoria.vue')
+  },
+  {
     path: '/reporteRendimiento',
     name: 'Reporte Rendimiento',
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteRendimiento.vue')

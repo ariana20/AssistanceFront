@@ -1,5 +1,5 @@
 <template>
-  <div name="FormAsignarTutor" class="contenedor">
+  <div name="FormAsignarTipoTutoria" class="contenedor">
     <div style="text-align: center;">
 
         <div class="row" style="text-align:left;">
@@ -95,9 +95,9 @@
 </template>
 
 <script>
-import Swal from 'sweetalert2'
+//import Swal from 'sweetalert2'
 import Vue from 'vue'
-import emailjs from 'emailjs-com';
+//import emailjs from 'emailjs-com';
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
 import axios from 'axios'
@@ -132,6 +132,7 @@ export default {
 
   },
   methods:{
+
     obtenerAlumnos(){
       axios.post('programa/alumnosProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
       .then( response => {
@@ -141,6 +142,7 @@ export default {
           console.log(e.response);
       });
     },
+
     onCodigoChange: function () {
         var i;
         for(i in this.codigos){
@@ -168,178 +170,7 @@ export default {
         })
     },
 
-    listarTT(){
-      if(this.tutorSeleccionado){
-        this.tipoTutoria=null;
-        this.tipoTutoria=this.tutorSeleccionado.tipo_tutorias;
-        var tipo= new Object();
-        tipo.nombre="Todos";
-        tipo.id_tipo_tutoria=0;
-        this.tipoTutoria.push(tipo);
-      }
-      this.tutoriaSeleccionada=null;
-      this.tutoriaAlumno=null;
-    },
-
-    listarAlumnos(){
-        
-        if(this.tutoriaSeleccionada || this.tutoriaSeleccionada==0){
-            const params = {
-            id_tutor: this.tutorSeleccionado.id_usuario,
-            id_programa: this.$store.state.programaActual.id_programa,
-            id_tipo_tutoria: this.tutoriaSeleccionada.id_tipo_tutoria
-            };
-            //si te doy tipo de tutoría 0, me listas a todos los alumnos con sus tipos de tutorías
-            axios
-            .post('/registros/listarAlumnos', params)
-            .then(res =>{
-            this.alumnosAsig=res.data;
-            console.log(res);            
-            })
-            .catch(e => {
-            console.log(e.response);
-            })
-        }
-    },
-
-    addAlumno: function () {  
-
-        const params = {
-        id_tutor: this.tutorSeleccionado.usuario.id_usuario,
-        id_programa: this.$store.state.programaActual.id_programa,
-        id_alumno: this.alSeleccionado.id_usuario,
-        usuario_creacion: this.$store.state.usuario.id_usuario,
-        id_tipo_tutoria: this.tutoriaAlumno.id_tipo_tutoria,
-        usuario_actualizacion: this.$store.state.usuario.id_usuario,
-        cambiar:this.cambiar,
-        };
-        
-        axios
-        .post('/registros/insertar', params)
-        .then(res =>{
-            if(res.data.status=="error"){
-                Swal.fire({
-                    text:res.data.mensaje+", ¿desea asignar de todos modos?",
-                    icon:"warning",
-                    confirmButtonText: 'Si',
-                    showCancelButton: true,
-                    cancelButtonText: 'No',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                }).then((result) => {
-                    if (result.value) {
-                        params.cambiar=true;
-                        axios
-                        .post('/registros/insertar', params)
-                        .then(rr =>{
-                            console.log(rr);
-                            Swal.fire({
-                                text:"Se ha realizado correctamente la asignación",
-                                icon:"success",
-                                confirmButtonText: 'OK',
-                                confirmButtonColor:'#0097A7',
-                                showConfirmButton: true,
-                            }) 
-                            this.enviarCorreo(); 
-                            this.alumnosAsig.push(this.alSeleccionado);
-                            this.alSeleccionado=null;
-                            this.sel='';
-                            this.cambiar=false; 
-                            
-
-                        }).catch(e => {
-                        console.log(e.response);
-                        })
-
-
-                    } 
-                })
-                
-            }else if (res.data.status=="success"){
-                Swal.fire({
-                    text:"Se ha realizado correctamente la asignación",
-                    icon:"success",
-                    confirmButtonText: 'OK',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                }) 
-                
-                this.alumnosAsig.push(this.alSeleccionado);
-                this.enviarCorreo();
-                this.alSeleccionado=null;
-                this.sel='';  
-                
-            }
-            
-     
-        })
-        .catch(e => {
-        console.log(e.response);
-        })
-
-            
-    },
-
-    enviarCorreo(){
-        var mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.usuario.nombre+" "+this.tutorSeleccionado.usuario.apellidos+" como tutor o tutora.";
-        emailjs.send(
-            "gmail",
-            "template_bV7OIjEW",
-            {
-            "nombre":this.alSeleccionado.nombre+" "+this.alSeleccionado.apellidos,
-            "mensaje":mensaje,
-            "correo": this.alSeleccionado.correo
-            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
-        .then((result) => {
-            console.log('SUCCESS!', result.status, result.text);
-        }, (error) => {
-            console.log('FAILED...', error);
-        });
-    },
-
-    Eliminar: function(item, index) {
-        Swal.fire({
-            title: '¿Desea eliminar la asignación de '+item.nombre+'?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#0097A7',
-            cancelButtonColor: '#757575',
-            confirmButtonText: 'Confirmar'
-        }).then((result) => {
-            if (result.value) {
-                const params = {
-                id_tutor: this.tutorSeleccionado.usuario.id_usuario,
-                id_programa: this.$store.state.programaActual.id_programa,
-                usuario_actualizacion: this.$store.state.usuario.id_usuario,
-                id_alumno: item.id_usuario,
-                id_tipo_tutoria:item.tipoTutoria.id_tipo_tutoria,
-                };
-                axios
-                .post('/registros/eliminar',params)
-                .then(response=>{
-                    console.log(response);
-                    this.alumnosAsig.splice(index,1);
-                    Swal.fire({
-                        text:"Eliminación Exitosa",
-                        icon:"success",
-                        confirmButtonText: 'OK',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                    })
-                })
-                .catch(e => {
-                console.log(e.response);
-                })
-            }
-        })	
-
-    },
-
-    Cancelar(){
-        this.alSeleccionado=null;
-        this.sel='';
-    }
-    
+  
   }
 }
 </script>

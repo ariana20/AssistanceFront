@@ -16,7 +16,7 @@
             <div class="font-weight-bolder">Temas: </div>
             <div>
                 <label v-for="(item,index) in tipoTutoria" :key="index" style="margin-bottom: 0px;">
-                    {{item.nombre}}<label v-if="index<tipoTutoria.length-1" style="margin-right:5px; margin-bottom: 0px;">, </label>
+                    <label v-if="item.tutor_asignado==0">{{item.nombre}}</label><label v-if="item.tutor_asignado==0 && index<tipoTutoria.length-1" style="margin-right:5px; margin-bottom: 0px;">, </label>
                 </label>
             </div>
             <div style="text-align: right" id="botones" >

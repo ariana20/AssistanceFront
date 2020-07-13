@@ -143,6 +143,11 @@ export default new Vuex.Store({
         path: '/reportes',
         icon: 'ion-ios-stats'
       },
+      {
+        text: 'Asignar Tipo de Tutoría',
+        path: '/asignarTipoTutoria',
+        icon: 'ion-ios-bookmarks'
+      },
     ],
     filtro:{
       query: '',
