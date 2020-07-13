@@ -249,6 +249,7 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewTutoresDisponibles" */ '../views/Gestion Periodo/ViewTutoresDisponibles.vue')
   },
   {
+    // path: '/agregardocumentos',
     path: '/agregarNotas',
     name: 'Agregar Notas',
     props: true,
@@ -313,6 +314,12 @@ Vue.use(VueRouter)
     name: 'Cita Agendada Alumnos',
     // props: true,
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewCitaAgendada2.vue')
+  },
+  {
+    path: '/asignarTipoTutoria',
+    name: 'Asignar Tipo de Tutoría',
+    // props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Gestion Periodo/ViewAsignarTipoTutoria.vue')
   },
   {
     path: '/reporteRendimiento',

@@ -105,6 +105,8 @@ export default new Vuex.Store({
         icon: 'ion-ios-person-add'
       },
       {
+        // text: 'Agregar Documento',
+        // path: '/agregardocumentos',
         text: 'Agregar Notas',
         path: '/agregarNotas',
         icon: 'ion-ios-document'
@@ -148,6 +150,11 @@ export default new Vuex.Store({
         text: 'Reportes',
         path: '/reportes',
         icon: 'ion-ios-stats'
+      },
+      {
+        text: 'Asignar Tipo de Tutoría',
+        path: '/asignarTipoTutoria',
+        icon: 'ion-ios-bookmarks'
       },
     ],
     filtro:{

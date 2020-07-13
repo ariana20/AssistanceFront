@@ -245,7 +245,9 @@ export default {
             axios
             .post('/programa/tutoresListar', params)
             .then(res =>{
-                this.tutores=res.data;
+                this.tutores=res.data.sort((a, b) => { return  a.usuario.nombre.localeCompare(b.usuario.nombre);});
+          
+                // this.tutores=res.data;
                
                 console.log('tutores: ',this.tutores);
                 // this.tutores.splice(0,1);
