@@ -48,7 +48,8 @@
       <div v-for="(item,index) in tutores" :key="index">
         <datosTutor
         :tutor="item"
-        :tipoTutoria="item.tipo_tutorias" />
+        :tipoTutoria="item.tipoTutoriasPrograma" 
+        :tipoTutoriaAsignado="ttAsignado"/>
       </div>
       <infinite-loading spinner="spiral" :identifier="infiniteId" @infinite="infiniteHandler">
         <div slot="no-more">No hay más tutores</div>
@@ -80,7 +81,8 @@ export default {
       selectedTema:null,
       temas:[],
       temaSelect:[],
-      idTemas:[]
+      idTemas:[],
+      ttAsignado: null,
       
       
     }
@@ -140,6 +142,7 @@ export default {
       .post('/programa/tutoresAlumnoPaginado', params)
         .then(res =>{
           console.log(res);
+          this.ttAsignado=res.data.tipoAsignado;
           this.loadMore($state, res); 
           console.log(this.tutores);          
         })
