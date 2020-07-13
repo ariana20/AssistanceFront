@@ -14,30 +14,30 @@
             <ol start=1>
             <li class="font-weight-ligth text-left col-12 col-md-12">El formato permitido para el archivo es el siguiente: CSV(delimitado por comas)</li>
             <li class="font-weight-ligth text-left  col-12 col-md-12">El tamaño máximo permitido para el archivo es el siguiente: 2MB. </li>
-            <li class="font-weight-ligth text-left  col-12 col-md-12">El formato del archivo debe incluir una cabecera de 6 columnas en la primera linea. </li>
+            <li class="font-weight-ligth text-left  col-12 col-md-12">El formato del archivo debe incluir una cabecera de 6 columnas en la primera línea. </li>
             
             <li class="font-weight-ligth text-left col-12 col-md-12">El contenido de las 6 columnas permitidas para la cabecera es el siguiente:</li>  
             </ol>
               <li type="circle" style="text-indent:40px"  class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>agregar </strong> alumnos nuevos, llenar los campos obligatorios en las columnas y dejar vacíos los campos que no desea agregar:</li>  
               <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%"> 
-                      <td style="text-indent: 70px">Codigo*</td>                     
-                      <td style="text-indent: 25px" >Nombre*</td>
-                      <td style="text-indent: 25px" >Apellidos*</td>
-                       <td style="text-indent: 25px">Correo*</td>
-                      <td style="text-indent: 25px">Telefono</td>
-                      <td style="text-indent: 25px" >Condicion</td>                            
+                      <td style="text-indent: 70px">CODIGO*</td>                     
+                      <td style="text-indent: 25px" >NOMBRE*</td>
+                      <td style="text-indent: 25px" >APELLIDOS*</td>
+                       <td style="text-indent: 25px">CORREO*</td>
+                      <td style="text-indent: 25px">TELEFONO</td>
+                      <td style="text-indent: 25px" >CONDICION</td>                            
         
               </div>
               <div style="text-indent:40px" class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> Si no especifica la condicion del alumno, se asignará como Cachimbo. * Columnas con datos obligatorios. Además, no incluir * en la cabecera.</div> 
              
               <li type="circle" style="text-indent:40px"  class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>modificar  </strong> alumnos de su programa, llenar los campos obligatorios en las columnas y dejar vacíos las columnas que no desea modificar:</li> 
               <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%"> 
-                      <td style="text-indent: 70px">Codigo*</td>                      
-                      <td style="text-indent: 25px" >Nombre</td>
-                      <td style="text-indent: 25px" >Apellidos</td>
-                      <td style="text-indent: 25px">Correo</td>
-                      <td style="text-indent: 25px">Telefono</td>
-                      <td style="text-indent: 25px" >Condicion</td>    
+                      <td style="text-indent: 70px">CODIGO*</td>                      
+                      <td style="text-indent: 25px" >NOMBRE</td>
+                      <td style="text-indent: 25px" >APELLIDOS</td>
+                      <td style="text-indent: 25px">CORREO</td>
+                      <td style="text-indent: 25px">TELEFONO</td>
+                      <td style="text-indent: 25px" >CONDICION</td>    
               </div> 
               <div style="text-indent:40px" class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> No se pueden modificar los datos de las columnas obligatorias. * Columnas con datos obligatorios.Además, no incluir * en la cabecera.</div> 
           
@@ -60,19 +60,16 @@
                 <thead>
                   <tr>
                     <th scope="col">N°</th>
-                      <th scope="col">Codigo</th>
-                      <th  scope="col">Nombres</th>
-                      <th scope="col">Correo</th>
+                      <th scope="col">Código</th>
+                      <th scope="col">Línea identificada</th>
                       <th scope="col">Descripcion</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(item, index) in reporte" :key="index">
                       <th scope="row">{{index+1}}</th>
-                      <td>{{item.codigo}}</td>        
-                      <td v-if="item.nombre!=undefined"  >{{item.nombre + " -"+ item.apellido  }}</td>     
-                      <td v-else >{{item.linea  }}</td>     
-                      <td>{{item.correo}}</td>     
+                      <td>{{item.codigo}}</td> 
+                      <td >{{item.linea}}</td>        
                       <td>{{item.error}}</td>    
                     </tr>
                   </tbody>
@@ -246,6 +243,17 @@ export default Vue.extend ({
                   }); 
                 }
                 else if (response.data.status.indexOf("No se ha encontrado")!=-1){
+                  this.hideModal();
+             
+                    Swal.fire({
+                        text:response.data.status,
+                        icon:"warning",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                }
+                else if (response.data.status.indexOf("Subida detenida")!=-1){
                   this.hideModal();
              
                     Swal.fire({

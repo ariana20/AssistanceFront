@@ -249,6 +249,7 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewTutoresDisponibles" */ '../views/Gestion Periodo/ViewTutoresDisponibles.vue')
   },
   {
+    // path: '/agregardocumentos',
     path: '/agregarNotas',
     name: 'Agregar Notas',
     props: true,

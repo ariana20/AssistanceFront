@@ -318,38 +318,38 @@ export default {
             else{
               if(this.tiposUsuariosselect==5){
               const params = {
-              //Parametros insertar de usuario
-           codigo:this.codigo.trim().replace(/\s+/g, ' '), 
-            nombre:this.nombre.trim().replace(/\s+/g, ' '),
-            apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
-            correo:this.correo.trim().replace(/\s+/g, ' '), //replace o no replace?
-            telefono:this.telefono,
-            password:"12345",
-            estado:this.estado,
-            id_programaNuevo:this.miprog.id_programa,
-            id_tipo_usuario:this.tiposUsuariosselect,  
-            usuario_creacion:this.miUsuario.id_usuario, 
-            //como es alumno inserto las condicioes
-            condicion_alumno:this.condiAlumnosselect,//le doy el value
+                  //Parametros insertar de usuario
+                codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+                nombre:this.nombre.trim().replace(/\s+/g, ' '),
+                apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                correo:this.correo.trim().replace(/\s+/g, ' '), //replace o no replace?
+                telefono:this.telefono,
+                password:"12345",
+                estado:this.estado,
+                id_programaNuevo:this.miprog.id_programa,
+                id_tipo_usuario:this.tiposUsuariosselect,  
+                usuario_creacion:this.miUsuario.id_usuario, 
+                //como es alumno inserto las condicioes
+                condicion_alumno:this.condiAlumnosselect,//le doy el value
              
-            };
+              };
              this.usuarioNuevo(params);
             }
             else{
         
             const params = {
-        //Parametros insertar de usuario
-           codigo:this.codigo.trim().replace(/\s+/g, ' '), 
-            nombre:this.nombre.trim().replace(/\s+/g, ' '),
-            apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
-            correo:this.correo.trim().replace(/\s+/g, ' '), //replace o no replace?
-            telefono:this.telefono,
-            password:"12345",
-            estado:this.estado,
-            id_programaNuevo:this.miprog.id_programa,
-            id_tipo_usuario:this.tiposUsuariosselect,
-            usuario_creacion:this.miUsuario.id_usuario, 
-            //ahora, si es tipo usuario 4 de tutor debe insertar el tipo de tutoria
+            //Parametros insertar de usuario
+                codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+                nombre:this.nombre.trim().replace(/\s+/g, ' '),
+                apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                correo:this.correo.trim().replace(/\s+/g, ' '), //replace o no replace?
+                telefono:this.telefono,
+                password:"12345",
+                estado:this.estado,
+                id_programaNuevo:this.miprog.id_programa,
+                id_tipo_usuario:this.tiposUsuariosselect,
+                usuario_creacion:this.miUsuario.id_usuario, 
+                //ahora, si es tipo usuario 4 de tutor debe insertar el tipo de tutoria
             };
          
             this.usuarioNuevo(params);
@@ -388,10 +388,6 @@ export default {
               }
               else{
                 //aqui verifico
-                  
-
-
-
                   const params2 = {
               //Parametros modificados de usuario
                     codigo:this.codigo.trim().replace(/\s+/g, ' '), 
@@ -432,12 +428,12 @@ export default {
                  //primero evaluo si es alumno
                   if(this.tiposUsuariosselect==5){
                     const params3 = {
-                    //Parametros insertar de usuario
-                     id_usuario:this.id_usuario_entrante,
-                     id_tipo_usuario:this.tiposUsuariosselect,
-                     id_programaNuevo:this.miprog.id_programa,
-                    //como es alumno inserto las condicioes
-                     condicion_alumno:this.condiAlumnosselect,//le doy el value
+                        //Parametros insertar de usuario
+                        id_usuario:this.id_usuario_entrante,
+                        id_tipo_usuario:this.tiposUsuariosselect,
+                        id_programaNuevo:this.miprog.id_programa,
+                        //como es alumno inserto las condicioes
+                        condicion_alumno:this.condiAlumnosselect,//le doy el value
                     };
                         this.insertarUsuario(params3); //Insertar un usuario existente en el programa
                  }
@@ -497,42 +493,6 @@ export default {
           });
       }
 
-
-    /*
-
-      //taambién debería ser por programa
-      Axios.create().post('/tipoUsuarios/listarTodo')
-        .then(res =>{
-           //Ordenadito
-           let par=res.data;
-          //  console.log('TUsu:',res.data);
-           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-          // this.tiposUsuarios=res.data;
-          //console.log(this.tiposUsuarios); 
-          
-          //Cuando ya sea tipousuarioxprog, analizo los tipos de usuarios
-          //Busco en el nombre, Tutor o  Alumno y guardo ese id para tenerlo como variable
-          this.idsTU();
-          
-        })
-        .catch(e => {
-          console.log('catchlistart_usu',e.response);
-          Swal.fire({
-              text:"Estamos teniendo problemas al listar los tipos de usuarios. Vuelve a intentar en unos minutos.",
-              icon:"warning",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
-        }).then((result) => {
-            if (result.value) {
-              this.$store.state.usuarios=null;
-              //lo redirigo
-              this.$router.push('/ListaUsuarios');
-            } 
-          })
-
-        })
-        */
     },
     cancelarUsuario(){
         Swal.fire({
@@ -561,7 +521,9 @@ export default {
       Axios.post('/TipoTutoria/listarActivos/'+ this.miprog.id_programa)
       // Axios.post('/TipoTutoria/listarActivos/'+ this.miprog.id_programa)  //falta que esté en el servidor
         .then(response=>{
-            this.tipostutorias = response.data; //
+          //ordenado
+            this.tipostutorias=response.data.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
+            // this.tipostutorias = response.data; //
             if(this.id_usuario_entrante!=0){
             //Despues de llenar los tipos de tutorias veo cuales son del tutor 
 
@@ -605,14 +567,14 @@ export default {
     addMTT: function () {
 
             for(var i in this.tipostutorias)
-            if(this.tipostutoriasselect ==this.tipostutorias[i].id_tipo_tutoria){
-              this.listTT.push(this.tipostutorias[i].nombre);
-              this.listTTId.push(this.tipostutorias[i].id_tipo_tutoria);
-              this.listTTBorrados.push(this.tipostutorias[i]);
-              this.tipostutorias.splice(i,1);
-              this.tipostutoriasselect="no";
+              if(this.tipostutoriasselect ==this.tipostutorias[i].id_tipo_tutoria){
+                this.listTT.push(this.tipostutorias[i].nombre);
+                this.listTTId.push(this.tipostutorias[i].id_tipo_tutoria);
+                this.listTTBorrados.push(this.tipostutorias[i]);
+                this.tipostutorias.splice(i,1);
+                this.tipostutoriasselect="no";
 
-            }
+              }
             
         },
      deleteTT: function (index) {
@@ -973,7 +935,9 @@ export default {
         Axios.create()
               .post('/usuarios/condAlumno')
               .then( response=>{
-                this.condiAlumnos=response.data;
+                //ordenado
+                  this.condiAlumnos=response.data.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
+                // this.condiAlumnos=response.data;
               
 
             }).catch(e => {
