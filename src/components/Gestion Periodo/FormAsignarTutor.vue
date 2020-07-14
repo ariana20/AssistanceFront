@@ -3,7 +3,7 @@
     <div style="text-align: center;">
 
         <div class="row" style="text-align:left;">
-            <h4 class="font-weight-bolder col-sm-2">Tutor: </h4>
+            <h5 class="col-sm-2">Tutor: </h5>
             <select class="col-12 col-md-5 form-control" v-model="tutorSeleccionado"  v-on:change="listarTT()" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
@@ -15,7 +15,7 @@
             </select>
         </div>
         <div class="row" style="text-align:left;">
-          <div class="font-weight-bolder col-12 col-md-2" style="text-align:left;">Tipo de Tutoría: </div>
+          <div class="col-12 col-md-2" style="text-align:left;"><h5>Tipo de Tutoría: </h5></div>
           <div class="col-12 col-md-5" style="padding-left: 0px; padding-right: 0px;">
             <select class="form-control" v-model="tutoriaSeleccionada"  v-on:change="listarAlumnos()" >
                 <option disabled selected :value="null" focusable="false">Selecciona un Tipo de Tutoria</option>
@@ -64,17 +64,17 @@
                         <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >Nombre Alumno</div>
                     </td>
                     <td scope="col" style="width:400px">
-                        <select v-if="alSeleccionado!=null" class="form-control" v-model="tutoriaAlumno" >
+                        <select v-if="alSeleccionado!=null && tutoriaSeleccionada.id_tipo_tutoria==0" class="form-control" v-model="tutoriaAlumno" >
                             <option disabled selected :value="null" focusable="false">Selecciona un Tipo de Tutoria</option>
                             <option 
-                                v-for="(item, index) in tipoTutoria" 
+                                v-for="(item, index) in tipoTutoriaAsignar" 
                                 :key="index" 
                                 :value="item">
                                 {{ item.nombre}}
                             </option>
                         </select>
-                        <!--div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >{{alSeleccionado.condicion}}</div-->
-                        <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Tipo de Tutoría</div>
+                        <div v-if="alSeleccionado!=null && tutoriaSeleccionada.id_tipo_tutoria!=0" type="text" class="form-control" style="color: white;background:#BEBEBE;" >{{tutoriaSeleccionada.nombre}}</div>
+                        <div v-if="alSeleccionado==null" type="text" class="form-control" style="color: white;background:#BEBEBE;" >Tipo Tutoría</div>
                     </td>
                     <td scope="col">
                         <button  :disabled="!this.sel" type="button" class="btn btn-info" style="text-align:right;" @click="addAlumno">Asignar</button>
@@ -83,7 +83,7 @@
                 <tr v-for="(item,index) in alumnosAsig" :key="index">
                     <td v-if="item!=undefined">{{item.codigo}}</td>
                     <td v-if="item!=undefined">{{item.nombre+" "+item.apellidos}}</td>
-                    <td v-if="item!=undefined">pendiente{{item.tipo_tutoria}}</td>
+                    <td v-if="item!=undefined">{{item.tipotutoria}}</td>
                     <td v-if="item!=undefined"><button class="btn link" v-on:click="Eliminar(item, index)"><b-icon  style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"></b-icon></button></td>
                 </tr>
             </tbody>
@@ -108,6 +108,7 @@ export default {
         tutores:[],
         tutoriaAlumno:null,
         tutorSeleccionado:null,
+        tipoTutoriaAsignar:[],
         tutoriaSeleccionada:null,
         tipoTutoria:[],
         alumnos:[],
@@ -161,6 +162,18 @@ export default {
       .post('/programa/tutoresAsignar', params)
         .then(res =>{
           this.tutores=res.data; 
+          for(var i=0; i<this.tutores.length; i++){
+              this.tutores[i].ttAsignar=new Array();
+              this.tutores[i].ttAsignar=this.tutores[i].ttAsignar.concat(this.tutores[i].tiposTutoriaAsignar);
+              
+              if(this.tutores[i].tiposTutoriaAsignar.length>1){
+                    var tipo= new Object();
+                    tipo.nombre="Todos";
+                    tipo.id_tipo_tutoria=0;
+                    this.tutores[i].tiposTutoriaAsignar.push(tipo);
+              }
+              
+          }
           console.log(res);           
         })
         .catch(e => {
@@ -169,20 +182,32 @@ export default {
     },
 
     listarTT(){
-      if(this.tutorSeleccionado){
-        this.tipoTutoria=null;
-        this.tipoTutoria=this.tutorSeleccionado.tipo_tutorias;
-        var tipo= new Object();
-        tipo.nombre="Todos";
-        tipo.id_tipo_tutoria=0;
-        this.tipoTutoria.push(tipo);
-      }
-      this.tutoriaSeleccionada=null;
-      this.tutoriaAlumno=null;
+        this.alumnosAsig=[];
+        this.alSeleccionado=null;
+        this.sel='';
+        if(this.tutorSeleccionado){
+            
+            this.tipoTutoria=this.tutorSeleccionado.tiposTutoriaAsignar;
+            if (this.tutorSeleccionado.tiposTutoriaAsignar.length==1){
+                this.tutoriaSeleccionada=this.tutorSeleccionado.tiposTutoriaAsignar[0];
+                this.tutoriaAlumno=this.tutorSeleccionado.tiposTutoriaAsignar[0];
+            }else{
+                this.tutoriaSeleccionada=null;
+                this.tutoriaAlumno=null;
+            }
+            if(this.tutoriaSeleccionada){
+                this.listarAlumnos();
+            }
+        }
+
+
+
     },
 
     listarAlumnos(){
         
+        if(this.tutoriaSeleccionada.id_tipo_tutoria!=0)this.tutoriaAlumno=this.tutoriaSeleccionada;
+        this.tipoTutoriaAsignar=this.tutorSeleccionado.ttAsignar;
         if(this.tutoriaSeleccionada || this.tutoriaSeleccionada==0){
             const params = {
             id_tutor: this.tutorSeleccionado.id_usuario,
@@ -205,7 +230,7 @@ export default {
     addAlumno: function () {  
 
         const params = {
-        id_tutor: this.tutorSeleccionado.usuario.id_usuario,
+        id_tutor: this.tutorSeleccionado.id_usuario,
         id_programa: this.$store.state.programaActual.id_programa,
         id_alumno: this.alSeleccionado.id_usuario,
         usuario_creacion: this.$store.state.usuario.id_usuario,
@@ -281,7 +306,7 @@ export default {
     },
 
     enviarCorreo(){
-        var mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.usuario.nombre+" "+this.tutorSeleccionado.usuario.apellidos+" como tutor o tutora.";
+        var mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.nombre+" "+this.tutorSeleccionado.apellidos+" como tutor o tutora.";
         emailjs.send(
             "gmail",
             "template_bV7OIjEW",
@@ -308,7 +333,7 @@ export default {
         }).then((result) => {
             if (result.value) {
                 const params = {
-                id_tutor: this.tutorSeleccionado.usuario.id_usuario,
+                id_tutor: this.tutorSeleccionado.id_usuario,
                 id_programa: this.$store.state.programaActual.id_programa,
                 usuario_actualizacion: this.$store.state.usuario.id_usuario,
                 id_alumno: item.id_usuario,
