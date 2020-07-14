@@ -84,7 +84,14 @@
                     <td v-if="item!=undefined">{{item.codigo}}</td>
                     <td v-if="item!=undefined">{{item.nombre+" "+item.apellidos}}</td>
                     <td v-if="item!=undefined">{{item.tipotutoria}}</td>
-                    <td v-if="item!=undefined"><button class="btn link" v-on:click="Eliminar(item, index)"><b-icon  style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"></b-icon></button></td>
+                    <td v-if="item!=undefined"><button class="btn link" style="
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        border-top-width: 0px;
+                        border-bottom-width: 0px;
+                        margin-top: 0px;
+                        margin-bottom: 0px;
+                    " v-on:click="Eliminar(item, index)"><b-icon  style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"></b-icon></button></td>
                 </tr>
             </tbody>
         </table>
@@ -266,6 +273,9 @@ export default {
                                 showConfirmButton: true,
                             }) 
                             this.enviarCorreo(); 
+                            
+                            this.alSeleccionado.tipotutoria=this.tutoriaAlumno.nombre;
+                            this.alSeleccionado.id_tipo_tutoria=this.tutoriaAlumno.id_tipo_tutoria;
                             this.alumnosAsig.push(this.alSeleccionado);
                             this.alSeleccionado=null;
                             this.sel='';
@@ -288,7 +298,9 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                 }) 
-                
+               
+                this.alSeleccionado.tipotutoria=this.tutoriaAlumno.nombre;
+                this.alSeleccionado.id_tipo_tutoria=this.tutoriaAlumno.id_tipo_tutoria;
                 this.alumnosAsig.push(this.alSeleccionado);
                 this.enviarCorreo();
                 this.alSeleccionado=null;
@@ -337,7 +349,7 @@ export default {
                 id_programa: this.$store.state.programaActual.id_programa,
                 usuario_actualizacion: this.$store.state.usuario.id_usuario,
                 id_alumno: item.id_usuario,
-                id_tipo_tutoria:item.tipoTutoria.id_tipo_tutoria,
+                id_tipo_tutoria:item.id_tipo_tutoria,
                 };
                 axios
                 .post('/registros/eliminar',params)
