@@ -44,6 +44,9 @@
         </div>
         
       </div>
+      <datosTutorAsignado v-if="tutorAsignado"
+        :tutor="tutorAsignado"
+        :tipoTutoriaAsignado="ttAsignado"/>
 
       <div v-for="(item,index) in tutores" :key="index">
         <datosTutor
@@ -64,6 +67,7 @@
 
 import axios from 'axios'
 import datosTutor from '@/components/Gestion Periodo/DatosTutor.vue'
+import datosTutorAsignado from '@/components/Gestion Periodo/DatosTutorAsignado.vue'
 import InfiniteLoading from 'vue-infinite-loading';
 import { FormCheckboxPlugin } from 'bootstrap-vue'
 import Vue from 'vue'
@@ -83,6 +87,7 @@ export default {
       temaSelect:[],
       idTemas:[],
       ttAsignado: null,
+      tutorAsignado:null,
       
       
     }
@@ -90,6 +95,7 @@ export default {
   components: {
     datosTutor,
     InfiniteLoading,
+    datosTutorAsignado
   },
   mounted(){
     this.listarTipoTutoria();
@@ -143,6 +149,7 @@ export default {
         .then(res =>{
           console.log(res);
           this.ttAsignado=res.data.tipoAsignado;
+          this.tutorAsignado=res.data.tutor;
           this.loadMore($state, res); 
           console.log(this.tutores);          
         })

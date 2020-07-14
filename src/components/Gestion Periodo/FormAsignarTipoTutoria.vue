@@ -3,19 +3,7 @@
     <div style="text-align: center;">
 
         <div class="row" style="text-align:left;">
-            <h4 class="font-weight-bolder col-sm-2">Tutor: </h4>
-            <select class="col-12 col-md-5 form-control" v-model="tutorSeleccionado"  v-on:change="listarTT()" >
-                <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
-                <option 
-                    v-for="(item, index) in tutores" 
-                    :key="index" 
-                    :value="item">
-                    {{ item.nombre + " " + item.apellidos }}
-                </option>
-            </select>
-        </div>
-        <div class="row" style="text-align:left;">
-          <div class="font-weight-bolder col-12 col-md-2" style="text-align:left;">Tipo de Tutoría: </div>
+          <div class="col-12 col-md-2" style="text-align:left;"><h5>Tipo de Tutoría: </h5></div>
           <div class="col-12 col-md-5" style="padding-left: 0px; padding-right: 0px;">
             <select class="form-control" v-model="tutoriaSeleccionada"  v-on:change="listarAlumnos()" >
                 <option disabled selected :value="null" focusable="false">Selecciona un Tipo de Tutoria</option>
@@ -28,6 +16,16 @@
             </select>
           </div>
         </div>
+        <div class="row" style="margin-top:1%">
+            <div class="col-12 col-md-4 col-lg-1 form-inline">
+            <h5>Descripción: </h5>
+            </div>
+            <div class="col-11 col-md-6 col-lg-5">
+            <div rows=3 cols=40 class="form-control" type="text" v-if="tutoriaSeleccionada">{{descripcion}}</div>
+            </div>
+        </div>
+
+
         <div class="row" style="margin-top:2%">
             <div class="font-weight-bolder col-12 col-md-3" style="text-align:left;">Alumnos Asignados</div>
             <div class="font-weight-bolder col-sm-6" style="text-align:right;">
@@ -124,7 +122,7 @@ export default {
 
   },
   mounted(){
-    this.listarTutores();
+    this.listarTipoTutoria();
     //usuarios/condAlumno 
     this.obtenerAlumnos();
   },
@@ -153,21 +151,45 @@ export default {
             
         }
     },
-    listarTutores() {
+
+    listarTipoTutoria() {
       const params = {
         id_programa : this.$store.state.programaActual.id_programa,
         nomFacu:this.$store.state.programaActual.facultad.nombre,
-        nombre: "",
       };
       axios
-      .post('/programa/tutoresAsignar', params)
+      .post('TipoTutoria/tiposTutoriaPrograma', params)
         .then(res =>{
-          this.tutores=res.data; 
+          this.tipoTutoria=res.data; 
           console.log(res);           
         })
         .catch(e => {
           console.log(e.response);
         })
+    },
+    listarAlumnos(){
+
+        
+        
+        if(this.tutoriaSeleccionada){
+            /*
+            const params = {
+            
+            id_programa: this.$store.state.programaActual.id_programa,
+            id_tipo_tutoria: this.tutoriaSeleccionada.id_tipo_tutoria
+            };
+            //si te doy tipo de tutoría 0, me listas a todos los alumnos con sus tipos de tutorías
+            axios
+            .post('TipoTutoria/ListarAlumnosConTT', params)
+            .then(res =>{
+            this.alumnosAsig=res.data;
+            console.log(res);            
+            })
+            .catch(e => {
+            console.log(e.response);
+            })*/
+            this.descripcion=this.tutoriaSeleccionada.descripcion;
+        }
     },
 
   
