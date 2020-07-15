@@ -2,11 +2,12 @@
     <div class="contenedor">
          <!-- <div class="row grid-divider "> -->
             <div >
-                <!-- <router-link to="reporteRendimiento"> 
+                <!--  <router-link to="reporteRendimiento"> 
                   <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Reporte</button>
                  </router-link>  -->
-
-
+                  <!-- <router-link to="reportePlanAccion"> 
+                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Reporte</button>
+                 </router-link> -->
                 <div class="text-left" style="padding-top:0px">
                     <h5 class="font-weight-ligth text-left col-md-9" style="font-weight: bold;">Carga masiva de los documentos históricos de los alumnos</h5>
                      <div class="row form-controlT" style="margin:20px;" >
