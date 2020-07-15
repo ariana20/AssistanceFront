@@ -375,7 +375,20 @@ function addTimes (startTime, endTime) {
     @import '~@fullcalendar/core/main.css';
     @import '~@fullcalendar/daygrid/main.css';
     @import '~@fullcalendar/timegrid/main.css';
+    .btn:focus {
+        outline:none;
+        box-shadow: none;
+        border: 2.3px solid transparent;
+    }
+    select:focus {
+        outline:none !important ;
+        box-shadow: none !important ; 
+    }
 
+    input:focus {
+        outline:none !important ;
+        box-shadow: none !important ;
+    }
     .top-titulo {
         display: flex;
         justify-content: space-between;

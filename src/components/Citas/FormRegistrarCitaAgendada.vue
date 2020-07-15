@@ -670,4 +670,10 @@ select:focus {
     outline:none;
     box-shadow: none;
 }
+
+input:focus {
+    outline:none;
+    box-shadow: none;
+}
+
 </style>

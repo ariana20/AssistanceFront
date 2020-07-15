@@ -5,15 +5,28 @@
     <div >  
          
       <div class="row" style="width:100%">
-        <div class="form-inline col-12 col-md-4 col-lg-2">
-          <h5 style="margin-top:5%;margin-bottom:5%">Nombre o Código: </h5>
+        <div class="form-inline col-12 col-md-2 "  style="padding-left:10px">
+          <h5 style="margin-top:5%;margin-bottom:5%">Nombres o Código: </h5>
         </div>
-        <div class="form-inline col-12 col-md-4">
+        <div class="form-inline col-12 col-md-5"  style="padding:0px">
           <input class="form-control" v-model="criterio" @keyup.enter=" buscarUsuario" placeholder="Buscar por nombre o código">
+        <!-- </div>
+        <div class="form-inline col-12 col-md-2" style="padding:0px"> -->
+          <select v-model="tiposUsuariosselect" class="col sm-6 form-control" style="cursor:pointer"   >
+              <option value="no" disabled    >Selecciona un tipo de usuario</option>
+              <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index" style="cursos:pointer;" >
+              {{ tipoU.nombre}}
+              </option>
+            </select>
         </div>
-        <div class="form-inline col-12 col-md-2 offset-md-2 offset-lg-4">
+
+        <div class="form-inline col-12 col-md-3"> 
+          <!-- espacio xd no borrar -->
+            </div>
+         <div class="form-inline col-12 col-md-2">
           <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir Nuevo</button>
         </div>
+
       </div>
 
       <div style="overflow: auto;margin-top:2%">
@@ -116,6 +129,8 @@ export default {
       state:{
         usuarioEscogido:null,},
       banderaVacio:false,
+      tiposUsuarios:"",
+      tiposUsuariosselect:null,
     }
   },
  
@@ -175,6 +190,8 @@ export default {
     this.criterio="";
     this.banderaVacio=false;
     this.listarUsuarios(); 
+    this.listarTUsuarios();
+    this.tiposUsuariosselect=0;
     //this.usuarios = this.$store.state.usuarios; //
   },
   methods:{
@@ -232,8 +249,9 @@ export default {
 
       paramsB={
         criterio:this.criterio,
+        tipo_usuario:this.tiposUsuariosselect,
       }
-    
+      console.log(paramsB);
       var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
       
        if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador   
@@ -245,13 +263,24 @@ export default {
            if(res.data==""){
              this.hideModal();
              //No encontró al usuario
+             if(this.tiposUsuariosselect==0)
                 Swal.fire({
-                    text:"No se ha encontrado ningún usuario "+this.criterio+".Intente nuevamente",
+                    text:"No se ha encontrado ningún usuario "+this.criterio+". Intente nuevamente",
                     icon:"warning",
                     confirmButtonText: 'Sí',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                 });
+              else{
+                let nomTU= this.tiposUsuarios.find( tipo_usuario =>  tipo_usuario.id_tipo_usuario==this.tiposUsuariosselect )
+                Swal.fire({
+                    text:"No se ha encontrado ningún usuario "+this.criterio+" con el tipo de usuario "+ nomTU.nombre +". Intente nuevamente",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                });
+              }
            }
            else{
           let par=res.data.tasks.data;
@@ -347,7 +376,55 @@ export default {
     },
     nuevo(){
       this.$router.push('/Usuario/0');
-    }
+    },
+    listarTUsuarios() {
+       if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+        let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
+        this.axios.post('/tipoUsuarios/tiposFacultad',obj)
+          .then(res=>{
+               //Ordenadito
+           let par=res.data;
+        
+           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+           //agregar Todos
+             var tUsuario=new Object;
+             tUsuario.nombre="Todos";
+             tUsuario.id_tipo_usuario=0;
+             this.tiposUsuarios.push(tUsuario); 
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e)
+            this.hideModal()
+          });
+       }
+      if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+        let obj = {
+          id_programa: this.$store.state.programaActual.id_programa,
+          id_facultad: this.$store.state.programaActual.id_facultad
+        }
+        this.axios.post('/tipoUsuarios/tiposPrograma',obj)
+          .then(res=>{
+                //Ordenadito
+           let par=res.data;
+     
+           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+           //agregar Todos
+             var tUsuario=new Object;
+             tUsuario.nombre="Todos Tipos de Usuarios";
+             tUsuario.id_tipo_usuario=0;
+             this.tiposUsuarios.push(tUsuario); 
+            this.hideModal()
+          })
+          .catch(e=>{
+            console.log(e);
+            this.hideModal()
+          });
+      }
+
+
+    },
+
   }
 }
 </script>
