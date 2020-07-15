@@ -65,13 +65,19 @@ export default {
     }
 @media screen and (max-width: 1100px){
   .margs{
-    margin-top: 10%;
+    margin-top: 5%;
+  }
+  .jumbotron {
+    height: 20vh;
   }
 }
 
 @media screen and (max-width: 759px){
   .margs{
-    margin-top: 25%;
+    margin-top: 8%;
+  }
+  .jumbotron {
+    height: 10vh;
   }
 }
 </style>
