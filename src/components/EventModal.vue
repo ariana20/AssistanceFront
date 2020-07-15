@@ -121,6 +121,7 @@ export default {
         updateEvent () {
           this.isDisabled = true;
           if(this.motivoSel){
+            console.log('id del motivo seleccionado ',this.motivoSel.id_tipo_tutoria)
             this.$store.commit("UPDATE_EVENT", {
                 id: this.event.id,
                 title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
@@ -151,6 +152,15 @@ export default {
             }).catch(e => {
                 console.log(e.response);
             });
+          }else {
+            Swal.fire({
+              text:"Debe elegir un motivo",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+            })
+            this.isDisabled = false;
           }
             
         },
@@ -252,7 +262,9 @@ export default {
     tutorSel: Object,
   },mounted() {
     if(this.tutorSel) {
+      console.log('tutor ttutoria: ', this.tutorSel.tipo_tutorias)
       this.tipoTutorias = this.tutorSel.usuario.tipo_tutorias
+      console.log('tutorias: ', this.tipoTutorias)
     }
     this.$store.state.curEvent = this.event;
     this.getIdCita();
