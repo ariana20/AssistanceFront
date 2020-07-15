@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="row" v-for="alumno in alumnos" :key="alumno.id_usuario">
-            <div class="col-12 col-md-10">
+            <div class="col-12 col-md-9">
                 <datosAlumno
                     :tutor="alumno"
                     :tipoTutoria="null"/>
@@ -138,7 +138,7 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import moment from 'moment';
 import datosTutor from '@/components/Citas/DatosTutor.vue'
-import datosAlumno from '@/components/Citas/DatosAlumno.vue'
+import datosAlumno from '@/components/Citas/DatosAlumnoEncuesta.vue'
 
 export default {
     components:{
