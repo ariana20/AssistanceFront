@@ -70,9 +70,9 @@ export default new Vuex.Store({
         icon: 'ion-ios-business'
       },
       {
-        text: 'Tipos de Tutoria',
-        path: '/ListaTiposTutorias',
-        icon: 'ion-ios-bookmarks'
+        text: 'Tipos de Usuario',
+        path: '/tiposUsuario',
+        icon: 'ion-md-people'
       },
       {
         text: 'Usuarios',
@@ -80,14 +80,24 @@ export default new Vuex.Store({
         icon: 'ion-ios-people'
       },
       {
+        text: 'Tipos de Tutoria',
+        path: '/ListaTiposTutorias',
+        icon: 'ion-ios-bookmarks'
+      },
+      {
+        text: 'Asignar Tipo de Tutoría',
+        path: '/asignarTipoTutoria',
+        icon: 'ion-ios-bookmarks'
+      },
+      {
+        text: 'Asignar Tutor',
+        path: '/asignartutor',
+        icon: 'ion-ios-contacts'
+      },
+      {
         text: 'Unidades de Apoyo',
         path: '/unidadesApoyo',
         icon: 'ion-ios-medkit'
-      },
-      {
-        text: 'Tipos de Usuario',
-        path: '/tiposUsuario',
-        icon: 'ion-md-people'
       },
       {
         text: 'Sesión de Tutoría',
@@ -127,11 +137,6 @@ export default new Vuex.Store({
         icon: 'ion-ios-calendar'
       },
       {
-        text: 'Asignar Tutor',
-        path: '/asignartutor',
-        icon: 'ion-ios-contacts'
-      },
-      {
         text: 'Calendario',
         path: '/calendariocitas',
         icon: 'ion-ios-calendar'
@@ -150,11 +155,6 @@ export default new Vuex.Store({
         text: 'Reportes',
         path: '/reportes',
         icon: 'ion-ios-stats'
-      },
-      {
-        text: 'Asignar Tipo de Tutoría',
-        path: '/asignarTipoTutoria',
-        icon: 'ion-ios-bookmarks'
       },
     ],
     filtro:{
