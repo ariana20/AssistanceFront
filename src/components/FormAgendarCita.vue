@@ -129,8 +129,9 @@ export default {
         this.listarTutores();
         this.bloque = this.$store.state.programaActual.hora_bloque;
         if(this.$store.state.tutorDisponibilidad) {
-            this.tutorSel = this.$store.state.tutorDisponibilidad
-            console.log("storestate tutor: ", this.tutorSel)
+            //this.tutorSel = this.$store.state.tutorDisponibilidad
+            //console.log("storestate tutor: ", this.tutorSel)
+            this.showCalendar()
         }  
          
         /*let calendar = this.$refs.fullCalendar.getApi();
@@ -183,7 +184,10 @@ export default {
         getReminders: function() {
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
-                if(this.$store.state.tutorDisponibilidad) {this.tutorSel = this.$store.state.tutorDisponibilidad}
+                if(this.$store.state.tutorDisponibilidad) {
+                    this.tutorSel = this.$store.state.tutorDisponibilidad
+                    
+                }
                 console.log('tutorSel', this.tutorSel)
                 axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {

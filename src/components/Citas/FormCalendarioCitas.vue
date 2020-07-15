@@ -108,6 +108,14 @@ export default {
                             this.getReminders();
                         }
                     },
+                    today: {
+                        text: 'Hoy',
+                        click: () => {
+                            let calendar = this.$refs.fullCalendar.getApi();
+                            calendar.today();
+                            this.getReminders();
+                        }
+                    },
             },
             isTutor: true,
             nombre: '',
