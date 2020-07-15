@@ -301,6 +301,7 @@ export default {
                         .then(response=>{
                             response
                             this.hideModal()
+                            this.ListarElementos();
                         })
                         .catch(e => {
                             console.log('Catch Enviar Encuestas: ',e);
