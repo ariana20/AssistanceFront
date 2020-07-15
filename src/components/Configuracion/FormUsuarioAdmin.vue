@@ -1130,6 +1130,15 @@ export default {
                           console.log(e)
                         })
                     }
+                    else{
+                      this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
+                        .then(response=>{
+                          response
+                        })
+                        .catch(e=>{
+                          console.log(e)
+                        })
+                    }
                   }
                 }
                 else{
