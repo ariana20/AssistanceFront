@@ -624,6 +624,7 @@ export default {
                   telefono:this.telefono,
                   //como es alumno inserto las condicioes
                   condicion_alumno:this.condiAlumnosselect,//le doy el value
+                  id_programa:id_prog,
                   usuario_actualizacion:this.$store.state.usuario.id_usuario
                 };
                 this.modificarUsuario(params2);
