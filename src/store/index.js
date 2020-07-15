@@ -176,6 +176,14 @@ export default new Vuex.Store({
     ADD_EVENT: (state, event) => {
       state.events.push(event)
     },
+    UPDATE_EVENT: (state, {id,title,start,color}) => {
+      let index = state.index.findIndex(_event => _event.id === id)
+
+      state.events[index].title = title
+      state.events[index].start = start
+      state.events[index].color = color
+
+    },
     DELETE_EVENT: (state,{id}) => {
       let index = state.events.findIndex(_event => _event.id == id)
       state.events.splice(index,1)   
