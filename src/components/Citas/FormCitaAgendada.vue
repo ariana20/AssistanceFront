@@ -246,20 +246,12 @@ export default Vue.extend ({
         axios.post('motivosConsulta/listarTodo')
             .then( response => {
                 this.motivos = response.data;
+                this.fillFields()
                 this.hideModal()
             })
             .catch(e => {
             console.log(e.response);
-        });
-    axios.post('motivosConsulta/listarTodo')
-        .then( response => {
-            this.motivos = response.data;
-            this.fillFields()
-        })
-        .catch(e => {
-          console.log(e.response);
-        });
-    
+        });    
     },
     methods: {
         fillFields() {
