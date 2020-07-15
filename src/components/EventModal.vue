@@ -28,6 +28,9 @@
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
       <!--<b>Tipo Tutoría:</b>  {{ event.description }} <br/>-->
       <div id="botones">
+            <a type="button" class="btn btn-info" :href="'http://www.google.com/calendar/event?action=TEMPLATE&amp;trp=false&amp;text='+nombreEvento+'&amp;location=Pontificia Universidad Católica del Perú, Av. Universitaria 1801, San Miguel 15088, Perú&amp;details='+descripcion+'&amp;dates='+new Date()+'/'+new Date((new Date).setDate((new Date).getDate() + 1))" target="_blank">
+                Agregar a Google calendar
+            </a>
         <button type="button" class="btn btn-info" @click="SolCancelar();$emit('close')">Solicitar Cancelacion</button>
         <button type="button" class="btn btn-info" @click="$emit('close')">Cerrar</button>
       </div>
