@@ -16,14 +16,14 @@
             </select>
           </div>
         </div>
-        <div class="row" style="margin-top:1%">
+        <!--div class="row" style="margin-top:1%">
             <div class="col-12 col-md-4 col-lg-1 form-inline">
             <h5>Descripción: </h5>
             </div>
             <div class="col-11 col-md-6 col-lg-5">
             <div rows=3 cols=40 class="form-control" type="text" v-if="tutoriaSeleccionada">{{descripcion}}</div>
             </div>
-        </div>
+        </div-->
 
 
         <div class="row" style="margin-top:2%">
@@ -36,7 +36,7 @@
                 <tr>
                     <th scope="col" style="width:150px">Código</th>
                     <th scope="col" style="width:500px">Nombre y Apellidos</th>
-                    <th scope="col" style="width:400px">Tipo de Tutoría</th>
+                    <th scope="col" style="width:400px">Condición</th>
                     <th scope="col" > 
                     </th>
                 </tr>
@@ -62,17 +62,8 @@
                         <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >Nombre Alumno</div>
                     </td>
                     <td scope="col" style="width:400px">
-                        <select v-if="alSeleccionado!=null" class="form-control" v-model="tutoriaAlumno" >
-                            <option disabled selected :value="null" focusable="false">Selecciona un Tipo de Tutoria</option>
-                            <option 
-                                v-for="(item, index) in tipoTutoria" 
-                                :key="index" 
-                                :value="item">
-                                {{ item.nombre}}
-                            </option>
-                        </select>
-                        <!--div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >{{alSeleccionado.condicion}}</div-->
-                        <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Tipo de Tutoría</div>
+                        <div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >{{alSeleccionado.condicion}}</div>
+                        <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Condición</div>
                     </td>
                     <td scope="col">
                         <button  :disabled="!this.sel" type="button" class="btn btn-info" style="text-align:right;" @click="addAlumno">Asignar</button>
@@ -81,8 +72,15 @@
                 <tr v-for="(item,index) in alumnosAsig" :key="index">
                     <td v-if="item!=undefined">{{item.codigo}}</td>
                     <td v-if="item!=undefined">{{item.nombre+" "+item.apellidos}}</td>
-                    <td v-if="item!=undefined">pendiente{{item.tipo_tutoria}}</td>
-                    <td v-if="item!=undefined"><button class="btn link" v-on:click="Eliminar(item, index)"><b-icon  style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"></b-icon></button></td>
+                    <td v-if="item!=undefined">{{item.cond}}</td>
+                    <td v-if="item!=undefined"><button class="btn link" style="
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        border-top-width: 0px;
+                        border-bottom-width: 0px;
+                        margin-top: 0px;
+                        margin-bottom: 0px;
+                    " v-on:click="Eliminar(item, index)"><b-icon  style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"></b-icon></button></td>
                 </tr>
             </tbody>
         </table>
@@ -93,7 +91,7 @@
 </template>
 
 <script>
-//import Swal from 'sweetalert2'
+import Swal from 'sweetalert2'
 import Vue from 'vue'
 //import emailjs from 'emailjs-com';
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
@@ -132,6 +130,7 @@ export default {
   methods:{
 
     obtenerAlumnos(){
+        //fatla CORREGIR, CARO (15/07/2020)
       axios.post('programa/alumnosProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
       .then( response => {
           this.codigos=response.data;
@@ -168,29 +167,113 @@ export default {
         })
     },
     listarAlumnos(){
-
-        
-        
-        if(this.tutoriaSeleccionada){
-            /*
+        this.alumnosAsig=[];
+        this.alSeleccionado=null;
+        this.sel='';
             const params = {
-            
+            nomFacu: this.$store.state.programaActual.facultad.nombre,
             id_programa: this.$store.state.programaActual.id_programa,
             id_tipo_tutoria: this.tutoriaSeleccionada.id_tipo_tutoria
             };
             //si te doy tipo de tutoría 0, me listas a todos los alumnos con sus tipos de tutorías
             axios
-            .post('TipoTutoria/ListarAlumnosConTT', params)
+            .post('TipoTutoria/listaAlumnosConTT', params)
             .then(res =>{
             this.alumnosAsig=res.data;
             console.log(res);            
             })
             .catch(e => {
             console.log(e.response);
-            })*/
-            this.descripcion=this.tutoriaSeleccionada.descripcion;
-        }
+            })
+            //this.descripcion=this.tutoriaSeleccionada.descripcion;
+
     },
+    addAlumno: function () {  
+
+        const params = {
+        
+        id_programa: this.$store.state.programaActual.id_programa,
+        id_alumno: this.alSeleccionado.id_usuario,
+        usuario_creacion: this.$store.state.usuario.id_usuario,
+        id_tipo_tutoria: this.tutoriaSeleccionada.id_tipo_tutoria,
+        usuario_actualizacion: this.$store.state.usuario.id_usuario,
+        cambiar:this.cambiar,
+        };
+        
+        axios
+        .post('/registros/insertar', params)
+        .then(res =>{
+            if(res.data.status=="error"){
+                Swal.fire({
+                    text:res.data.mensaje+", ¿desea asignar de todos modos?",
+                    icon:"warning",
+                    confirmButtonText: 'Si',
+                    showCancelButton: true,
+                    cancelButtonText: 'No',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                }).then((result) => {
+                    if (result.value) {
+                        params.cambiar=true;
+                        axios
+                        .post('/registros/insertar', params)
+                        .then(rr =>{
+                            console.log(rr);
+                            Swal.fire({
+                                text:"Se ha realizado correctamente la asignación",
+                                icon:"success",
+                                confirmButtonText: 'OK',
+                                confirmButtonColor:'#0097A7',
+                                showConfirmButton: true,
+                            }) 
+                            
+                            this.alSeleccionado.cond=this.alSeleccionado.condicion;
+                            this.alumnosAsig.push(this.alSeleccionado);
+                            this.alSeleccionado=null;
+                            this.sel='';
+                            this.cambiar=false; 
+                            
+
+                        }).catch(e => {
+                        console.log(e.response);
+                        })
+
+
+                    } 
+                })
+                
+            }else if (res.data.status=="success"){
+                Swal.fire({
+                    text:"Se ha realizado correctamente la asignación",
+                    icon:"success",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                }) 
+               
+                this.alSeleccionado.cond=this.alSeleccionado.condicion;
+                this.alumnosAsig.push(this.alSeleccionado);
+                //this.enviarCorreo();
+                this.alSeleccionado=null;
+                this.sel='';  
+                
+            }
+            
+     
+        })
+        .catch(e => {
+        console.log(e.response);
+        })
+
+            
+    },
+    Eliminar(item, index){
+        console.log(item);
+        //Pendiente con CARO (15/07/2020)
+        console.log(index);
+        
+    }
+    
 
   
   }

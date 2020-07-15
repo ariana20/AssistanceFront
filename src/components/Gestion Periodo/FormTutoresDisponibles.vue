@@ -99,10 +99,25 @@ export default {
   },
   mounted(){
     this.listarTipoTutoria();
+    this.listarTutoresAsignados();
     
   },
   methods:{
-
+    listarTutoresAsignados(){
+        const params = {
+          id_programa : this.$store.state.programaActual.id_programa,
+          id_alumno: this.$store.state.usuario.id_usuario
+        };
+        axios
+        .post('/programa/tutoresAsignados', params)
+          .then(res =>{
+            
+            console.log(res);         
+          })
+          .catch(e => {
+            console.log(e.response);
+          })
+    },
     listarTipoTutoria(){
 
         const params = {
