@@ -7,19 +7,31 @@
                  </router-link>  -->
 
 
-                <section class="text-left" style="padding-top:0px">
-                    <h5 class="font-weight-ligth text-left col-md-6" style="font-weight: bold;">Carga masiva de notas de alumnos</h5>
-                    <h6 class="font-weight-ligth text-left col-md-6" >El formato permitido para los archivos es el siguiente: PDF</h6>
-                    <h6 class="font-weight-ligth text-left col-md-6" >El formato de nombre permitido para los archivos es el siguiente: Codigo</h6>
-                    <h6 class="font-weight-ligth text-left col-md-6" >El tamaño máximo permitido para los archivos es el siguiente: 2MB </h6>
-                    <h6 class="font-weight-ligth text-left col-md-6" >Ejemplo: 20152354.PDF</h6>
+                <div class="text-left" style="padding-top:0px">
+                    <h5 class="font-weight-ligth text-left col-md-9" style="font-weight: bold;">Carga masiva de los documentos históricos de los alumnos</h5>
+                     <div class="row form-controlT" style="margin:20px;" >
+                        <input multiple type="file" style="margin-top:5px" id="get-files" ref="file" name="client-file"  class="col-12 col-md-4" v-on:change="FileUpload" />
+                        <button type="button" style="margin:5px;border-radius: 10px;text-align:center;padding:0px" id="btnsubir" class="col-10 col-md-3  btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
+                        <button type="button"  class="col-10 col-md-3  btn btn-info" style="padding:0px;border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarNotas()"  >Cancelar</button>  
 
-                    <input type="file" id="get-files" ref="file" name="client-file" 
+                     </div>
+                    
+                    <ol start=1>
+                    <li class="font-weight-ligth text-left col-md-6" >El formato permitido para los archivos es el siguiente: PDF</li>
+                    <li class="font-weight-ligth text-left col-md-6" >El formato de nombre permitido para los archivos es el siguiente: Codigo</li>
+                    <li class="font-weight-ligth text-left col-md-6" >El tamaño máximo permitido para los archivos es el siguiente: 2MB. </li>
+                    <li class="font-weight-ligth text-left col-md-6" >Ejemplo: 20152354.PDF</li>
+                      </ol>
+                      <div class="font-weight-ligth text-left col-md-6" ><strong>Nota:</strong> Se permite subir un documento por alumno, mostrando como histórico el último subido.</div>
+                  
+                   
+          
+                    <!-- <input type="file" id="get-files" ref="file" name="client-file" 
                     multiple class="col-md-offset-4 col-md-4" v-on:change="FileUpload" style="margin-top:5%" />
                     <button style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnsubir" v-on:click="subirPDFs">Subir archivos</button>
-                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarNotas()"  >Cancelar</button>  
+                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarNotas()"  >Cancelar</button>   -->
       
-                </section>
+                </div>
                 <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
                     <h5 class="font-weight-ligth text-left col-md-6"  style="font-weight: bold;">Reporte de errores</h5>
                     <table class="table" style="text-align:left" >
@@ -515,5 +527,10 @@ hr {
 .btn-info{
     height: 33px;
     text-align: center;
+}
+.form-controlT {
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
+    margin-bottom: 13px;
 }
 </style>

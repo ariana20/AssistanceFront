@@ -2,7 +2,7 @@
     <div name="Modal" >
         <a :href="'#openModal'+id"><b-icon icon="caret-right-square-fill" style="color:#0097A7"/></a>
         <div :id="'openModal'+id" class="modalbg">
-            <div class="dialog" style="width:50%">
+            <div class="dialog col-11">
                 <a href="#close" title="Close" class="close">X</a>
                 <div style="margin-top:3%;margin-bottom:3%;font-size:200%">
                     <strong>CITA REALIZADA</strong>

@@ -12,7 +12,7 @@
           <input class="form-control" v-model="criterio" @keyup.enter=" buscarUsuario" placeholder="Buscar por nombre o código">
         </div>
         <div class="form-inline col-12 col-md-2 offset-md-2 offset-lg-4">
-          <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
+          <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir Nuevo</button>
         </div>
       </div>
 
@@ -31,7 +31,8 @@
           </thead>
           <tbody>
             <tr v-for="(item, index) in usuarios"  :key="index">
-              <td v-if="item!=undefined">{{item.codigo}}</td>
+              <td v-if="item.codigo!=undefined">{{item.codigo}}</td>
+              <td v-else>Pendiente</td>
               <!-- <td v-if="item!=undefined">{{item.nombre}} {{item.apellidos}}</td> -->
               <td v-if="item!=undefined">{{item.nombre}}</td> 
             <td v-if="item!=undefined"> {{item.apellidos}}</td> 
@@ -48,7 +49,7 @@
                   
                 </router-link>              
                 
-                  <b-icon icon="dash-circle-fill" style="color:#757575;width:20px; height:20px;"  v-on:click="eliminarUsuario(item,index)"></b-icon>
+                  <b-icon icon="dash-circle-fill" style="color:#757575;width:20px; height:20px;cursor:pointer"  v-on:click="eliminarUsuario(item,index)"></b-icon>
                   
                 
               </td>
@@ -179,8 +180,9 @@ export default {
   methods:{
 		changePage: function(page){
 			this.paginate.current_page=page;
-			this.listarUsuarios(page);//trae un nuevo listadp
-			event.preventDefault();
+			this.buscarUsuario(page);//trae un nuevo listadp
+      event.preventDefault();
+      
 		},
     //4 es el id del programa de admin
     //1 es el id tipo usuario de admin

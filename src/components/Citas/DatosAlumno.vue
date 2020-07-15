@@ -5,7 +5,7 @@
             <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo" style="height:100%">
                     <img  :src="tutor.imagen" height="110px" width="110px" />		
             </figure>
-            <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo">	
+            <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo" style="height:100%">	
                     <b-avatar size="7rem" ></b-avatar>		
             </figure>
         </div>
@@ -13,7 +13,7 @@
             <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
             <div class="font-weight-bolder">Correo: {{tutor.correo}}</div>
             <div class="font-weight-bolder">Telefono: {{tutor.telefono}}</div>
-            <div class="font-weight-bolder">Programa: {{this.$store.state.programaActual.nombre}}</div>
+            <div class="font-weight-bolder" v-if="this.$store.state.programaActual">Programa: {{this.$store.state.programaActual.nombre}}</div>
             <div class="font-weight-bolder">Condicion: {{tutor.cond}}</div>
         </div>
                           

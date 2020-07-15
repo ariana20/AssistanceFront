@@ -1,6 +1,6 @@
 <template>
     <div style="text-align:left;">
-        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
+        <div style="width: 100%; border-bottom: 2px solid rgb(0, 152, 146); height: 1px; padding-top: 15px; margin-bottom: 15px;"></div>
         <div style="text-align:center">
         <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo" style="margin-left: 0px;">
                 <img v-if="tutor.imagen[0]!='u'" :src="tutor.imagen" height="110px" width="110px"/>
@@ -11,27 +11,23 @@
 		</figure>
         </div>
         <div class="descripcion-tutor">
+            <div class="font-weight-bolder"><h4>Tutor Asignado</h4></div>
             <div class="font-weight-bolder">{{tutor.nombre + " " + tutor.apellidos}}</div>
             <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
-            <div class="font-weight-bolder">Temas: </div>
-            <div>
-                <label v-for="(item,index) in tipoTutoria" :key="index" style="margin-bottom: 0px;">
-                    <label v-if="item.tutor_fijo==0 || (item.tutor_fijo==1 && item.tutor_asignado==0 && tipoTutoriaAsignado)">{{item.nombre}}</label>
-                    <label v-if="(item.tutor_fijo==0 || (item.tutor_fijo==1 && item.tutor_asignado==0 && tipoTutoriaAsignado)) && index<tipoTutoria.length-1" style="margin-right:5px; margin-bottom: 0px;">, </label>
-                </label>
+            <div class="font-weight-bolder">Tema Asignado: </div>
+            <div class="font-weight-bolder">{{tipoTutoriaAsignado.nombre}}
             </div>
+            <!--div>
+                <label v-for="(item,index) in tipoTutoria" :key="index" style="margin-bottom: 0px;">
+                    {{item.nombre}}<label v-if="index<tipoTutoria.length-1" style="margin-right:5px; margin-bottom: 0px;">, </label>
+                </label>
+            </div-->
             <div style="text-align: right" id="botones" >
                 <button type="button"
                 class="btn btn-info" v-on:click="verDisponibilidad()">Ver disponibilidad</button>
-                <!--button type="button"
-                class="btn btn-info">Ver Perfil</button> 
-                <button type="button"
-                class="btn btn-info btn-enviar-msg">Enviar Mensaje</button-->
-                <button type="button" style="align: right" v-if="tutor.solicitado"
-                class="btn btn-info" v-on:click="solicitarTutor()">Solicitar Tutor</button> 
             </div>
         </div>
-        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
+        <div style="width: 100%; border-bottom: 2px solid rgb(0, 152, 146); height: 1px; padding-top: 15px; margin-bottom: 15px;"></div>
                           
     </div>
 </template>
@@ -43,7 +39,6 @@ export default {
     props: {
         text: String,
         tutor: Object,
-        tipoTutoria: Array,
         tipoTutoriaAsignado: Object
         
     },

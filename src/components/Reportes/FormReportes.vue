@@ -2,7 +2,7 @@
   <div class="FormReportes">
       <div class="contenedor">
         <div class="top-titulo" style="text-align:left;">
-            <div class="col-4">
+            <div class="col-8 col-md-4">
                 <h5>Fechas:</h5>
                 <date-picker style="left:0px" class="wide-date-example"
                     v-model="periodo" 
@@ -13,52 +13,6 @@
                     input-class="form-control">
                 </date-picker>
             </div>
-            <!--div class="col-4"> Filtros que pondré posteriormente ewe
-                <div class="row">
-                <div class="col"><h5>Facultad: </h5></div>
-                <div class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
-                </div>
-                <select class="form-control"  v-model="selectedFacultad" v-on:change="listarProgramas()">
-                    <option disabled selected :value="null" focusable="false">Selecciona una facultad</option>
-                    <option 
-                        v-for="(facultad, index) in facultades" 
-                        :key="index" 
-                        :value="facultad">
-                        {{ facultad.nombre }}
-                    </option>
-                </select>
-                <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
-                    <li class="motivos-seleccionados list-group-item" style="text-align:left;"
-                        v-for="(facultad,index) in facultadesSelect"  
-                        :key="index">
-                        {{facultad.nombre}}
-                        <span name="remove" class="close" @click="deleteFacu(index)" style="float:right;">&times;</span>           
-                    </li>
-                </ul>
-            </div-->
-            <!--div class="col-4">
-                <div class="row">
-                    <div class="col"><h5>Programa: </h5></div>
-                    <div  class="col" style="text-align: right; top: 50%"><h8 style="top:50%;cursor:pointer;color:#17a2b8;">Seleccionar</h8></div>
-                </div>
-                <select class="form-control"  v-model="selectedPrograma">
-                    <option disabled selected :value="null" focusable="false">Selecciona un programa</option>
-                    <option 
-                        v-for="(programa, index) in progSinDefault"
-                        :key="index" 
-                        :value="programa" >
-                        {{ programa.nombre }}
-                    </option>
-                </select>
-                <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
-                    <li class="motivos-seleccionados list-group-item" style="text-align:left;"
-                        v-for="(programa,index) in programasSelect"  
-                        :key="index">
-                        {{programa.nombre}}
-                        <span name="remove" class="close" @click="deleteProg(index)" style="float:right;">&times;</span>        
-                    </li>
-                </ul>
-            </div-->
             <div class="botones" style="margin-bottom:10px;margin-right: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
@@ -99,15 +53,17 @@
                     <button type="button" class="btn btn-info"  @click="verDetalleRendimiento()" >Ver más</button>
                 </div>
             </div>
+            
         </div>
+        
       </div>
+      
 
   </div>
 </template>
 
 
-
-<script>
+<script >
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
@@ -120,7 +76,8 @@ export default {
         LineChart,
         PieChart,
         HorizontalBarChart,
-        DatePicker
+        DatePicker,
+        
     },
     data(){
         return{
@@ -153,7 +110,10 @@ export default {
                     yAxes: [{
                         stacked: true,
                         ticks:{precision:0}
-                    }]
+                    }],
+                    pointLabels :{
+                        fontStyle: "bold",
+                    }
                 },        
                 legend: {
                     display: false
@@ -163,7 +123,8 @@ export default {
                     precision: 1
                 },
                 responsive: true,
-                maintainAspectRatio:false
+                maintainAspectRatio:false,
+                
             },
             chartOp2:{
                 responsive: true,
@@ -171,7 +132,27 @@ export default {
                     mode: 'percentage',
                     precision: 1
                 },
-                maintainAspectRatio:false
+                maintainAspectRatio:false,
+                legend:{
+                    position: 'right'
+                },
+                tooltips: {
+                    enabled: true
+                },
+                plugins: {
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            let sum = 0;
+                            let dataArr = ctx.chart.data.datasets[0].data;
+                            dataArr.map(data => {
+                                sum += data;
+                            });
+                            let percentage = (value*100 / sum).toFixed(2)+"%";
+                            return percentage;
+                        }
+                    }
+                }
+                            
             },
             
         }
@@ -184,7 +165,8 @@ export default {
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontWeight = "400";
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
-  
+        
+        
     },
     computed: {
         progSinDefault: function () {
@@ -200,9 +182,11 @@ export default {
         this.RatioAsignado();
         this.RatioAtenciones();
         this.BajoRendimiento();
+        this.Encuestas();
         //this.listarFacultades();
     },
     methods:{
+        
         listarFacultades(){
             const params = {
                 id_institucion:1,
@@ -285,10 +269,9 @@ export default {
             
             const { data } =await axios.post("programa/citasXDiaTodos", params);
             
+            this.atenciones=data;
             
-            data.forEach(d =>{
-                this.atenciones.push({data:d.fecha,total:d.count});               
-            })
+           
             
 
         },
@@ -297,27 +280,52 @@ export default {
         async BajoRendimiento(){
 
             this.alumnosBR=[];
-
+            
             const params = {
                 id_programa: this.idPogramas,
                 id_facultad: this.$store.state.programaActual.id_facultad,
                 id_institucion: 1,
                 fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+                id_tutor:[],
             };
 
             var data =await axios.post("usuarios/datosBajoRendimiento", params);
            
             // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
             //LLenado del gráfico de la izquierda
-            this.alumnosBR.push({data:"Asistieron >50%-Cuarta",total:data.data[4].total_alumnos});
-            this.alumnosBR.push({data:"Asistieron <50%-Cuarta",total:data.data[5].total_alumnos});
+            this.alumnosBR.push({data:">50%-Cuarta",total:data.data[4].total_alumnos});
+            this.alumnosBR.push({data:"<50%-Cuarta",total:data.data[5].total_alumnos});
 
-            this.alumnosBR.push({data:"Asistieron >50%-Trica",total:data.data[2].total_alumnos});
-            this.alumnosBR.push({data:"Asistieron <50%-Trica",total:data.data[3].total_alumnos});
+            this.alumnosBR.push({data:">50%-Trica",total:data.data[2].total_alumnos});
+            this.alumnosBR.push({data:"<50%-Trica",total:data.data[3].total_alumnos});
             
-            this.alumnosBR.push({data:"Asistieron >50%-Bica",total:data.data[0].total_alumnos});
-            this.alumnosBR.push({data:"Asistieron <50%-Bica",total:data.data[1].total_alumnos});
+            this.alumnosBR.push({data:">50%-Bica",total:data.data[0].total_alumnos});
+            this.alumnosBR.push({data:"<50%-Bica",total:data.data[1].total_alumnos});
+                
+
+        },
+
+        async Encuestas(){
+
+            this.satisfaccion=[];
+            
+            const params = {
+                id_programa: this.idPogramas,
+                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+            };
+
+            var data =await axios.post("encuesta/reporteEncuesta", params);
+           
+            // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
+            //LLenado del gráfico de la izquierda
+            data.data.forEach(element => {
+                if(element.id_encuesta == 1){
+                    element.data = element.nombre
+                    this.satisfaccion.push(element)
+                }
+            });
                 
 
         },
@@ -327,6 +335,7 @@ export default {
             this.RatioAsignado();
             this.BajoRendimiento();
             this.RatioAtenciones();
+            this.Encuestas();
         },
         verDetalleAsignado(){
             this.$router.push('/reporteAsignado');
@@ -336,7 +345,7 @@ export default {
 
         },
         verDetalleSatisfaccion(){
-            this.$router.push('/reporteSatisfaccion');
+            this.$router.push('/reporteencuestas');
 
         },
         verDetalleRendimiento(){

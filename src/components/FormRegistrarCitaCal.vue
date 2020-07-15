@@ -19,7 +19,7 @@
                 <!-- <li><span class="citareservada"></span> Cita Resevada </li> -->
             </ul>
         </div>
-        <div class="top-titulo" style="text-align:left">
+        <div class="top-titulo" style="text-align:left" v-if="bloque!=null">
             <Fullcalendar ref="fullCalendar"
                           :plugins = "calendarPlugins"
                           defaultView = "timeGridWeek"
@@ -35,6 +35,7 @@
                               center: '',
                               right: ''
                           }"
+                          :slotDuration="'00:'+bloque+':00'"
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
@@ -123,7 +124,8 @@ export default {
             tutores: [],
             fechaIni:null,
             miUsuario:this.$store.state.permisosUsuario,
-            isTutor:null,
+           
+            bloque:null,
         }
     },
     computed: {
@@ -132,10 +134,12 @@ export default {
     mounted() {     
          
         this.listarTutores();
+         this.bloque = this.$store.state.programaActual.hora_bloque;
         if (this.tutorSel)
             this.showCalendar();
         else
-            this.$store.state.events=[];            
+            this.$store.state.events=[];      
+             
     },
     methods: {
         showCalendar() {
@@ -161,7 +165,7 @@ export default {
 
                 };
              
-                this.$router.push('/registrarCita/registrarCitaAgendada');
+                // this.$router.push('/registrarCita/registrarCitaAgendada');
             } else { 
                 //Gray
                
@@ -196,14 +200,12 @@ export default {
             axios
             .post('/programa/tutoresListar', params)
             .then(res =>{
-                this.tutores=res.data;   
+                //Ordenadito
+                this.tutores=res.data.sort((a, b) => { return  a.usuario.nombre.localeCompare(b.usuario.nombre);});
+                 // this.tutores=res.data;  
+                
                 this.hideModal();  
-                if(this.$store.state.permisosUsuario.includes('Sesión de Tutoría')) {                  
-                    this.isTutor=true; //tiene tutorías- es tutor o es coordinador                    
-                }else  {
-                    //Es secretaria 
-                    this.isTutor=false;
-                }
+            
                       
             })
             .catch(e => {
@@ -216,7 +218,7 @@ export default {
                     confirmButtonColor:'#0097A7',
                      showConfirmButton: true,
                 });
-                 this.$router.push('/registrarCita');
+                //  this.$router.push('/registrarCita');
             })
         },
 
@@ -368,78 +370,61 @@ function addTimes (startTime, endTime) {
 
 </script>
 
-<style lang='scss' scoped>
-@import './../assets/styles/main.css';
+<style lang='scss'>
+    @import './../assets/styles/main.css';
+    @import '~@fullcalendar/core/main.css';
+    @import '~@fullcalendar/daygrid/main.css';
+    @import '~@fullcalendar/timegrid/main.css';
 
-@import '~@fullcalendar/core/main.css';
-@import '~@fullcalendar/daygrid/main.css';
-@import '~@fullcalendar/timegrid/main.css';
-
-.top-titulo {
-    display: flex;
-    justify-content: space-between;
-}
-.fc-header-toolbar {
-    margin-top: 10px;
-}
-.fc-button {
-    background-color: #17a2b8;
-    border-color: #17a2b8;
-}
-.fc-button-primary:not(:disabled).fc-button-active {
-    background-color: #757575;
-    border-color: #757575;
-}
-.fc-button:hover {
-    background:#00BCD4;border-color: #00BCD4;
-}
-.fc-button:focus {
-    background:#00BCD4 !important;
-    border-color: #00BCD4 !important;
-    outline:none !important;
-    box-shadow: none !important;
-    border: 2.3px solid transparent !important;
-}
-.fc-view-container {
-    font-family: "Brandon Bold" !important;
-}
-.myCalendar {
-    cursor: pointer;
-}
-.fc-event { 
-    background-color: #B2EBF2;
-    border-color: #B2EBF2;   
-    cursor: pointer !important;
-
-}
-.vm--modal {
-    border-radius: 25px;
-    margin: 30px;
-    height: 260px !important;
-}
-@media screen and (max-width: 759px) {
-    .form-control { 
-        left: -100px;
+    .top-titulo {
+        display: flex;
+        justify-content: space-between;
     }
-}
-@media screen and (max-width: 1024px) {
-    .form-control { 
-        left: 0px;
+    .fc-header-toolbar {
+        margin-top: 10px;
     }
-}
-.fc-time-grid .fc-slats td {
-    height: 2.5em;
-}
-.vm--modal {
-    border-radius: 25px;
-    margin: 30px;
-    height: 260px !important;
-}
-select:focus {outline: none;box-shadow: none;}
-.form-control {
-  border-radius: 1.25rem;  
-  border: 0.5px solid #757575;
-  margin-bottom: 10px;
-  width: 100%;
-}
+    .fc-button {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+    .fc-button-primary:not(:disabled).fc-button-active {
+        background-color: #757575;
+        border-color: #757575;
+    }
+    .fc-button:hover {
+        background:#00BCD4;border-color: #00BCD4;
+    }
+    .fc-button:focus {
+        background:#00BCD4 !important;
+        border-color: #00BCD4 !important;
+        outline:none !important;
+        box-shadow: none !important;
+        border: 2.3px solid transparent !important;
+    }
+    .fc-view-container {
+        font-family: "Brandon Bold" !important;
+    }
+    .fc-event { 
+        background-color: #B2EBF2;
+        border-color: #B2EBF2;
+        cursor: pointer;
+    }
+    .vm--modal {
+        border-radius: 25px;
+        margin: 30px;
+        height: 260px !important;
+    }
+    @media screen and (max-width: 759px) {
+        .form-control { 
+            left: -100px;
+        }
+    }
+    @media screen and (max-width: 1024px) {
+        .form-control { 
+            left: 0px;
+        }
+    }
+    .fc-time-grid .fc-slats td {
+        height: 2.5em;
+    }
 </style>

@@ -19,7 +19,7 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "about" */ '../views/Principal/About.vue')
   },
   {
-    path: '/recuperarContrasena',
+    path: '/recuperarContrasena/:token?',
     name: 'Recuperar Contrasena',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -249,6 +249,7 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewTutoresDisponibles" */ '../views/Gestion Periodo/ViewTutoresDisponibles.vue')
   },
   {
+    // path: '/agregardocumentos',
     path: '/agregarNotas',
     name: 'Agregar Notas',
     props: true,
@@ -315,6 +316,12 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewCitaAgendada2.vue')
   },
   {
+    path: '/asignarTipoTutoria',
+    name: 'Asignar Tipo de Tutoría',
+    // props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Gestion Periodo/ViewAsignarTipoTutoria.vue')
+  },
+  {
     path: '/reporteRendimiento',
     name: 'Reporte Rendimiento',
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteRendimiento.vue')
@@ -333,6 +340,22 @@ Vue.use(VueRouter)
     path: '/reporteAtenciones',
     name: 'Reporte Atenciones',
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteAtenciones.vue')
+  },
+  {
+    path: '/reporteencuestas',
+    name: 'Reporte Satisfaccion',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteSatisfaccion.vue')
+  },
+  {
+    path: '/encuestas',
+    name: 'Encuestas',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewEncuesta.vue')
+  },
+  {
+    path: '/respuesta/:id',
+    name: 'Responder Encuesta',
+    props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewRespuesta.vue')
   },
 ]
 const router = new VueRouter({

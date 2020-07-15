@@ -2,31 +2,57 @@
   <div class="FormUsuario contenedor" style="margin-top:5px;">
     <div class="row grid-divider" style="margin-top:3%" >
       <div id="izquierdo" class="col-md-5">
-        <table>
-          <tbody >
-            <td >
-              <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) ||( event.charCode== 239) || (event.charCode== 130) || (event.charCod==144 ) || (event.charCod==181) || (event.charCod==214) || (event.charCod==233) || (event.charCod==224))"   -->
-              <!-- onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 163) || event.charCode== 130 || event.charCod==144 ||event.charCod==181 || event.charCod==214 || event.charCod==233 || event.charCod==224)" -->
-              <tr style="text-align:left"><td style="width:80px;">Codigo:*</td>   <td> <input class="form-control" style="width: 180%;" type="text" maxlength="8"    id="cod" v-on:keyup="verificarUsuariosCod();"   v-model="codigo"></td></tr> 
-              <tr style="text-align:left"><td style="width:80px;">Nombre:*</td>   <td> <input class="form-control" style="width: 180%;" type="text"  id="nomb" maxlength="100"   v-model="nombre"></td></tr>
-              <tr style="text-align:left"><td style="width:80px;">Apellidos:*</td>   <td> <input class="form-control" style="width: 180%;" type="text" id="apel" maxlength="100"   v-model="apellidos"></td></tr>
-              <tr style="text-align:left"><td style="width:80px;">Celular:</td>   <td>   <input  type="text" class="form-control" style="width: 180%;"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
-              <tr style="text-align:left"><td style="width:80px;">Correo:*</td>   <td> <input id="corr" class="form-control" style="width: 180%;"  type="text" v-model="correo" v-on:keyup="verificarUsuariosCorreo();" ></td></tr>
-              <tr style="text-align:left"><td style="width:80px;"></td></tr>
-               
-              <tr class="" style="bottom:0px;margin-left:0px;" > 
-                <b-form-checkbox v-model="estado" value="act" unchecked-value="ina" > Activo</b-form-checkbox>
-              </tr>
-              <tr>
-                <td ></td>
-                <h5  v-if="this.IsmsgUsuario==false"   style="color:white;text-align:right;margin-left:50px">{{msgUsuario}}</h5>               
-                <h5  v-else  style="color:#009892;text-align:right;margin-left:50px">
-                    {{msgUsuario}}
-                </h5>
-              </tr> 
-            </td> 
-          </tbody>
-        </table>
+        <div class="row" style="text-align:left">
+          <div class="col-12 col-md-3" style=";margin-bottom:10px">
+            Codigo:*
+          </div>
+          <div class=" col-12 col-md-9" style=";margin-bottom:10px">
+            <input class="form-control col-12" style="width: 180%;" type="text" maxlength="8"    id="cod" v-on:keyup="verificarUsuariosCod();"   v-model="codigo">
+          </div>
+        </div> 
+        <div class="row" style="text-align:left">
+          <div class="col-12 col-md-3" style=";margin-bottom:10px">
+            Nombre:*
+          </div>
+          <div class=" col-12 col-md-9" style=";margin-bottom:10px">
+            <input class="form-control col-12" style="width: 180%;" type="text"  id="nomb" maxlength="100"   v-model="nombre">
+          </div>
+        </div> 
+        <div class="row" style="text-align:left">
+          <div class="col-12 col-md-3" style=";margin-bottom:10px">
+            Apellidos:*
+          </div>
+          <div class=" col-12 col-md-9" style=";margin-bottom:10px">
+            <input class="form-control col-12" style="width: 180%;" type="text" id="apel" maxlength="100"   v-model="apellidos">
+          </div>
+        </div> 
+        <div class="row" style="text-align:left">
+          <div class="col-12 col-md-3" style=";margin-bottom:10px">
+            Celular:
+          </div>
+          <div class=" col-12 col-md-9" style=";margin-bottom:10px">
+            <input  type="text" class="form-control col-12" style="width: 180%;"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+          </div>
+        </div> 
+        <div class="row" style="text-align:left">
+          <div class="col-12 col-md-3" style=";margin-bottom:10px">
+            Correo:*
+          </div>
+          <div class=" col-12 col-md-9" style=";margin-bottom:10px">
+            <input id="corr" class="form-control col-12" style="width: 180%;"  type="text" v-model="correo" v-on:keyup="verificarUsuariosCorreo();" >
+          </div>
+        </div> 
+        <div class="row" style="text-align:left">
+          <div class="col-12" style=";margin-bottom:10px">
+            <b-form-checkbox v-model="estado" value="act" unchecked-value="ina" > Activo</b-form-checkbox>
+          </div>
+        </div> 
+
+        <div v-if="this.IsmsgUsuario==true" class="row" style="text-align:left">            
+          <h5 style="color:#009892;text-align:right;margin-left:50px">
+            {{msgUsuario}}
+          </h5>
+        </div>
       </div>
 
       <div id="medio" class="col-md-1">
@@ -44,20 +70,20 @@
           </tr>
         <div style="margin-bottom:20px;" >
           <tr>      
-            <td style="width:110px;" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario!=2" >Programa: </td>
-            <select v-on:change="ProgramaSel" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario!=2" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
+            <td style="width:35%;text-align:left" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario!=2" >Programa: </td>
+            <select v-on:change="ProgramaSel" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario!=2" class="col-sm-12 form-control" style="margin-top:5px"
               v-model="progSeleccionadoInd">  <!--aqui guardo-->
-              <option selected disabled :value="null">Selecciona un programa</option>
+              <option selected :value="null">Selecciona un programa</option>
               <option v-for="(prog, i) in programas"  :key="i" :value="prog.id_programa"  > <!--falta agregar value, creo que abreviatura le mando-->
               {{ prog.nombre }} 
               </option>
             </select>
           </tr>
           <tr>      
-            <td style="width:110px;" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario==2" >Facultad: </td>
-            <select v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario==2" v-on:change="ProgramaSel" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
+            <td style="width:35%;text-align:left" v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario==2" >Facultad: </td>
+            <select v-if="this.tiposUsuariosSel!=null && this.tiposUsuariosSel.id_programa == 1 && this.tiposUsuariosSel.id_tipo_usuario==2" v-on:change="ProgramaSel" class="col-sm-11 form-control" style="margin-top:5px;margin-left:-25px"
               v-model="progSeleccionadoInd">  <!--aqui guardo-->
-              <option selected disabled :value="null">Selecciona una facultad</option>
+              <option selected :value="null">Selecciona una facultad</option>
               <option v-for="(prog, i) in facultades"  :key="i" :value="prog.id_programa"  > <!--falta agregar value, creo que abreviatura le mando-->
               {{ prog.nombre }} 
               </option>
@@ -66,7 +92,7 @@
           <tr style="text-align:left">  
             <td style="width:150px;"  v-if="this.tiposUsuariosselect === 4" >Tipos de tutorias:*     </td>
             <select v-if="this.tiposUsuariosselect === 4" class="col-sm-12 form-control"    v-model="tipostutoriasselect" style="cursor:pointer">
-              <option selected disabled value="no">Selecciona un tipo de tutoria</option>
+              <option selected disabled hidden value="no">Selecciona un tipo de tutoria</option>
               <option v-for="(tt, i) in tipostutorias"  :key="i"   :value="tt.id_tipo_tutoria">
               {{ tt.nombre}}
               </option>
@@ -78,10 +104,10 @@
               Seleccionar
             </button>
           <tr>      
-            <td style="width:110px;" v-if="this.tiposUsuariosselect === 5" >Condición del alumno: </td>
-            <select v-if="this.tiposUsuariosselect === 5" class="col-sm-12 form-control" style="margin-top:5px;margin-left:35px"
+            <td style="width:35%;text-align:left" v-if="this.tiposUsuariosselect === 5" >Condición del alumno: </td>
+            <select v-if="this.tiposUsuariosselect === 5" class="col-sm-12 form-control" style="margin-top:5px"
               v-model="condiAlumnosselect">  <!--aqui guardo-->
-              <option selected disabled :value="null">Selecciona una condición</option>
+              <option selected disabled hidden :value="null">Selecciona una condición</option>
               <option v-for="(condi, i) in condiAlumnos"  :key="i" :value="condi.abreviatura"  > <!--falta agregar value, creo que abreviatura le mando-->
               {{ condi.nombre }} 
               </option>
@@ -120,8 +146,9 @@
             <select v-else v-on:change="TipoUsEl" v-model="tiposUsuariosselect" class="col sm-6 form-control" style="cursor:pointer;margin-bottom:0px;margin-top:1.5%">
               <option value="no" disabled hidden selected  >Selecciona un tipo de usuario</option>
               <option   v-for="(tipoU,index) in usuario_entrante.usuario_x_programas" :value="tipoU.id_usuario_x_programa" v-bind:key="index" style="cursos:pointer;" >
-                <div v-if="tipoU.programa.nombre == 'Administrador'">{{ tipoU.tipo_usuario.nombre + " (General)"}}</div>
-                <div v-else>{{ tipoU.tipo_usuario.nombre + " ("+ tipoU.programa.nombre+")"}}</div>
+                <div v-if="tipoU.programa && tipoU.programa.nombre == 'Administrador'">{{ tipoU.tipo_usuario.nombre + " (General)"}}</div>
+                <div v-else-if="tipoU.programa">{{ tipoU.tipo_usuario.nombre + " ("+ tipoU.programa.nombre+")"}}</div>
+                <div v-else>{{ tipoU.tipo_usuario.nombre + " (Sin Asignar)"}}</div>
               </option>
             </select>
           </div>
@@ -140,7 +167,7 @@
           <div class="col-12 col-md-8">
             <select v-on:change="ProgramaSel" class="form-control"
               v-model="progSeleccionadoInd">  <!--aqui guardo-->
-              <option selected disabled :value="null">Selecciona un programa</option>
+              <option selected :value="null">Selecciona un programa</option>
               <option v-for="(prog, i) in programas"  :key="i" :value="prog.id_programa"  > <!--falta agregar value, creo que abreviatura le mando-->
               {{ prog.nombre }} 
               </option>
@@ -155,7 +182,7 @@
             <div class="col-12 col-md-8">
               <select v-on:change="ProgramaSel" class="form-control"
                 v-model="progSeleccionadoInd">  <!--aqui guardo-->
-                <option selected disabled :value="null">Selecciona una facultad</option>
+                <option selected :value="null">Selecciona una facultad</option>
                 <option v-for="(prog, i) in facultades"  :key="i" :value="prog.id_programa"  > <!--falta agregar value, creo que abreviatura le mando-->
                 {{ prog.nombre }} 
                 </option>
@@ -307,7 +334,7 @@ export default {
       if(this.usuario_entrante.usuario_x_programas[0]){
         this.tiposUsuariosselect=this.usuario_entrante.usuario_x_programas[0].id_usuario_x_programa;  
         this.tiposUsuariosSel=this.usuario_entrante.usuario_x_programas[0].tipo_usuario;    
-        this.progSeleccionadoInd=this.usuario_entrante.usuario_x_programas[0].programa.id_programa;   
+        if(this.usuario_entrante.usuario_x_programas[0].programa)this.progSeleccionadoInd=this.usuario_entrante.usuario_x_programas[0].programa.id_programa;   
         this.progSeleccionado=this.usuario_entrante.usuario_x_programas[0].programa;   
         for (let i = 0; i < this.usuario_entrante.usuario_x_programas.length; i++) {
             this.usuario_entrante.usuario_x_programas[i].tipo_usuario.alumno = false;
@@ -322,7 +349,7 @@ export default {
             }
           }
         }
-        this.listarTT(this.usuario_entrante.usuario_x_programas[0].programa.id_programa);
+        if(this.usuario_entrante.usuario_x_programas[0].programa) this.listarTT(this.usuario_entrante.usuario_x_programas[0].programa.id_programa);
       }
       Axios.create()
         .post('/usuarios/listar/'+this.id_usuario_entrante).then( response =>{
@@ -507,7 +534,7 @@ export default {
           showConfirmButton: true,
         })
       }
-      else if(this.progSeleccionadoInd==null){
+      else if(this.progSeleccionadoInd==null && this.tiposUsuariosselect!=3 && this.tiposUsuariosselect!=2){
         Swal.fire({
           text:"Falta elegir un programa",
           icon:"error",
@@ -549,8 +576,8 @@ export default {
                 password:"12345",
                 estado:this.estado,
                 id_programaNuevo:id_prog,
-                id_tipo_usuario:this.tiposUsuariosselect,  
-                
+                id_tipo_usuario:this.tiposUsuariosselect, 
+                usuario_creacion:this.$store.state.usuario.id_usuario,
                 //como es alumno inserto las condicioes
                 condicion_alumno:this.condiAlumnosselect,//le doy el value
               };
@@ -567,7 +594,8 @@ export default {
                 password:"12345",
                 estado:this.estado,
                 id_programaNuevo:id_prog,
-                id_tipo_usuario:this.tiposUsuariosselect,  
+                id_tipo_usuario:this.tiposUsuariosselect,
+                usuario_creacion:this.$store.state.usuario.id_usuario,
                 //ahora, si es tipo usuario 4 de tutor debe insertar el tipo de tutoria
               };
               this.usuarioNuevo(params);
@@ -596,6 +624,7 @@ export default {
                   telefono:this.telefono,
                   //como es alumno inserto las condicioes
                   condicion_alumno:this.condiAlumnosselect,//le doy el value
+                  usuario_actualizacion:this.$store.state.usuario.id_usuario
                 };
                 this.modificarUsuario(params2);
               }
@@ -625,6 +654,7 @@ export default {
                   id_programa:id_prog,
                   //como es alumno inserto las condicioes
                   condicion_alumno:this.condiAlumnosselect,//le doy el value
+                  usuario_actualizacion:this.$store.state.usuario.id_usuario
                 };
                 this.modificarUsuario(params2);
               }
@@ -639,6 +669,7 @@ export default {
                   // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
                   id_tipo_usuario_Nuevo:this.tiposUsuariosselect, 
                   id_programa:id_prog,
+                  usuario_actualizacion:this.$store.state.usuario.id_usuario
                 };
                 this.modificarUsuario(params2);
               }
@@ -858,6 +889,7 @@ export default {
                 
                 this.msgUsuario="Usuario existente";
                 this.IsmsgUsuario=true;
+                this.tiposUsuariosselect="no";
                 // this.hideModal();
 
              }
@@ -935,8 +967,9 @@ export default {
               this.estado=response.data.usuario[0].estado; 
               // console.log('existente: ',this.usuario_entrante);
               //tipo de usuarip
-                this.msgUsuario="Usuario existente";
+              this.msgUsuario="Usuario existente";
               this.IsmsgUsuario=true;
+              this.tiposUsuariosselect="no";
               // this.hideModal();
 
             }
@@ -1009,9 +1042,18 @@ export default {
               confirmButtonText: 'OK',
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
-            }) 
+            })
+            if(this.tiposUsuariosselect==2 || this.tiposUsuariosselect==3){
+              this.axios.post('/usuarios/veificarCoordinador',{id_programa:params.id_programaNuevo,tipo_usuario:this.tiposUsuariosselect})
+                .then(response=>{
+                  response
+                })
+                .catch(e=>{
+                  console.log(e)
+                })
+            }
             //Como se guardaron con éxito ahora agrego el titutoria
-            if(this.this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor==true){
+            if(this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor==true){
               var idusuarionuevo=response.data["user"].id_usuario;
               // console.log('id del usuario nuevo: ',response.data["user"].id_usuario);
               this.actualizarTT(idusuarionuevo);//tiene hide?
@@ -1057,18 +1099,52 @@ export default {
             // console.log('params2 ',params2.id_tipo_usuario_Nuevo);
             //Si es tutor actualizo el tt
             if(this.usuario_entrante.usuario_x_programas[0]){
-              if(params2.id_programa){
+              if(params2.id_programa || this.tiposUsuariosselect==2 || this.tiposUsuariosselect==3 ){
                 let existe = false;
-                for (let index = 0; index < this.usuario_entrante.usuario_x_programas.length; index++) {
-                  if(this.usuario_entrante.usuario_x_programas[index].id_programa == this.progSeleccionadoInd){
-                    existe = true;
-                    break;
+                if(params2.id_programa){
+                  for (let index = 0; index < this.usuario_entrante.usuario_x_programas.length; index++) {
+                    if(this.usuario_entrante.usuario_x_programas[index].id_programa == this.progSeleccionadoInd){
+                      existe = true;
+                      break;
+                    }
+                  }
+                  if(!existe){
+                    let obj ={
+                      id_tipo_usuario:this.tiposUsuariosselect, 
+                      id_programa:params2.id_programa,
+                    }
+                    if(this.tiposUsuariosselect==2 || this.tiposUsuariosselect==3){
+                      this.axios.post('/usuarios/veificarCoordinador',{id_programa:params2.id_programa,tipo_usuario:this.tiposUsuariosselect,id_usuario:this.id_usuario_entrante})
+                        .then(response=>{
+                          response
+                            this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
+                              .then(response=>{
+                                response
+                                
+                              })
+                              .catch(e=>{
+                                console.log(e)
+                              })
+                        })
+                        .catch(e=>{
+                          console.log(e)
+                        })
+                    }
+                    else{
+                      this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
+                        .then(response=>{
+                          response
+                        })
+                        .catch(e=>{
+                          console.log(e)
+                        })
+                    }
                   }
                 }
-                if(!existe){
+                else{
                   let obj ={
                     id_tipo_usuario:this.tiposUsuariosselect, 
-                    id_programa:params2.id_programa,
+                    id_programa:null,
                   }
                   this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
                     .then(response=>{
@@ -1081,18 +1157,28 @@ export default {
               }
             }
             else{
-              if(params2.id_programa){
+              if(params2.id_programa || this.tiposUsuariosselect==2 || this.tiposUsuariosselect==3 ){
                 let obj ={
                   id_tipo_usuario:this.tiposUsuariosselect, 
                   id_programa:params2.id_programa,
                 }
-                this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
-                  .then(response=>{
-                    response
-                  })
-                  .catch(e=>{
-                    console.log(e)
-                  })
+                if(this.tiposUsuariosselect==2 || this.tiposUsuariosselect==3){
+                  this.axios.post('/usuarios/veificarCoordinador',{id_programa:params2.id_programa,tipo_usuario:this.tiposUsuariosselect,id_usuario:this.id_usuario_entrante})
+                    .then(response=>{
+                      response
+                        this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
+                          .then(response=>{
+                            response
+                            
+                          })
+                          .catch(e=>{
+                            console.log(e)
+                          })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                    })
+                }
               }
             }
             if(this.tiposUsuariosSel!=null && this.tiposUsuariosSel.tutor!=false){
@@ -1131,70 +1217,19 @@ export default {
 
         
     },
-    insertarUsuario(params3){//Insertar usuario cuando este existe en la universidad
-      
-       //////falta crear un params3 para la misma ruta de insertar cuando es un usuario existente
-       //id_usuario, id_tipo_usuario, id_programaNuevo  
-       
-     
-     
-         Axios.create()
-              .post('/usuarios/insertar',params3)
-              .then( response=>{
-
-                console.log('Usuario insertado: ',response.data);  
-
-                  // this.hideModal();
-                  Swal.fire({
-                    text:"Se guardaron los datos con éxito",
-                    icon:"success",
-                    confirmButtonText: 'OK',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                  }) 
-                  
-                  this.$store.state.usuariosA=null;
-                  //Como se guardaron con éxito ahora agrego el titutoria, pero ya tengo el id usuario
-                  if(this.tiposUsuariosselect==4){
-                  this.actualizarTT(this.id_usuario_entrante);
-                  //this.hideModal();
-                  }
-                  else{
-                    this.$store.state.usuariosA = null;
-                    this.$router.push('/AListaUsuarios');
-                  }
-                  
-             
-              // //ahora va a estar en el actualizarTT
-              //Si es tutor
-              
-
-            }).catch(e => {
-              console.log('catch usuario existente',e);
-              // console.log(e);
-              // this.hideModal();
-                 Swal.fire({
-                    text:"Estamos teniendo problemas al insertar este usuario a su programa. Vuelve a intentar en unos minutos.",
-                    icon:"warning",
-                    confirmButtonText: 'Ok',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                  });  
-                  
-                  this.$store.state.usuariosA=null;
-                  //  this.$router.push('/ListaUsuarios');         
-                
-                
-               }
-            );
-        
-
-
-
-
-    },
     eliminarTipo(){
-      this.showModal();
+      Swal.fire({
+        text: '¿Desea eliminar el tipo de usuario?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#0097A7',
+        cancelButtonColor: '#757575',
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+      })
+      .then((result) => {
+        if (result.value) {
+          this.showModal();
       let obj = {
         id_usuario: this.id_usuario_entrante,
         tipo_usuario: this.tiposUsuariosSel.id_tipo_usuario,
@@ -1227,6 +1262,8 @@ export default {
           this.$store.state.usuariosA=null;
           this.$router.push('/AListaUsuarios');
         });
+        }
+      })
     },
     listarCA(){
       Axios.create()

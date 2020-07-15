@@ -78,14 +78,14 @@
     </section>
     
     <div id="openModal" class="modalbg">
-      <div class="dialog" >
+      <div class="dialog col-10">
         <a href="#close" title="Close" class="close" style="height:40px;margin-top:5%;left:92.7%;text-align:left">X</a>
         <h1>¿Olvidaste tu contraseña?</h1><br>
         <div style="margin-left:-40%">
           <div style="text-align:center;margin-left:-140px">
             <strong >Email</strong><br>
           </div>
-          <input v-model="emailRec" type="email" style="margin-left:30%;width:55%;border-radius: 1.25rem;border: 2px solid #757575;padding:10px;margin-bottom:3%" required><br>
+          <input @keyup.enter="OlvidarContra" v-model="emailRec" type="email" style="margin-left:30%;width:55%;border-radius: 1.25rem;border: 2px solid #757575;padding:10px;margin-bottom:3%" required><br>
         </div>
         <div >
           <button v-on:click="OlvidarContra" style="border-radius: 1.2rem;background: #0097A7;width:40%;height:40px;color:white;line-height: 40px">Recuperar Contraseña</button>
@@ -401,31 +401,31 @@ import emailjs from 'emailjs-com';
           axios.post('/vueuser',{usuario: {correo:this.emailRec}})
             .then(response=>{
               if(response.data.user){
-                window.location.href = '/login#close'
-                let direccion = "https://proyectosoftware20201front.vizcochitos.cloudns.cl/recuperarContrasena"
-                emailjs.send(
-                  "gmail",
-                  "template_bV7OIjEW",
-                  {
-                  "nombre":response.data.user.nombre,
-                  "mensaje":"Olvidaste tu contrasena?<br><br>Entra a este <a href="+direccion+">link</a> "+direccion,
-                  "correo": response.data.user.correo
-                  }, 'user_ySzIMrq3LRmXhtVkmpXAA')
-                  .then((result) => {
-                    console.log('SUCCESS!', result.status, result.text);
-                  }, (error) => {
-                    console.log('FAILED...', error);
-                  });
-                this.axios.post('/usuarios/modificar/'+response.data.user.id_usuario,{bloqueado: "2"})
+                this.axios.post('/usuarios/modificar/'+response.data.user.id_usuario,{bloqueado: "2",recuperar:true})
                   .then(response=>{
                     response
-                    Swal.fire({
-                      text:"Se le envió las instrucciones al correo registrado",
-                      icon:"success",
-                      confirmButtonText: 'OK',
-                      confirmButtonColor:'#0097A7',
-                      showConfirmButton: true,
-                    })
+                    window.location.href = '/login#close'
+                    let direccion = "https://proyectosoftware20201front.vizcochitos.cloudns.cl/recuperarContrasena/"+response.data.token_recuperacion
+                    emailjs.send(
+                      "gmail",
+                      "template_bV7OIjEW",
+                      {
+                      "nombre":response.data.nombre,
+                      "mensaje":"Olvidaste tu contrasena?<br><br>Entra a este <a href="+direccion+">link</a> "+direccion,
+                      "correo": response.data.correo
+                      }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                      .then((result) => {
+                        console.log('SUCCESS!', result.status, result.text);
+                        Swal.fire({
+                          text:"Se le envió las instrucciones al correo registrado",
+                          icon:"success",
+                          confirmButtonText: 'OK',
+                          confirmButtonColor:'#0097A7',
+                          showConfirmButton: true,
+                        })
+                      }, (error) => {
+                        console.log('FAILED...', error);
+                      });
                   }) 
               }
               else{
@@ -466,6 +466,7 @@ import emailjs from 'emailjs-com';
     font-size: 1vw;
     margin-left: 0px;
     margin-right: 0px;
+    border-radius: 10px;
   }
   .btn-google2 {
     color: white;
@@ -482,6 +483,7 @@ import emailjs from 'emailjs-com';
     margin-left:18%;
     width:41.01%;
     overflow: auto;
+    border-radius: 10px;
   }
   .form-control {
     border-radius: 1.25rem;

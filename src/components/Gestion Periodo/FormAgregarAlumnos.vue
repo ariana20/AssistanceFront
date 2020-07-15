@@ -2,41 +2,53 @@
     <div class ="contenedor">
       <div >
         <section class="text-left" style="padding-top:0px">
-            <h5 class="font-weight-ligth text-left col-md-6" style="font-weight: bold;">Carga masiva de alumnos</h5>
-            <h6 class="font-weight-ligth text-left col-md-6">El formato permitido para el archivo es el siguiente: CSV(delimitado por comas)</h6>
-            <h6 class="font-weight-ligth text-left col-md-6">El tamaño máximo permitido para el archivo es el siguiente: 2MB </h6>
-            <h6 class="font-weight-ligth text-left col-md-6">El orden de las columnas permitidas para el archivo es el siguiente:</h6>  
-            
-            <div class="font-weight-ligth text-left col-md-6" style="overflow: auto;width:100%;margin-top:2%"> 
-                      <td style="text-indent: 25px">Codigo*</td>
-                      <td style="text-indent: 25px">Correo*</td>
-                      <td style="text-indent: 25px" >Nombres*</td>
-                      <!-- <th scope="col">Apellido Materno*</th>
-                      <th scope="col">Apellido Paterno*</th> -->
-                      <td style="text-indent: 25px" >Apellidos</td>
-                      <td style="text-indent: 25px">Celular</td>
-                      <td style="text-indent: 25px" >Condicion</td>                            
-        
-            </div>
-            <h6 class="font-weight-ligth text-left col-md-6">Las condiciones de los alumnos válidas son las siguientes:</h6>
-            
-            <div class="font-weight-ligth text-left col-md-6" style="overflow: auto;width:100%;margin-top:2%">
-              <tr>
-                <td style="text-indent:25px" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.abreviatura + " = "+ item.nombre}} </td>
-              </tr>
-            </div>
-             <!-- <h6 class="font-weight-ligth text-left col-md-6">Las condiciones de los alumnos no son obligatorias, por lo que si no coloca una, se asume que la condición del alumno es "Cachimbo"-pri</h6> -->
-            
-            <div >
-              <input type="file" id="get-files" ref="file" name="client-file"  class="col-md-4" v-on:change="FileUpload" />
-            
-                <button type="button" style="margin:5px;border-radius: 10px;" id="btnsubir" class="col-sm-2 btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
-                <button type="button"  class="col-sm-2 btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
-            
-                <h6 >* Columnas obligatorios-No incluirlas en la cabecera</h6>
+            <h5 class="font-weight-ligth text-left col-12 col-md-12" style="font-weight: bold;">Carga masiva de alumnos</h5>
+             <div class="row form-controlT" style="margin:20px;" >
+                <input type="file" style="margin-top:10px" id="get-files" ref="file" name="client-file"  class="col-12 col-md-4" v-on:change="FileUpload" />
+                <button type="button" style="margin-top:10px;border-radius: 10px;text-align:center;padding:0px" id="btnsubir" class="col-10 col-md-3  btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
+                <button type="button"  class="col-10 col-md-3  btn btn-info" style="margin-top:10px;padding:0px;border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
+                <h6 class="col-12" ></h6>
              
             
             </div>
+            <ol start=1>
+            <li class="font-weight-ligth text-left col-12 col-md-12">El formato permitido para el archivo es el siguiente: CSV(delimitado por comas)</li>
+            <li class="font-weight-ligth text-left  col-12 col-md-12">El tamaño máximo permitido para el archivo es el siguiente: 2MB. </li>
+            <li class="font-weight-ligth text-left  col-12 col-md-12">El formato del archivo debe incluir una cabecera de 6 columnas en la primera línea. </li>
+            
+            <li class="font-weight-ligth text-left col-12 col-md-12">El contenido de las 6 columnas permitidas para la cabecera es el siguiente:</li>  
+            </ol>
+              <li type="circle" style="text-indent:40px"  class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>agregar </strong> alumnos nuevos, llenar los campos obligatorios en las columnas y dejar vacíos los campos que no desea agregar:</li>  
+              <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%"> 
+                      <td style="text-indent: 70px">CODIGO*</td>                     
+                      <td style="text-indent: 25px" >NOMBRE*</td>
+                      <td style="text-indent: 25px" >APELLIDOS*</td>
+                       <td style="text-indent: 25px">CORREO*</td>
+                      <td style="text-indent: 25px">TELEFONO</td>
+                      <td style="text-indent: 25px" >CONDICION</td>                            
+        
+              </div>
+              <div style="text-indent:40px" class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> Si no especifica la condicion del alumno, se asignará como Cachimbo. * Columnas con datos obligatorios. Además, no incluir * en la cabecera.</div> 
+             
+              <li type="circle" style="text-indent:40px"  class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>modificar  </strong> alumnos de su programa, llenar los campos obligatorios en las columnas y dejar vacíos las columnas que no desea modificar:</li> 
+              <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%"> 
+                      <td style="text-indent: 70px">CODIGO*</td>                      
+                      <td style="text-indent: 25px" >NOMBRE</td>
+                      <td style="text-indent: 25px" >APELLIDOS</td>
+                      <td style="text-indent: 25px">CORREO</td>
+                      <td style="text-indent: 25px">TELEFONO</td>
+                      <td style="text-indent: 25px" >CONDICION</td>    
+              </div> 
+              <div style="text-indent:40px" class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> No se pueden modificar los datos de las columnas obligatorias. * Columnas con datos obligatorios.Además, no incluir * en la cabecera.</div> 
+          
+            <ol start=5>
+              <li class="font-weight-ligth text-left col-12 col-md-12">Las condiciones de los alumnos se identifican con 3 letras válidas. Son las siguientes:</li>
+            </ol>
+            <div class="col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%">
+               <li type="circle" style="text-indent:40px" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.abreviatura + " = "+ item.nombre}} </li>
+            </div>
+             
+           
            
 
 
@@ -48,18 +60,16 @@
                 <thead>
                   <tr>
                     <th scope="col">N°</th>
-                      <th scope="col">Codigo</th>
-                      <th scope="col">Nombres</th>
-                      <th scope="col">Correo</th>
+                      <th scope="col">Código</th>
+                      <th scope="col">Línea identificada</th>
                       <th scope="col">Descripcion</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(item, index) in reporte" :key="index">
                       <th scope="row">{{index+1}}</th>
-                      <td>{{item.codigo}}</td>        
-                      <td>{{item.nombre + " "+ item.apellido  }}</td>     
-                      <td>{{item.correo}}</td>     
+                      <td>{{item.codigo}}</td> 
+                      <td >{{item.linea}}</td>        
                       <td>{{item.error}}</td>    
                     </tr>
                   </tbody>
@@ -188,7 +198,7 @@ export default Vue.extend ({
         let files=this.$refs.file.files;
         this.formData= new FormData();           
         this.formData.append('_hidden','solojohAl');   
-        this.formData.append('usuario_creacion', this.miUsuario.id_usuario);   
+        this.formData.append('usuario', this.miUsuario.id_usuario);   
         if(files[0].size>=2000000){
             Swal.fire({
                     text:"No puede subir el archivo "+files[0].name+", ya que es mayor de 2 MB.",
@@ -222,7 +232,7 @@ export default Vue.extend ({
                 'Content-Type': 'multipart/form-data'
             }})
               .then( response=>{
-              
+                console.log(response);
                 if(response.data==[]) {
                   Swal.fire({
                     text:"Estamos teniendo problemas al cargar los datos de los nuevos alumnos. Vuelve a intentar en unos minutos.",
@@ -231,6 +241,28 @@ export default Vue.extend ({
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   }); 
+                }
+                else if (response.data.status.indexOf("No se ha encontrado")!=-1){
+                  this.hideModal();
+             
+                    Swal.fire({
+                        text:response.data.status,
+                        icon:"warning",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                }
+                else if (response.data.status.indexOf("Subida detenida")!=-1){
+                  this.hideModal();
+             
+                    Swal.fire({
+                        text:response.data.status,
+                        icon:"warning",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
                 }
                 else if(response.data.status.indexOf("Se han encontrado errores")!=-1){
                     this.hideModal();
@@ -417,6 +449,11 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
     border: 0.5px solid #757575;
     margin-bottom: 13px;
     height: 33px;
+}
+.form-controlT {
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
+    margin-bottom: 13px;
 }
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}

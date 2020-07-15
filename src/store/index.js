@@ -10,6 +10,7 @@ export default new Vuex.Store({
     programaActual:null, // Objeto Programa Actual (this.$store.state.programaActual)
     cantProg:null,
     tipoActual:null, // Objeto Tipo de Usuario Actual (this.$store.state.tipoActual)
+    encuesta:null, // Objeto Encuesta (this.$store.state.encuesta)
     facultades:null, 
     facultadEscogida:null,
     coordinadores:null,
@@ -99,16 +100,13 @@ export default new Vuex.Store({
         icon: 'ion-ios-people'
       },
       {
-        text: 'Solicitudes',
-        path: '/solicitudes',
-        icon: 'ion-ios-book'
-      },
-      {
         text: 'Agregar Alumnos',
         path: '/agregarAlumnos',
         icon: 'ion-ios-person-add'
       },
       {
+        // text: 'Agregar Documento',
+        // path: '/agregardocumentos',
         text: 'Agregar Notas',
         path: '/agregarNotas',
         icon: 'ion-ios-document'
@@ -139,9 +137,24 @@ export default new Vuex.Store({
         icon: 'ion-ios-calendar'
       },
       {
+        text: 'Solicitudes',
+        path: '/solicitudes',
+        icon: 'ion-ios-book'
+      },
+      {
+        text: 'Encuestas',
+        path: '/encuestas',
+        icon: 'ion-ios-document'
+      },
+      {
         text: 'Reportes',
         path: '/reportes',
         icon: 'ion-ios-stats'
+      },
+      {
+        text: 'Asignar Tipo de Tutoría',
+        path: '/asignarTipoTutoria',
+        icon: 'ion-ios-bookmarks'
       },
     ],
     filtro:{

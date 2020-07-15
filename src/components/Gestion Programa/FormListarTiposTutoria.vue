@@ -10,7 +10,7 @@
 					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
 				</div>
 				<div class="form-inline col-11 col-md-2 offset-md-3 offset-lg-5">
-					<button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
+					<button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir Nuevo</button>
 				</div>
 			</div> 
 
