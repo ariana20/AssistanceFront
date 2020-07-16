@@ -44,9 +44,12 @@
         </div>
         
       </div>
-      <datosTutorAsignado v-if="tutorAsignado"
-        :tutor="tutorAsignado"
-        :tipoTutoriaAsignado="ttAsignado"/>
+
+      <div v-for="(item) in tutoresAsignado" :key="item.id_usuario">
+        <datosTutorAsignado 
+          :tutor="item"
+          :tipoTutoriaAsignado="ttAsignado"/>
+      </div>
 
       <div v-for="(item,index) in tutores" :key="index">
         <datosTutor
@@ -87,8 +90,7 @@ export default {
       temaSelect:[],
       idTemas:[],
       ttAsignado: null,
-      tutorAsignado:null,
-      
+      tutoresAsignado:[],
       
     }
   },
@@ -111,7 +113,7 @@ export default {
         axios
         .post('/programa/tutoresAsignados', params)
           .then(res =>{
-            
+            this.tutoresAsignado=res.data;
             console.log(res);         
           })
           .catch(e => {
@@ -164,7 +166,6 @@ export default {
         .then(res =>{
           console.log(res);
           this.ttAsignado=res.data.tipoAsignado;
-          this.tutorAsignado=res.data.tutor;
           this.loadMore($state, res); 
           console.log(this.tutores);          
         })
