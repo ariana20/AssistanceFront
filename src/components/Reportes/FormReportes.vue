@@ -48,13 +48,32 @@
             </div>
             <div class="col-12 col-md-6" v-if="alumnosBR.length>0">
                 <strong>Asistencia Alumnos Bajo Rendimiento</strong>
-                <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp" label='Cumplimiento de Planes de Acción'></horizontal-bar-chart>
+                <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp3" label='Cumplimiento de Planes de Acción'></horizontal-bar-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleRendimiento()" >Ver más</button>
                 </div>
+             </div>
+            
+        </div>
+        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
+        <div class="row">
+
+           <div class="col-12 col-md-6" v-if="alumnosBRPlan.length>0">
+                <strong style="margin-left:80px">Cantidad de alumnos que cumplieron su Plan de Acción</strong>
+                <bar-chart :chartData="alumnosBRPlan" :options="chartOp4"
+                label='Alumnos con Plan de Acción terminado' ></bar-chart>
+
+                
+                <div class="botones" style="margin-bottom:10px;text-align: right">
+                    <button type="button" class="btn btn-info"  @click="verDetallePlanAccion()" >Ver más</button>
+                </div>
+
             </div>
             
         </div>
+
+
+
         
       </div>
       
@@ -70,6 +89,7 @@ import axios from 'axios';
 import LineChart from '@/components/Reportes/LineChart.vue'
 import PieChart from '@/components/Reportes/PieChart.vue'
 import HorizontalBarChart from '@/components/Reportes/HorizontalBarChart.vue'
+import BarChart from '@/components/Reportes/BarChart.vue'
 import moment from 'moment';
 export default {
     components:{
@@ -77,6 +97,7 @@ export default {
         PieChart,
         HorizontalBarChart,
         DatePicker,
+        BarChart,
         
     },
     data(){
@@ -94,6 +115,7 @@ export default {
             //graficos
             satisfaccion:[],
             alumnosBR:[],
+            alumnosBRPlan:[],
             asignados:[],
             atenciones:[],
             //datepicker
@@ -154,6 +176,51 @@ export default {
                 }
                             
             },
+            // /graficos de joh
+             chartOp3:{
+                scales: {
+                    yAxes: [{
+                        stacked: true,
+                        ticks:{precision:0}
+                    }],
+                    xAxes: [{
+                        stacked: false,
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                pieceLabel: {
+                    mode: 'percentage',
+                    precision: 1
+                },
+                responsive: true,
+                maintainAspectRatio:false,
+                 type: 'horizontalBar',
+            },
+             chartOp4:{
+                scales: {
+                    yAxes: [{
+                        stacked: true,
+                        ticks:{precision:0}
+                    }],
+                    xAxes: [{
+                        stacked: false,
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                pieceLabel: {
+                    mode: 'percentage',
+                    precision: 1
+                },
+                responsive: true,
+                maintainAspectRatio:false
+            },
+          
+
+
             
         }
 
@@ -183,6 +250,7 @@ export default {
         this.RatioAtenciones();
         this.BajoRendimiento();
         this.Encuestas();
+        this.PlanAccion();
         //this.listarFacultades();
     },
     methods:{
@@ -235,6 +303,7 @@ export default {
                 fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                 fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
             };
+
             var data;
             if(this.idPogramas.length>0)
                 data =await axios.post("registros/asignadosXPrograma", params);
@@ -248,6 +317,41 @@ export default {
             this.asignados.push({data:"No Asignados",total:data.data[1].noasignados});
 
 
+        },
+
+        async PlanAccion(){
+            this.alumnosBRPlan=[];
+            this.selectedPrograma=this.$store.state.programaActual.id_programa;
+            console.log(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null );
+            if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){
+                var programas=[];              
+                if(this.selectedPrograma==0){
+                    //escogió todos los prog
+                    let n=this.programas.length;
+                    for(let i=1;i<n-1;i++ ){
+                        programas[i]=this.programas[i].id_programa;                     
+                    }
+                }else if(this.idTutores==0 && this.selectedPrograma!=0 ){                   
+                    programas[0]=this.selectedPrograma;
+                }else if(this.idTutores!=0 && this.selectedPrograma!=0 ){                  
+                    programas[0]=this.selectedPrograma;
+                }          
+                           
+                const params2 = {
+                    id_programa: programas,
+                    id_facultad: this.$store.state.programaActual.id_facultad,
+                    id_tutor:[],
+                    fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                    fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+                };
+
+                var dataPlan =await axios.post("usuarios/datosAlumnosPlan", params2);
+                //LLenado del gráfico de la derecha
+                 this.alumnosBRPlan.push({data:dataPlan.data[1].grupo,total:dataPlan.data[1].total_alumno});
+                 this.alumnosBRPlan.push({data:"más 50%",total:dataPlan.data[0].total_alumno});
+
+
+            }
         },
         handlePeriodChange(periodo) {
             this.periodo = periodo;
@@ -280,28 +384,53 @@ export default {
         async BajoRendimiento(){
 
             this.alumnosBR=[];
-            
-            const params = {
-                id_programa: this.idPogramas,
-                id_facultad: this.$store.state.programaActual.id_facultad,
-                id_institucion: 1,
-                fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
-                fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
-                id_tutor:[],
-            };
 
-            var data =await axios.post("usuarios/datosBajoRendimiento", params);
-           
-            // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
-            //LLenado del gráfico de la izquierda
-            this.alumnosBR.push({data:">50%-Cuarta",total:data.data[4].total_alumnos});
-            this.alumnosBR.push({data:"<50%-Cuarta",total:data.data[5].total_alumnos});
+            this.selectedPrograma=this.$store.state.programaActual.id_programa;
+            console.log(this.selectedPrograma!=null );
+            console.log(this.periodo[0]!=null );
+            console.log( this.periodo[1]!=null );
+            if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){
+               
+                var programas=[];
+              
+                if(this.selectedPrograma==0){
+                    //escogió todos los prog
+                    let n=this.programas.length;
+                    for(let i=1;i<n-1;i++ ){
+                        programas[i]=this.programas[i].id_programa;
+                     
+                    }
+                }else if(this.idTutores==0 && this.selectedPrograma!=0 ){
+                   
+                    programas[0]=this.selectedPrograma;
+                }else if(this.idTutores!=0 && this.selectedPrograma!=0 ){
+                  
+                    programas[0]=this.selectedPrograma;
+                }
 
-            this.alumnosBR.push({data:">50%-Trica",total:data.data[2].total_alumnos});
-            this.alumnosBR.push({data:"<50%-Trica",total:data.data[3].total_alumnos});
-            
-            this.alumnosBR.push({data:">50%-Bica",total:data.data[0].total_alumnos});
-            this.alumnosBR.push({data:"<50%-Bica",total:data.data[1].total_alumnos});
+                const params = {
+                    id_programa: programas,
+                    id_facultad: this.$store.state.programaActual.id_facultad,
+                    id_institucion: 1,
+                    fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+                    fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+                    // id_tutor:tutoresSeleccionados,
+                     id_tutor:[],
+                };
+                console.log(params);
+                 
+                var data =await axios.post("usuarios/datosBajoRendimiento", params);
+                for( let i in data.data ){
+                   var grupo50;
+                    if(data.data[i].grupo=="mas 50%")
+                        grupo50 =">50%-"+data.data[i].condicion;
+                    else if(data.data[i].grupo=="menos 50%")
+                        grupo50 ="<50%-"+data.data[i].condicion;
+
+                    this.alumnosBR.push({data:grupo50,total:data.data[i].total_alumnos});
+                   
+                }
+            }
                 
 
         },
@@ -336,6 +465,7 @@ export default {
             this.BajoRendimiento();
             this.RatioAtenciones();
             this.Encuestas();
+            this.PlanAccion();
         },
         verDetalleAsignado(){
             this.$router.push('/reporteAsignado');
@@ -350,6 +480,10 @@ export default {
         },
         verDetalleRendimiento(){
             this.$router.push('/reporteRendimiento');
+
+        },
+        verDetallePlanAccion(){
+            this.$router.push('/reportePlanAccion');
 
         }
         

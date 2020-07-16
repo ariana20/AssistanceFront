@@ -13,7 +13,7 @@
                 <button type="button" id="actualizarDisp" class="btn btn-info" style="display:none;" @click="modificarDisp">Actualizar Disponibilidades</button>-->
             </div>
         </div>
-        <div style="text-align:left;">
+        <div style="text-align:left;" v-show="bloque!=null">
             <Fullcalendar ref="fullCalendar"
                           :plugins ="calendarPlugins"
                           defaultView ="timeGridWeek"
@@ -24,7 +24,7 @@
                               center: '',
                               right: 'prev today next'
                           }"
-                          
+                          :slotDuration= bloque
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
@@ -105,6 +105,14 @@ export default {
                         click: () => {
                             let calendar = this.$refs.fullCalendar.getApi();
                             calendar.next();
+                            this.getReminders();
+                        }
+                    },
+                    today: {
+                        text: 'Hoy',
+                        click: () => {
+                            let calendar = this.$refs.fullCalendar.getApi();
+                            calendar.today();
                             this.getReminders();
                         }
                     },
@@ -291,6 +299,7 @@ export default {
                     var rd3 = response.data[2];
                     var rd4 = response.data[3];
                     var today = new Date()
+                    console.log('eventos cal: ', response.data)
                     for(var i in response.data[0]) {
                         var start_hour = rd[i].hora_inicio;
                         var date = rd[i].fecha + " " + rd[i].hora_inicio
@@ -312,7 +321,7 @@ export default {
                                             start: rd[i].fecha + " " + rd[i].hora_inicio,
                                             fecha: rd[i].fecha,
                                             horaIni: rd[i].hora_inicio, 
-                                            end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                            end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                             tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                             color: '#009892',
                                             usuario_creacion: rd[i].usuario_creacion,
@@ -332,7 +341,7 @@ export default {
                                                 start: rd[i].fecha + " " + rd[i].hora_inicio,
                                                 fecha: rd[i].fecha,
                                                 horaIni: rd[i].hora_inicio, 
-                                                end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                                end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                                 tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                                 color: '#FFC107',
                                                 usuario_creacion: rd[i].usuario_creacion,
@@ -350,7 +359,7 @@ export default {
                                                 start: rd[i].fecha + " " + rd[i].hora_inicio,
                                                 fecha: rd[i].fecha,
                                                 horaIni: rd[i].hora_inicio, 
-                                                end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                                end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                                 tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                                 color: 'red',
                                                 usuario_creacion: rd[i].usuario_creacion,
@@ -373,7 +382,7 @@ export default {
                                             start: rd[i].fecha + " " + rd[i].hora_inicio,
                                             fecha: rd[i].fecha,
                                             horaIni: rd[i].hora_inicio, 
-                                            end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                            end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                             tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                             color: '#009892',
                                             usuario_creacion: rd[i].usuario_creacion,
@@ -393,7 +402,7 @@ export default {
                                                 start: rd[i].fecha + " " + rd[i].hora_inicio,
                                                 fecha: rd[i].fecha,
                                                 horaIni: rd[i].hora_inicio, 
-                                                end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                                end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                                 tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                                 color: '#FFC107',
                                                 usuario_creacion: rd[i].usuario_creacion,
@@ -413,7 +422,7 @@ export default {
                                                 start: rd[i].fecha + " " + rd[i].hora_inicio,
                                                 fecha: rd[i].fecha,
                                                 horaIni: rd[i].hora_inicio, 
-                                                end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                                end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                                 tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                                 color: 'red',
                                                 usuario_creacion: rd[i].usuario_creacion,
@@ -436,7 +445,7 @@ export default {
                                         title: 'Disponible',
                                         description:'',
                                         start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                        end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                         tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                         color: '#B2EBF2',
                                         editable:false,
@@ -468,7 +477,9 @@ export default {
         }
     },
     mounted() {
+        this.bloque = "00:"+ this.$store.state.programaActual.hora_bloque + ":00"
         this.getTipoTutorias()
+        
         if(this.$store.state.usuario==null) this.$router.push('/login')
         this.showModal()
         this.getReminders();

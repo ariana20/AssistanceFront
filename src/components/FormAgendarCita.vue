@@ -29,7 +29,7 @@
                               right: 'prev today next'
                           }"
                           
-                          :slotDuration="'00:'+bloque+':00'"
+                          :slotDuration= this.bloque
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
@@ -126,14 +126,19 @@ export default {
         }
     },
      mounted() {
+        this.bloque = "00:"+ this.$store.state.programaActual.hora_bloque + ":00"
+        this.$store.state.events = [];
         this.listarTutores();
-        this.bloque = this.$store.state.programaActual.hora_bloque;
         if(this.$store.state.tutorDisponibilidad) {
             this.tutorSel = this.$store.state.tutorDisponibilidad
-            console.log("storestate tutor: ", this.tutorSel)
+        }
+        /*if(this.$store.state.tutorDisponibilidad) {
+            //this.tutorSel = this.$store.state.tutorDisponibilidad
+            //console.log("storestate tutor: ", this.tutorSel)
+            this.showCalendar()
         }  
          
-        /*let calendar = this.$refs.fullCalendar.getApi();
+        let calendar = this.$refs.fullCalendar.getApi();
         console.log(calendar.view.activeStart)
         axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:calendar.view.activeStart,horaInicio:calendar.view.activeEnd })
         .then(response => {
@@ -167,7 +172,7 @@ export default {
             })
         },
         handleClick (arg) {
-            if(arg.event.backgroundColor!='gray') {
+            if(arg.event.backgroundColor!='#ff6961') {
                 this.$modal.show(EventModal,{
                     text: "This is from the component",
                     event: arg.event,
@@ -183,11 +188,11 @@ export default {
         getReminders: function() {
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
-                if(this.$store.state.tutorDisponibilidad) {this.tutorSel = this.$store.state.tutorDisponibilidad}
+                
                 console.log('tutorSel', this.tutorSel)
                 axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
-                    //console.log('getreminders',response.data)
+                    console.log('getreminders',response.data)
                     var rd = response.data[0]; 
                     var rd2 = response.data[1];
                     var today = new Date()
@@ -203,7 +208,7 @@ export default {
                                         id: rd[i].id_disponibilidad,
                                         title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
                                         start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                        end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                         tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                         color: '#009892',
                                         usuario_creacion: rd[i].usuario_creacion,
@@ -216,9 +221,9 @@ export default {
                                         id: rd[i].id_disponibilidad,
                                         title: 'Ocupado',
                                         start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                        end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                         tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                        color: 'red',
+                                        color: '#ff6961',
                                         usuario_creacion: rd[i].usuario_creacion,
                                         id_usuario_tutor: rd[i].id_usuario,
                                         usuario_actualizacion: rd[i].usuario_actualizacion,
@@ -231,7 +236,7 @@ export default {
                                         id: rd[i].id_disponibilidad,
                                         title: 'Disponible',
                                         start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                        end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                         tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                         usuario_creacion: rd[i].usuario_creacion,
                                         id_usuario_tutor: rd[i].id_usuario,
@@ -350,6 +355,19 @@ function addTimes (startTime, endTime) {
 }
 .fc-time-grid .fc-slats td {
     height: 2.5em;
+}
+.btn:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border:2.3px solid transparent !important;
+}
+select:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+input:focus {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 </style>

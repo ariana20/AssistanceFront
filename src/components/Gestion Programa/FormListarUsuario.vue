@@ -12,7 +12,7 @@
           <input class="form-control" v-model="criterio" @keyup.enter=" buscarUsuario" placeholder="Buscar por nombre o código">
         <!-- </div>
         <div class="form-inline col-12 col-md-2" style="padding:0px"> -->
-          <select v-model="tiposUsuariosselect" class="col sm-6 form-control" style="cursor:pointer"   >
+          <select v-model="tiposUsuariosselect" class="col sm-6 form-control" style="cursor:pointer" @change=" buscarUsuario"  >
               <option value="no" disabled    >Selecciona un tipo de usuario</option>
               <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index" style="cursos:pointer;" >
               {{ tipoU.nombre}}

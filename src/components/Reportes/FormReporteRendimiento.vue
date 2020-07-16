@@ -78,11 +78,7 @@
                 <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp2"
                 label='Alumnos con Bajo Rendimiento'  ></horizontal-bar-chart>
             </div>
-            <div class="col-12 col-md-6" v-if="alumnosBRPlan.length>0">
-                <strong style="margin-left:80px">Cantidad de alumnos que cumplieron su Plan de Acción</strong>
-                <bar-chart :chartData="alumnosBRPlan" :options="chartOp"
-                label='Alumnos con Plan de Acción terminado' ></bar-chart>
-            </div>
+         
 
 
         </div>
@@ -107,7 +103,7 @@ import axios from 'axios';
 // import LineChart from '@/components/Reportes/LineChart.vue'
 // import PieChart from '@/components/Reportes/PieChart.vue'
 import HorizontalBarChart from '@/components/Reportes/HorizontalBarChart.vue'
-import BarChart from '@/components/Reportes/BarChart.vue'
+
 // import DoughnutChart from '@/components/Reportes/DoughnutChart.vue'
 import moment from 'moment';
 import Swal from 'sweetalert2';
@@ -118,7 +114,7 @@ export default {
         // DoughnutChart,
         DatePicker,
         HorizontalBarChart,
-        BarChart
+
     },
     data(){
         return{
@@ -147,7 +143,6 @@ export default {
             cuartas:[],
             atenciones:[],
             alumnosBR:[],
-            alumnosBRPlan:[],
             //datepicker
             inicio: new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
             fin: new Date(),
@@ -335,14 +330,10 @@ export default {
 
         async BajoRendimiento(){
            this.sinGrafico=false;
-          
-            console.log('reporte');
             this.alumnosBR=[];
-            this.alumnosBRPlan=[];
-            console.log('t: ',this.idTutores);
             this.selectedPrograma=this.$store.state.programaActual.id_programa;
             if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){
-                 console.log('func reporte');
+
                 var programas=[];
               
                 if(this.selectedPrograma==0){
@@ -369,16 +360,9 @@ export default {
                     // id_tutor:tutoresSeleccionados,
                      id_tutor:this.idTutores,
                 };
-                  const params2 = {
-                    id_programa: programas,
-                    id_facultad: this.$store.state.programaActual.id_facultad,
-                    id_tutor:this.idTutores,
-                    fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
-                    fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
-                };
+
                 console.log(params);
                 var data =await axios.post("usuarios/datosBajoRendimiento", params);
-                var dataPlan =await axios.post("usuarios/datosAlumnosPlan", params2);
 
                
                 for( let i in data.data ){
@@ -392,12 +376,7 @@ export default {
                    
                 }
                
-                //LLenado del gráfico de la derecha
-
-                    console.log('datos: ',dataPlan);
-                 this.alumnosBRPlan.push({data:dataPlan.data[1].grupo,total:dataPlan.data[1].total_alumno});
-                 this.alumnosBRPlan.push({data:dataPlan.data[0].grupo,total:dataPlan.data[0].total_alumno});
-
+              
             }
          
 

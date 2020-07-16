@@ -224,7 +224,7 @@ export default Vue.extend ({
         //     //si hay info de la sesion quiere decir que ha asistido a su 
         // }
         console.log('cita  ', this.cita);
-        this.disableFields()
+        // this.disableFields()
         
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {
@@ -246,20 +246,12 @@ export default Vue.extend ({
         axios.post('motivosConsulta/listarTodo')
             .then( response => {
                 this.motivos = response.data;
+                this.fillFields()
                 this.hideModal()
             })
             .catch(e => {
             console.log(e.response);
-        });
-    axios.post('motivosConsulta/listarTodo')
-        .then( response => {
-            this.motivos = response.data;
-            this.fillFields()
-        })
-        .catch(e => {
-          console.log(e.response);
-        });
-    
+        });    
     },
     methods: {
         fillFields() {

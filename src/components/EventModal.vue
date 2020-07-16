@@ -5,7 +5,7 @@
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
-      <div id="motivo"><b style="margin-top: 6px;">Motivo:</b><select class="form-control" style="width:40%" v-model="motivoSel">
+      <!--<div id="motivo"><b style="margin-top: 6px;">Motivo:</b><select class="form-control" style="width:40%" v-model="motivoSel">
         <option disabled selected :value="null" focusable="false">Selecciona un motivo</option>
         <option v-for="(item, index) in tipoTutorias" 
                 :key="index" 
@@ -13,7 +13,7 @@
                 {{ item.nombre }}
         </option>
         </select>
-        </div>
+        </div>-->
       <div id="botones">
         <button type="button" class="btn btn-info" :disabled='isDisabled'  @click="updateEvent">Aceptar</button>
         <button type="button" class="btn btn-secondary" @click="$emit('close')">Cerrar</button>
@@ -26,8 +26,11 @@
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
-      <b>Tipo Tutoría:</b>  {{ event.description }} <br/>
+      <!--<b>Tipo Tutoría:</b>  {{ event.description }} <br/>-->
       <div id="botones">
+            <a type="button" class="btn btn-info" :href="'http://www.google.com/calendar/event?action=TEMPLATE&amp;trp=false&amp;text='+nombreEvento+'&amp;location=Pontificia Universidad Católica del Perú, Av. Universitaria 1801, San Miguel 15088, Perú&amp;details='+descripcion+'&amp;dates='+new Date()+'/'+new Date((new Date).setDate((new Date).getDate() + 1))" target="_blank">
+                Agregar a Google calendar
+            </a>
         <button type="button" class="btn btn-info" @click="SolCancelar();$emit('close')">Solicitar Cancelacion</button>
         <button type="button" class="btn btn-info" @click="$emit('close')">Cerrar</button>
       </div>
@@ -261,6 +264,7 @@ export default {
     id_tutor: Number,
     tutorSel: Object,
   },mounted() {
+    console.log(this.event)
     if(this.tutorSel) {
       console.log('tutor ttutoria: ', this.tutorSel.tipo_tutorias)
       this.tipoTutorias = this.tutorSel.usuario.tipo_tutorias

@@ -349,11 +349,27 @@ export default Vue.extend ({
         },
         onCodigoChange: function () {
             var i;
+            console.log(this.codigos);
             for(i in this.codigos){
                 if(this.sel==this.codigos[i].codigo){
-                    this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;       
-                    this.condSeleccionado = this.codigos[i].cond;     
-               }            
+                    this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;   
+                    ///////////////super if de condicion
+                 if(this.codigos[i].condicion_alumno=="bic")
+                    this.condSeleccionado = "Bica";
+                 else if(this.codigos[i].condicion_alumno=="tri")
+                    this.condSeleccionado = "Trica";
+                 else if(this.codigos[i].condicion_alumno=="car")
+                     this.condSeleccionado = "Carta";
+                 else if(this.codigos[i].condicion_alumno=="reg")
+                    this.condSeleccionado = "Regular";
+                 else if(this.codigos[i].condicion_alumno=="pri")
+                      this.condSeleccionado = "Cachimbo";                 
+                 else if(this.codigos[i].condicion_alumno=="egr")
+                     this.condSeleccionado = "Egresado";
+
+                }    
+                        
+                         
             }
         },
   
@@ -422,14 +438,15 @@ export default Vue.extend ({
         listarAlumnosxProg(){
             this.showModal();
             axios.post('sesiones/alumnoProg', {
-                    idTipoU:5, //Id=5 lista los alumnos, 
+                 
                     idProg: this.$store.state.programaActual.id_programa
                 })
             .then( response => {
+                   console.log(response.data);
                    
-                    for(var i in response.data){ 
-                        this.codigos.push(response.data[i][0]);
-                    }
+                        // this.codigos.push(response.data[i].codigo); //tiene todo del alumno
+                        this.codigos=response.data
+                    
                     this.hideModal();
                    this.mipermisosUsuario=this.$store.state.permisosUsuario;
                 })
