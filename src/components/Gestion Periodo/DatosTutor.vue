@@ -16,6 +16,7 @@
             <div class="font-weight-bolder">Temas: </div>
             <div>
                 <label v-for="(item,index) in tipoTutoria" :key="index" style="margin-bottom: 0px;">
+                    <!--Falta decir que el tipo de tutoría solicitado sea parte del tipo de tutoria Asignado-->
                     <label v-if="item.tutor_fijo==0 || (item.tutor_fijo==1 && item.tutor_asignado==0 && tipoTutoriaAsignado)">{{item.nombre}}</label>
                     <label v-if="(item.tutor_fijo==0 || (item.tutor_fijo==1 && item.tutor_asignado==0 && tipoTutoriaAsignado)) && index<tipoTutoria.length-1" style="margin-right:5px; margin-bottom: 0px;">, </label>
                 </label>
@@ -44,7 +45,7 @@ export default {
         text: String,
         tutor: Object,
         tipoTutoria: Array,
-        tipoTutoriaAsignado: Object
+        tipoTutoriaAsignado: Array
         
     },
     data(){
