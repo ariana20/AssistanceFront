@@ -38,8 +38,9 @@
 </template>
 
 <script>
-import Swal from 'sweetalert2'
-import axios from 'axios'
+//import Swal from 'sweetalert2'
+//import axios from 'axios'
+import EventModal from './../ModalSolicitud.vue'
 export default {
     props: {
         text: String,
@@ -60,6 +61,11 @@ export default {
             this.$router.push('/agendarcita');
         },
         solicitarTutor(){
+            this.$modal.show(EventModal,{
+                text: "This is from the component",
+                isTutor: true
+            });
+            /*
             Swal.fire({
                 text:"¿Desea solicitar a "+this.tutor.nombre+" como tutor o tutora?",
                 icon:"warning",
@@ -107,7 +113,7 @@ export default {
                     })
 
                 } 
-            })
+            })*/
 
 
         }
