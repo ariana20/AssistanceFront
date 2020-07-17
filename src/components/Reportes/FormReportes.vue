@@ -67,7 +67,6 @@
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetallePlanAccion()" >Ver más</button>
                 </div>
-
             </div>
             
         </div>
@@ -82,7 +81,10 @@
 </template>
 
 
+
 <script >
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
@@ -254,7 +256,27 @@ export default {
         //this.listarFacultades();
     },
     methods:{
-        
+        downloadPDF(){
+            const pdf = new jsPDF();
+            //var reporte=document.getElementById('reporte');
+            //var imag=reporte.toDataURL('image/png');
+            //pdf.addImage(imag,'PNG',10,10);
+            //pdf.text('Hola vizcochitos',10,10);
+            const html=this.$refs.content.innerHTML;
+            pdf.fromHTML(html,15,15,{width:150});
+            pdf.save('salida2.pdf');
+        },
+        downloadWithCSS() {
+            const doc = new jsPDF();
+            /** WITH CSS */
+            var canvasElement = document.createElement('canvas');
+                html2canvas(this.$refs.content, { canvas: canvasElement 
+                }).then(function (canvas) {
+                const img = canvas.toDataURL("image/jpeg", 20);
+                doc.addImage(img,'JPEG',10,10);
+                doc.save("sample.pdf");
+            });
+        },
         listarFacultades(){
             const params = {
                 id_institucion:1,
