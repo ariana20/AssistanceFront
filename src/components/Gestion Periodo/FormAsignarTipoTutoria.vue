@@ -267,12 +267,44 @@ export default {
 
             
     },
-    Eliminar(item, index){
-        console.log(item);
-        //Pendiente con CARO (15/07/2020)
-        console.log(index);
-        
-    }
+
+    Eliminar: function(item, index) {
+        Swal.fire({
+            title: '¿Desea eliminar la asignación de '+item.nombre+'?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0097A7',
+            cancelButtonColor: '#757575',
+            confirmButtonText: 'Confirmar'
+        }).then((result) => {
+            if (result.value) {
+                const params = {
+                id_tutor: null,
+                id_programa: this.$store.state.programaActual.id_programa,
+                usuario_actualizacion: this.$store.state.usuario.id_usuario,
+                id_alumno: item.id_usuario,
+                id_tipo_tutoria:this.tutoriaSeleccionada.id_tipo_tutoria,
+                };
+                axios
+                .post('/registros/eliminar',params)
+                .then(response=>{
+                    console.log(response);
+                    this.alumnosAsig.splice(index,1);
+                    Swal.fire({
+                        text:"Eliminación Exitosa",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                })
+                .catch(e => {
+                console.log(e.response);
+                })
+            }
+        })	
+
+    },
     
 
   
