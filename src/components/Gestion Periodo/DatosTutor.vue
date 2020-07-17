@@ -33,13 +33,15 @@
             </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
-                          
+        <modals-container/>                 
     </div>
+    
 </template>
 
 <script>
 //import Swal from 'sweetalert2'
 //import axios from 'axios'
+
 import EventModal from './../ModalSolicitud.vue'
 export default {
     props: {
@@ -57,7 +59,11 @@ export default {
     },
     methods:{
         verDisponibilidad(){
-            this.$store.state.tutorDisponibilidad=this.tutor;
+            var tutorS=new Object();
+            tutorS.usuario=new Object();
+            tutorS.usuario=this.tutor;
+            tutorS.id_usuario=this.tutor.id_usuario;
+            this.$store.state.tutorDisponibilidad=tutorS;
             this.$router.push('/agendarcita');
         },
         solicitarTutor(){
@@ -123,6 +129,11 @@ export default {
 </script>
 
 <style scoped>
+.vm--modal {
+    border-radius: 25px;
+    margin: 30px;
+    height: 260px !important;
+}
 .descripcion-tutor {
     margin-left: 170px;
 }

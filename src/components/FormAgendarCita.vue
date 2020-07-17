@@ -129,9 +129,7 @@ export default {
         this.bloque = "00:"+ this.$store.state.programaActual.hora_bloque + ":00"
         this.$store.state.events = [];
         this.listarTutores();
-        if(this.$store.state.tutorDisponibilidad) {
-            this.tutorSel = this.$store.state.tutorDisponibilidad
-        }
+
         /*if(this.$store.state.tutorDisponibilidad) {
             //this.tutorSel = this.$store.state.tutorDisponibilidad
             //console.log("storestate tutor: ", this.tutorSel)
@@ -161,15 +159,25 @@ export default {
             id_programa : this.$store.state.programaActual.id_programa,
             nomFacu:this.$store.state.programaActual.facultad.nombre,
             nombre: "",
+            id_alumno: this.$store.state.usuario.id_usuario,
         };
         axios
         .post('/programa/tutoresListar', params)
             .then(res =>{
-            this.tutores=res.data;
+             this.tutores=res.data;
+
+           
+            console.log(res);
             })
             .catch(e => {
             console.log(e.response);
             })
+        if(this.$store.state.tutorDisponibilidad) {
+            console.log(this.$store.state.tutorDisponibilidad);
+            this.tutorSel = this.$store.state.tutorDisponibilidad;
+            console.log(this.tutorSel);
+            console.log("llega");
+        }
         },
         handleClick (arg) {
             if(arg.event.backgroundColor!='#ff6961') {
