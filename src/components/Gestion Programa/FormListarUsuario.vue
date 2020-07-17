@@ -203,7 +203,7 @@ export default {
     //2 es el id de usuairo admin
     
     listarUsuarios(page) {
-    this.showModal();
+     this.showModal();
  
     var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
     
@@ -223,7 +223,7 @@ export default {
         })
         .catch(e => {
           console.log(e.response);
-            this.hideModal();
+             this.hideModal();
           //Swal de problema
            Swal.fire({
                     text:"Estamos teniendo problemas al listar los usuarios. Vuelve a intentar en unos minutos.",
@@ -235,20 +235,21 @@ export default {
 
         })
       }
+      
      
      
       
        
     },
     buscarUsuario(page){
-      this.showModal();
+      // this.showModal();
       let paramsB;
 
       paramsB={
         criterio:this.criterio,
         tipo_usuario:this.tiposUsuariosselect,
       }
-      console.log(paramsB);
+      
       var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
       
        if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador   
@@ -258,7 +259,7 @@ export default {
           //ordenado por estado
           
            if(res.data==""){
-             this.hideModal();
+            //  this.hideModal();
              //No encontró al usuario
              if(this.tiposUsuariosselect==0)
                 Swal.fire({
@@ -280,18 +281,18 @@ export default {
               }
            }
            else{
-          let par=res.data.tasks.data;
-          //this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});   
-          
-          this.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});   
-          this.paginate=res.data.paginate;
-          this.hideModal();
+              let par=res.data.tasks.data;
+              //this.$store.state.usuarios=par.sort((a, b) => { return a.estado.localeCompare(b.estado) && a.nombre.localeCompare(b.nombre);});   
+              
+              this.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});   
+              this.paginate=res.data.paginate;
+              // this.hideModal();
           }
                    
         })
         .catch(e => {
           console.log('catc buscar',e);
-            this.hideModal();
+            // this.hideModal();
           //Swal de problema
            Swal.fire({
                     text:"Estamos teniendo problemas al buscar los usuarios. Vuelve a intentar en unos minutos.",
@@ -305,7 +306,7 @@ export default {
       }
       else{
           //Mensaje informativo de que esta pantalla no es para admin
-      
+        //  this.hideModal();
       }
 
 
@@ -365,16 +366,12 @@ export default {
       this.$store.state.usuarioEscogido=item;     
       this.usuarioEscogido=item;
    },
-    showModal() {
-      this.$refs['my-modal'].show()
-    },
-    hideModal() {
-      this.$refs['my-modal'].hide()
-    },
+
     nuevo(){
       this.$router.push('/Usuario/0');
     },
     listarTUsuarios() {
+      this.showModal();
        if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
         let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
         this.axios.post('/tipoUsuarios/tiposFacultad',obj)
@@ -388,11 +385,13 @@ export default {
              tUsuario.nombre="Todos";
              tUsuario.id_tipo_usuario=0;
              this.tiposUsuarios.push(tUsuario); 
-            this.hideModal()
+              this.hideModal();
+            
           })
           .catch(e=>{
-            console.log(e)
-            this.hideModal()
+            console.log(e);
+               this.hideModal();
+            
           });
        }
       if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
@@ -411,16 +410,23 @@ export default {
              tUsuario.nombre="Todos Tipos de Usuarios";
              tUsuario.id_tipo_usuario=0;
              this.tiposUsuarios.push(tUsuario); 
-            this.hideModal()
+            
           })
           .catch(e=>{
             console.log(e);
-            this.hideModal()
+           
           });
       }
 
 
     },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
+    },
+
 
   }
 }

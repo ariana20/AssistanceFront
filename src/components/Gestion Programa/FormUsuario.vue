@@ -168,8 +168,8 @@ export default {
       banderaUsuProg:false, //Bandera que me indica que el usuario vino del listar y pertenece a mi programa
       msgUsuario:"",
       IsmsgUsuario:false,
-      idTutor:0,
-      idAlumno:0,
+      esTutor:[],
+      esAlumno:[],
       idJP:0,
       miUsuario:null,
     }
@@ -180,7 +180,7 @@ export default {
     if(this.$store.state.usuario==null) this.$router.push('/login');
 
     this.IsmsgUsuario=false;
-    this.msgUsuario="Assistance"
+    this.msgUsuario="Assistance";
     this.listarTUsuarios();    
     this.listarCA();  
     this.miUsuario=this.$store.state.usuario;
@@ -195,12 +195,13 @@ export default {
       
       this.id_usuario_entrante=this.$store.state.usuarioEscogido.id_usuario;
       this.usuario_entrante=this.$store.state.usuarioEscogido;     
-      this.tiposUsuariosselect=this.usuario_entrante.pivot.id_tipo_usuario;      
+      console.log('entrante: ',this.usuario_entrante);
+      this.tiposUsuariosselect=this.usuario_entrante.id_tipo_usuario;      
       Axios.create()
        .post('/usuarios/listar/'+this.id_usuario_entrante).then( response =>{
          document.getElementById("corr").disabled = true;
           // document.getElementById("cod").disabled = true;
-
+            console.log('usuario: ',response.data);
            this.codigo=response.data.codigo;
            this.nombre= response.data.nombre;
            this.apellidos=response.data.apellidos;
@@ -465,8 +466,9 @@ export default {
           .then(res=>{
                //Ordenadito
            let par=res.data;
-        
+          //cord de facultad
            this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+        
             this.hideModal()
           })
           .catch(e=>{
@@ -475,17 +477,21 @@ export default {
           });
       }
       if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+        // this.$store.state.permisos include == 'Usuarios'
         let obj = {
           id_programa: this.$store.state.programaActual.id_programa,
           id_facultad: this.$store.state.programaActual.id_facultad
         }
+        console.log(obj);
         this.axios.post('/tipoUsuarios/tiposPrograma',obj)
           .then(res=>{
                 //Ordenadito
            let par=res.data;
-     
+           console.log(par);
            this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-            this.hideModal()
+         
+            this.hideModal();
+           
           })
           .catch(e=>{
             console.log(e);
@@ -955,31 +961,7 @@ export default {
 
       
     },
-    idsTU(){
-      //Como me dan solo los tipos_usuarios de mi programa
-      ///////////OOOOOOOOOOOOOOO verifico los permisos?
-     for(var i in this.tiposUsuarios){
-       //tutor o posible tutor
-        if(this.tiposUsuarios[i].nombre.toUpperCase()=="TUTOR"){
-          //
-          this.idTutor=this.tiposUsuarios[i].id_tipo_usuario;
-        }
-        else if(this.tiposUsuarios[i].nombre.toUpperCase()=="ALUMNO"){
-          //
-          this.idAlumno=this.tiposUsuarios[i].id_tipo_usuario;
-        }
-        else{
-          //ya tengo
-          var posi=this.tiposUsuarios[i].nombre.toUpperCase().indexOf("TUTOR");//Contenga la palabra tutor
-          if (posi!=-1 ){
-            //es otro tipo de tutor
-            this.idJP=this.tiposUsuarios[i].id_tipo_usuario;
-            if(this.idJP==this.idTutor) this.idJP=0;//No encontró a otro tipo de tutor, encontró al mismo de siempre
-          }
-        }
-     }
 
-    },
 
   }
 }
