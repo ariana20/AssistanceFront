@@ -1,7 +1,7 @@
 <template>
     <div class="row" style="text-align:left;">
         
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-sm-12 col-lg-4">
             <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo" style="height:100%">
                     <img  :src="tutor.imagen" height="110px" width="110px" />		
             </figure>
@@ -9,7 +9,7 @@
                     <b-avatar size="7rem" ></b-avatar>		
             </figure>
         </div>
-        <div class=" col-12 col-md-5" style="margin-top:1%">
+        <div class=" col-12 col-sm-12 col-lg-8" style="margin-top:1%">
             <div><strong>Código: </strong> {{tutor.codigo}}</div>
             <div><strong>Nombre: </strong> {{tutor.nombre+" "+tutor.apellidos}}</div>
             <div><strong>Correo: </strong>{{tutor.correo}}</div>
