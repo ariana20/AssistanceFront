@@ -11,7 +11,7 @@
               <tr style="text-align:left"><td style="width:80px;">Nombre:*</td>   <td> <input class="form-control" style="width: 180%;" type="text"    maxlength="100"   v-model="nombre"></td></tr>
               <tr style="text-align:left"><td style="width:80px;">Apellidos:*</td>   <td> <input class="form-control" style="width: 180%;" type="text"    maxlength="100"   v-model="apellidos"></td></tr>
               <tr style="text-align:left"><td style="width:80px;">Celular:</td>   <td>   <input  type="text" class="form-control" style="width: 180%;"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"></td></tr>
-              <tr style="text-align:left"><td style="width:80px;">Correo:*</td>   <td> <input id="corr" class="form-control" style="width: 180%;"  type="text" v-model="correo" v-on:keyup="verificarUsuariosCorreo();" ></td></tr>
+              <tr style="text-align:left"><td style="width:80px;">Correo:*</td>   <td> <input id="corr" class="form-control" style="width: 180%;" maxlength="100" type="text" v-model="correo" v-on:keyup="verificarUsuariosCorreo();" ></td></tr>
               <tr style="text-align:left"><td style="width:80px;"></td></tr>
                
               <tr class="" style="bottom:0px;margin-left:0px;" > 

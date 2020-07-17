@@ -347,8 +347,8 @@ export default {
 
                 var dataPlan =await axios.post("usuarios/datosAlumnosPlan", params2);
                 //LLenado del gráfico de la derecha
-                 this.alumnosBRPlan.push({data:dataPlan.data[1].grupo,total:dataPlan.data[1].total_alumno});
-                 this.alumnosBRPlan.push({data:"más 50%",total:dataPlan.data[0].total_alumno});
+                 this.alumnosBRPlan.push({data:"< 50%",total:dataPlan.data[1].total_alumno});
+                 this.alumnosBRPlan.push({data:"> 50%",total:dataPlan.data[0].total_alumno});
 
 
             }
@@ -423,9 +423,10 @@ export default {
                 for( let i in data.data ){
                    var grupo50;
                     if(data.data[i].grupo=="mas 50%")
-                        grupo50 =">50%-"+data.data[i].condicion;
+                        grupo50 ="> 50% - "+data.data[i].condicion;
                     else if(data.data[i].grupo=="menos 50%")
-                        grupo50 ="<50%-"+data.data[i].condicion;
+                        grupo50 ="< 50% - "+data.data[i].condicion;
+
 
                     this.alumnosBR.push({data:grupo50,total:data.data[i].total_alumnos});
                    

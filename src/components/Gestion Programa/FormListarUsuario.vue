@@ -9,12 +9,12 @@
           <h5 style="margin-top:5%;margin-bottom:5%">Nombres o Código: </h5>
         </div>
         <div class="form-inline col-12 col-md-5"  style="padding:0px">
-          <input class="form-control" v-model="criterio" @keyup.enter=" buscarUsuario" placeholder="Buscar por nombre o código">
+          <input maxlength="100" class="form-control" v-model="criterio" @keyup.enter=" buscarUsuario" placeholder="Buscar">
         <!-- </div>
         <div class="form-inline col-12 col-md-2" style="padding:0px"> -->
-          <select v-model="tiposUsuariosselect" class="col sm-6 form-control" style="cursor:pointer" @change=" buscarUsuario"  >
+          <select v-model="tiposUsuariosselect" class="col sm-6 form-control" style="cursor:pointer;margin-left:5px" @change=" buscarUsuario"  >
               <option value="no" disabled    >Selecciona un tipo de usuario</option>
-              <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index" style="cursos:pointer;" >
+              <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index" style="cursor:pointer;" >
               {{ tipoU.nombre}}
               </option>
             </select>
@@ -48,21 +48,18 @@
               <td v-else>Pendiente</td>
               <!-- <td v-if="item!=undefined">{{item.nombre}} {{item.apellidos}}</td> -->
               <td v-if="item!=undefined">{{item.nombre}}</td> 
-            <td v-if="item!=undefined"> {{item.apellidos}}</td> 
+              <td v-if="item!=undefined"> {{item.apellidos}}</td> 
               <td v-if="item!=undefined">{{item.correo}}</td>  
               <td >
                   <b-icon v-if="item.estado == 'act'" icon="check" style="color:green;width:35px; height:35px;padding:0px"/>
                   <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;padding:0px"/>
-              </td>
-                <td>{{item.tipo_usuario[0].nombre}}</td>
-              <td  >
+                  </td>
+              <td>{{item.tipo_usuario[0].nombre}}</td>
+              <td>
                 <router-link :to="{name: 'GestionarUsuario', params: {id: item.id_usuario}}"> 
-                
-                  <b-icon icon="pencil" style="color:#0097A7;margin-right:20px;width:20px; height:20px;" v-on:click="llenarUsuarioEscogido(item)"></b-icon>
-                  
+                     <b-icon icon="pencil" style="color:#0097A7;margin-right:20px;width:20px; height:20px;" v-on:click="llenarUsuarioEscogido(item)"></b-icon>
                 </router-link>              
-                
-                  <b-icon icon="dash-circle-fill" style="color:#757575;width:20px; height:20px;cursor:pointer"  v-on:click="eliminarUsuario(item,index)"></b-icon>
+                <b-icon icon="dash-circle-fill" style="color:#757575;width:20px; height:20px;cursor:pointer"  v-on:click="eliminarUsuario(item,index)"></b-icon>
                   
                 
               </td>
