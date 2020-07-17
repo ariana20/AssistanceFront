@@ -1,27 +1,40 @@
 <template>
-    <div class= "container">
+    <div class="contenedor">
          <!-- <div class="row grid-divider "> -->
             <div >
-                <!-- <router-link to="agregarAlumnos"> 
-                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Alumnos</button>
+                <!--  <router-link to="reporteRendimiento"> 
+                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Reporte</button>
+                 </router-link>  -->
+                  <!-- <router-link to="reportePlanAccion"> 
+                  <button  type="button"  style="text-align:right;border-radius: 10px;" class="btn btn-info">Reporte</button>
                  </router-link> -->
+                <div class="text-left" style="padding-top:0px">
+                    <h5 class="font-weight-ligth text-left col-md-9" style="font-weight: bold;">Carga masiva de los documentos históricos de los alumnos</h5>
+                     <div class="row form-controlT" style="margin:20px;" >
+                        <input multiple type="file" style="margin-top:5px" id="get-files" ref="file" name="client-file"  class="col-12 col-md-4" v-on:change="FileUpload" />
+                        <button type="button" style="margin:5px;border-radius: 10px;text-align:center;padding:0px" id="btnsubir" class="col-10 col-md-3  btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
+                        <button type="button"  class="col-10 col-md-3  btn btn-info" style="padding:0px;border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarNotas()"  >Cancelar</button>  
 
-
-                <section class="text-left" style="padding-top:0px">
-                    <h5 style="font-weight: bold;">Carga masiva de notas de alumnos</h5>
-                    <h6 >El formato permitido para los archivos es el siguiente: PDF</h6>
-                    <h6 >El formato de nombre permitido para los archivos es el siguiente: Codigo</h6>
-                    <h6 >El tamaño máximo permitido para los archivos es el siguiente: 2MB </h6>
-                    <h6 >Ejemplo: 20152354.PDF</h6>
-
-                    <input type="file" id="get-files" ref="file" name="client-file" 
-                    multiple class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
+                     </div>
+                    
+                    <ol start=1>
+                    <li class="font-weight-ligth text-left col-md-6" >El formato permitido para los archivos es el siguiente: PDF</li>
+                    <li class="font-weight-ligth text-left col-md-6" >El formato de nombre permitido para los archivos es el siguiente: Codigo</li>
+                    <li class="font-weight-ligth text-left col-md-6" >El tamaño máximo permitido para los archivos es el siguiente: 2MB. </li>
+                    <li class="font-weight-ligth text-left col-md-6" >Ejemplo: 20152354.PDF</li>
+                      </ol>
+                      <div class="font-weight-ligth text-left col-md-6" ><strong>Nota:</strong> Se permite subir un documento por alumno, mostrando como histórico el último subido.</div>
+                  
+                   
+          
+                    <!-- <input type="file" id="get-files" ref="file" name="client-file" 
+                    multiple class="col-md-offset-4 col-md-4" v-on:change="FileUpload" style="margin-top:5%" />
                     <button style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnsubir" v-on:click="subirPDFs">Subir archivos</button>
-                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:50px" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
+                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarNotas()"  >Cancelar</button>   -->
       
-                </section>
+                </div>
                 <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
-                    <h5 style="font-weight: bold;">Reporte de errores</h5>
+                    <h5 class="font-weight-ligth text-left col-md-6"  style="font-weight: bold;">Reporte de errores</h5>
                     <table class="table" style="text-align:left" >
                      <thead>
                        <tr>
@@ -43,87 +56,6 @@
                        </tbody>
                      </table>
                 </section>
-
-
-
-                
-                <!-- <div>
-                    <h5 style="font-weight: bold;" class="text-left">Carga grupal</h5>
-                  <hr style="width:105%;border:0px;"  >
-
-                </div>
-                
-                <div class="row " >
-                    
-                    <div class="col-xs-6 col-sm-2" sytle="padding:50px;padding-top:10px;">
-                        <div class="col-sm-12" style="text-align:center">
-                                <b>Código</b>                            
-                        </div>
-                        <hr style="width:730%;border:0px;" >
-                        <ejs-autocomplete
-                            :dataSource='codigos' 
-                            :fields='campoCodigo' 
-                            placeholder="Código" 
-                            :change='onCodigoChange'
-                            v-model="sel"
-                            class="form-control"
-                            style="margin-bottom: 10px;"
-                            :showClearButton="false">
-                        </ejs-autocomplete>
-
-                        <ul class="col-sm-6" style="text-align:left;margin-left:-8px;">
-                            <li class="form-control" style="width:300%;text-align:center;margin-top:8px;"
-                                v-for="(newAlumnoCod,alcIndex) in listAlumnosCod"  
-                                :key="alcIndex">
-                                {{newAlumnoCod}}           
-                            </li>
-                        </ul>
-
-                    </div>
-                    <div class="col-md-4">
-                        <div class="col-sm-12" style="text-align:center;padding-bottom:34px">
-                            <b>Nombre y Apellidos</b>
-                         
-                        </div>
-                        <div type="text" class="col-sm-12 form-control" placeholder="Nombre"  style="margin-left:10px;color: white;background:#BEBEBE;" >
-                            {{alSeleccionado}} </div>
-                         
-                        <div class="col-sm-12 form-control list-group-item" 
-                        style="padding: 0.4rem 0.5rem;text-align:center;width:200%;margin-left:10px;padding-right:0px;"
-                            v-for="(newAlumno,alIndex) in listAlumnosNom"  
-                            :key="alIndex">
-                            {{newAlumno}}    
-                            <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
-                        </div>  
-                    </div>
-                    <div class="col-md-6">
-                        <div class="col-sm-4" style="text-align:center;padding-bottom:33px;">
-                            <b>Archivo PDF</b>
-                         
-                        </div>
-                        <div type="text" class="col-sm-4" placeholder="Nombre" style="top:-5px;padding-bottom:5px">
-                            <button  :disabled="!this.sel" type="button" class="btn btn-info"
-                                    @click="addAlumno">Agregar
-                            </button>          
-                        </div>
-                         
-                        <div class="row" style="margin-left:0px"
-                        v-for="(newAlumno,alIndex) in listAlumnosNom"  
-                        :key="alIndex">
-                             <input type="file" id="get-files" ref="file" name="client-file"
-                                     style="padding-bottom:17px"   class="col-md-offset-4 col-md-4" v-on:change="file1x1" />
-                           
-                        </div>  
-                    </div>
-                </div>
-                <div style="position:absolute; bottom:30px;">
-                </div>
-                <hr style="width:105%;border:0px;">
-                <div  class="botones" >   
-                    <button type="button" style="margin:5px;border-radius: 10px;" class="btn btn-info" id="btnGuardar" v-on:click="guardarNotas()">Guardar</button>
-                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarNotas()"  >Cancelar</button>  
-      
-                </div>-->
             </div> 
               <!-- Modal de cargando -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
@@ -183,14 +115,16 @@ export default Vue.extend ({
             reporte:[],
             isWrong:false,
             miprog:this.$store.state.programaActual, //this.miprog.id_programa;
+            miUsuario:null,
         }
     },
     mounted(){
        
+    if(this.$store.state.usuario==null) this.$router.push('/login');
     
     Axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
         .then( response => {
-            //console.log("listado alumnos: ",response.data)
+            this.miUsuario=this.$store.state.usuario;
             for(var i in response.data){ 
                 this.codigos.push(response.data[i][0]);
                 
@@ -200,7 +134,7 @@ export default Vue.extend ({
             console.log(e.response);
         });
 
-    //PArte del pdf
+      document.getElementById("btnsubir").disabled =true; //inhabilita
     
    
     },
@@ -212,7 +146,7 @@ export default Vue.extend ({
                 if(this.sel==this.codigos[i].codigo){
                     this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
                 }
-                //console.log(this.alSeleccionado);
+               
                 //break;   
             }
         },
@@ -257,7 +191,7 @@ export default Vue.extend ({
                 this.alSeleccionado='Nombre del alumno';
                 this.sel= '';
             }
-            console.log(this.listAlumnosCod);
+           
             
             
         },
@@ -289,8 +223,7 @@ export default Vue.extend ({
         this.banderaReporte=false;
         
         let files=this.$refs.file.files;
-        console.log('archivoS',files);
-        //console.log('cods',this.listAlumnosCod);
+       
         this.formData= new FormData();           
         this.formData.append('_hidden','solojoh');
         //
@@ -310,6 +243,8 @@ export default Vue.extend ({
           }
 
           this.formData.append('files[' + i + ']', file);
+          this.formData.append('usuario_actualizacion', this.miUsuario.id_usuario);
+          
          
         }    
         if(this.isWrong==true) document.getElementById("btnsubir").disabled =true; //inhabilita
@@ -323,12 +258,12 @@ export default Vue.extend ({
         this.showModal();
         
        Axios
-              .post('/usuarios/masivo',this.formData,  {
+              .post('/usuarios/masivo/'+this.miprog.id_programa,this.formData,  {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }})
               .then( response=>{
-                console.log('rptaM: ',response);//Subida terminada
+             
                 
                 if(response.data.status=="Se han encontrado errores"){
                     this.hideModal();
@@ -345,7 +280,7 @@ export default Vue.extend ({
                     document.getElementById("btnsubir").disabled = false;
                 }
                 else if(response.data.status=="Subida terminada"){ 
-                    console.log(response);
+                  
                      this.hideModal();
                     Swal.fire({
                         text:"Se guardaron los datos con éxito",
@@ -416,7 +351,7 @@ export default Vue.extend ({
       for (let index = 0; index < files.length; index++) {
         this.createFile(files[index]);
       }
-      console.log(this.selectedFiles);
+     
     },
     createFile(file) {
       let reader = new FileReader();
@@ -450,8 +385,7 @@ export default Vue.extend ({
                 'Content-Type': 'multipart/form-data'
             }})
           .then(res =>{
-            //this.$store.state.usuarios=res.data;
-            //res.data=='Subido'
+         console.log(res);
             this.hideModal();
             Swal.fire({
                     text:"Se guardaron los datos con éxito. Ningún archivo presentó errores",
@@ -460,7 +394,7 @@ export default Vue.extend ({
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });
-                  console.log('grupal:',res);
+                
                   this.$router.push('/ListaUsuarios'); 
                   this.$store.state.usuarioEscogido=null;//
                   this.$store.state.usuarios=null;
@@ -481,10 +415,8 @@ export default Vue.extend ({
     },
     
     File1by1(){
-        console.log('1x1');
-        this.file1x1=this.$refs.file.files[0];
-        console.log('archivos',this.file1x1);
-        //console.log('cods',this.listAlumnosCod);
+      
+        this.file1x1=this.$refs.file.files[0];     
         this.files[0]=this.file1x1;
     },
 
@@ -596,5 +528,10 @@ hr {
 .btn-info{
     height: 33px;
     text-align: center;
+}
+.form-controlT {
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
+    margin-bottom: 13px;
 }
 </style>

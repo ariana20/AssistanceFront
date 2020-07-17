@@ -1,8 +1,8 @@
 <script>
-import {HorizontalBar} from "vue-chartjs";
+import {Line} from "vue-chartjs";
 
 export default {
-    extends: HorizontalBar,
+    extends: Line,
     props:{
         label:{
             type:String
@@ -15,8 +15,8 @@ export default {
         }
     },
     mounted(){
-        const dates = this.chartData.map(d=>d.date).reverse();
-        const totals = this.chartData.map(d=> d.total).reverse();
+        const dates = this.chartData.map(d=>d.data);
+        const totals = this.chartData.map(d=> d.total);
 
         this.renderChart({
            labels:dates,

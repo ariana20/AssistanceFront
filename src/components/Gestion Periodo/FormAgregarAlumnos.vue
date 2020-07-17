@@ -1,69 +1,83 @@
 <template>
-    <div class= "container">
-         <!-- <div class="row grid-divider "> -->
-            <div >
-                <section class="text-left" style="padding-top:0px">
-                    <h5 style="font-weight: bold;">Carga masiva de alumnos</h5>
-                    <h6 >El formato permitido para el archivo es el siguiente: CSV</h6>
-                    <h6 >El tamaño máximo permitido para el archivo es el siguiente: 2MB </h6>
-                    <h6 >El orden de las columnas permitidas para el archivo es el siguiente:</h6>                    
-                    <table class="table" style="text-align:left" >
-                     <thead>
-                       <tr >
-                            <th scope="col">Código*</th>
-                            <th scope="col">Correo*</th>
-                            <th scope="col">Nombres*</th>
-                            <!-- <th scope="col">Apellido Materno*</th>
-                            <th scope="col">Apellido Paterno*</th> -->
-                            <th scope="col">Apellidos</th>
+    <div class ="contenedor">
+      <div >
+        <section class="text-left" style="padding-top:0px">
+            <h5 class="font-weight-ligth text-left col-12 col-md-12" style="font-weight: bold;">Carga masiva de alumnos</h5>
+             <div class="row form-controlT" style="margin:20px;" >
+                <input type="file" style="margin-top:10px" id="get-files" ref="file" name="client-file"  class="col-12 col-md-4" v-on:change="FileUpload" />
+                <button type="button" style="margin-top:10px;border-radius: 10px;text-align:center;padding:0px" id="btnsubir" class="col-10 col-md-3  btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
+                <button type="button"  class="col-10 col-md-3  btn btn-info" style="margin-top:10px;padding:0px;border-radius: 10px;border-color:gray;background-color:gray;margin-left:2%" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
+                <h6 class="col-12" ></h6>
+             
+            
+            </div>
+            <ol start=1>
+            <li class="font-weight-ligth text-left col-12 col-md-12">El formato permitido para el archivo es el siguiente: CSV(delimitado por comas)</li>
+            <li class="font-weight-ligth text-left  col-12 col-md-12">El tamaño máximo permitido para el archivo es el siguiente: 2MB. </li>
+            <li class="font-weight-ligth text-left  col-12 col-md-12">El formato del archivo debe incluir una cabecera de 6 columnas en la primera línea. </li>
+            
+            <li class="font-weight-ligth text-left col-12 col-md-12">El contenido de las 6 columnas permitidas para la cabecera es el siguiente:</li>  
+            </ol>
+              <li type="circle" style="text-indent:40px"  class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>agregar </strong> alumnos nuevos, llenar los campos obligatorios en las columnas y dejar vacíos los campos que no desea agregar:</li>  
+              <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%"> 
+                      <td style="text-indent: 70px">CODIGO*</td>                     
+                      <td style="text-indent: 25px" >NOMBRE*</td>
+                      <td style="text-indent: 25px" >APELLIDOS*</td>
+                       <td style="text-indent: 25px">CORREO*</td>
+                      <td style="text-indent: 25px">TELEFONO</td>
+                      <td style="text-indent: 25px" >CONDICION</td>                            
+        
+              </div>
+              <div style="text-indent:40px" class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> Si no especifica la condicion del alumno, se asignará como Cachimbo. * Columnas con datos obligatorios. Además, no incluir * en la cabecera.</div> 
+             
+              <li type="circle" style="text-indent:40px"  class="font-weight-ligth text-left col-12 col-md-12">Si desea <strong>modificar  </strong> alumnos de su programa, llenar los campos obligatorios en las columnas y dejar vacíos las columnas que no desea modificar:</li> 
+              <div class="font-weight-ligth text-left col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%"> 
+                      <td style="text-indent: 70px">CODIGO*</td>                      
+                      <td style="text-indent: 25px" >NOMBRE</td>
+                      <td style="text-indent: 25px" >APELLIDOS</td>
+                      <td style="text-indent: 25px">CORREO</td>
+                      <td style="text-indent: 25px">TELEFONO</td>
+                      <td style="text-indent: 25px" >CONDICION</td>    
+              </div> 
+              <div style="text-indent:40px" class="font-weight-ligth text-left col-12 col-md-12"><strong>Nota:</strong> No se pueden modificar los datos de las columnas obligatorias. * Columnas con datos obligatorios.Además, no incluir * en la cabecera.</div> 
+          
+            <ol start=5>
+              <li class="font-weight-ligth text-left col-12 col-md-12">Las condiciones de los alumnos se identifican con 3 letras válidas. Son las siguientes:</li>
+            </ol>
+            <div class="col-12 col-md-12" style="overflow: auto;width:100%;margin-top:2%">
+               <li type="circle" style="text-indent:40px" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.abreviatura + " = "+ item.nombre}} </li>
+            </div>
+             
+           
+           
 
-                            <th scope="col">Celular</th>
-                            <th scope="col">Condición</th>                            
-                        </tr>
-                        
-                      </thead>
-                    </table>
-                    <h6 >Las condiciones de los alumnos válidas son las siguientes:</h6>
-                    <tr>
-                      <td style="text-indent: 1.5cm;" v-for="(item,id) in condiAlumnos" v-bind:key="id">{{item.nombre}}</td>
+
+        </section>
+        <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
+            <h5 class="font-weight-ligth text-left col-md-6"  style="font-weight: bold;">Reporte de errores</h5>
+            <div class="font-weight-ligth text-left col-md-12"  style="overflow: auto;width:100%;margin-top:2%">
+              <table class="table" style="text-align:left" >
+                <thead>
+                  <tr>
+                    <th scope="col">N°</th>
+                      <th scope="col">Código</th>
+                      <th scope="col">Línea identificada</th>
+                      <th scope="col">Descripcion</th>
                     </tr>
-
-                    <input type="file" id="get-files" ref="file" name="client-file"  class="col-md-offset-4 col-md-4" v-on:change="FileUpload" />
-                    <button type="button" style="margin:5px;border-radius: 10px;" id="btnsubir" class="btn btn-info" v-on:click="subirPDFs">Subir archivo</button>
-                    <button type="button"  class="btn btn-info" style="border-radius: 10px;border-color:gray;background-color:gray;margin-left:50px" id="btnCancela" v-on:click="cancelarAlumnos()"  >Cancelar</button>  
-      
-                    <h6 >* Campos obligatorios</h6>
-
-
-
-                </section>
-                <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
-                    <h5 style="font-weight: bold;">Reporte de errores</h5>
-                    <table class="table" style="text-align:left" >
-                     <thead>
-                       <tr>
-                         <th scope="col">N°</th>
-                            <th scope="col">Codigo</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Descripcion</th>
-                            
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr v-for="(item, index) in reporte" :key="index">
-                            <th scope="row">{{index+1}}</th>
-                            <td>{{item.codigo}}</td>        
-                            <td>{{item.file}}</td>     
-                            <td>{{item.error}}</td>      
-                             
-                         </tr>
-                       </tbody>
-                     </table>
-                </section>
-
-
-            </div> 
-              <!-- Modal de cargando -->
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in reporte" :key="index">
+                      <th scope="row">{{index+1}}</th>
+                      <td>{{item.codigo}}</td> 
+                      <td >{{item.linea}}</td>        
+                      <td>{{item.error}}</td>    
+                    </tr>
+                  </tbody>
+              </table>
+            </div>
+        </section>
+      </div> 
+      <!-- Modal de cargando -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
         <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
           <b-spinner style="width: 3rem; height: 3rem;"/>
@@ -117,11 +131,16 @@ export default Vue.extend ({
             banderaReporte:false,
             reporte:[],
             condiAlumnos:[],
+            miprog:this.$store.state.programaActual, //this.miprog.id_programa;
+            miUsuario:null,
         }
     },
     mounted(){   
     //
+    if(this.$store.state.usuario==null) this.$router.push('/login');
+    
     this.listarCA();
+    document.getElementById("btnsubir").disabled =true; //inhabilita
     },
     methods: {
       listarCA(){
@@ -129,13 +148,12 @@ export default Vue.extend ({
         Axios.create()
               .post('/usuarios/condAlumno')
               .then( response=>{
-                console.log('condA: ',response.data);
                 this.condiAlumnos=response.data;    
                 this.hideModal();        
 
             }).catch(e => {
               console.log('catch condAlumno',e);
-              console.log(e);
+
               // this.hideModal();
                  Swal.fire({
                     text:"Estamos teniendo problemas al listar las condiciones del alumno. Vuelve a intentar en unos minutos.",
@@ -173,35 +191,29 @@ export default Vue.extend ({
    
     FileUpload(){
         document.getElementById("btnsubir").disabled =false; //habilita
-        
+         this.miUsuario=this.$store.state.usuario;
         //Para masivo
         this.reporte=null;
         this.banderaReporte=false;
         let files=this.$refs.file.files;
-        console.log('archivoS',files);
-        //console.log('cods',this.listAlumnosCod);
         this.formData= new FormData();           
-        this.formData.append('_hidden','solojoh');
-        //
-         for( var i = 0; i < files.length; i++ ){
-          let file = files[i];
-          if(file.size>=2000000){
-              this.formData=null;
-              Swal.fire({
-                    text:"No puede subir el conjunto de archivos debido al siguiente archivo: "+file.name+", ya que es mayor de 2 MB.",
+        this.formData.append('_hidden','solojohAl');   
+        this.formData.append('usuario', this.miUsuario.id_usuario);   
+        if(files[0].size>=2000000){
+            Swal.fire({
+                    text:"No puede subir el archivo "+files[0].name+", ya que es mayor de 2 MB.",
                     icon:"warning",
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                })
-              
-              break;
-          }
-
-          this.formData.append('files[' + i + ']', file);
-         
-        }       
-        document.getElementById("btnsubir").disabled = true; //inhabilita
+             document.getElementById("btnsubir").disabled = true; //inhabilita
+        }   else{
+              this.formData.append('file', files[0]);
+        // document.getElementById("btnsubir").disabled = true; //inhabilita
+         document.getElementById("btnsubir").disabled =false; //habilita
+        }
+      
         
     },
 
@@ -211,15 +223,48 @@ export default Vue.extend ({
         document.getElementById("btnsubir").disabled = true; //inhabilita
         this.showModal();
         
-       Axios
-              .post('/usuarios/masivo',this.formData,  {
+       Axios /////////////ruta
+       //this.miprog.id_programa;
+              // .post('/usuarios/alumnoMasivo',
+              .post('/usuarios/alumnoMasivo/'+this.miprog.id_programa,
+              this.formData,  {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }})
               .then( response=>{
-                console.log('rptaM: ',response);//Subida terminada
-                
-                if(response.data.status=="Se han encontrado errores"){
+                console.log(response);
+                if(response.data==[]) {
+                  Swal.fire({
+                    text:"Estamos teniendo problemas al cargar los datos de los nuevos alumnos. Vuelve a intentar en unos minutos.",
+                    icon:"warning",
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  }); 
+                }
+                else if (response.data.status.indexOf("No se ha encontrado")!=-1){
+                  this.hideModal();
+             
+                    Swal.fire({
+                        text:response.data.status,
+                        icon:"warning",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                }
+                else if (response.data.status.indexOf("Subida detenida")!=-1){
+                  this.hideModal();
+             
+                    Swal.fire({
+                        text:response.data.status,
+                        icon:"warning",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                }
+                else if(response.data.status.indexOf("Se han encontrado errores")!=-1){
                     this.hideModal();
              
                     Swal.fire({
@@ -233,8 +278,20 @@ export default Vue.extend ({
                     this.reporte=response.data.reporte;
                     document.getElementById("btnsubir").disabled = false;
                 }
+                  else if(response.data.status.indexOf("El archivo no tiene formato csv")!=-1){
+                     this.hideModal();
+                    Swal.fire({
+                        text:"No ha subido un archivo con formato .csv o está con delimitado de ','(coma) ",
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                   document.getElementById("btnsubir").disabled = true; //inhabilita
+
+                  }
                 else if(response.data.status=="Subida terminada"){ 
-                    console.log(response);
+
                      this.hideModal();
                     Swal.fire({
                         text:"Se guardaron los datos con éxito",
@@ -275,11 +332,10 @@ export default Vue.extend ({
 
             }).catch(e => {
               console.log('catch masivo',e);
-              //console.log(e);
                this.hideModal();
                document.getElementById("btnsubir").disabled = false;
                  Swal.fire({
-                    text:"Estamos teniendo problemas al cargar las notas de los alumnos. Vuelve a intentar en unos minutos.",
+                    text:"Estamos teniendo problemas al cargar los datos de los nuevos alumnos. Vuelve a intentar en unos minutos.",
                     icon:"warning",
                     confirmButtonText: 'Ok',
                     confirmButtonColor:'#0097A7',
@@ -297,87 +353,9 @@ export default Vue.extend ({
     hideModal() {
       this.$refs['my-modal'].hide()
     },
-    onFileSelected(e){//para 1 x 1
-        
-      let files = e.target.files || e.dataTransfer.files;
-      if (!files.length)
-        return;
-      for (let index = 0; index < files.length; index++) {
-        this.createFile(files[index]);
-      }
-      console.log(this.selectedFiles);
-    },
-    createFile(file) {
-      let reader = new FileReader();
-      let vm = this;
-      reader.onload = (e) => {
-          vm.selectedFile = e.target.result;
-          vm.selectedFiles.push(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    },
-    guardarNotas(){ //Para 1 x 1
-      this.formData2= new FormData();
-           
-        this.formData2.append('_hidden','solojoh');
-        //
-         for( var i = 0; i < this.files.length; i++ ){
-          let file = this.files[i];
+   
 
-          this.formData2.append('files[' + i + ']', file);
-          this.formData2.append('codigos[' + i + ']', this.listAlumnosCod[i]);
-         
-        }     
-      this.showModal();
-       //Le tengo que enviar form data?
-      /*let obj = {
-            files:this.selectedFiles,
-            codigos:this.listAlumnosCod,
-          }*/
-      Axios.post('/usuarios/subirNotas',this.formData2,  {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }})
-          .then(res =>{
-            //this.$store.state.usuarios=res.data;
-            //res.data=='Subido'
-            this.hideModal();
-            Swal.fire({
-                    text:"Se guardaron los datos con éxito. Ningún archivo presentó errores",
-                    icon:"success",
-                    confirmButtonText: 'OK',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                  });
-                  console.log('grupal:',res);
-                  this.$router.push('/ListaUsuarios'); 
-                  this.$store.state.usuarioEscogido=null;//
-                  this.$store.state.usuarios=null;
-            
-          })
-          .catch(e => {
-              this.hideModal();
-            console.log(e.response.data);
-            Swal.fire({
-              text:"Estamos teniendo problemas al subir las notas de manera grupal. Vuelve a intentar en unos minutos.",
-              icon:"warning",
-              confirmButtonText: 'OK',
-              confirmButtonColor:'#0097A7',
-              showConfirmButton: true,
-            })
-           })
-       
-    },
-    
-    File1by1(){
-        console.log('1x1');
-        this.file1x1=this.$refs.file.files[0];
-        console.log('archivos',this.file1x1);
-        //console.log('cods',this.listAlumnosCod);
-        this.files[0]=this.file1x1;
-    },
-
-    }
+  }
 })
 </script>
 
@@ -471,6 +449,11 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
     border: 0.5px solid #757575;
     margin-bottom: 13px;
     height: 33px;
+}
+.form-controlT {
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
+    margin-bottom: 13px;
 }
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}

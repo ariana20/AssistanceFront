@@ -5,7 +5,7 @@
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
-      <div id="motivo"><b style="margin-top: 6px;">Motivo:</b><select class="form-control" style="width:40%" v-model="motivoSel">
+      <!--<div id="motivo"><b style="margin-top: 6px;">Motivo:</b><select class="form-control" style="width:40%" v-model="motivoSel">
         <option disabled selected :value="null" focusable="false">Selecciona un motivo</option>
         <option v-for="(item, index) in tipoTutorias" 
                 :key="index" 
@@ -13,7 +13,7 @@
                 {{ item.nombre }}
         </option>
         </select>
-        </div>
+        </div>-->
       <div id="botones">
         <button type="button" class="btn btn-info" :disabled='isDisabled'  @click="updateEvent">Aceptar</button>
         <button type="button" class="btn btn-secondary" @click="$emit('close')">Cerrar</button>
@@ -26,8 +26,11 @@
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
-      <b>Tipo Tutoría:</b>  {{ event.description }} <br/>
+      <!--<b>Tipo Tutoría:</b>  {{ event.description }} <br/>-->
       <div id="botones">
+            <a type="button" class="btn btn-info" :href="'http://www.google.com/calendar/event?action=TEMPLATE&amp;trp=false&amp;text='+nombreEvento+'&amp;location=Pontificia Universidad Católica del Perú, Av. Universitaria 1801, San Miguel 15088, Perú&amp;details='+descripcion+'&amp;dates='+new Date()+'/'+new Date((new Date).setDate((new Date).getDate() + 1))" target="_blank">
+                Agregar a Google calendar
+            </a>
         <button type="button" class="btn btn-info" @click="SolCancelar();$emit('close')">Solicitar Cancelacion</button>
         <button type="button" class="btn btn-info" @click="$emit('close')">Cerrar</button>
       </div>
@@ -38,7 +41,7 @@
     <fieldset v-if="isTutor">
       <div v-if="this.event.backgroundColor!='#B2EBF2'">
         <legend>Cita Agendada</legend>
-        <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
+        <b>Alumno(s) :</b>  {{ nombre_usuario }} <br/>
         <b>Fecha:</b>{{event.start | formatDate}} <br/>
         <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
         <b>Motivo:</b>  {{ event.extendedProps.motivo }} <br/>
@@ -67,23 +70,20 @@ export default {
             end: {},
             isDisabled: false,
             idCita: null,
-            tipoTutorias: this.tutorSel.usuario.tipo_tutorias,
-            motivoSel: null
+            tipoTutorias: "",
+            motivoSel: null,
         }
     },
     methods: {
         rutaEvent () {
-          /*this.$router.push({
-            name: 'Cita Agendada',
-            props: {event:this.event }
-          });*/
-          this.$router.push({name:'Cita Agendada', params: {event:this.event }});
-
+          if(this.event.title == 'Cita Grupal') {
+            this.$router.push({name:'Cita Agendada Alumnos'});  
+          }
+          else {
+            this.$router.push({name:'Cita Agendada', params: {event:this.event}});  
+          }
         },
         removeEvent() {
-          //console.log('idDisponibilidad: ',this.event.id);
-          //console.log('usuario actualizando: ', this.$store.state.usuario.id_usuario);
-          //console.log(this.idCita);
           Swal.fire({
           text:'¿Estás seguro que desea cancelar al cita?',
           icon:"warning",
@@ -99,21 +99,21 @@ export default {
               idDisponibilidad:this.event.id,
               usuario_actualizacion:this.$store.state.usuario.id_usuario})
             .then((response) => {
-              console.log('cancelar cita: ',response);
-              this.$store.commit("UPDATE_EVENT", {
-                id: this.event.id,
-                title: 'Disponible',
-                start: this.event.start,
-                color:'#B2EBF2',
-              });
-              Swal.fire({
-                text:"La cita ha sido cancelada",
-                icon:"success",
-                confirmButtonText: 'Aceptar',
-                confirmButtonColor:'#0097A7',
-                showConfirmButton: true,
-              });
-              
+              if(response) {
+                this.$store.commit("UPDATE_EVENT", {
+                  id: this.event.id,
+                  title: 'Disponible',
+                  start: this.event.start,
+                  color:'#B2EBF2',
+                });
+                Swal.fire({
+                  text:"La cita ha sido cancelada",
+                  icon:"success",
+                  confirmButtonText: 'Aceptar',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+                });
+              }
             }).catch(e => {
               console.log(e.response);
             });
@@ -123,8 +123,8 @@ export default {
         },
         updateEvent () {
           this.isDisabled = true;
-          //console.log(this.event.extendedProps);
           if(this.motivoSel){
+            console.log('id del motivo seleccionado ',this.motivoSel.id_tipo_tutoria)
             this.$store.commit("UPDATE_EVENT", {
                 id: this.event.id,
                 title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
@@ -142,35 +142,43 @@ export default {
               usuario_actualizacion: this.$store.state.usuario.id_usuario,
               idUsuario: this.$store.state.usuario.id_usuario,
             }).then(response => {
-              console.log('registrarCitaAl response: ', response.data);
-              Swal.fire({
-                      text:"Registro Exitoso",
-                      icon:"success",
-                      confirmButtonText: 'Continuar',
-                      confirmButtonColor:'#0097A7',
-                      showConfirmButton: true,
-                    });
-                    this.$emit('close');
+              if(response) {
+                Swal.fire({
+                        text:"Registro Exitoso",
+                        icon:"success",
+                        confirmButtonText: 'Continuar',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                      });
+                      this.$emit('close');
+              }
             }).catch(e => {
                 console.log(e.response);
             });
+          }else {
+            Swal.fire({
+              text:"Debe elegir un motivo",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+            })
+            this.isDisabled = false;
           }
             
         },
         getIdCita () {
           axios.post('disponibilidades/mostrarCita2', {idDisponibilidad:this.event.id})
           .then((response) => {
-            this.idCita = response.data.id_cita;
-            this.$store.state.idCita = response.data.id_cita;
-            //this.idCita = response.data.cita[0].id_cita
-            //console.log(response.data);
-            //console.log(response.data.cita[0].id_cita);
+            this.idCita = response.data[0].id_cita;
+            this.$store.state.idCita = response.data[0].id_cita;
+            this.$store.state.curSesion = response.data
+            this.$store.state.cond = response.data[0].cond
           }).catch(e => {
             console.log(e.response);
           });
         },
         SolCancelar(){
-          console.log('Cancelar Cita')
           Swal.fire({
                 text:"¿Desea solicitar la cancelacion de esta cita?",
                 icon:"warning",
@@ -180,33 +188,67 @@ export default {
                 cancelButtonColor:'C4C4C4',
                 showCancelButton: true,
                 showConfirmButton: true,
-            }).then((result) => {
+            })
+              .then((result) => {
                 if (result.value) {
-                    const params={
-                      id_remitente: this.id_tutor,
-                      id_solicitante: this.$store.state.usuario.id_usuario,
-                      tipo_solicitud: 'Cita',
-                      descripcion: 'Solicitud para la cancelacion de una cita',
-                      id_programa: this.$store.state.programaActual.id_programa, 
-                      motivo: "Deseo cancelar mi cita con el tutor ",
-                      usuario_creacion: this.$store.state.usuario.id_usuario,
-                      id_usuario_relacionado: this.id_tutor,
-                    }
-                    axios.create()
-                    .post('/solicitudes/insertar', params)
-                    .then( response=>{
-                      Swal.fire({
-                      text:"Solicitud Enviada Exitosamente",
-                      icon:"success",
-                      confirmButtonText: 'OK',
-                      confirmButtonColor:'#0097A7',
-                      showConfirmButton: true,
+                  Swal.fire({
+                    title: 'Ingrese el motivo de la cancelación',
+                    input: 'text',
+                    inputAttributes: {
+                      autocapitalize: 'off'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Enviar',
+                    confirmButtonColor:'#0097A7',
+                    cancelButtonText: 'Cancelar',
+                    cancelButtonColor:'C4C4C4',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (login) => {
+                      const params={
+                        id_remitente: this.id_tutor,
+                        id_solicitante: this.$store.state.usuario.id_usuario,
+                        tipo_solicitud: 'Cita',
+                        descripcion: 'Solicitud para la cancelacion de una cita',
+                        id_programa: this.$store.state.programaActual.id_programa, 
+                        motivo: login,
+                        usuario_creacion: this.$store.state.usuario.id_usuario,
+                        usuario_actualizacion: this.$store.state.usuario.id_usuario,
+                        id_usuario_relacionado: this.id_tutor,
+                        id_cita: this.$store.state.idCita,
+                      }
+                      return axios.post('/solicitudes/insertar', params)
+                      .then( response=>{
+                        return response
                       })
-                      console.log(response)
-                    })
-                    .catch(e => {
+                      .catch(e => {
                         console.log(e.response);
-                    })
+                        Swal.showValidationMessage(
+                          `Request failed: ${e}`
+                        )
+                      })
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                  }).then((result) => {
+                    if(result.value.data.status == 'error'){
+                        Swal.fire({
+                        text:result.value.data.mensaje,
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                        })
+                      }
+                      else{
+                        Swal.fire({
+                        text:"Solicitud Enviada Exitosamente",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                        })
+                      }
+                  })
+                  
 
                 } 
             })
@@ -222,8 +264,13 @@ export default {
     id_tutor: Number,
     tutorSel: Object,
   },mounted() {
+    console.log(this.event)
+    if(this.tutorSel) {
+      console.log('tutor ttutoria: ', this.tutorSel.tipo_tutorias)
+      this.tipoTutorias = this.tutorSel.usuario.tipo_tutorias
+      console.log('tutorias: ', this.tipoTutorias)
+    }
     this.$store.state.curEvent = this.event;
-    console.log(this.event.id);
     this.getIdCita();
 
   }
@@ -242,7 +289,7 @@ Vue.filter('formatHour', function(value) {
 
 </script>
 
-<style>
+<style scoped>
 @import './../assets/styles/main.css';
 div {
     color: black !important;
@@ -253,7 +300,7 @@ fieldset {
     margin-bottom: 10px;
     border-radius: 25px;
     padding:0;
-    border:1px solid #757575;
+    /*border:1px solid #757575;*/
     font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
     height: 230px;
 }

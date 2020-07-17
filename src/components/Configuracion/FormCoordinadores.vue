@@ -1,60 +1,73 @@
 <template>
   <!-- <div class="FormPrograma">
     <div class="container" style="left:60px;text-align: left"> -->
-	<div name="FormCoordinador container">
-		<div   class="row top-titulo container" style="left:60px;text-align: left;">
-      <!-- <div class="top-titulo">
-            <h4 class="col-sm-4 title-container">Nombre: </h4>
-            <input class="col-sm-4 form-control" style="left:-230px;top:26px;right:0px;" v-model="nombre" placeholder="Ingrese nombre del coordinador">
-            <div class="botones">
-            <button type="button" class="btn btn-info" @click="nuevo()" style="margin-left:190px" >Añadir</button>
-            </div>
-      </div> -->
-        <!--<div class="row" style="margin-top:40px;margin-bottom:40px">
-            <div class="font-weight-ligth text-left textF" style="font-size:20px;line-height: 35px;">Buscar:</div>
-            <input class="borde-textbox" type="text" style="margin-left:3%;padding:7px" v-model="nombre">
-            <b-button v-on:click="nuevo()" style="margin-left:60%;background: #0097A7">Añadir</b-button>
-        </div>-->
-        <div class="col-sm-6 top-titulo">
-           <h5 class="col-sm-6 " style="top:5px;" >Nombre: </h5>
-          <input class="col-sm-6 form-control" type="text" style="top:-5px;margin-bottom:20px" 
-           v-model="nombre" placeholder="Ingrese nombre del coordinador">
+	<div name="FormCoordinador" class="contenedor">
+		<div style="text-align: left;">
+			<div class="row" style="width:100%">
+				<div class="form-inline col-12 col-md-2 col-lg-1">
+					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
+				</div>
+				<div class="form-inline col-12 col-md-4">
+					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese nombre del coordinador">
+				</div>
+        <div class="form-inline col-12 col-md-3">
+          <select v-on:change="FacultadSel"  class="form-control" style="margin-top:4%"
+            v-model="facuSeleccionadoInd">  <!--aqui guardo-->
+            <option selected :value="null">Selecciona una facultad</option>
+            <option v-for="(prog, i) in facultades"  :key="i" :value="prog.id_programa"> 
+              {{ prog.nombre }} 
+            </option>
+          </select>
         </div>
-        <div class="botones" >
-           <button  type="button" style="border-radius: 10px;margin-right:50px;padding-top:5px;margin-top:-25px"
-              @click="nuevo()" class="row btn btn-info">Añadir</button>
-        </div> 
+        <div class="form-inline col-12 col-md-3">
+          <select v-on:change="ProgramaSel"  class="form-control" style="margin-top:4%"
+            v-model="progSeleccionadoInd">  <!--aqui guardo-->
+            <option selected :value="null">Selecciona un programa</option>
+            <option v-for="(prog, i) in programas"  :key="i" :value="prog.id_programa"> 
+              {{ prog.nombre }} 
+            </option>
+          </select>
+        </div>
+			</div>
 
-
-      <table class="table" style="text-align:center">
-        <thead>
-          <tr>
-            <th scope="col">N°</th>
-            <th scope="col">Codigo</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Correo</th>
-            <th scope="col">Facultad/Programa</th>
-            <th scope="col">Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in coordinadoresFiltrados" :key="index">
-            <td>{{index+1}}</td>
-            <td>{{item.codigo}}</td>
-            <td>{{item.nombre}}</td>
-            <td>{{item.correo}}</td>
-            <td>
+      <div style="overflow: auto;width:100%;">
+        <table class="table" style="text-align:left;margin-top:2%">
+          <thead>
+            <tr>
+              <th scope="col">Codigo</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Facultad/Programa</th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in coordinadoresFiltrados" :key="index">
+              <td>{{item.codigo}}</td>
+              <td>{{item.nombre}}</td>
+              <td>{{item.correo}}</td>
+              <td>
                 <div v-for="(lugar,ind) in item.lugares" :key="ind">
                     <a style="font-weight:normal">{{lugar}}</a>
                 </div>
-            </td>
-            <td style=";font-size:30px">
-                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
-                <b-icon v-else icon="check" style="color:#757575"/>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                <div v-if="item.lugares.length==0">
+                  <a style="font-weight:normal">Sin Asignar</a>
+                </div>
+              </td>
+              <td style=";font-size:30px">
+                  <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
+                  <b-icon v-else icon="check" style="color:#757575"/>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div v-if="coordinadoresFiltrados==null || coordinadoresFiltrados.length==0" class="row" style="width:100%">
+      <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
+        Ningún Registro de Coordinadores
+      </div>
     </div>
 
     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
@@ -74,17 +87,21 @@ import { mapGetters } from 'vuex'
 export default {
   data(){
     return{
-      coordinadores:[]
+      coordinadores:[],
+      progSeleccionadoInd:null,
+      progSeleccionado:null,
+      facuSeleccionadoInd:null,
+      facuSeleccionado:null,
+      programas:null,
+      facultades:null,
     }
   },
   created(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
-    if(this.$store.state.coordinadoresL == null) {
-      
-      this.listarCoordinadores();
-    }
-    else this.coordinadores = this.$store.state.coordinadoresL;
-    console.log('a',this.$refs)
+    this.showModal();
+    this.listarProgramas();
+    this.listarFacultades();
+    this.listarCoordinadores();
   },
   computed:{
     nombre:{
@@ -95,13 +112,81 @@ export default {
           this.$store.commit('SET_QUERY',val);
       }
     },
+    filtroProg:{
+      get(){
+        return this.$store.state.filtro.programa;
+      },
+      set(val){
+        this.$store.commit('SET_Prog',val);
+      }
+    },
+    filtroFacu:{
+      get(){
+        return this.$store.state.filtro.facultad;
+      },
+      set(val){
+        this.$store.commit('SET_Facu',val);
+      }
+    },
     ...mapGetters({
       coordinadoresFiltrados: 'filtrarCoordinadoresL'
     })
   },
   methods:{
+    listarProgramas(){
+      this.axios.post('/programa/listarTodo')
+        .then(response=>{
+          this.programas = response.data
+        })
+        .catch(e=>{
+          console.log(e)
+        })
+    },
+    listarFacultades(){
+      this.axios.post('/programa/facultadesProg')
+        .then(response=>{
+          this.facultades = response.data
+        })
+        .catch(e=>{
+          console.log(e)
+        })
+    },
+    ProgramaSel(){
+      if(this.progSeleccionadoInd == null){
+        this.filtroProg = null;
+      }
+      else{
+        this.programas.forEach(element => {
+          if(element.id_programa == this.progSeleccionadoInd){
+            this.progSeleccionado = element;
+            this.filtroProg = element;
+          }
+        });
+      }
+    },
+    FacultadSel(){
+      this.progSeleccionadoInd = null;
+      this.filtroProg = null;
+      if(this.facuSeleccionadoInd == null){
+        this.filtroFacu = null;
+        this.listarProgramas();
+      }
+      else{
+        this.facultades.forEach(element => {
+          if(element.id_programa == this.facuSeleccionadoInd){
+            this.facuSeleccionado = element;
+            this.filtroFacu = element;
+          }
+        });
+        let aux = []
+        this.programas.forEach(element => {
+          if(element.id_facultad == this.facuSeleccionado.id_facultad) aux.push(element);
+        });
+        this.programas = aux
+        this.$store.state.filtroProgs = aux;
+      }
+    },
     listarCoordinadores() {
-      this.showModal();
       this.axios.post('/facultad/coordinadoresPyF')
         .then(res =>{
           this.$store.state.coordinadoresL = res.data;
@@ -119,7 +204,7 @@ export default {
     },
     Eliminar(item,index){
       Swal.fire({
-          text: '¿Dese eliminar a '+item.nombre+'?',
+          text: '¿Desea eliminar a '+item.nombre+'?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
@@ -154,10 +239,10 @@ export default {
       this.$router.push('/coordinador/'+0);
     },
     showModal() {
-      //this.$refs['my-modal'].show()
+      if (this.$refs['my-modal']) this.$refs['my-modal'].show()
     },
     hideModal() {
-      //this.$refs['my-modal'].hide()
+      if (this.$refs['my-modal']) this.$refs['my-modal'].hide()
     },
   }
 }
@@ -173,6 +258,7 @@ export default {
     border-radius: 1.25rem;  
     border: 0.5px solid #757575;
     margin-bottom: 10px;
+    width: 100%;
 }
 .top-titulo {
     display: flex;

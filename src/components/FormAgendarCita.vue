@@ -2,7 +2,7 @@
     <div class="formagendarcita container">
         <div class="top-titulo " style="text-align:left;">
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @click="showCalendar" >
+            <select id="selectBox" class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
@@ -17,22 +17,19 @@
                 <li><span class="citareservada"></span> Cita Resevada </li>
             </ul>
         </div>
-        <div class="top-titulo" style="text-align:left;">
+        <div class="top-titulo" style="text-align:left;" v-if="bloque!=null">
             <Fullcalendar ref="fullCalendar"
                           :plugins = "calendarPlugins"
                           defaultView = "timeGridWeek"
                           :locales= "locales"
                           locale="es"
                           :header ="{
-                              left: 'prev',
-                              center: 'title',
-                              right: 'next'
-                          }"
-                          :footer ="{
-                              left: 'today',
+                              left: 'title',
                               center: '',
-                              right: ''
+                              right: 'prev today next'
                           }"
+                          
+                          :slotDuration= this.bloque
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
@@ -79,7 +76,8 @@ export default {
                 ListPlugin,
                 momentPlugin
             ],
-            columnFormat: 'ddd M/D',
+            bloque: null,
+            columnFormat: 'ddd D/M',
             titleFormat: 'MMMM YYYY',
             calendar: null,
             locales: [esLocale],
@@ -95,7 +93,9 @@ export default {
                         click: () => {
                             let calendar = this.$refs.fullCalendar.getApi();
                             calendar.prev();
-                            this.getReminders();
+                            if(this.tutorSel) {
+                                this.getReminders();
+                            }
                         }
                     },
                     next: {
@@ -103,23 +103,58 @@ export default {
                         click: () => {
                             let calendar = this.$refs.fullCalendar.getApi();
                             calendar.next();
-                            this.getReminders();
+                            if(this.tutorSel) {
+                                this.getReminders();
+                            }
+                        }
+                    },
+                    today: {
+                        text: 'Hoy',
+                        click: () => {
+                            let calendar = this.$refs.fullCalendar.getApi();
+                            calendar.today();
+                            if(this.tutorSel) {
+                                this.getReminders();
+                            }
                         }
                     },
             },
             nombre_usuario: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
-            tutorSel: this.$store.state.tutorDisponibilidad,
+            tutorSel:null,
+            //tutorSel2: this.$store.state.tutorDisponibilidad,
             tutores: [],
         }
+    },
+     mounted() {
+        this.bloque = "00:"+ this.$store.state.programaActual.hora_bloque + ":00"
+        this.$store.state.events = [];
+        this.listarTutores();
+        if(this.$store.state.tutorDisponibilidad) {
+            this.tutorSel = this.$store.state.tutorDisponibilidad
+        }
+        /*if(this.$store.state.tutorDisponibilidad) {
+            //this.tutorSel = this.$store.state.tutorDisponibilidad
+            //console.log("storestate tutor: ", this.tutorSel)
+            this.showCalendar()
+        }  
+         
+        let calendar = this.$refs.fullCalendar.getApi();
+        console.log(calendar.view.activeStart)
+        axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:calendar.view.activeStart,horaInicio:calendar.view.activeEnd })
+        .then(response => {
+            this.dispSemanalVistaAl = response.data;
+
+            console.log(response.data);
+        }).catch(e => {
+            console.log(e.response);
+        });*/
     },
     computed: {
         ...mapGetters(["EVENTS"])
     },
     methods: {
         showCalendar() {
-            if(this.tutorSel) {
-                this.getReminders();
-            }
+            this.getReminders();
         },
         listarTutores() {
         const params = {
@@ -130,15 +165,14 @@ export default {
         axios
         .post('/programa/tutoresListar', params)
             .then(res =>{
-            console.log(res);
-            this.tutores=res.data;            
+            this.tutores=res.data;
             })
             .catch(e => {
             console.log(e.response);
             })
         },
         handleClick (arg) {
-            if(arg.event.backgroundColor!='gray') {
+            if(arg.event.backgroundColor!='#ff6961') {
                 this.$modal.show(EventModal,{
                     text: "This is from the component",
                     event: arg.event,
@@ -154,21 +188,27 @@ export default {
         getReminders: function() {
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
+                
+                console.log('tutorSel', this.tutorSel)
                 axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
-                    var rd = response.data[0];
+                    console.log('getreminders',response.data)
+                    var rd = response.data[0]; 
                     var rd2 = response.data[1];
+                    var today = new Date()
                     for(var i in rd) {
-                        //console.log('usuario_actualizacion',rd[i])
+                        var date = rd[i].fecha + " " + rd[i].hora_inicio
+                        var date1 = new Date(date)
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
+                            
                             if(rd2[i]=='o'){
                                 if(rd[i].alumno[0].id_usuario == this.$store.state.usuario.id_usuario){
                                     this.$store.commit("ADD_EVENT", {
                                         id: rd[i].id_disponibilidad,
                                         title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
                                         start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                        end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                         tipo_disponibilidad: rd[i].tipo_disponibilidad,
                                         color: '#009892',
                                         usuario_creacion: rd[i].usuario_creacion,
@@ -181,29 +221,30 @@ export default {
                                         id: rd[i].id_disponibilidad,
                                         title: 'Ocupado',
                                         start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                        end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
                                         tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                        color: 'gray',
+                                        color: '#ff6961',
                                         usuario_creacion: rd[i].usuario_creacion,
                                         id_usuario_tutor: rd[i].id_usuario,
                                         usuario_actualizacion: rd[i].usuario_actualizacion,
-                                       
+                                    
                                     });
                                 }
                             } else {
-                                this.$store.commit("ADD_EVENT", {
-                                    id: rd[i].id_disponibilidad,
-                                    title: 'Disponible',
-                                    start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                    end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                    tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                    usuario_creacion: rd[i].usuario_creacion,
-                                    id_usuario_tutor: rd[i].id_usuario,
-                                    usuario_actualizacion: rd[i].usuario_actualizacion,
-                                    
-                                });
+                                if(date1>today) {
+                                    this.$store.commit("ADD_EVENT", {
+                                        id: rd[i].id_disponibilidad,
+                                        title: 'Disponible',
+                                        start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                        end: rd[i].fecha + " " + addTimes(start_hour, this.bloque),
+                                        tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                        usuario_creacion: rd[i].usuario_creacion,
+                                        id_usuario_tutor: rd[i].id_usuario,
+                                        usuario_actualizacion: rd[i].usuario_actualizacion,
+                                        
+                                    });
+                                }
                             }
-
                         //});
                     }
                 }).catch(e => {
@@ -216,22 +257,7 @@ export default {
         eventFilter() {
         this.$refs.calendar.fireMethod("rerenderEvents");
         }
-    },
-    mounted() {
-        //console.log('prog actual: ',this.$store.state.programaActual.id_programa);
-        this.listarTutores();
-        //this.calendar = this.$refs.fullCalendar.getApi();
-        //idUsuario: this.$store.state.usuario.id_usuario
-        /*axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:50,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
-        .then(response => {
-            this.dispSemanalVistaAl = response.data;
-
-            console.log(response.data);
-        }).catch(e => {
-            console.log(e.response);
-        });*/
     }
-    
 }
 function addTimes (startTime, endTime) {
   var times = [ 0, 0, 0 ]
@@ -272,7 +298,7 @@ function addTimes (startTime, endTime) {
 
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 @import './../assets/styles/main.css';
 
 @import '~@fullcalendar/core/main.css';
@@ -310,6 +336,7 @@ function addTimes (startTime, endTime) {
 .fc-event { 
     background-color: #B2EBF2;
     border-color: #B2EBF2;
+    cursor: pointer;
 }
 .vm--modal {
     border-radius: 25px;
@@ -328,6 +355,19 @@ function addTimes (startTime, endTime) {
 }
 .fc-time-grid .fc-slats td {
     height: 2.5em;
+}
+.btn:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border:2.3px solid transparent !important;
+}
+select:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+input:focus {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 </style>

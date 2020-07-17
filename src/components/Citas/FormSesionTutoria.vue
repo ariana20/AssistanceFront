@@ -1,8 +1,8 @@
 <template>
     <div class= "formSesionTutoria container">
-        <div class="top-titulo" style="text-align:left;">
-            <h4 class="col-sm-4 tutoria-title">Tipo de Tutoría: </h4>
-            <select class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="selectedTipoTutoria">
+        <div class="top-titulo row top-row" style="text-align:left;">
+            <h4 class="row col-sm-4 tutoria-title">Tipo de Tutoría: </h4>
+            <select class="col-sm-4 form-control selectedTT" v-model="selectedTipoTutoria">
                 <option disabled selected :value="null" focusable="false">Selecciona un tipo de tutoría</option>
                 <option 
                     v-for="(tipoTutoria, index) in tiposTutoria" 
@@ -11,8 +11,8 @@
                     {{ tipoTutoria.nombre }}
                 </option>
             </select>
-            <date-picker class="col-sm-3 " style="left:-160px;top:26px" v-model="datetime" lang="es" type="datetime" format="YYYY-MM-DD HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
-            <div class="botones col-sm-4" style="margin-left: -150px;margin-bottom:10px">
+            <date-picker class="col-sm-3 dateSlot" v-model="datetime" type="datetime" format="YYYY-MM-DD HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
+            <div class="row botones col-sm-4 botones-top">
             <button type="button" class="btn btn-info" @click="guardar()" >Guardar</button>
             <button type="button" class="btn btn-info" @click="cancelar()" style="border-color:gray;background-color:gray;">Cancelar</button>
             </div>
@@ -20,7 +20,12 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         <div class="row grid-divider">
             <div class="izq col-lg-6 col-xm-2 col-md-12">
-                <div class="font-weight-bolder text-left">Alumno</div>
+                <div class="font-weight-bolder text-left">Alumno
+                    <button  :disabled="!this.sel" type="button" class="btn btn-info btnAgregarAlM"
+                                    @click="addAlumno">Agregar
+                </button>
+                </div>
+                
                 <div class="row">
                     <div class="col-md-4 col-sm-4">
                         <div class="col-sm-6"><label for="formGroupExampleInput">Código</label></div>
@@ -48,17 +53,17 @@
                     <div class="col">
                         <div class="col" style="text-align:left;padding-bottom:30px;">
                             <label for="formGroupExampleInput" style="margin-right:50px">Nombre y Apellidos</label>
-                            <button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:-3px;"
+                            <button  :disabled="!this.sel" type="button" class="btn btn-info btnAgregarAlD"
                                     @click="addAlumno">Agregar
                             </button>
                         </div>
                         <div type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >{{alSeleccionado}}</div>
-                        <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
+                        <ul class="col" style="color:red;text-align:center;width:200%;margin-left:-10px;padding-right:0px;">
                             <li class="form-control list-group-item" style="padding: 0.4rem 0.5rem;"
                                 v-for="(newAlumno,alIndex) in listAlumnosNom"  
                                 :key="alIndex">
                                 {{newAlumno}}    
-                                <span name="remove" class="close" @click="deleteAl(alIndex)">&times;</span> 
+                                <span name="remove" class="close" @click="deleteAl(alIndex)" style="color:red;">&times;</span> 
                             </li>
                         </ul>
                     </div>
@@ -75,7 +80,7 @@
                  <div class="top-titulo" style="margin-bottom:20px;">
                     <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
                     <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="selectedMotivo">
-                        <option disabled selected value=null>Selecciona un motivo</option>
+                        <option disabled selected value="null">Selecciona un motivo</option>
                         <option
                         v-for="(motivo, i) in motivos" 
                         :key="i" 
@@ -87,7 +92,7 @@
                     <button type="button" 
                             :disabled="!this.selectedMotivo"
                             class="btn btn-info" 
-                            @click="addMotivos(i)">Seleccionar</button>
+                            @click="addMotivos">Seleccionar</button>
                     </div>
                 </div>
                 <div class="left-content" >
@@ -99,7 +104,7 @@
                             v-for="(newMotivo,motivoIndex) in listMotivos"  
                             :key="motivoIndex">
                             {{newMotivo}}
-                            <span name="remove" class="close" @click="deleteMotivo(motivoIndex)" style="margin-right : 20px;float:right;">&times;</span>           
+                            <span name="remove" class="close" @click="deleteMotivo(motivoIndex)" style="color:red;margin-right : 20px;float:right;">&times;</span>           
                         </li>
                     </ul>
                     <hr>
@@ -166,7 +171,7 @@ export default Vue.extend ({
             campoCodigo: {value:'codigo'},    
             selectedTipoTutoria: null,
             tiposTutoria: [],
-            selectedMotivo: '',
+            selectedMotivo: null,
             motivos: [],
             newMotivo: null,
             listMotivos:[],
@@ -177,16 +182,27 @@ export default Vue.extend ({
             listAlumnosId: [],
             unidadesApoyo: [],
             selectedUnidadApoyo: null,
+            bloque:null,
         }
     },
     mounted(){
         if(this.$store.state.usuario==null) this.$router.push('/login')
+        if (window.matchMedia("(max-width: 767px)").matches) {
+            document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo.row.top-row > div.col-sm-3.dateSlot.mx-datepicker").style.width = "100%"
+        }
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.borderRadius = "1.25rem"; 
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.border= "0.5px solid #757575";    
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontWeight = "400";
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.height = "2.4em";
-  
+        axios.post('/programa/listar/'+this.$store.state.programaActual.id_programa)
+            .then( response=>{
+                this.bloque = response.data.hora_bloque
+                this.timePickerOptions.step = '00:'+this.bloque.toString()
+            })
+            .catch(e => {
+                console.log(e.response);
+            });
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
             .then(response => {
                 for(var i in response.data) {
@@ -197,11 +213,7 @@ export default Vue.extend ({
             });
         axios.post('sesiones/alumnoProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
             .then( response => {
-                console.log("listado alumnos: ",response.data)
-                for(var i in response.data){ 
-                    this.codigos.push(response.data[i][0]);
-                }
-                console.log(this.codigos);
+                this.codigos = response.data;
             })
             .catch(e => {
                 console.log(e.response);
@@ -222,7 +234,6 @@ export default Vue.extend ({
                 console.log(e.response);
                 this.hideModal()
             });
-            console.log("datetime es: ",this.datetime);
     },
     methods: {
         guardar: function () {
@@ -247,15 +258,17 @@ export default Vue.extend ({
                                 this.showModal()
                                 axios.post('/sesiones/asistencia',sesion_params)
                                     .then( response=>{
-                                        console.log(response);
-                                        this.hideModal()
-                                        Swal.fire({
-                                            text:"Se ha registrado la sesión con éxito",
-                                            icon:"success",
-                                            confirmButtonText: 'OK',
-                                            confirmButtonColor:'#0097A7',
-                                            showConfirmButton: true,
-                                        }) 
+                                        if(response) {
+                                            this.hideModal()
+                                            Swal.fire({
+                                                text:"Se ha registrado la sesión con éxito",
+                                                icon:"success",
+                                                confirmButtonText: 'OK',
+                                                confirmButtonColor:'#0097A7',
+                                                showConfirmButton: true,
+                                            }) 
+                                            this.$router.push({name:'Calendario'});
+                                        }
                                     })  
                                     .catch(e => {
                                         console.log(e.response);
@@ -319,8 +332,9 @@ export default Vue.extend ({
             this.sel= '';
             this.alSeleccionado= 'Nombre Alumno';
             this.selectedTipoTutoria= null;
-            this.selectedMotivo= '';
+            this.selectedMotivo= null;
             this.newMotivo= null;
+            this.listMotivos=[],
             this.listMotivosId= [];
             this.motivosBorrados=[];
             this.listAlumnosNom= [];
@@ -334,7 +348,6 @@ export default Vue.extend ({
                 if(this.sel==this.codigos[i].codigo){
                     this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
                 }
-                console.log(this.alSeleccionado);
                 //break;   
             }
         },
@@ -346,6 +359,7 @@ export default Vue.extend ({
                     this.motivosBorrados.push(this.motivos[i]);
                     this.motivos.splice(i,1);  
                 }
+            this.selectedMotivo = null
         },
         deleteMotivo: function (index) {
             var i;
@@ -356,6 +370,7 @@ export default Vue.extend ({
                 }
             this.listMotivos.splice(index,1);
             this.listMotivosId.splice(index,1);
+            this.selectedMotivo = null
         },
         deleteAl: function(index) {
             this.listAlumnosCod.splice(index,1);
@@ -378,9 +393,7 @@ export default Vue.extend ({
                 }
                 this.alSeleccionado='Nombre Alumno';
                 this.sel= '';
-            }
-            console.log(this.listAlumnosId);
-            
+            }            
             
         },
         showModal() {
@@ -496,5 +509,46 @@ input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper in
 select:focus {
     outline:none;
     box-shadow: none;
+}
+.btnAgregarAlD {
+    display:none;
+}
+
+@media screen and (min-width: 800px) {
+    .dateSlot {
+        left:-160px;
+        top:26px
+    }
+    .btnAgregarAlM {
+        display:none;
+    }
+    .btnAgregarAlD {
+        display:inline;
+        margin:-3px;
+    }
+    .selectedTT {
+        left:-160px;
+        top:26px;
+    }
+    .botones-top {
+        margin-left: -150px;
+        margin-bottom:10px;
+    }
+    .top-row {
+        flex-wrap: inherit;
+    }
+
+}
+@media (max-width: 767px) {
+    .selectedTT {
+        width: 87%;
+        left: 17px;
+    }
+    .top-titulo {
+        padding: 0px 20px;
+    }
+    .botones-top { 
+        top:15px;
+    }
 }
 </style>

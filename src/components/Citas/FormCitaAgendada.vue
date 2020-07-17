@@ -2,7 +2,10 @@
     <div class="formcitaagendada container">
         <div class="top-info" style="text-align:left;">
             <div id="botones">
-                <button type="button" class="btn btn-info" @click="guardar">Guardar</button>
+                <button v-if="this.cita[1]=='l' && !this.editar" type="button" class="btn btn-info" @click="editFields">Editar</button>
+                <button v-else-if="this.editar" type="button" class="btn btn-info" @click="guardar">Guardar</button>
+                
+                
                 <button type="button" class="btn btn-secondary" @click="cancelar">Cancelar</button>
             </div>
                 <div class="botones list-data"><div id="left">Día:          </div> <div id="right"> {{ this.event.extendedProps.fecha }} </div></div>
@@ -20,7 +23,7 @@
                         <div class="list-data"><div id="left">Código:          </div> <div id="right"> {{ this.event.extendedProps.alumno.codigo }} </div></div>
                         <div class="list-data"><div id="left">Nombre:  </div> <div id="right"> {{ this.event.extendedProps.alumno.nombre }} </div></div>
                         <div class="list-data"><div id="left">Apellidos:     </div> <div id="right"> {{ this.event.extendedProps.alumno.apellidos }} </div></div>
-                        <div class="list-data"><div id="left">Condición: </div> <div v-if="us" id="right"> {{ us.cond }} </div></div>
+                        <div class="list-data"><div id="left">Condición: </div> <div v-if="us" id="right"> {{ this.$store.state.cond }} </div></div>
                     </div>
                     <div class="col center-block text-center">
                         <figure v-if="this.event.extendedProps.alumno.imagen!='' && this.event.extendedProps.alumno.imagen!=null" id="floated" class="image-logo" style="margin-bottom:15%">
@@ -55,8 +58,8 @@
                             </svg>
                         </div>
                         <div id="botones" v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')">
-                            <button type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Historico de Citas</button>
-                            <button v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" type="button" class="btn btn-info" @click="Perfil(2)">Historico de Notas</button>
+                            <button type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Histórico de Citas</button>
+                            <button v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" type="button" class="btn btn-info" @click="Perfil(2)">Histórico del Alumno</button>
                             <button type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
                         </div>
                         <div v-else>
@@ -89,7 +92,7 @@
                     <button type="button" 
                             :disabled="!this.selectedMotivo"
                             class="btn btn-info" 
-                            @click="addMotivos(i)">Seleccionar</button>
+                            @click="addMotivos()">Seleccionar</button>
                     </div>
                 </div>
                 <div class="left-content" >
@@ -101,7 +104,7 @@
                             v-for="(newMotivo,motivoIndex) in listMotivos"  
                             :key="motivoIndex">
                             {{newMotivo}}
-                            <span name="remove" class="close" @click="deleteMotivo(motivoIndex)" style="margin-right : 20px;float:right;">&times;</span>           
+                            <span name="remove" class="close" @click="deleteMotivo(motivoIndex)" style="color:red;margin-right : 20px;float:right;">&times;</span>           
                         </li>
                     </ul>
                     <hr>
@@ -195,14 +198,35 @@ export default Vue.extend ({
             listAlumnosId: [],
             unidadesApoyo: [],
             selectedUnidadApoyo: null,
+            cita: this.$store.state.curSesion,
+            editar: false,
             us:null,
         }
     },
     mounted(){
-        if(this.$store.state.usuario==null) this.$router.push('/login')
-        else this.showModal()
+        console.log('idCita: ',this.$store.state.idCita)
+        //LLENANDO LOS CAMPOS CUANDO HAY INFO EN LA SESION
+        console.log('editar status: ',this.editar)
+        console.log('obtuve la cita: ',this.$store.state.curSesion)
+        // if(this.cita[1] != "l") {
+        //     this.descripcion = this.cita[1].resultado
+        //     if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
+        //         this.asistencia = true
+        //     }
+        //     console.log('longitud for:', this.cita[1].motivo_consultas)
+        //     for(var i in this.cita[1].motivo_consultas) {
+        //         this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
+        //         console.log('motivo selected: ', this.selectedMotivo)
+        //         this.addMotivos()
+        //     }
         
-        axios.post('usuarios/listar/'+this.event.extendedProps.alumno.id_usuario)
+        //     console.log('motivos: ', this.listMotivos)
+        //     //si hay info de la sesion quiere decir que ha asistido a su 
+        // }
+        console.log('cita  ', this.cita);
+        // this.disableFields()
+        
+        axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {
             this.us = response.data
         }).catch(e => {
@@ -222,14 +246,50 @@ export default Vue.extend ({
         axios.post('motivosConsulta/listarTodo')
             .then( response => {
                 this.motivos = response.data;
+                this.fillFields()
                 this.hideModal()
             })
             .catch(e => {
             console.log(e.response);
-                this.hideModal()
-            });
+        });    
     },
     methods: {
+        fillFields() {
+            if(this.cita[1] != "l") {
+            this.descripcion = this.cita[1].resultado
+            if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
+                this.asistencia = true
+            }
+            console.log('longitud for:', this.cita[1].motivo_consultas)
+            for(var i in this.cita[1].motivo_consultas) {
+                this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
+                console.log('motivo selected: ', this.selectedMotivo)
+                this.addMotivos()
+            }
+        }
+        },
+        enableFields() {
+            let elems = document.getElementsByTagName('input')
+            elems[0].disabled = false;
+            let elems2 = document.getElementsByTagName('select');
+            for(let i = 0; i < elems2.length; i++) {
+                elems2[i].disabled = false;
+            }
+            let elems3 = document.getElementsByTagName('textarea');
+            elems3[0].disabled = false;
+            
+        },
+        disableFields() {
+            let elems = document.getElementsByTagName('input')
+            elems[0].disabled = true;
+            let elems2 = document.getElementsByTagName('select');
+            for(let i = 0; i < elems2.length; i++) {
+                elems2[i].disabled = true;
+            }
+            let elems3 = document.getElementsByTagName('textarea');
+            elems3[0].disabled = true;
+            document.querySelector("#app > nav.navbar.navbar-dark.navbar-expand-lg > select").disabled = false
+        },
         cancelar: function(){
             Swal.fire({
                     text:"¿Está seguro que desea cancelar?",
@@ -242,20 +302,37 @@ export default Vue.extend ({
                     showConfirmButton: true,
                 }).then((result) => {
                     if (result.value) {
-                    //lo redirigo
-                    this.$router.push('/calendariocitas');
-                    
+                        this.descripcion= '';
+                        this.motivo= null;
+                        this.sel= '';
+                        this.selectedTipoTutoria= null;
+                        this.selectedMotivo= '';
+                        this.newMotivo= null;
+                        this.listMotivosId= [];
+                        this.motivosBorrados=[];
+                        this.selectedUnidadApoyo= null;
+                        //lo redirigo
+                        this.$router.push('/calendariocitas');
                     } 
                 })
+        },
+        editFields: function () {
+            if(this.cita[1]=='l') {
+                this.enableFields()
+                this.editar=true
+            }
+            
         },
         guardar: function () {
             let array = []
             array.push(this.event.extendedProps.alumno.id_usuario);
             console.log(array);
             const sesion_params = {
+                id_cita: this.$store.state.idCita,
                 resultado: this.descripcion,
+                usuario_creacion: this.cita[1].usuario_creacion,
+                usuario_actualizacion: this.cita[1].usuario_actualizacion,
                 idAlumnos: array,
-                id_cita: this.$store.state.idCita, 
                 asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
             };
@@ -263,14 +340,12 @@ export default Vue.extend ({
                         
                             if(this.descripcion!=null) {
                                 if(this.selectedUnidadApoyo) {
-                                    //console.log('asdfasdf',this.selectedUnidadApoyo);
                                     this.enviarCorreo(this.selectedUnidadApoyo)
                                 }
-                                this.showModal()
                                 axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
                                         console.log(response);
-                                        this.hideModal()
+                                        this.disableFields()
                                         Swal.fire({
                                             text:"Se ha registrado la sesión con éxito",
                                             icon:"success",
@@ -281,7 +356,6 @@ export default Vue.extend ({
                                     })  
                                     .catch(e => {
                                         console.log(e.response);
-                                        this.hideModal()
                                     });
                                 }
                                 else {
@@ -316,6 +390,7 @@ export default Vue.extend ({
             }
         },
         addMotivos: function () {
+            console.log('la funcion addmotivos ha sido llamada',this.motivos)
             for(var i in this.motivos)
                 if(this.selectedMotivo==this.motivos[i].id_motivo_consulta) {
                     this.listMotivos.push(this.motivos[i].nombre);
@@ -326,39 +401,17 @@ export default Vue.extend ({
         },
         deleteMotivo: function (index) {
             var i;
+            if(this.cita[1]=='l'){
             for(i in this.motivosBorrados)
                 if(this.listMotivos[index]==this.motivosBorrados[i].nombre) {
                     this.motivos.push(this.motivosBorrados[i]);
                     break;
                 }
+            
             this.listMotivos.splice(index,1);
             this.listMotivosId.splice(index,1);
-        },
-        deleteAl: function(index) {
-            this.listAlumnosCod.splice(index,1);
-            this.listAlumnosNom.splice(index,1);
-        },
-        addAlumno: function () {  
-            var estaAl = false;
-            for( var i in this.listAlumnosCod ){
-                    if(this.sel == this.listAlumnosCod[i]){
-                        estaAl = true;
-                        break;
-                    }
+
             }
-            if(this.alSeleccionado != 'Nombre Alumno' && !estaAl && this.sel.length == 8){ 
-                this.listAlumnosNom.push(this.alSeleccionado);
-                this.listAlumnosCod.push(this.sel);
-                for(var j in this.codigos){
-                    if(this.sel == this.codigos[j].codigo)
-                        this.listAlumnosId.push(this.codigos[j].id_usuario);
-                }
-                this.alSeleccionado='Nombre Alumno';
-                this.sel= '';
-            }
-            console.log(this.listAlumnosId);
-            
-            
         },
         enviarCorreo(unidad){
             let mensaje = "Se te ha derivado a "+unidad.nombre+":<br>"
@@ -401,127 +454,128 @@ export default Vue.extend ({
 </script>
 
 <style lang="scss" scoped>
-@import '../../assets/styles/material.css';
-@import '../../assets/styles/main.css';
-@import 'https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css';
-#left {
-    float: left;
-    margin-right: 27px;
-    width: 100px;
-}
+    @import '../../assets/styles/material.css';
+    @import '../../assets/styles/main.css';
+    @import 'https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css';
+    #left {
+        float: left;
+        margin-right: 27px;
+        width: 100px;
+    }
 
-#right {
-    text-align: right;
-}
-#floated {
-    margin-right: 50px;
-    float: right;
-    height: 100px;
-}
-.list-data { 
-    display: flex;
-    width: 100%;
-    height: 40px;
-}
-.close {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    right: 0%;
-    padding: 12px 16px;
-    transform: translate(0%, -50%);
-}
+    #right {
+        text-align: right;
+    }
+    #floated {
+        margin-right: 50px;
+        float: right;
+        height: 100px;
+    }
+    .list-data { 
+        display: flex;
+        width: 100%;
+        height: 40px;
+    }
+    .close {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        right: 0%;
+        padding: 12px 16px;
+        transform: translate(0%, -50%);
+    }
 
-input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper input.e-input, textarea.e-input, .e-input-group textarea.e-input, .e-input-group.e-control-wrapper textarea.e-input{
-    border-width: 1px !important;
-}
-.input.e-input, .e-input-group input.e-input, .e-input-group input, .e-input-group.e-control-wrapper input.e-input, .e-input-group.e-control-wrapper input, .e-float-input input, .e-float-input.e-input-group input, .e-float-input.e-control-wrapper input, .e-float-input.e-control-wrapper.e-input-group input, .e-input-group, .e-input-group.e-control-wrapper, .e-float-input, .e-float-input.e-control-wrapper {
-    border-radius: 1.25rem;  
-    border: 0.5px solid #757575;
-    text-align: center;
-    font-family: "Brandon Bold",Helvetica,Arial,sans-serif;
-    font-size: 17px;
-    margin-bottom:0px!important;
-}
-.e-control .e-autocomplete .e-lib .e-input .e-keyboard {
-    z-index: -100;
-}
-.borde-textbox {
-    border-radius: 1.25rem;  
-    border: 2px solid #757575;
-}
-.izq {
-    //background-color: cornflowerblue;
-    padding: 20px;
-}
-.der {
-    //background-color: darkgreen;
-    padding: 20px;
-}
-.tutoria-title{
-    margin-top: 30px;
-    margin-bottom: 20px;
-}
-.grid-divider {
-  overflow-x: hidden; //quickfix to hide divider on left side
-  position: relative;
-}
-.grid-divider > [class*="col-"]:nth-child(n + 2):after {
-  content: "";
-  background-color: #BABABA;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  @media (max-width: 767px) {
-    width: 100%;
-    height: 1px;
-    left: 0;
-    top: -4px; // quickfix to center line between columns
-  }
-  @media (min-width: 768px) {
-    width: 1px;
-    height: auto;
-    left: -1px; // quickfix to hide divider on left side
-  }
-}
-.font-weight-bolder {
-    color: black;
-    font-size: 24px;
-    font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
-}
-.botones {
-    margin:auto;
-}
-.btn {
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 10px;
-    margin: 5px;
-}
-.top-titulo {
-    display: flex;
-    justify-content: space-between;
-}
-.text-left {
-    margin-bottom: 20px;
-}
-.motivo-dropdown-title {
-    top: 10px;
-    text-align: left;
-}
+    input.e-input, .e-input-group input.e-input, .e-input-group.e-control-wrapper input.e-input, textarea.e-input, .e-input-group textarea.e-input, .e-input-group.e-control-wrapper textarea.e-input{
+        border-width: 1px !important;
+    }
+    .input.e-input, .e-input-group input.e-input, .e-input-group input, .e-input-group.e-control-wrapper input.e-input, .e-input-group.e-control-wrapper input, .e-float-input input, .e-float-input.e-input-group input, .e-float-input.e-control-wrapper input, .e-float-input.e-control-wrapper.e-input-group input, .e-input-group, .e-input-group.e-control-wrapper, .e-float-input, .e-float-input.e-control-wrapper {
+        border-radius: 1.25rem;  
+        border: 0.5px solid #757575;
+        text-align: center;
+        font-family: "Brandon Bold",Helvetica,Arial,sans-serif;
+        font-size: 17px;
+        margin-bottom:0px!important;
+    }
+    .e-control .e-autocomplete .e-lib .e-input .e-keyboard {
+        z-index: -100;
+    }
+    .borde-textbox {
+        border-radius: 1.25rem;  
+        border: 2px solid #757575;
+    }
+    .izq {
+        //background-color: cornflowerblue;
+        padding: 20px;
+    }
+    .der {
+        //background-color: darkgreen;
+        padding: 20px;
+    }
+    .tutoria-title{
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    .grid-divider {
+    overflow-x: hidden; //quickfix to hide divider on left side
+    position: relative;
+    }
+    .grid-divider > [class*="col-"]:nth-child(n + 2):after {
+        content: "";
+        background-color: #BABABA;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        @media (max-width: 767px) {
+            width: 100%;
+            height: 1px;
+            left: 0;
+            top: -4px; // quickfix to center line between columns
+        }
+        @media (min-width: 768px) {
+            width: 1px;
+            height: auto;
+            left: -1px; // quickfix to hide divider on left side
+        }
+    }
+    .font-weight-bolder {
+        color: black;
+        font-size: 24px;
+        font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
+    }
+    .botones {
+        margin:auto;
+    }
+    .btn {
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 10px;
+        margin: 5px;
+    }
+    .top-titulo {
+        display: flex;
+        justify-content: space-between;
+    }
+    .text-left {
+        margin-bottom: 20px;
+    }
+    .motivo-dropdown-title {
+        top: 10px;
+        text-align: left;
+    }
 
-.form-control {
-    border-radius: 1.25rem;  
-    border: 0.5px solid #757575;
-    margin-bottom: 10px;
-}
-.btn:focus {
-    outline:none;
-    box-shadow: none;
-    border: 2.3px solid transparent;
-}
-select:focus {
-    outline:none;
-    box-shadow: none;
-}
+    .form-control {
+        border-radius: 1.25rem;  
+        border: 0.5px solid #757575;
+        margin-bottom: 10px;
+    }
+    .btn:focus {
+        outline:none;
+        box-shadow: none;
+        border: 2.3px solid transparent;
+    }
+    select:focus {
+        outline:none;
+        box-shadow: none;
+    }
+    
 </style>

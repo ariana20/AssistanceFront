@@ -1,5 +1,5 @@
 <template>
-    <div name="Seleccion" style="margin-top:30px;margin-left:-250px">
+    <div name="Seleccion" class="margen">
         <h1>Elige tu Programa</h1>
         <div id="app" class="container row" style="text-align:center;margin:auto" >
             <div class="borde" v-for="(item,index) in this.programas" :key="index">
@@ -63,6 +63,7 @@ export default {
             }
             axios.post('/usuarios/permisos',paramr)
             .then(response=>{
+                this.$store.state.permisosUsuario = response.data;
                 this.$store.state.rutas = [];
                 for(var i=0; i < this.$store.state.navLinks.length; i++){
                     for(var j=0; j < response.data.length; j++){
@@ -138,5 +139,14 @@ export default {
         background-color: #009892;
         display: grid;
         color: white;
+    }
+    .margen{
+        margin-top:30px;
+        margin-left:-250px
+    }
+    @media screen and (max-width: 600px) {
+        .margen{
+            margin-left: -20%;
+        }
     }
  </style>

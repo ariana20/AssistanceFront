@@ -1,50 +1,51 @@
 <template>
-  <div name="FormAsignarTutor">
-    <div class="container" style="text-align: center;margin-top:20px">
+  <div name="FormAsignarTutor" class="contenedor">
+    <div style="text-align: center;">
 
-        <div class="row" style="text-align:center;">
-            <h4 class="font-weight-bolder col-sm-2">Tutor: </h4>
-            <select class="col-sm-5 form-control" v-model="tutorSeleccionado"  @click="listarTT()" >
+        <div class="row" style="text-align:left;">
+            <h5 class="col-sm-2">Tutor: </h5>
+            <select class="col-12 col-md-5 form-control" v-model="tutorSeleccionado"  v-on:change="listarTT()" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
                     :key="index" 
                     :value="item">
-                    {{ item.usuario.nombre + " " + item.usuario.apellidos }}
+                    {{ item.nombre + " " + item.apellidos }}
                 </option>
             </select>
         </div>
-        <div class="row" >
-          <div class="font-weight-bolder col-sm-2" style="text-align:center;">Temas: </div>
-          <div>
-              <label v-for="(item,index) in tipoTutoria" :key="index">
-                  {{item.nombre}}<label v-if="index<tipoTutoria.length-1" style="margin-right:5px">, </label>
-              </label>
+        <div class="row" style="text-align:left;">
+          <div class="col-12 col-md-2" style="text-align:left;"><h5>Tipo de Tutoría: </h5></div>
+          <div class="col-12 col-md-5" style="padding-left: 0px; padding-right: 0px;">
+            <select class="form-control" v-model="tutoriaSeleccionada"  v-on:change="listarAlumnos()" >
+                <option disabled selected :value="null" focusable="false">Selecciona un Tipo de Tutoria</option>
+                <option 
+                    v-for="(item, index) in tipoTutoria" 
+                    :key="index" 
+                    :value="item">
+                    {{ item.nombre}}
+                </option>
+            </select>
           </div>
         </div>
-        <div class="row">
-            <div class="font-weight-bolder col-sm-2" style="text-align:center;">Alumnos</div>
-            <div class="font-weight-bolder col-sm-10" style="text-align:right;"><button  :disabled="!this.sel" type="button" class="btn btn-info" style="text-align:right;" @click="addAlumno">
-                Asignar
-            </button>
+        <div class="row" style="margin-top:2%">
+            <div class="font-weight-bolder col-12 col-md-3" style="text-align:left;">Alumnos Asignados</div>
+            <div class="font-weight-bolder col-sm-6" style="text-align:right;">
             </div>
         </div>
-        <table class="table" style="text-align: left">
+        <table class="table" style="text-align: left; margin-top:15px">
             <thead>
                 <tr>
                     <th scope="col" style="width:150px">Código</th>
                     <th scope="col" style="width:500px">Nombre y Apellidos</th>
-                    <th scope="col" style="width:400px">Condición</th>
-                    <th scope="col" >    
-                    <!--button  :disabled="!this.sel" type="button" class="btn btn-info" style="display:inline;margin:-3px;" @click="addAlumno">
-                        Agregar
-                    </button-->
+                    <th scope="col" style="width:400px">Tipo de Tutoría</th>
+                    <th scope="col" > 
                     </th>
                 </tr>
             </thead>
    
             <tbody>
-                <tr>
+                <tr v-if="tutoriaSeleccionada">
                     <td scope="col" style="width:150px">
                         <ejs-autocomplete
                             :enabled="this.tutorSeleccionado"
@@ -63,18 +64,34 @@
                         <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >Nombre Alumno</div>
                     </td>
                     <td scope="col" style="width:400px">
-                        <div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >{{alSeleccionado.condicion}}</div>
-                        <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Condición Alumno</div>
+                        <select v-if="alSeleccionado!=null && tutoriaSeleccionada.id_tipo_tutoria==0" class="form-control" v-model="tutoriaAlumno" >
+                            <option disabled selected :value="null" focusable="false">Selecciona un Tipo de Tutoria</option>
+                            <option 
+                                v-for="(item, index) in tipoTutoriaAsignar" 
+                                :key="index" 
+                                :value="item">
+                                {{ item.nombre}}
+                            </option>
+                        </select>
+                        <div v-if="alSeleccionado!=null && tutoriaSeleccionada.id_tipo_tutoria!=0" type="text" class="form-control" style="color: white;background:#BEBEBE;" >{{tutoriaSeleccionada.nombre}}</div>
+                        <div v-if="alSeleccionado==null" type="text" class="form-control" style="color: white;background:#BEBEBE;" >Tipo Tutoría</div>
                     </td>
                     <td scope="col">
-                        <button class="btn link" v-on:click="Cancelar"><b-icon icon="x-circle-fill"></b-icon></button>
+                        <button  :disabled="!this.sel" type="button" class="btn btn-info" style="text-align:right;" @click="addAlumno">Asignar</button>
                     </td>
                 </tr>
                 <tr v-for="(item,index) in alumnosAsig" :key="index">
                     <td v-if="item!=undefined">{{item.codigo}}</td>
                     <td v-if="item!=undefined">{{item.nombre+" "+item.apellidos}}</td>
-                    <td v-if="item!=undefined">{{item.condicion}}</td>
-                    <td v-if="item!=undefined"><button class="btn link" v-on:click="Eliminar(item, index)"><b-icon icon="dash-circle-fill"></b-icon></button></td>
+                    <td v-if="item!=undefined">{{item.tipotutoria}}</td>
+                    <td v-if="item!=undefined"><button class="btn link" style="
+                        padding-top: 0px;
+                        padding-bottom: 0px;
+                        border-top-width: 0px;
+                        border-bottom-width: 0px;
+                        margin-top: 0px;
+                        margin-bottom: 0px;
+                    " v-on:click="Eliminar(item, index)"><b-icon  style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"></b-icon></button></td>
                 </tr>
             </tbody>
         </table>
@@ -96,7 +113,10 @@ export default {
   data(){
     return{
         tutores:[],
+        tutoriaAlumno:null,
         tutorSeleccionado:null,
+        tipoTutoriaAsignar:[],
+        tutoriaSeleccionada:null,
         tipoTutoria:[],
         alumnos:[],
         alumnosAsig:[],
@@ -114,21 +134,21 @@ export default {
   mounted(){
     this.listarTutores();
     //usuarios/condAlumno 
-    this.obtenerAlumnos();
+    //this.obtenerAlumnos();
   },
   computed:{
 
   },
   methods:{
     obtenerAlumnos(){
-      axios.post('programa/alumnosProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
+      axios.post('TipoTutoria/listaAlumnosConTT', 
+        {id_programa: this.$store.state.programaActual.id_programa,
+        nomFacu: this.$store.state.programaActual.facultad.nombre,
+        id_tipo_tutoria: this.tutoriaSeleccionada.id_tipo_tutoria
+          
+        })
       .then( response => {
-          console.log("listado alumnos: ",response.data)
           this.codigos=response.data;
-          //for(var i in response.data){ 
-            //  this.codigos.push(response.data[i][0]);
-          //}
-          console.log(this.codigos);
       })
       .catch(e => {
           console.log(e.response);
@@ -151,10 +171,22 @@ export default {
         nombre: "",
       };
       axios
-      .post('/programa/tutoresListar', params)
+      .post('/programa/tutoresAsignar', params)
         .then(res =>{
-          console.log(res);
-          this.tutores=res.data;            
+          this.tutores=res.data; 
+          for(var i=0; i<this.tutores.length; i++){
+              this.tutores[i].ttAsignar=new Array();
+              this.tutores[i].ttAsignar=this.tutores[i].ttAsignar.concat(this.tutores[i].tiposTutoriaAsignar);
+              
+              if(this.tutores[i].tiposTutoriaAsignar.length>1){
+                    var tipo= new Object();
+                    tipo.nombre="Todos";
+                    tipo.id_tipo_tutoria=0;
+                    this.tutores[i].tiposTutoriaAsignar.push(tipo);
+              }
+              
+          }
+          console.log(res);           
         })
         .catch(e => {
           console.log(e.response);
@@ -162,45 +194,70 @@ export default {
     },
 
     listarTT(){
-      if(this.tutorSeleccionado){
-        this.tipoTutoria=this.tutorSeleccionado.usuario.tipo_tutorias;
-        console.log(this.tutorSeleccionado);
-        const params = {
-          id_tutor: this.tutorSeleccionado.usuario.id_usuario,
-          id_programa: this.$store.state.programaActual.id_programa
-        };
-        //Falta corregir por caro!!!
-        axios
-        .post('/registros/listarAlumnos', params)
-        .then(res =>{
-          console.log(res);
-          this.alumnosAsig=res.data;            
-        })
-        .catch(e => {
-          console.log(e.response);
-        })
-      }
+        this.alumnosAsig=[];
+        if(this.tutorSeleccionado){
+            
+            this.tipoTutoria=this.tutorSeleccionado.tiposTutoriaAsignar;
+            if (this.tutorSeleccionado.tiposTutoriaAsignar.length==1){
+                this.tutoriaSeleccionada=this.tutorSeleccionado.tiposTutoriaAsignar[0];
+                this.tutoriaAlumno=this.tutorSeleccionado.tiposTutoriaAsignar[0];
+            }else{
+                this.tutoriaSeleccionada=null;
+                this.tutoriaAlumno=null;
+            }
+            if(this.tutoriaSeleccionada){
+                this.listarAlumnos();
+            }
+        }
+
+
 
     },
 
+    listarAlumnos(){
+        this.alumnosAsig=[];
+        this.alSeleccionado=null;
+        this.sel='';
+
+        if(this.tutoriaSeleccionada.id_tipo_tutoria!=0)this.tutoriaAlumno=this.tutoriaSeleccionada;
+        this.tipoTutoriaAsignar=this.tutorSeleccionado.ttAsignar;
+        if(this.tutoriaSeleccionada || this.tutoriaSeleccionada==0){
+            const params = {
+            id_tutor: this.tutorSeleccionado.id_usuario,
+            id_programa: this.$store.state.programaActual.id_programa,
+            id_tipo_tutoria: this.tutoriaSeleccionada.id_tipo_tutoria
+            };
+            //si te doy tipo de tutoría 0, me listas a todos los alumnos con sus tipos de tutorías
+            axios
+            .post('/registros/listarAlumnos', params)
+            .then(res =>{
+            this.alumnosAsig=res.data;
+            console.log(res);            
+            })
+            .catch(e => {
+            console.log(e.response);
+            })
+        }
+        if(this.tutoriaSeleccionada && this.tutoriaSeleccionada.id_tipo_tutoria!=0)
+         this.obtenerAlumnos();
+    },
+
     addAlumno: function () {  
-        console.log(this.alSeleccionado);
-        console.log(this.alumnosAsig);
 
         const params = {
-        id_tutor: this.tutorSeleccionado.usuario.id_usuario,
+        id_tutor: this.tutorSeleccionado.id_usuario,
         id_programa: this.$store.state.programaActual.id_programa,
         id_alumno: this.alSeleccionado.id_usuario,
-        id_usuario_creacion: this.$store.state.usuario.id_usuario,
+        usuario_creacion: this.$store.state.usuario.id_usuario,
+        id_tipo_tutoria: this.tutoriaAlumno.id_tipo_tutoria,
+        usuario_actualizacion: this.$store.state.usuario.id_usuario,
         cambiar:this.cambiar,
         };
         
         axios
         .post('/registros/insertar', params)
         .then(res =>{
-            console.log(res);
             if(res.data.status=="error"){
-                //console.log(res.data.mensaje);
                 Swal.fire({
                     text:res.data.mensaje+", ¿desea asignar de todos modos?",
                     icon:"warning",
@@ -224,6 +281,9 @@ export default {
                                 showConfirmButton: true,
                             }) 
                             this.enviarCorreo(); 
+                            
+                            this.alSeleccionado.tipotutoria=this.tutoriaAlumno.nombre;
+                            this.alSeleccionado.id_tipo_tutoria=this.tutoriaAlumno.id_tipo_tutoria;
                             this.alumnosAsig.push(this.alSeleccionado);
                             this.alSeleccionado=null;
                             this.sel='';
@@ -246,7 +306,9 @@ export default {
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                 }) 
-                
+               
+                this.alSeleccionado.tipotutoria=this.tutoriaAlumno.nombre;
+                this.alSeleccionado.id_tipo_tutoria=this.tutoriaAlumno.id_tipo_tutoria;
                 this.alumnosAsig.push(this.alSeleccionado);
                 this.enviarCorreo();
                 this.alSeleccionado=null;
@@ -264,7 +326,7 @@ export default {
     },
 
     enviarCorreo(){
-        var mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.usuario.nombre+" "+this.tutorSeleccionado.usuario.apellidos+" como tutor o tutora.";
+        var mensaje = "Se le acaba de asignar a "+this.tutorSeleccionado.nombre+" "+this.tutorSeleccionado.apellidos+" como tutor o tutora.";
         emailjs.send(
             "gmail",
             "template_bV7OIjEW",
@@ -282,7 +344,7 @@ export default {
 
     Eliminar: function(item, index) {
         Swal.fire({
-            title: '¿Dese eliminar la asignación de '+item.nombre+'?',
+            title: '¿Desea eliminar la asignación de '+item.nombre+'?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',
@@ -291,14 +353,16 @@ export default {
         }).then((result) => {
             if (result.value) {
                 const params = {
-                id_tutor: this.tutorSeleccionado.usuario.id_usuario,
+                id_tutor: this.tutorSeleccionado.id_usuario,
                 id_programa: this.$store.state.programaActual.id_programa,
+                usuario_actualizacion: this.$store.state.usuario.id_usuario,
                 id_alumno: item.id_usuario,
+                id_tipo_tutoria:item.id_tipo_tutoria,
                 };
                 axios
                 .post('/registros/eliminar',params)
                 .then(response=>{
-                    console.log(response)
+                    console.log(response);
                     this.alumnosAsig.splice(index,1);
                     Swal.fire({
                         text:"Eliminación Exitosa",

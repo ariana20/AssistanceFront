@@ -1,19 +1,17 @@
 <template>
-  <div name="FormSolicitudes" class="container" >
-    <div class="row top-titulo" style="text-align: left" >
-      <div class="top-titulo">
-            <h5 class="col-sm-4 title-container">Nombre: </h5>
-            <input class="col-sm-6 form-control" style="top:26px;right:40px;width:250px" v-model="nombre" placeholder="Busque por nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )" >
+  <div name="FormSolicitudes" style="text-align: left" class="contenedor">
+      
+    <div class="row" style="width:100%">
+      <div class="form-inline col-12 col-md-2 col-lg-1">
+        <h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
       </div>
-        <!--<div class="row col-sm-4 tutoria-title"  style="margin:10px;font-size:25px;font-weight:bold">Buscar:  
-        <input placeholder="Busque por nombre" class="row col-sm-8 form-control" style="left:25px;" type="text" v-model="nombre">  
-        </div>
-        <div style="margin-right:100px"></div>                   
-                 <button  type="button"  style="text-align:right" class="btn btn-info">Añadir</button> 
-                  <b-button v-on:click="nuevo()" style="height:40px;border-color:transparent;margin-left:25%;background: #0097A7">Añadir</b-button>-->
-           
+      <div class="form-inline col-12 col-md-4">
+        <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Busque por nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)  )">
       </div>
-      <table class="table"  style="text-align:left">
+    </div>
+          
+    <div style="overflow: auto;width:95%">
+      <table class="table"  style="text-align:left;margin-top:2%">
         <thead>
           <tr>
             <th scope="col">Código</th>
@@ -39,7 +37,7 @@
               <button style="padding-left: 5px;padding-right: 5px;width:25px;margin-left:5px" v-on:click="Aceptar(item)" class="btn link">
                   <b-icon icon="check-circle-fill" style="color:#0097A7"/>
               </button>
-              <button style="padding-left: 5px;padding-right: 5px;margin-left:5px;width:25px" v-on:click="Rechazar" class="btn link">
+              <button style="padding-left: 5px;padding-right: 5px;margin-left:5px;width:25px" v-on:click="Rechazar(item)" class="btn link">
                   <b-icon icon="x-circle-fill" style="color:#757575"/>
               </button>
             </td>
@@ -51,14 +49,21 @@
           </tr>
         </tbody>
       </table>
-  
+    </div>
+
+    <div v-if="solicitudesFiltrados==null || solicitudesFiltrados.length==0" class="row" style="width:100%">
+      <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
+        Ninguna Solicitud Pendiente
+      </div>
+    </div>
+
     <!-- Modal de cargando.más grande  -->
-      <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-        <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
-          <b-spinner style="width: 3rem; height: 3rem;"/>
-          <br >Cargando... 
-        </div>
-      </b-modal>
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+        <b-spinner style="width: 3rem; height: 3rem;"/>
+        <br >Cargando... 
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -149,28 +154,28 @@ export default {
                   }
                   this.axios.post('/usuarios/nuevoPrograma/'+item.usuarioSolicitante.id_usuario,obj)
                       .then(response=>{
-                          response
-                          emailjs.send(
-                              "gmail",
-                              "template_bV7OIjEW",
-                              {
-                              "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
-                              "mensaje":mensaje,
-                              "correo": item.usuarioSolicitante.correo
-                              }, 'user_ySzIMrq3LRmXhtVkmpXAA')
-                          .then((result) => {
-                              console.log('SUCCESS!', result.status, result.text);
-                          }, (error) => {
-                              console.log('FAILED...', error);
-                          });
-                          this.hideModal();
-                          Swal.fire({
-                          text:"Aceptado exitosamente",
-                          icon:"success",
-                          confirmButtonText: 'OK',
-                          confirmButtonColor:'#0097A7',
-                          showConfirmButton: true,
-                          })
+                        response
+                        emailjs.send(
+                            "gmail",
+                            "template_bV7OIjEW",
+                            {
+                            "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                            "mensaje":mensaje,
+                            "correo": item.usuarioSolicitante.correo
+                            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                        .then((result) => {
+                            console.log('SUCCESS!', result.status, result.text);
+                        }, (error) => {
+                            console.log('FAILED...', error);
+                        });
+                        this.hideModal();
+                        Swal.fire({
+                        text:"Aceptado exitosamente",
+                        icon:"success",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                        })
                       })
                       .catch(e=>{
                         console.log(e)
@@ -179,54 +184,61 @@ export default {
                 }
                 else if(item.tipo_solicitud == 'Tutor'){
                   mensaje = "Se te asignó "+item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos+" como tutor en el programa "+this.$store.state.programaActual.nombre
-                  let obj ={
-                    id_alumno:item.id_solicitante, 
-                    id_tutor:item.usuarioRelacionado.id_usuario,
-                    id_programa:this.$store.state.programaActual.id_programa,
-                    usuario_creacion: this.$store.state.usuario.id_usuario,
-                  }
-                  this.axios.post('/registros/insertar',obj)
-                      .then(response=>{
+                  this.axios.post('/TipoTutoria/tipoTutoriaNombre',item.motivo)
+                    .then(response=>{
+                      let obj ={
+                        id_alumno:item.id_solicitante, 
+                        id_tutor:item.usuarioRelacionado.id_usuario,
+                        id_programa:this.$store.state.programaActual.id_programa,
+                        id_tipo_tutoria: response.data.id_tipo_tutoria,
+                        usuario_creacion: this.$store.state.usuario.id_usuario,
+                      }
+                      this.axios.post('/registros/insertar',obj)
+                        .then(response=>{
                           response
                           emailjs.send(
-                              "gmail",
-                              "template_bV7OIjEW",
-                              {
-                              "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
-                              "mensaje":mensaje,
-                              "correo": item.usuarioSolicitante.correo
-                              }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                            "gmail",
+                            "template_bV7OIjEW",
+                            {
+                            "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                            "mensaje":mensaje,
+                            "correo": item.usuarioSolicitante.correo
+                            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
                           .then((result) => {
-                              console.log('SUCCESS!', result.status, result.text);
+                            console.log('SUCCESS!', result.status, result.text);
                           }, (error) => {
-                              console.log('FAILED...', error);
+                            console.log('FAILED...', error);
                           });
                           this.hideModal();
                           Swal.fire({
-                          text:"Asignación de tutor exitosa",
-                          icon:"success",
-                          confirmButtonText: 'OK',
-                          confirmButtonColor:'#0097A7',
-                          showConfirmButton: true,
+                            text:"Asignación de tutor exitosa",
+                            icon:"success",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor:'#0097A7',
+                            showConfirmButton: true,
                           })
-                      })
-                      .catch(e=>{
-                        console.log(e)
-                        this.hideModal();
-                      })
+                        })
+                        .catch(e=>{
+                          console.log(e)
+                          this.hideModal();
+                        })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
                 }
                 else if(item.tipo_solicitud == 'Cita'){
-                  mensaje = "Se acepto tu cancelacion de la cita con el tutor "
+                  mensaje = "Se aceptó tu cancelacion de la cita con el tutor "
                     +item.usuarioRelacionado.nombre+" "
                     +item.usuarioRelacionado.apellidos
-                    +" del día "+this.$store.state.programaActual.nombre
+                    +" del día "+item.cita.disponibilidad.fecha+ " a las "+item.cita.disponibilidad.hora_inicio+" en el programa "+this.$store.state.programaActual.nombre
                   let obj ={
-                    id_alumno:item.id_solicitante, 
-                    id_tutor:item.usuarioRelacionado.id_usuario,
-                    id_programa:this.$store.state.programaActual.id_programa,
-                    usuario_creacion: this.$store.state.usuario.id_usuario,
+                    idCita:item.cita.id_cita, 
+                    idDisponibilidad:item.cita.id_disponibilidad,
+                    usuario_actualizacion: this.$store.state.usuario.id_usuario,
                   }
-                  this.axios.post('/citas/eliminar',obj)
+                  this.axios.post('/citas/cancelarCita',obj)
                     .then(response=>{
                         response
                         emailjs.send(
@@ -293,7 +305,7 @@ export default {
                 let mensaje;
                 if(item.tipo_solicitud == 'Programa') mensaje = "Se rechazó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
                 if(item.tipo_solicitud == 'Tutor') mensaje = "Se rechazó tu solicitud para asignacion de Tutor en el programa de "+this.$store.state.programaActual.nombre
-                console.log(mensaje)
+                if(item.tipo_solicitud == 'Cita') mensaje = "Se rechazó tu solicitud para la cancelación de tu cita con "+this.$store.state.usuario.nombre+" "+this.$store.state.usuario.apellidos
                 emailjs.send(
                   "gmail",
                   "template_bV7OIjEW",
@@ -340,6 +352,7 @@ export default {
     border-radius: 1.25rem;  
     border: 0.5px solid #757575;
     margin-bottom: 10px;
+    width: 100%;
 }
 .motivo-dropdown-title {
     top: 10px;

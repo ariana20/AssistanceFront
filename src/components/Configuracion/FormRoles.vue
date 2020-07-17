@@ -1,16 +1,20 @@
 <template>
-  <div class="FormRoles container" >
-    <div class="row top-titulo" style="text-align: left" >
-      <div class="col-sm-6 top-titulo">
-        <h5 class="col-sm-6 " style="margin-top: 5px;margin-bottom: 30px;" >Nombre: </h5>
-        <input class="col-sm-6 form-control" style="top:-5px;" v-model="nombre" placeholder="Buscar por nombre"  >
-       
+  <div class="FormRoles contenedor" style="text-align: left">
+
+    <div class="row" style="width:100%">
+      <div class="form-inline col-11 col-md-2 col-lg-1">
+        <h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
       </div>
-      <div class="botones" >
-          <button  type="button" style="border-radius: 10px;margin-right:50px;padding-top:5px;margin-top:-25px" @click="nuevo()" class="row btn btn-info">Añadir</button>
-      </div>      
+      <div class="form-inline col-11 col-md-4">
+        <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
+      </div>
+      <div class="form-inline col-11 col-md-2 offset-md-3 offset-lg-4">
+        <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
+      </div>
     </div>
-      <table class="table"  style="text-align:left">
+
+    <div style="overflow: auto;width:99%;margin-top:2%">
+      <table class="table" style="width:99%">
         <thead>
           <tr>
             <th scope="col">N°</th>
@@ -32,17 +36,17 @@
               </div>
             </td>
             <td  style="text-align: center" v-if="$store.state.tipoActual.nombre == 'Admin'">
-              <button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
+              <button v-on:click="Editar(item.id_tipo_usuario,false)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
               <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
             </td>
             <td  style="text-align: center" v-else>
               
               <div v-if="(item.programa.nombre!='Administrador' && item.programa.nombre!=$store.state.programaActual.facultad.nombre)">
-                <button v-on:click="Editar(item.id_tipo_usuario)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
+                <button v-on:click="Editar(item.id_tipo_usuario,false)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
                 <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
               </div>
               
-              <div v-else>
+              <div v-else v-on:click="Editar(item.id_tipo_usuario,true)" style="cursor: pointer;">
                 Solo Visualización
               </div>
 
@@ -50,14 +54,15 @@
           </tr>
         </tbody>
       </table>
-  
-     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
-      <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
-        <b-spinner style="width: 3rem; height: 3rem;"/>
-        <br >Cargando... 
-      </div>
-      </b-modal>
     </div>
+
+    <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+    <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+      <b-spinner style="width: 3rem; height: 3rem;"/>
+      <br >Cargando... 
+    </div>
+    </b-modal>
+  </div>
 </template>
 
 <script>
@@ -135,7 +140,8 @@ export default {
       }
       
     },
-    Editar(id){
+    Editar(id,Visualización){
+      this.$store.state.visualizacion = Visualización;  
       this.$router.push('/permisos/'+id);
     },
     nuevo(){
@@ -143,7 +149,7 @@ export default {
     },
     Eliminar(item){
       Swal.fire({
-          text: '¿Dese eliminar '+item.nombre+'?',
+          text: '¿Desea eliminar '+item.nombre+'?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
@@ -220,7 +226,7 @@ export default {
     justify-content: space-between;
 }
 .botones {
-    margin:auto;
+    margin-top: -0.5%;
 }
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}

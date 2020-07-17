@@ -19,6 +19,14 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "about" */ '../views/Principal/About.vue')
   },
   {
+    path: '/recuperarContrasena/:token?',
+    name: 'Recuperar Contrasena',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/Principal/ViewRecuperarContrasena.vue')
+  },
+  {
     path: '/institucion',
     name: 'Institucion',
     // route level code-splitting
@@ -35,6 +43,22 @@ Vue.use(VueRouter)
   component: () => import(/* webpackChunkName: "about" */ '../views/Configuracion/ViewFacultad.vue')
   },
   {
+  path: '/datosFacultad',
+  name: 'Datos Facultad',
+  // route level code-splitting
+  // this generates a separate chunk (about.[hash].js) for this route
+  // which is lazy-loaded when the route is visited.
+  component: () => import(/* webpackChunkName: "about" */ '../views/Configuracion/ViewDatosFacultad.vue')
+  },
+  {
+  path: '/datosPrograma',
+  name: 'Datos Programa',
+  // route level code-splitting
+  // this generates a separate chunk (about.[hash].js) for this route
+  // which is lazy-loaded when the route is visited.
+  component: () => import(/* webpackChunkName: "about" */ '../views/Configuracion/ViewDatosPrograma.vue')
+  },
+  {
     path: '/crearFacultad/:id?',
     name: 'CrearFacultad',
     // route level code-splitting
@@ -49,6 +73,15 @@ Vue.use(VueRouter)
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/Configuracion/ViewPrograma.vue')
+    },
+    {
+      path: '/perfilConf',
+      name: 'Perfil Usuario',
+      props: true,
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "ViewPerfil" */ '../views/Configuracion/ViewPerfil.vue')
     },
     {
       path: '/unidadesApoyo',
@@ -216,6 +249,7 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewTutoresDisponibles" */ '../views/Gestion Periodo/ViewTutoresDisponibles.vue')
   },
   {
+    // path: '/agregardocumentos',
     path: '/agregarNotas',
     name: 'Agregar Notas',
     props: true,
@@ -263,7 +297,66 @@ Vue.use(VueRouter)
     path: '/reportes',
     name: 'Reportes',
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReportes.vue')
-  }
+  },
+  {
+    path: '/registrarCita',
+    name: 'Registra Cita',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewRegistrarCitaCal.vue')
+  },
+  {
+    path: '/registrarCita/registrarCitaAgendada',
+    name: 'Registrar Cita Agendada',
+    // props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewRegistrarCitaAgendada.vue')
+  },
+  {
+    path: '/calendariocitas/cita-agendada-alumnos',
+    name: 'Cita Agendada Alumnos',
+    // props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewCitaAgendada2.vue')
+  },
+  {
+    path: '/asignarTipoTutoria',
+    name: 'Asignar Tipo de Tutoría',
+    // props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Gestion Periodo/ViewAsignarTipoTutoria.vue')
+  },
+  {
+    path: '/reporteRendimiento',
+    name: 'Reporte Rendimiento',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteRendimiento.vue')
+  },
+  {
+    path: '/reportePlanAccion',
+    name: 'Reporte PlanAccion',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReportePlanAccion.vue')
+  },
+  {
+    path: '/reporteAsignado',
+    name: 'Reporte Asignado',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteAsignado.vue')
+  },
+  {
+    path: '/reporteAtenciones',
+    name: 'Reporte Atenciones',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteAtenciones.vue')
+  },
+  {
+    path: '/reporteencuestas',
+    name: 'Reporte Satisfaccion',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Reportes/ViewReporteSatisfaccion.vue')
+  },
+  {
+    path: '/encuestas',
+    name: 'Encuestas',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewEncuesta.vue')
+  },
+  {
+    path: '/respuesta/:id',
+    name: 'Responder Encuesta',
+    props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewRespuesta.vue')
+  },
 ]
 const router = new VueRouter({
   mode: 'history',

@@ -1,45 +1,49 @@
 <template>
-  <div class="FormRoles container" style="margin-top:5px">  
-    <!-- titulo de busqueda ya es responsive -->
-    <div class="row top-titulo" style="text-align: left" >
-      <div class="col-sm-6 top-titulo">
-        <h5 class="col-sm-6 " style="margin-top:10px;margin-bottom: 30px;" >Nombre: </h5>
-        <input class="col-sm-6 form-control" style="top:0px;margin-top:-1px" v-model="nombre" placeholder="Buscar por nombre"  >
+  <div class="FormRoles contenedor ">  
+    <div style="text-align: left" >
+      
+			<div class="row" style="width:100%">
+				<div class="form-inline col-11 col-md-2 col-lg-1">
+					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
+				</div>
+				<div class="form-inline col-11 col-md-4">
+					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
+				</div>
+				<div class="form-inline col-11 col-md-2 offset-md-3 offset-lg-5">
+					<button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir Nuevo</button>
+				</div>
+			</div> 
+
+      <div style="overflow: auto;width:100%">
+        <table class="table " style="text-align:left;margin-top:2%" >
+          <thead>
+            <tr>
+              <th scope="col">N°</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Estado</th>
+              <th scope="col" style="text-align: center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in tipostutoriasFiltrados" :key="index">
+              <th scope="row">{{index+1}}</th>
+              <td>{{item.nombre}}</td>        
+              <td >
+                  <b-icon v-if="item.estado == 'act'" icon="check" style="color:green;width:35px; height:35px;"/>
+                  <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;"/>
+              </td>     
+              <td  style="text-align: center">
+                    <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}">                          
+                      <b-icon style="color:#0097A7;width:20px; height:20px;margin-right:20px;" icon="pencil"/>
+                    </router-link>                  
+                    <b-icon v-on:click="eliminarTtutoria(item)" style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"/>
+                
+              </td>
+            
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      <div class="botones" >
-        <button  type="button" style="border-radius: 10px;margin-right:50px;margin-top:-25px;padding-top:5px" @click="nuevo()" class="row btn btn-info">Añadir</button>
-      </div>    
-  <!-- </tr> -->
-
-      <table class="table" style="text-align:left" >
-        <thead>
-          <tr>
-            <th scope="col">N°</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Estado</th>
-            <th scope="col" style="text-align: center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in tipostutoriasFiltrados" :key="index">
-            <th scope="row">{{index+1}}</th>
-            <td>{{item.nombre}}</td>        
-            <td >
-                <b-icon v-if="item.estado == 'act'" icon="check" style="color:green;width:35px; height:35px;"/>
-                <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;"/>
-            </td>     
-            <td  style="text-align: center">
-                 <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}">                          
-                    <b-icon style="color:#0097A7;width:20px; height:20px;margin-right:20px;" icon="pencil"/>
-                 </router-link>                  
-                  <b-icon v-on:click="eliminarTtutoria(item)" style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"/>
-              
-            </td>
-          
-          </tr>
-        </tbody>
-      </table>
     </div>
         <!-- MODAL CARGANDO  -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
@@ -61,12 +65,12 @@ export default {
     return{
       tipostutorias:[], //
       miprog:this.$store.state.programaActual,
-    
+      miUsuario:null,
     }
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login');
-    console.log('mi programa actual: ',this.$store.state.programaActual);
+  
     if(this.$store.state.tipostutorias === null) this.listarTT(); //
     else this.tipostutorias = this.$store.state.tipostutorias; //
     this.nombre="";
@@ -96,12 +100,12 @@ computed:{
            this.$store.state.tipostutorias=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
 
             // this.$store.state.tipostutorias = response.data; //
-
-            console.log('Listado de tt: ',this.$store.state.tipostutorias);
+           this.miUsuario=this.$store.state.usuario;
+       
             this.hideModal();
         })
         .catch(e=>{
-        console.log(e);
+        console.log('catch Listar',e);
         this.hideModal();
         //Swal de problema
          Swal.fire({
@@ -118,7 +122,7 @@ computed:{
     },
     
     eliminarTtutoria(item){
-        console.log('Id del tipo de tutoria a eliminar: ',item);
+    
       Swal.fire({
             text:'¿Desea eliminar el tipo de tutoria '+item.nombre+'?',
             icon:'warning',
@@ -139,18 +143,19 @@ computed:{
                 confirmButtonColor:'#0097A7'
                 }
               )
+              let params ={usuario_actualizacion:this.miUsuario.id_usuario}
               //aqui iriía el eliminar
-              Axios.post('/TipoTutoria/eliminar/'+item.id_tipo_tutoria)
+
+              Axios.post('/TipoTutoria/eliminar/'+item.id_tipo_tutoria,params)
                 .then(response=>{
                   console.log(response);
-                  console.log('eliminaré a :', this.$store.state.tipostutorias.id_tipo_tutoria);
                   let index = this.$store.state.tipostutorias.indexOf( //
                     function(element){
                       return element.id_tipo_tutoria === item.id_tipo_tutoria; //
                    })
                   this.$store.state.tipostutorias.splice(index, 1); //  
-                  this.$router.push('/ListaTiposTutorias'); //
-                  
+                  //this.$router.push('/ListaTiposTutorias'); //
+                  this.$store.state.tipostutorias=null;                 
 
                 })
                 .catch(e=>{

@@ -1,42 +1,68 @@
 <template>
-  <div class="FormUsuario container" style="margin-top:5px">
-    <div style="margin-right:50px"></div>  
-    <!-- </div>
-    <div> -->
-      <table>
-      <tbody>
-        <td style="text-align:left">
-        <tr style="text-align:left"><td>Codigo: *</td>   <td> <input style="margin-left:5%;margin-top:7%"  class=" form-control" type="text" v-model="codigo"></td></tr>
-        <tr style="text-align:left"><td>Nombre: *</td>   <td> <input style="margin-left:5%;margin-top:7%" class="form-control" type="text" v-model="nombre"></td></tr>
-        <tr style="text-align:left"><td>Apellidos: *</td>   <td> <input style="margin-left:5%;margin-top:7%" class="form-control" type="text" v-model="apellidos"></td></tr>
-        <tr style="text-align:left"><td>Celular: *</td>   <td> <input style="margin-left:5%;margin-top:7%" class="form-control" type="text" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" v-model="telefono"></td></tr>
-        <tr style="text-align:left"><td>Correo: *</td>   <td> <input style="margin-left:5%;margin-top:7%" id="corr" class="form-control" type="text" v-model="correo"></td></tr>
-        <tr style="text-align:left">
-          <td>Tipo de Coordinador *</td>
-          <td>
-            <select class= "form-control" style="color:gray;margin-top:7%;margin-left:5%" v-model="tipoSel">
-              <option selected="true" disabled :value="0">Elige un Tipo de Coordinador</option>
-              <option :value="2">Coordinador de Facultad</option>
-              <option :value="3">Coordinador de Programa</option>
-            </select>
-          </td>
-        </tr>
-       
-        <tr style="margin-left:0%"  >
-          <div class="row col-sm-6 " style="margin-left:0%;" > 
-            <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox></div>
-            <!-- <div>{{estado}}</div> -->
-
-        </tr> 
-        <br>  * Campos obligatorios    
-       </td> 
-      </tbody>
-      </table>
-       <div  class="botones">   
-            <button type="button" style="margin:5px" class="btn btn-info"  v-on:click="guardarUsuario()">Guardar</button>
-            <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>
-         
-
+  <div class="FormUsuario contenedor" style="margin-top:2%">
+    <div class="row">
+      <div class="col-12 col-md-4 col-lg-2 form-inline">
+        Codigo: *
+      </div>
+      <div class="col-12 col-md-6 col-lg-5">
+        <input style="margin-top:2%" class=" form-control" type="text" v-model="codigo" onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165))">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4 col-lg-2 form-inline">
+        Nombres: *
+      </div>
+      <div class="col-12 col-md-6 col-lg-5">
+        <input style="margin-top:2%" class="form-control" type="text" v-model="nombre" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4 col-lg-2 form-inline">
+        Apellidos: *
+      </div>
+      <div class="col-12 col-md-6 col-lg-5">
+        <input style="margin-top:2%" class="form-control" type="text" v-model="apellidos" onkeypress="return (( event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90) ||  (event.charCode >= 97 && event.charCode <= 122)    || (event.charCode >= 160 && event.charCode <= 165) )">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4 col-lg-2 form-inline">
+        Celular: *
+      </div>
+      <div class="col-12 col-md-6 col-lg-5">
+        <input style="margin-top:2%" class="form-control" type="text" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" v-model="telefono">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4 col-lg-2 form-inline">
+        Correo: *
+      </div>
+      <div class="col-12 col-md-6 col-lg-5">
+        <input style="margin-top:2%" class="form-control" type="text" id="corr" v-model="correo">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4 col-lg-2 form-inline">
+        Tipo de Coordinador *
+      </div>
+      <div class="col-12 col-md-6 col-lg-5">
+        <select class= "form-control" style="color:gray;margin-top:2%" v-model="tipoSel">
+          <option selected="true" disabled :value="0">Elige un Tipo de Coordinador</option>
+          <option :value="2">Coordinador de Facultad</option>
+          <option :value="3">Coordinador de Programa</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 form-inline">
+        <b-form-checkbox v-model="estado" value="act" unchecked-value="ina"> Activo</b-form-checkbox>
+      </div>
+      <div class="col-12 form-inline" style="margin-top:2%">
+        * Campos obligatorios  
+      </div>
+    </div>  
+    <div  class="botones">   
+      <button type="button" style="margin:5px" class="btn btn-info"  v-on:click="guardarUsuario()">Guardar</button>
+      <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="cancelarUsuario()"  >Cancelar</button>
     </div>
     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
@@ -267,8 +293,9 @@ export default {
 .form-control {
     border-radius: 1rem;  
     border: 0.5px solid #757575;
-    text-align-last: right;
+    text-align-last: left;
     margin-bottom:1.3em;
+    width: 100%;
 }
 body{
   background-image: null;

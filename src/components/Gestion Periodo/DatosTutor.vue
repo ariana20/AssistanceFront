@@ -1,20 +1,24 @@
 <template>
     <div style="text-align:left;">
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
-        
-        <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo">
-				<img  :src="tutor.imagen" height="110px" width="110px" />		
+        <div style="text-align:center">
+        <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo" style="margin-left: 0px;">
+                <img v-if="tutor.imagen[0]!='u'" :src="tutor.imagen" height="110px" width="110px"/>
+				<img v-else  :src="'https://assisstanceproyecto20201.vizcochitos.cloudns.cl/'+tutor.imagen" height="110px" width="110px" />		
 		</figure>
-        <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo">	
+        <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo" style="margin-left: 0px;">	
                 <b-avatar size="7rem" ></b-avatar>		
 		</figure>
+        </div>
         <div class="descripcion-tutor">
             <div class="font-weight-bolder">{{tutor.nombre + " " + tutor.apellidos}}</div>
             <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
             <div class="font-weight-bolder">Temas: </div>
             <div>
-                <label v-for="(item,index) in tipoTutoria" :key="index">
-                    {{item.nombre}}<label v-if="index<tipoTutoria.length-1" style="margin-right:5px">, </label>
+                <label v-for="(item,index) in tipoTutoria" :key="index" style="margin-bottom: 0px;">
+                    <!--Falta decir que el tipo de tutoría solicitado sea parte del tipo de tutoria Asignado-->
+                    <label v-if="item.tutor_fijo==0 || (item.tutor_fijo==1 && item.tutor_asignado==0 && tipoTutoriaAsignado)">{{item.nombre}}</label>
+                    <label v-if="(item.tutor_fijo==0 || (item.tutor_fijo==1 && item.tutor_asignado==0 && tipoTutoriaAsignado)) && index<tipoTutoria.length-1" style="margin-right:5px; margin-bottom: 0px;">, </label>
                 </label>
             </div>
             <div style="text-align: right" id="botones" >
@@ -24,7 +28,7 @@
                 class="btn btn-info">Ver Perfil</button> 
                 <button type="button"
                 class="btn btn-info btn-enviar-msg">Enviar Mensaje</button-->
-                <button type="button" style="align: right"
+                <button type="button" style="align: right" v-if="tutor.solicitado"
                 class="btn btn-info" v-on:click="solicitarTutor()">Solicitar Tutor</button> 
             </div>
         </div>
@@ -41,6 +45,7 @@ export default {
         text: String,
         tutor: Object,
         tipoTutoria: Array,
+        tipoTutoriaAsignado: Array
         
     },
     data(){
@@ -70,6 +75,7 @@ export default {
                         id_tutor: this.tutor.id_usuario,
                         id_solicitante: this.$store.state.usuario.id_usuario,
                         id_programa: this.$store.state.programaActual.id_programa, 
+                        usuario_creacion: this.$store.state.usuario.id_usuario,
                         motivo: ""
                     }
                     axios.create()
@@ -95,7 +101,6 @@ export default {
                             }) 
                         }
 
-                        console.log(response)
                     })
                     .catch(e => {
                         console.log(e.response);
