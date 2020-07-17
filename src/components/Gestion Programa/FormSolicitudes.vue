@@ -184,7 +184,10 @@ export default {
                 }
                 else if(item.tipo_solicitud == 'Tutor'){
                   mensaje = "Se te asignó "+item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos+" como tutor en el programa "+this.$store.state.programaActual.nombre
-                  this.axios.post('/TipoTutoria/tipoTutoriaNombre',item.motivo)
+                  this.axios.post('/TipoTutoria/tipoTutoriaNombre',{
+                      nombre: item.motivo,
+                      id_programa:this.$store.state.programaActual.id_programa
+                    })
                     .then(response=>{
                       let obj ={
                         id_alumno:item.id_solicitante, 
