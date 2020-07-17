@@ -54,10 +54,35 @@ export default {
     data(){
         return{
             habilitado:"",
-            mensaje:""
+            mensaje:"",
+            tutoriaSolicitar:[],
         }
     },
+    mounted(){
+        this.obtenerTipoTutoriaAceptado();
+
+    },
     methods:{
+        obtenerTipoTutoriaAceptado(){
+            
+            for(var i=0; i<this.tipoTutoria.length; i++){
+                var iguales=false;
+                if(this.tipoTutoria[i].tutor_fijo && this.tipoTutoria[i].tutor_asignado==0){
+                    for(var j=0; j<this.tipoTutoriaAsignado.length; j++){
+                        if(this.tipoTutoria[i].id_tipo_tutoria==this.tipoTutoriaAsignado[j].id_tipo_tutoria){
+                            iguales=true;
+                            break;
+                        }
+
+                    }
+                    if(!iguales){
+                        this.tipoTutoria.splice(i,1);
+                    }else{
+                        this.tutoriaSolicitar.push(this.tipoTutoria[i]);
+                    }
+                }
+            }
+        },
         verDisponibilidad(){
             var tutorS=new Object();
             tutorS.usuario=new Object();
@@ -68,69 +93,23 @@ export default {
         },
         solicitarTutor(){
             this.$modal.show(EventModal,{
-                text: "This is from the component",
-                isTutor: true
+                tutorSel: this.tutor,
+                tipoTutoria: this.tutoriaSolicitar,
+
             });
-            /*
-            Swal.fire({
-                text:"¿Desea solicitar a "+this.tutor.nombre+" como tutor o tutora?",
-                icon:"warning",
-                confirmButtonText: 'Sí',
-                confirmButtonColor:'#0097A7',
-                cancelButtonText: 'No',
-                cancelButtonColor:'C4C4C4',
-                showCancelButton: true,
-                showConfirmButton: true,
-            }).then((result) => {
-                if (result.value) {
-                    const params={
-                        id_tutor: this.tutor.id_usuario,
-                        id_solicitante: this.$store.state.usuario.id_usuario,
-                        id_programa: this.$store.state.programaActual.id_programa, 
-                        usuario_creacion: this.$store.state.usuario.id_usuario,
-                        motivo: ""
-                    }
-                    axios.create()
-                    .post('/solicitudes/solicitudTutor', params)
-                    .then( response=>{
-                        this.habilitado=response.data.habilitado;
-                        this.mensaje=response.data.mensaje;
-                        if(this.habilitado=="Si"){
-                            Swal.fire({
-                            text:"Registro Exitoso",
-                            icon:"success",
-                            confirmButtonText: 'OK',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                            })   
-                        }else if(this.habilitado=="No"){
-                            Swal.fire({
-                            text:this.mensaje,
-                            icon:"error",
-                            confirmButtonText: 'OK',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                            }) 
-                        }
-
-                    })
-                    .catch(e => {
-                        console.log(e.response);
-                    })
-
-                } 
-            })*/
-
-
         }
     }
 }
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+@import '../../assets/styles/material.css';
+@import '../../assets/styles/main.css';
+
 .vm--modal {
-    border-radius: 25px;
+    border-radius: 25px !important;
     margin: 30px;
     height: 260px !important;
 }
