@@ -1,15 +1,18 @@
 <template>
-  <div class="FormReportes">
-      <div class="container">
-        <div class="row mt-5">
+
+  <div  class="FormReportes">
+      <button  type="button" style="border-radius: 10px;margin-right:50px;padding-top:5px;margin-top:-25px" @click="downloadPDF" class="row btn btn-info">Descargar</button>
+        
+      <div ref="content"  class="container">
+        <div class="row mt-5">            
             <div class="col-7"  v-if="arrPositive.length>0">
                 <strong>Alumnos Asignados</strong>
                 <line-chart :chartData="arrPositive" :options="chartOp" label='Alumnos asignados'></line-chart>
-            </div>
+            </div>            
             <div class="col-1"></div>
             <div class="col-3" v-if="arrAsistencia.length>0">
                 <strong>Atenciones</strong>
-                <pie-chart :chartData="arrAsistencia" :options="chartOp2" label='Alumnos asignados'></pie-chart>
+                <pie-chart id="reporte" :chartData="arrAsistencia" :options="chartOp2" label='Alumnos asignados'></pie-chart>
             </div>
         </div>
       </div>
@@ -20,6 +23,8 @@
 
 
 <script>
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import axios from 'axios';
 import LineChart from '@/components/Reportes/LineChart.vue'
 import PieChart from '@/components/Reportes/PieChart.vue'
@@ -63,6 +68,27 @@ export default {
         this.RatioAsistencia();
     },
     methods:{
+        downloadPDF(){
+            const pdf = new jsPDF();
+            //var reporte=document.getElementById('reporte');
+            //var imag=reporte.toDataURL('image/png');
+            //pdf.addImage(imag,'PNG',10,10);
+            //pdf.text('Hola vizcochitos',10,10);
+            const html=this.$refs.content.innerHTML;
+            pdf.fromHTML(html,15,15,{width:150});
+            pdf.save('salida2.pdf');
+        },
+        downloadWithCSS() {
+            const doc = new jsPDF();
+            /** WITH CSS */
+            var canvasElement = document.createElement('canvas');
+                html2canvas(this.$refs.content, { canvas: canvasElement 
+                }).then(function (canvas) {
+                const img = canvas.toDataURL("image/jpeg", 20);
+                doc.addImage(img,'JPEG',10,10);
+                doc.save("sample.pdf");
+            });
+        },
         async RatioAsignado(){
             const params = {
                 id_programa: this.$store.state.programaActual.id_programa,
