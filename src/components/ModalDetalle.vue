@@ -1,7 +1,7 @@
 <template>
     <div name="Modal" >
-        <a href="#openModal"><b-icon icon="caret-right-square-fill" style="color:#0097A7"/></a>
-        <div id="openModal" class="modalbg">
+        <a :href="'#openModal'+solicitud.id_solicitante+solicitud.id_remitente+solicitud.id_programa"><b-icon icon="caret-right-square-fill" style="color:#0097A7"/></a>
+        <div :id="'openModal'+solicitud.id_solicitante+solicitud.id_remitente+solicitud.id_programa" class="modalbg">
             <div class="dialog col-11">
                 <a href="#close" title="Close" class="close">X</a>
                 <div style="margin-top:3%;margin-bottom:3%;font-size:200%">
@@ -59,7 +59,7 @@
                         <strong>Motivo:</strong>
                     </div>
                     <div class="col-12 col-md-7" style="text-align:left">
-                        <div v-if="solicitud.motivo">
+                        <div v-if="solicitud.motivo!=null">
                             {{solicitud.motivo}}
                         </div>
                         <div v-else>
