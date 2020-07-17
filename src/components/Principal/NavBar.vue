@@ -6,7 +6,7 @@
         class="col-5 col-md-2 form-control selectf"
         v-model="selectedPrograma"
         @change="cambiarProg()">
-        <option selected disabled :value="null" style=";font-family:'Brandon Bold'">Cambia de Programa</option>
+        <option selected disabled hidden :value="null" style=";font-family:'Brandon Bold'">Cambia de Programa</option>
         <option
           v-for="(item, index) in $store.state.cantProg" 
           :key="index" 

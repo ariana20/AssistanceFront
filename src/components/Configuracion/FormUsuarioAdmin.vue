@@ -197,7 +197,7 @@
           <div class="col-12 col-md-8">
             <select class="form-control"
               v-model="condiAlumnosselect">  <!--aqui guardo-->
-              <option selected disabled :value="null">Selecciona una condición</option>
+              <option selected disabled hidden :value="null">Selecciona una condición</option>
               <option v-for="(condi, i) in condiAlumnos"  :key="i" :value="condi.abreviatura"  > <!--falta agregar value, creo que abreviatura le mando-->
               {{ condi.nombre }} 
               </option>
@@ -210,7 +210,7 @@
           </div>
           <div class="col-12 col-md-4">
             <select class="form-control" v-model="tipostutoriasselect" style="cursor:pointer">
-              <option selected disabled value="no">Selecciona un tipo de tutoria</option>
+              <option selected disabled hidden value="no">Selecciona un tipo de tutoria</option>
               <option v-for="(tt, i) in tipostutorias"  :key="i"   :value="tt.id_tipo_tutoria">
               {{ tt.nombre}}
               </option>
@@ -1165,20 +1165,29 @@ export default {
                 }
                 if(this.tiposUsuariosselect==2 || this.tiposUsuariosselect==3){
                   this.axios.post('/usuarios/veificarCoordinador',{id_programa:params2.id_programa,tipo_usuario:this.tiposUsuariosselect,id_usuario:this.id_usuario_entrante})
+                  .then(response=>{
+                    response
+                    this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
                     .then(response=>{
                       response
-                        this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
-                          .then(response=>{
-                            response
-                            
-                          })
-                          .catch(e=>{
-                            console.log(e)
-                          })
+                      
                     })
                     .catch(e=>{
                       console.log(e)
                     })
+                  })
+                  .catch(e=>{
+                    console.log(e)
+                  })
+                }
+                else{
+                  this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
+                  .then(response=>{
+                    response
+                  })
+                  .catch(e=>{
+                    console.log(e)
+                  })
                 }
               }
             }

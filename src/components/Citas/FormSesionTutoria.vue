@@ -115,7 +115,7 @@
                     <div class="top-titulo" style="text-align:left;">
                     <div class="col-sm-4 derivar-dropdown-title">Derivar: </div>
                     <select class="col-sm form-control" style="left:-40px;" v-model="selectedUnidadApoyo">
-                        <option selected disabled :value="null">Seleccionar</option>
+                        <option selected disabled hidden :value="null">Seleccionar</option>
                         <option
                         v-for="(unidadApoyo, i) in unidadesApoyo" 
                         :key="i" 
