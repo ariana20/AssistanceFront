@@ -7,7 +7,7 @@
 					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
 				</div>
 				<div class="form-inline col-11 col-md-4">
-					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
+					<input maxlength="100"  class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
 				</div>
 				<div class="form-inline col-11 col-md-2 offset-md-3 offset-lg-5">
 					<button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir Nuevo</button>
@@ -36,7 +36,7 @@
                     <router-link :to="{name: 'TiposTutoria', params: {id: item.id_tipo_tutoria}}">                          
                       <b-icon style="color:#0097A7;width:20px; height:20px;margin-right:20px;" icon="pencil"/>
                     </router-link>                  
-                    <b-icon v-on:click="eliminarTtutoria(item)" style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"/>
+                    <b-icon v-on:click="eliminarTtutoria(item,index)" style="color:#757575;width:20px; height:20px;cursor:pointer" icon="dash-circle-fill"/>
                 
               </td>
             
@@ -121,7 +121,7 @@ computed:{
       this.$router.push('/tiposdeTutoria/'+id); //
     },
     
-    eliminarTtutoria(item){
+    eliminarTtutoria(item,index){
     
       Swal.fire({
             text:'¿Desea eliminar el tipo de tutoria '+item.nombre+'?',
@@ -149,13 +149,9 @@ computed:{
               Axios.post('/TipoTutoria/eliminar/'+item.id_tipo_tutoria,params)
                 .then(response=>{
                   console.log(response);
-                  let index = this.$store.state.tipostutorias.indexOf( //
-                    function(element){
-                      return element.id_tipo_tutoria === item.id_tipo_tutoria; //
-                   })
+                  
                   this.$store.state.tipostutorias.splice(index, 1); //  
-                  //this.$router.push('/ListaTiposTutorias'); //
-                  this.$store.state.tipostutorias=null;                 
+                 
 
                 })
                 .catch(e=>{

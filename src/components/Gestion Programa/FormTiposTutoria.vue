@@ -6,7 +6,7 @@
           Nombre:*
         </div>
         <div class="col-11 col-md-6 col-lg-5">
-          <input style="margin-top:2%" class=" form-control" type="text" v-model="tipotutoria.nombre">
+          <input maxlength="100" style="margin-top:2%;border: 0.5px solid #757575;outline: none;box-shadow: none;  " class=" form-control" type="text" v-model="tipotutoria.nombre">
          
         </div>
       </div>
@@ -15,7 +15,10 @@
           Descripción:
         </div>
         <div class="col-11 col-md-6 col-lg-5">
-          <textarea rows=3 cols=40 class="form-control" type="text" v-model="tipotutoria.descripcion"/>
+          <textarea rows=3 cols=40     
+              style="   border-radius: 1.25rem;    border: 1px solid #757575;  
+             margin-bottom: 10px;     width: 100%;     box-shadow: none;     color: #495057;" 
+             type="text" v-model="tipotutoria.descripcion"/>
         </div>
       </div>
 
@@ -81,50 +84,6 @@
             <div class="col-5 col-md-4 col-lg-3">
               <div class="row">
                 <div class="col-1">
-                  <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorfijo">
-                </div>
-                <div class="col-10">
-                  <label style="text-indent:5px" >{{fijvar[0].text}}</label>
-                </div>
-              </div>
-            </div>
-            <div class="col-5 col-md-4 col-lg-3">
-              <div class="row">
-                <div class="col-1">
-                  <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorfijo">
-                </div>
-                <div class="col-10">
-                  <label style="text-indent:5px" >{{fijvar[1].text}}</label>
-                </div>
-              </div>
-            </div>
-             <div  v-if="tipotutoria.tutorfijo==1" class="col-5 col-md-4 col-lg-3">
-              <div class="row">
-                <div class="col-1">
-                  <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorasignado">
-                </div>
-                <div class="col-10">
-                  <label style="text-indent:5px" >{{asigsol[0].text}}</label>
-                </div>
-              </div>
-            </div>
-            <div   v-if="tipotutoria.tutorfijo==1" class="col-5 col-md-4 col-lg-3">
-              <div class="row">
-                <div class="col-1">
-                  <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorasignado">
-                </div>
-                <div class="col-10">
-                  <label style="text-indent:5px" >{{asigsol[1].text}}</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 offset-sm-1">
-          <div class="row">
-            <div class="col-5 col-md-4 col-lg-3">
-              <div class="row">
-                <div class="col-1">
                   <input type="radio" id="yes" value="1" v-model="tipotutoria.bajorend" >
                 </div>
                 <div class="col-10">
@@ -144,6 +103,60 @@
             </div>
           </div>
         </div>
+        <div class="col-sm-12 offset-sm-1">
+          <div class="row">
+            <div class="col-5 col-md-4 col-lg-3">
+              <div class="row">
+                <div class="col-1">
+                  <input type="radio" id="yes" value="1" v-model="tipotutoria.tutorfijo">
+                </div>
+                <div class="col-10">
+                  <label style="text-indent:5px" >{{fijvar[0].text}}</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-5 col-md-4 col-lg-3">
+              <div class="row">
+                <div class="col-1">
+                  <input  type="radio" id="no" value="0" v-model="tipotutoria.tutorfijo">
+                </div>
+                <div class="col-10">
+                  <label style="text-indent:5px" >{{fijvar[1].text}}</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-sm-12 offset-sm-1">
+          <div class="row">
+          <div  class="col-5 col-md-4 col-lg-3">
+              <div class="row">
+                <div class="col-1">
+                  <input  v-if="tipotutoria.tutorfijo==1" type="radio" id="yes" value="1" v-model="tipotutoria.tutorasignado">
+                  <input v-else disabled type="radio" id="yes" value="1" v-model="tipotutoria.tutorasignado">
+                </div>
+                <div class="col-10">
+                  <label style="text-indent:5px" >{{asigsol[0].text}}</label>
+                </div>
+              </div>
+            </div>
+            <div   class="col-5 col-md-4 col-lg-3">
+              <div class="row">
+                <div class="col-1">
+                  <input  v-if="tipotutoria.tutorfijo==1" type="radio" id="no" value="0" v-model="tipotutoria.tutorasignado">
+                  <input v-else disabled type="radio" id="no" value="0" v-model="tipotutoria.tutorasignado">
+                </div>
+                <div class="col-10">
+                  <label style="text-indent:5px" >{{asigsol[1].text}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+
       </div>
 
 
@@ -182,7 +195,7 @@
                 <td>{{item.apellidos}}</td>
 
                 <td  style="text-align: center">
-                      <b-icon v-on:click="eliminarTtutor(item)" style="color:#757575;width:20px; height:20px;" icon="dash-circle-fill"/>
+                      <b-icon v-on:click="eliminarTtutor(item,index)" style="color:#757575;width:20px; height:20px;cursor:pointer;" icon="dash-circle-fill"/>
 
                 </td>
 
@@ -249,16 +262,16 @@ export default Vue.extend( {
         {value: '0',text: "Opcional"},
       ],
       asigsol:[
-        {value: '1',text: "Tutor asignado"},
-        {value: '0',text: "Tutor solicitado"},
+        {value: '1',text: "Tutor fijo asignado"},
+        {value: '0',text: "Tutor fijo solicitado"},
       ],
       fijvar:[
         {value: '1',text: "Tutor fijo"},
         {value: '0',text: "Tutor variable"},
       ],
       bajorend:[
-        {value: '1',text: "Bajo Rendimiento"},
-        {value: '0',text: "No es de Bajo rendimiento"},
+        {value: '1',text: "Bajo rendimiento"},
+        {value: '0',text: "No es de bajo rendimiento"},
       ],
 
 
@@ -319,7 +332,7 @@ export default Vue.extend( {
          Swal.fire({
               text:"No ha completado todos los campos",
               icon:"error",
-              confirmButtonText: 'OK',
+              confirmButtonText: 'Corregir',
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
         })
@@ -352,22 +365,20 @@ export default Vue.extend( {
            }
            else{
              if(this.tipotutoria.tutorfijo==0) this.tipotutoria.tutorasignado=null;
-           const params = {
-              nombre: this.tipotutoria.nombre,
-              descripcion: this.tipotutoria.descripcion,
-              estado:this.tipotutoria.estado,
-              //condiciones
-              obligatorio:this.tipotutoria.obligatorio,
-              individual:this.tipotutoria.individual,
-              tutor_asignado:this.tipotutoria.tutorasignado,
-              tutor_fijo:this.tipotutoria.tutorfijo,
-              bajo_rendimiento: this.tipotutoria.bajorend,
-              //otros
-              
-              id_programa:this.tipotutoria.miprog.id_programa,
-              usuario_creacion:this.miUsuario.id_usuario,
-               
-             
+              const params = {
+                nombre: this.tipotutoria.nombre,
+                descripcion: this.tipotutoria.descripcion,
+                estado:this.tipotutoria.estado,
+                //condiciones
+                obligatorio:this.tipotutoria.obligatorio,
+                individual:this.tipotutoria.individual,
+                tutor_asignado:this.tipotutoria.tutorasignado,
+                tutor_fijo:this.tipotutoria.tutorfijo,
+                bajo_rendimiento: this.tipotutoria.bajorend,
+                //otros
+                
+                id_programa:this.tipotutoria.miprog.id_programa,
+                usuario_creacion:this.miUsuario.id_usuario,  
               };
               this.showModal();
          Axios.create()
@@ -376,9 +387,9 @@ export default Vue.extend( {
             console.log(response)
               this.hideModal();
                Swal.fire({
-              text:"El nuevo tipo de tutoria fue guardada con exito",
+              text:"El nuevo tipo de tutoría fue guardada con éxito",
               icon:'success',
-              confirmButtonText: 'ok',
+              confirmButtonText: 'Ok',
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
               });
@@ -392,7 +403,7 @@ export default Vue.extend( {
                    Swal.fire({
                     text:"Ocurrió un incoveniente. Vuelva a intentar en unos minutos.",
                     icon:'error',
-                    confirmButtonText: 'ok',
+                    confirmButtonText: 'Ok',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
                   });
@@ -421,9 +432,9 @@ export default Vue.extend( {
             console.log(response);
             this.hideModal();
                Swal.fire({
-              text:"El nuevo tipo de tutoria fue guardada con exito",
+              text:"Las modificaciones se han realizado con éxito",
               icon:'success',
-              confirmButtonText: 'ok',
+              confirmButtonText: 'Ok',
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
               });
@@ -437,7 +448,7 @@ export default Vue.extend( {
                    Swal.fire({
                     text:"Ocurrió un incoveniente al modificar. Vuelva a intentar en unos minutos.",
                     icon:'error',
-                    confirmButtonText: 'ok',
+                    confirmButtonText: 'Ok',
                     confirmButtonColor:'#0097A7',
                    showConfirmButton: true,
               });
@@ -472,7 +483,7 @@ export default Vue.extend( {
     hideModal() {
       this.$refs['my-modal'].hide()
     },
-    eliminarTtutor(item){
+    eliminarTtutor(item,index){
           //item
           const paramsE={
             id_tipo_tutoria: this.tipotutoria.id_tipo_tutoria_entrante, //El nombre del parámetro está mal,pero funciona bien porque envío el id_tipo_tutoria
@@ -490,6 +501,7 @@ export default Vue.extend( {
                          confirmButtonColor:'#0097A7',
                           showConfirmButton: true,
                        });
+                     this.tipotutoria.tutoresTT.splice(index, 1); //  
                     this.$router.push('/tiposdeTutoria/'+this.tipotutoria.id_tipo_tutoria_entrante); //
                    }
 
@@ -535,7 +547,7 @@ export default Vue.extend( {
                 Swal.fire({
                     text:"Ocurrió un incoveniente al listar los tutores asociados. Vuelva a intentar en unos minutos.",
                     icon:'error',
-                    confirmButtonText: 'ok',
+                    confirmButtonText: 'Ok',
                     confirmButtonColor:'#0097A7',
                    showConfirmButton: true,
               });
@@ -556,7 +568,7 @@ export default Vue.extend( {
                    Swal.fire({
                     text:"Ocurrió un incoveniente al listar los tutores asociados. Vuelva a intentar en unos minutos.",
                     icon:'error',
-                    confirmButtonText: 'ok',
+                    confirmButtonText: 'Ok',
                     confirmButtonColor:'#0097A7',
                    showConfirmButton: true,
               });
@@ -583,6 +595,14 @@ export default Vue.extend( {
     border: 1px solid #757575;
     margin-bottom: 10px;
     /* width: 100%; */
+
+}
+.form-control2 {
+    border-radius: 1.25rem;
+    border: 1px solid #757575;
+    margin-bottom: 10px;
+     width: 100%; 
+    box-shadow: none;
 
 }
 input[type=radio]:checked ~ .check {

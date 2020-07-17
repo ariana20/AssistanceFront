@@ -334,8 +334,9 @@ export default {
 
                 //LLenado del gráfico de la derecha
                  console.log('datos: ',dataPlan);
-                 this.alumnosBRPlan.push({data:dataPlan.data[1].grupo,total:dataPlan.data[1].total_alumno});
-                 this.alumnosBRPlan.push({data:"más 50%",total:dataPlan.data[0].total_alumno});
+
+                 this.alumnosBRPlan.push({data:"< 50%",total:dataPlan.data[1].total_alumno});
+                 this.alumnosBRPlan.push({data:"> 50%",total:dataPlan.data[0].total_alumno});
 
             }
          

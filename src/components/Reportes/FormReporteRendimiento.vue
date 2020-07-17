@@ -368,9 +368,9 @@ export default {
                 for( let i in data.data ){
                    var grupo50;
                     if(data.data[i].grupo=="mas 50%")
-                        grupo50 =">50%-"+data.data[i].condicion;
+                        grupo50 ="> 50% - "+data.data[i].condicion;
                     else if(data.data[i].grupo=="menos 50%")
-                        grupo50 ="<50%-"+data.data[i].condicion;
+                        grupo50 ="< 50% - "+data.data[i].condicion;
 
                     this.alumnosBR.push({data:grupo50,total:data.data[i].total_alumnos});
                    
