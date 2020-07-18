@@ -53,8 +53,19 @@
 
 
         </section>
+        <section class="text-left" v-if="this.banderaTodoBien==true" style="padding-top:0px">
+           <h5 class="font-weight-ligth text-left col-md-6"  style="font-weight: bold;">Reporte de errores</h5>
+            <div class="col-12 col-md-6"> Líneas totales: {{lineastotales}} </div> 
+            <div class="col-12 col-md-6"> Líneas de errores: {{lineaserrores}} </div> 
+            <div class="col-12 col-md-6"> Líneas correctas: {{lineasbuenas}} </div> 
+        </section>
         <section class="text-left" v-if="this.banderaReporte==true" style="padding-top:0px">
             <h5 class="font-weight-ligth text-left col-md-6"  style="font-weight: bold;">Reporte de errores</h5>
+            
+            <div class="col-12 col-md-6"> Líneas totales: {{lineastotales}} </div> 
+            <div class="col-12 col-md-6"> Líneas erróneas: {{lineaserrores}} </div> 
+            <div class="col-12 col-md-6"> Líneas correctas: {{lineasbuenas}} </div> 
+
             <div class="font-weight-ligth text-left col-md-12"  style="overflow: auto;width:100%;margin-top:2%">
               <table class="table" style="text-align:left" >
                 <thead>
@@ -129,10 +140,16 @@ export default Vue.extend ({
             formData2:null,
             file1x1:null,
             banderaReporte:false,
+            banderaTodoBien:false,
             reporte:[],
             condiAlumnos:[],
             miprog:this.$store.state.programaActual, //this.miprog.id_programa;
             miUsuario:null,
+            //reporte del reporte
+            lineastotales:0,
+            lineaserrores:0,
+            lineasbuenas:0,
+            files:null,
         }
     },
     mounted(){   
@@ -171,7 +188,7 @@ export default Vue.extend ({
     
        cancelarAlumnos(){
                 Swal.fire({
-                   text:"¿Está seguro que desea cancelar?",
+                   text:"¿Está seguro que desea cancelar? Se redirigirá al listado de usuarios.",
                    icon:"warning",
                    confirmButtonText: 'Sí',
                    confirmButtonColor:'#0097A7',
@@ -182,8 +199,12 @@ export default Vue.extend ({
                  }).then((result) => {
                  if (result.value) {
                 //lo redirigo
+                //por más que intento no borra
                  this.$store.state.usuarios=null;
-                     this.$router.push('/ListaUsuarios');
+                 this.files=null;
+                 this.formData=null;
+                 this.$refs.file.files=null;
+                this.$router.push('/ListaUsuarios');
                 } 
           })
         },
@@ -195,13 +216,13 @@ export default Vue.extend ({
         //Para masivo
         this.reporte=null;
         this.banderaReporte=false;
-        let files=this.$refs.file.files;
+         this.files=this.$refs.file.files;
         this.formData= new FormData();           
         this.formData.append('_hidden','solojohAl');   
         this.formData.append('usuario', this.miUsuario.id_usuario);   
-        if(files[0].size>=2000000){
+        if(this.files[0].size>=2000000){
             Swal.fire({
-                    text:"No puede subir el archivo "+files[0].name+", ya que es mayor de 2 MB.",
+                    text:"No puede subir el archivo "+this.files[0].name+", ya que es mayor de 2 MB.",
                     icon:"warning",
                     confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
@@ -209,7 +230,7 @@ export default Vue.extend ({
                })
              document.getElementById("btnsubir").disabled = true; //inhabilita
         }   else{
-              this.formData.append('file', files[0]);
+              this.formData.append('file', this.files[0]);
         // document.getElementById("btnsubir").disabled = true; //inhabilita
          document.getElementById("btnsubir").disabled =false; //habilita
         }
@@ -274,6 +295,10 @@ export default Vue.extend ({
                         confirmButtonColor:'#0097A7',
                         showConfirmButton: true,
                     })
+                    this.lineastotales=response.data.lineas_totales;
+                    this.lineaserrores=response.data.cantidad_errores;
+                    this.lineasbuenas=response.data.cantidad_procesados;
+                    this.$store.state.usuarios=null;
                     this.banderaReporte=true;                   
                     this.reporte=response.data.reporte;
                     document.getElementById("btnsubir").disabled = false;
@@ -300,9 +325,13 @@ export default Vue.extend ({
                         confirmButtonColor:'#0097A7',
                         showConfirmButton: true,
                     })
+                    this.banderaTodoBien=true;
+                     this.lineastotales=response.data.lineas_totales;
+                    this.lineaserrores=0;
+                    this.lineasbuenas=response.data.cantidad_procesados;
                     // this.$router.push('/ListaUsuarios'); 
                     // this.$store.state.usuarioEscogido=null;//
-                    // this.$store.state.usuarios=null;
+                    this.$store.state.usuarios=null;
                     document.getElementById("btnsubir").disabled = false;
                 }
                 else if(response.data.indexOf("Excepción capturada:")!=-1){ 
