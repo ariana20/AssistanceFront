@@ -31,13 +31,23 @@
         </div>
         
       </div>
-
-      <div v-for="(item) in tutoresAsignado" :key="item.id_usuario">
-        <datosTutorAsignado 
-          :tutor="item"
-          :tipoTutoriaAsignado="ttAsignado"/>
+      <div v-if="tutoresAsignado.length>0">
+        <div class="font-weight-bolder"><h4>Tutores Asignados</h4></div>
+        <div style="width: 100%; border-bottom: 2px solid rgb(0, 152, 146); height: 1px; padding-top: 15px; margin-bottom: 15px;"></div>
+        
+        <div class="row">
+        <div v-for="(item) in tutoresAsignado" :key="item.id_usuario" class="col-12 col-lg-6">
+          
+          <datosTutorAsignado 
+            :tutor="item"
+            :tipoTutoriaAsignado="ttAsignado"/>
+          
+        </div>
+        </div>
+        <div style="width: 100%; border-bottom: 2px solid rgb(0, 152, 146); height: 1px; padding-top: 15px; margin-bottom: 15px;"></div>
+        <div class="font-weight-bolder"><h4>Otros tutores</h4></div>
       </div>
-
+      
       <div v-for="(item,index) in tutores" :key="index">
         <datosTutor
         :tutor="item"
