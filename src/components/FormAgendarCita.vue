@@ -2,13 +2,13 @@
     <div class="formagendarcita container">
         <div class="top-titulo " style="text-align:left;">
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select id="selectBox" class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" >
+            <select id="selectBox" class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" v-if="tutores[0]">
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
                     :key="index" 
                     :value="item">
-                    {{ item.usuario.nombre + " " + item.usuario.apellidos }}
+                    {{ item.nombre + " " + item.apellidos }}
                 </option>
             </select>
             <ul class="legend">
@@ -129,7 +129,6 @@ export default {
         this.bloque = "00:"+ this.$store.state.programaActual.hora_bloque + ":00"
         this.$store.state.events = [];
         this.listarTutores();
-
         /*if(this.$store.state.tutorDisponibilidad) {
             //this.tutorSel = this.$store.state.tutorDisponibilidad
             //console.log("storestate tutor: ", this.tutorSel)
@@ -161,23 +160,21 @@ export default {
             nombre: "",
             id_alumno: this.$store.state.usuario.id_usuario,
         };
-        axios
-        .post('/programa/tutoresListar', params)
+        axios.post('/programa/tutoresAlumno', params)
             .then(res =>{
-             this.tutores=res.data;
-
-           
-            console.log(res);
+                this.tutores=res.data;
+                if(this.$store.state.tutorDisponibilidad) {
+                    this.tutores.forEach(element => {
+                        if(element.id_usuario == this.$store.state.tutorDisponibilidad.id_usuario) {
+                            this.tutorSel = element
+                        }
+                    });
+                    this.getReminders();
+                }
             })
             .catch(e => {
             console.log(e.response);
             })
-        if(this.$store.state.tutorDisponibilidad) {
-            console.log(this.$store.state.tutorDisponibilidad);
-            this.tutorSel = this.$store.state.tutorDisponibilidad;
-            console.log(this.tutorSel);
-            console.log("llega");
-        }
         },
         handleClick (arg) {
             if(arg.event.backgroundColor!='#ff6961') {

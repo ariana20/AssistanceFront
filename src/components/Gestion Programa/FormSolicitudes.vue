@@ -198,33 +198,65 @@ export default {
                       }
                       this.axios.post('/registros/insertar',obj)
                         .then(response=>{
-                          response
-                          emailjs.send(
-                            "gmail",
-                            "template_bV7OIjEW",
-                            {
-                            "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
-                            "mensaje":mensaje,
-                            "correo": item.usuarioSolicitante.correo
-                            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
-                          .then((result) => {
-                            console.log('SUCCESS!', result.status, result.text);
-                          }, (error) => {
-                            console.log('FAILED...', error);
-                          });
+                          if(response.data.status=="error"){
+                            Swal.fire({
+                              text:response.data.mensaje+", ¿desea asignar de todos modos?",
+                              icon:"warning",
+                              confirmButtonText: 'Si',
+                              showCancelButton: true,
+                              cancelButtonText: 'No',
+                              confirmButtonColor:'#0097A7',
+                              showConfirmButton: true,
+                            }).then((result) => {
+                                if (result.value) {
+                                  obj.cambiar=true;
+                                  this.axios.post('/registros/insertar', obj)
+                                  .then(rr =>{
+                                    console.log(rr);
+                                    Swal.fire({
+                                      text:"Se ha realizado correctamente la asignación",
+                                      icon:"success",
+                                      confirmButtonText: 'OK',
+                                      confirmButtonColor:'#0097A7',
+                                      showConfirmButton: true,
+                                    }) 
+                                    emailjs.send(
+                                      "gmail",
+                                      "template_bV7OIjEW",
+                                      {
+                                      "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                                      "mensaje":mensaje,
+                                      "correo": item.usuarioSolicitante.correo
+                                      }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                                    .then((result) => {
+                                      console.log('SUCCESS!', result.status, result.text);
+                                    }, (error) => {
+                                      console.log('FAILED...', error);
+                                    });
+                                  }).catch(e => {
+                                    console.log(e.response);
+                                  })
+                                } 
+                              })
+                              
+                          }
+                          else if (response.data.status=="success"){
+                            Swal.fire({
+                              text:"Se ha realizado correctamente la asignación",
+                              icon:"success",
+                              confirmButtonText: 'OK',
+                              confirmButtonColor:'#0097A7',
+                              showConfirmButton: true,
+                            })
+                          }
                           this.hideModal();
-                          Swal.fire({
-                            text:"Asignación de tutor exitosa",
-                            icon:"success",
-                            confirmButtonText: 'OK',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                          })
                         })
                         .catch(e=>{
                           console.log(e)
                           this.hideModal();
                         })
+                    
+                    
                     })
                     .catch(e=>{
                       console.log(e)
@@ -271,6 +303,7 @@ export default {
                       this.hideModal();
                     })
                 }
+                this.listarSolicitudes();
               })
               .catch(e=>{
                 console.log(e)
