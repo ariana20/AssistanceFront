@@ -1,9 +1,9 @@
 <template>
     <div class="formagendarcita contenedor">
-        <div class="top-titulo " style="text-align:left;">
+        <div class="row  " style="text-align:left;">
             <!-- inicia combobox de tutor -->
-            <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select class="col-sm-4 form-control" style="left:-160px;top:26px;cursor:pointer;border: 0.5px solid #757575;" v-model="tutorSel"  @change="showCalendar" >
+            <div class="col-md-1 col-12" style="padding-top:5px;font-size:20px;">Tutor:</div>
+            <select class="col-md-5 col-xs-11 offset-xs-1 form-control" style="cursor:pointer;border: 0.5px solid #757575;padding-left:10px" v-model="tutorSel"  @change="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
@@ -13,11 +13,12 @@
                 </option>
             </select>
             <!-- leyenda -->
-            <ul class="legend">
-                <li><span class="ocupado"></span> Ocupado </li>
-                <li><span class="disponible"></span> Disponible </li>
-                <!-- <li><span class="citareservada"></span> Cita Resevada </li> -->
-            </ul>
+            <div class="legend col-md-4  col-12">             
+                    <div class="col-md-2 offset-md-2 col-5 " style="padding-top:7px" ><span class="ocupado"></span> Ocupado </div >
+                    <div class="col-md-2 col-6" style="padding-top:7px"><span class="disponible"></span> Disponible</div >
+                    <!-- <li><span class="citareservada"></span> Cita Resevada </li> -->
+               
+            </div>
         </div>
         <div class="top-titulo" style="text-align:left" v-if="bloque!=null">
             <Fullcalendar ref="fullCalendar"
