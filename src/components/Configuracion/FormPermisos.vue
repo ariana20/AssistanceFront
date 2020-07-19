@@ -7,7 +7,7 @@
         </div>
         <div class="col-12 col-md-6 col-lg-4">
           <input v-if="idRol" type="text" class="form-control-plaintext" style="font-size:25px;height:40px;width:100%" :value="nombreRol" readonly>
-          <input v-else class="form-control" style="top:5%" v-model="nombre" placeholder="Ingrese un nombre">
+          <input v-else maxlength="100" class="form-control" style="top:5%" v-model="nombre" placeholder="Ingrese un nombre">
         </div>
         <div v-if="$store.state.visualizacion!=true" class="col-11 col-sm-12 col-lg-3 offset-lg-3">
           <div class="botones" style="display: inline-flex;">
@@ -113,7 +113,7 @@ export default {
             let indexA;
             for (let mod in this.$store.state.permisos) {
               indexA = mod;
-              if(this.$store.state.permisos[mod].nombre == "Configuracion") break;              
+              if(this.$store.state.permisos[mod].nombre == "Configuración") break;              
             }
             delete this.$store.state.permisos[indexA];
           }
@@ -150,7 +150,7 @@ export default {
         else{
           if(this.nombreRol!=null) this.nombre = this.nombreRol;
           Swal.fire({
-            title: '¿Desea guardar esta configuración de '+this.nombre+'?',
+            text: '¿Desea guardar esta configuración de '+this.nombre+'?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',

@@ -78,11 +78,7 @@
                 <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp2"
                 label='Alumnos con Bajo Rendimiento'  ></horizontal-bar-chart>
             </div>
-            <div class="col-12 col-md-6" v-if="alumnosBRPlan.length>0">
-                <strong style="margin-left:80px">Cantidad de alumnos que cumplieron su Plan de Acción</strong>
-                <bar-chart :chartData="alumnosBRPlan" :options="chartOp"
-                label='Alumnos con Plan de Acción terminado' ></bar-chart>
-            </div>
+         
 
 
         </div>
@@ -107,7 +103,7 @@ import axios from 'axios';
 // import LineChart from '@/components/Reportes/LineChart.vue'
 // import PieChart from '@/components/Reportes/PieChart.vue'
 import HorizontalBarChart from '@/components/Reportes/HorizontalBarChart.vue'
-import BarChart from '@/components/Reportes/BarChart.vue'
+
 // import DoughnutChart from '@/components/Reportes/DoughnutChart.vue'
 import moment from 'moment';
 import Swal from 'sweetalert2';
@@ -118,7 +114,7 @@ export default {
         // DoughnutChart,
         DatePicker,
         HorizontalBarChart,
-        BarChart
+
     },
     data(){
         return{
@@ -147,7 +143,6 @@ export default {
             cuartas:[],
             atenciones:[],
             alumnosBR:[],
-            alumnosBRPlan:[],
             //datepicker
             inicio: new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
             fin: new Date(),
@@ -335,14 +330,10 @@ export default {
 
         async BajoRendimiento(){
            this.sinGrafico=false;
-          
-            console.log('reporte');
             this.alumnosBR=[];
-            this.alumnosBRPlan=[];
-            console.log('t: ',this.idTutores);
             this.selectedPrograma=this.$store.state.programaActual.id_programa;
             if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){
-                 console.log('func reporte');
+
                 var programas=[];
               
                 if(this.selectedPrograma==0){
@@ -369,36 +360,23 @@ export default {
                     // id_tutor:tutoresSeleccionados,
                      id_tutor:this.idTutores,
                 };
-                  const params2 = {
-                    id_programa: programas,
-                    id_facultad: this.$store.state.programaActual.id_facultad,
-                    id_institucion: 1,
-                    fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
-                    fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
-                };
+
                 console.log(params);
                 var data =await axios.post("usuarios/datosBajoRendimiento", params);
-                var dataPlan =await axios.post("usuarios/datosAlumnosPlan", params2);
 
-                // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
-                //LLenado del gráfico de la izquierda
-                console.log('datos: ',data);
-                this.alumnosBR.push({data:">50%-Cuarta",total:data.data[4].total_alumnos});
-                this.alumnosBR.push({data:"<50%-Cuarta",total:data.data[5].total_alumnos});
+               
+                for( let i in data.data ){
+                   var grupo50;
+                    if(data.data[i].grupo=="mas 50%")
+                        grupo50 ="> 50% - "+data.data[i].condicion;
+                    else if(data.data[i].grupo=="menos 50%")
+                        grupo50 ="< 50% - "+data.data[i].condicion;
 
-                this.alumnosBR.push({data:">50%-Trica",total:data.data[2].total_alumnos});
-                this.alumnosBR.push({data:"<50%-Trica",total:data.data[3].total_alumnos});
-
-                this.alumnosBR.push({data:">50%-Bica",total:data.data[0].total_alumnos});
-                this.alumnosBR.push({data:"<50%-Bica",total:data.data[1].total_alumnos});
-
-                //LLenado del gráfico de la derecha
-
-
-                this.alumnosBRPlan.push({data:"Cumplieron-Cuarta",total:dataPlan.data[2].total_alumnos});
-                 this.alumnosBRPlan.push({data:"Cumplieron-Trica",total:dataPlan.data[1].total_alumnos});
-                 this.alumnosBRPlan.push({data:"Cumplieron-Bica",total:dataPlan.data[0].total_alumnos});
-
+                    this.alumnosBR.push({data:grupo50,total:data.data[i].total_alumnos});
+                   
+                }
+               
+              
             }
          
 

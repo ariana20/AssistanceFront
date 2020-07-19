@@ -25,33 +25,34 @@
             No se ha generado ningún reporte
         </div>
         <div class="row">
-            <div class="col-12 col-md-4" v-if="satisfaccion.length>0">
+            <div class="col-12 col-md-6" v-if="satisfaccion.length>0">
                 <strong>Satisfacción con el acompañamiento</strong>
                 <pie-chart :chartData="satisfaccion" :options="chartOp2" label='Satisfacción con el acompañamiento'></pie-chart>
             </div>
-            <div class="col-12 col-md-4" v-if="utilidad.length>0">
+            <div class="col-12 col-md-6" v-if="utilidad.length>0">
                 <strong>Utilidad del programa de tutoría</strong>
                 <pie-chart :chartData="utilidad" :options="chartOp2" label='Utilidad del programa de tutoría'></pie-chart>
-            </div>
-            <div class="col-12 col-md-4" v-if="decisiones.length>0">
-                <strong>Utilizó las recomendaciones para la toma de decisiones</strong>
-                <pie-chart :chartData="decisiones" :options="chartOp2" label='Utilizó las recomendaciones para la toma de decisiones'></pie-chart>
             </div>
         </div>
 
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row">
-            <div class="col-12" v-if="eficiencia.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
+            <div class="col-12 col-md-6" v-if="decisiones.length>0">
+                <strong>Utilizó las recomendaciones para la toma de decisiones</strong>
+                <pie-chart :chartData="decisiones" :options="chartOp2" label='Utilizó las recomendaciones para la toma de decisiones'></pie-chart>
+            </div>
+            <div class="col-12 col-md-6" v-if="eficiencia.length>0">
                 <strong>El programa solucionó su situación</strong>
                 <pie-chart :chartData="eficiencia" :options="chartOp2" label='El programa solucionó su situación'></pie-chart>
             </div>
+        </div>
+
+        <div class="row">
             <div class="col-12" v-if="recomendado.length>0">
                 <strong>Recomendación del programa de tutoría a sus pares</strong>
                 <pie-chart :chartData="recomendado" :options="chartOp2" label='Recomendación del programa de tutoría a sus pares'></pie-chart>
             </div>
-
-        
         </div>
 
 
@@ -149,7 +150,7 @@ export default {
 
     },
     mounted(){
-  
+        this.generarReporte()
     },
     computed: {
         progSinDefault: function () {

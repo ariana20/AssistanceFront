@@ -134,14 +134,19 @@ export default {
   mounted(){
     this.listarTutores();
     //usuarios/condAlumno 
-    this.obtenerAlumnos();
+    //this.obtenerAlumnos();
   },
   computed:{
 
   },
   methods:{
     obtenerAlumnos(){
-      axios.post('programa/alumnosProg', {idTipoU:5,idProg: this.$store.state.programaActual.id_programa})
+      axios.post('TipoTutoria/listaAlumnosConTT', 
+        {id_programa: this.$store.state.programaActual.id_programa,
+        nomFacu: this.$store.state.programaActual.facultad.nombre,
+        id_tipo_tutoria: this.tutoriaSeleccionada.id_tipo_tutoria
+          
+        })
       .then( response => {
           this.codigos=response.data;
       })
@@ -190,8 +195,6 @@ export default {
 
     listarTT(){
         this.alumnosAsig=[];
-        this.alSeleccionado=null;
-        this.sel='';
         if(this.tutorSeleccionado){
             
             this.tipoTutoria=this.tutorSeleccionado.tiposTutoriaAsignar;
@@ -212,7 +215,10 @@ export default {
     },
 
     listarAlumnos(){
-        
+        this.alumnosAsig=[];
+        this.alSeleccionado=null;
+        this.sel='';
+
         if(this.tutoriaSeleccionada.id_tipo_tutoria!=0)this.tutoriaAlumno=this.tutoriaSeleccionada;
         this.tipoTutoriaAsignar=this.tutorSeleccionado.ttAsignar;
         if(this.tutoriaSeleccionada || this.tutoriaSeleccionada==0){
@@ -232,6 +238,8 @@ export default {
             console.log(e.response);
             })
         }
+        if(this.tutoriaSeleccionada && this.tutoriaSeleccionada.id_tipo_tutoria!=0)
+         this.obtenerAlumnos();
     },
 
     addAlumno: function () {  

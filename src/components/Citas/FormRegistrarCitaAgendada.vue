@@ -349,29 +349,47 @@ export default Vue.extend ({
         },
         onCodigoChange: function () {
             var i;
+            // console.log(this.codigos);
             for(i in this.codigos){
                 if(this.sel==this.codigos[i].codigo){
-                    this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;       
-                    this.condSeleccionado = this.codigos[i].cond;     
-               }            
+                    this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;   
+                    ///////////////super if de condicion
+                 if(this.codigos[i].condicion_alumno=="bic")
+                    this.condSeleccionado = "Bica";
+                 else if(this.codigos[i].condicion_alumno=="tri")
+                    this.condSeleccionado = "Trica";
+                 else if(this.codigos[i].condicion_alumno=="car")
+                     this.condSeleccionado = "Carta";
+                 else if(this.codigos[i].condicion_alumno=="reg")
+                    this.condSeleccionado = "Regular";
+                 else if(this.codigos[i].condicion_alumno=="pri")
+                      this.condSeleccionado = "Cachimbo";                 
+                 else if(this.codigos[i].condicion_alumno=="egr")
+                     this.condSeleccionado = "Egresado";
+
+                }    
+                        
+                         
             }
         },
   
         deleteAl: function(index) {
-            
-            var estabaAntes=this.$store.state.citaDatos.alumnos.find(alum => alum.codigo == this.listAlumnosCod[index]); 
+             var estabaAntes;
+             if(this.$store.state.citaDatos.alumnos!=null){     
+                       estabaAntes=this.$store.state.citaDatos.alumnos.find(alum => alum.codigo == this.listAlumnosCod[index]); 
+             }
+             else estabaAntes="noalumnos";        //no estaba antes obviamente, es una lista nueva           
             //Si encuentra el código, estabaAntes es un objeto, si no, estabaAntes es undefined
-            var al=  this.listAlumnosCod.splice(index,1);
-            this.listAlumnosNom.splice(index,1);
-            this.listAlumnosCond.splice(index,1);
-            this.listAlumnosId.splice(index,1);
 
             //revisar duplicado y no enviar correo a quien se agregó y eliminó de casualidad, pero como no estaba originalmente,no le envío correo
             if(estabaAntes==undefined)        
                  this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),false) //No estaba antes
-            else          
-                 this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),true)  //sí estaba antes
-
+           else if (estabaAntes=="noalumnos") estabaAntes="noalumnos";
+           else   this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),true)  //sí estaba antes
+            var al=  this.listAlumnosCod.splice(index,1);
+            this.listAlumnosNom.splice(index,1);
+            this.listAlumnosCond.splice(index,1);
+            this.listAlumnosId.splice(index,1);
         },
         addAlumno: function () {  
             var estaAl = false;
@@ -422,14 +440,15 @@ export default Vue.extend ({
         listarAlumnosxProg(){
             this.showModal();
             axios.post('sesiones/alumnoProg', {
-                    idTipoU:5, //Id=5 lista los alumnos, 
+                 
                     idProg: this.$store.state.programaActual.id_programa
                 })
             .then( response => {
+                //    console.log(response.data);
                    
-                    for(var i in response.data){ 
-                        this.codigos.push(response.data[i][0]);
-                    }
+                        // this.codigos.push(response.data[i].codigo); //tiene todo del alumno
+                        this.codigos=response.data
+                    
                     this.hideModal();
                    this.mipermisosUsuario=this.$store.state.permisosUsuario;
                 })
@@ -670,4 +689,10 @@ select:focus {
     outline:none;
     box-shadow: none;
 }
+
+input:focus {
+    outline:none;
+    box-shadow: none;
+}
+
 </style>

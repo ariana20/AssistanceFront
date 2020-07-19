@@ -184,41 +184,52 @@ export default {
                 }
                 else if(item.tipo_solicitud == 'Tutor'){
                   mensaje = "Se te asignó "+item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos+" como tutor en el programa "+this.$store.state.programaActual.nombre
-                  let obj ={
-                    id_alumno:item.id_solicitante, 
-                    id_tutor:item.usuarioRelacionado.id_usuario,
-                    id_programa:this.$store.state.programaActual.id_programa,
-                    usuario_creacion: this.$store.state.usuario.id_usuario,
-                  }
-                  this.axios.post('/registros/insertar',obj)
-                      .then(response=>{
+                  this.axios.post('/TipoTutoria/tipoTutoriaNombre',{
+                      nombre: item.motivo,
+                      id_programa:this.$store.state.programaActual.id_programa
+                    })
+                    .then(response=>{
+                      let obj ={
+                        id_alumno:item.id_solicitante, 
+                        id_tutor:item.usuarioRelacionado.id_usuario,
+                        id_programa:this.$store.state.programaActual.id_programa,
+                        id_tipo_tutoria: response.data.id_tipo_tutoria,
+                        usuario_creacion: this.$store.state.usuario.id_usuario,
+                      }
+                      this.axios.post('/registros/insertar',obj)
+                        .then(response=>{
                           response
                           emailjs.send(
-                              "gmail",
-                              "template_bV7OIjEW",
-                              {
-                              "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
-                              "mensaje":mensaje,
-                              "correo": item.usuarioSolicitante.correo
-                              }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                            "gmail",
+                            "template_bV7OIjEW",
+                            {
+                            "nombre":item.usuarioSolicitante.nombre+" "+item.usuarioSolicitante.apellidos,
+                            "mensaje":mensaje,
+                            "correo": item.usuarioSolicitante.correo
+                            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
                           .then((result) => {
-                              console.log('SUCCESS!', result.status, result.text);
+                            console.log('SUCCESS!', result.status, result.text);
                           }, (error) => {
-                              console.log('FAILED...', error);
+                            console.log('FAILED...', error);
                           });
                           this.hideModal();
                           Swal.fire({
-                          text:"Asignación de tutor exitosa",
-                          icon:"success",
-                          confirmButtonText: 'OK',
-                          confirmButtonColor:'#0097A7',
-                          showConfirmButton: true,
+                            text:"Asignación de tutor exitosa",
+                            icon:"success",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor:'#0097A7',
+                            showConfirmButton: true,
                           })
-                      })
-                      .catch(e=>{
-                        console.log(e)
-                        this.hideModal();
-                      })
+                        })
+                        .catch(e=>{
+                          console.log(e)
+                          this.hideModal();
+                        })
+                    })
+                    .catch(e=>{
+                      console.log(e)
+                      this.hideModal();
+                    })
                 }
                 else if(item.tipo_solicitud == 'Cita'){
                   mensaje = "Se aceptó tu cancelacion de la cita con el tutor "

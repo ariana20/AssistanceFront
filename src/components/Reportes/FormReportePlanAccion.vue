@@ -1,79 +1,53 @@
 <template>
   <div class="FormReportesRendimiento">
       <div class="contenedor">
-        <div  class="top-titulo" style="text-align:left;">
-            <!-- inicia de las fechas -->
-            <!-- <div class="col-12 col-md-4 col-lg-2 form-inline"> -->
-            <!-- <div class="col-12 col-md-6">
-                <div class="row">
-                    <h5 class="">Fechas:</h5>
-                    <date-picker
-                     class="wide-date-example"
-                    v-model="periodo"
-                    width="100" lang="es" range
+        <div class="top-titulo" style="text-align:left;">
+            <div class="col-12 col-md-4">
+                <h5>Fechas:</h5>
+                <date-picker style="left:0px" class="wide-date-example"
+                    v-model="periodo" 
+                    width="20" lang="es" range 
                     placeholder="Selecciona Rango de Fechas"
                     :disabled-date="disabledAfterToday"
                     @input="handlePeriodChange"
-                    input-class="font-weight-ligth text-left  col-12 col-md-6 form-control">
-                    </date-picker>
+                    input-class="form-control">
+                </date-picker>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="row">
+                    <div class="col"><h5>Tutor(a): </h5></div>
+                    <div class="col" style="text-align: right; top: 50%">
+                        <h6 style="top:50%;cursor:pointer;color:#17a2b8;" 
+                        :disabled="!this.selectedTutor"
+                        @click="addTutor" 
+                        >Seleccionar</h6>
+                    </div>
                 </div>
-            </div> -->
-
-             <div class="col-12 col-md-4">
-              <div class="row">
-                <div  class="col-12 col-md-2">Fechas: </div>
-                <div > 
-                    <date-picker style="left:0px" class="wide-date-example"
-                        v-model="periodo" 
-                        width="20" lang="es" range 
-                        placeholder="Selecciona Rango de Fechas"
-                        :disabled-date="disabledAfterToday"
-                        @input="handlePeriodChange"
-                        input-class="form-control">
-                    </date-picker>
-                </div>
-              </div>  <!-- fin de la mitad del row2 que divide fecha y selecc fecha -->
-            </div> <!-- fin de la mitad del row1 -->
-
-           
-            <!-- inicia combobox de tutor -->
-            <!-- <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4> -->
-            <div class="col-12 col-md-6">
-              <div class="row">
-                <div  class="col-12 col-md-2">Tutor: </div>
-                <div  class="col-12 col-md-10"> 
-                  <select class="form-control " style="left:-160px;top:26px;cursor:pointer" v-model="tutorSel"  >
-                    <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
-                    <option
-                        v-for="(item, index) in tutores"
-                        :key="index"
-                        :value="item.id_tutor">
-                        {{ item.usuario.nombre + " " + item.usuario.apellidos }}
+                <select class="form-control"  v-model="selectedTutor">
+                    <option disabled selected :value="null" focusable="false">Selecciona un(a) tutor(a)</option>
+                    <option 
+                        v-for="(tutor, index) in tutores" 
+                        :key="index" 
+                        :value="tutor">
+                        {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
                     </option>
-                  </select>
-                
-                </div>   
-                
-                
-              </div><!-- fin del row2 -->
-               <div class="col-12 col-md-2 botones" style="margin-bottom:10px">
-                        <button type="button" class=" btn btn-info"  @click="generarReporte()" >Generar</button>
-                  </div>   
-                                <!-- div del boton -->
-
-            </div> <!-- fin de la mitad del row1 -->
-         </div>  <!-- fin del top -row1 -->
+                </select>
+                <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
+                    <li class="motivos-seleccionados list-group-item" style="text-align:left;"
+                        v-for="(tutor,index) in tutorSelect"  
+                        :key="index">
+                        {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
+                        <span name="remove" class="close" @click="deleteTutor(index, tutor)" style="float:right;">&times;</span>           
+                    </li>
+                </ul>
+            </div>
+            <div class="botones" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+                <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
+            </div>
+        </div>
+        <!-- aqui estaba mi cabcera -->
         <div class="row" style="margin-left:1px;text-align:left;">
-            <!-- <h4 v-if="this.isCoordinador===false">Facultad: </h4>
-            <select  class="col-sm-3 form-control" v-if="this.isCoordinador===false" v-model="selectedFacultad" v-on:change="listarProgramas()">
-                <option disabled selected :value="null" focusable="false">Selecciona una facultad</option>
-                <option
-                    v-for="(facultad, index) in facultades"
-                    :key="index"
-                    :value="facultad">
-                    {{ facultad.nombre }}
-                </option>
-            </select> -->
+        
             <h5 class="font-weight-ligth text-left col-sm-2" v-if="this.isCoordinador===false" >Programa: </h5>
             <select  id="cbxProg" v-if="this.isCoordinador===false"  class="col-sm-3 form-control" style="align:left"  v-model="selectedPrograma">
                 <option disabled selected :value="null" focusable="false">Selecciona un programa</option>
@@ -90,15 +64,10 @@
 
         <div class="row mt-2">
 
-            <div v-if="alumnosBR.length>0">
-                <strong style="margin-left:10px">Cantidad de alumnos que asistieron a sus citas</strong>
-                <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp2"
-                label='Alumnos con Bajo Rendimiento'  style="display: block; width: 444px; height: 222px;"></horizontal-bar-chart>
-            </div>
-            <div v-if="alumnosBRPlan.length>0">
+            <div class="col-12 col-md-6" v-if="alumnosBRPlan.length>0">
                 <strong style="margin-left:80px">Cantidad de alumnos que cumplieron su Plan de Acción</strong>
                 <bar-chart :chartData="alumnosBRPlan" :options="chartOp"
-                label='Alumnos con Plan de Acción terminado'  style="display: block; width: 300px; height: 222px;margin-left:100px"></bar-chart>
+                label='Alumnos con Plan de Acción terminado' ></bar-chart>
             </div>
 
 
@@ -121,20 +90,15 @@
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
-// import LineChart from '@/components/Reportes/LineChart.vue'
-// import PieChart from '@/components/Reportes/PieChart.vue'
-import HorizontalBarChart from '@/components/Reportes/HorizontalBarChart.vue'
+
 import BarChart from '@/components/Reportes/BarChart.vue'
 // import DoughnutChart from '@/components/Reportes/DoughnutChart.vue'
 import moment from 'moment';
 import Swal from 'sweetalert2';
 export default {
     components:{
-        // LineChart,
-        // PieChart,
-        // DoughnutChart,
-        DatePicker,
-        HorizontalBarChart,
+
+        DatePicker,       
         BarChart
     },
     data(){
@@ -150,11 +114,13 @@ export default {
             programas:[],
             selectedPrograma:null,
             tutores:[],
-            tutorSel:[],
-
+            tutorSel:null,
+            selectedTutor:null,
+            tutorSelect:[],
             //lista de identificadores
             idPogramas:[],
             idFacultades:[],
+            idTutores:[],
             //graficos
             asignados:[],
             bicas:[],
@@ -190,27 +156,7 @@ export default {
                 responsive: true,
                 maintainAspectRatio:false
             },
-            chartOp2:{
-                scales: {
-                    yAxes: [{
-                        stacked: true,
-                        ticks:{precision:0}
-                    }],
-                    xAxes: [{
-                        stacked: false,
-                    }]
-                },
-                legend: {
-                    display: false
-                },
-                pieceLabel: {
-                    mode: 'percentage',
-                    precision: 1
-                },
-                responsive: true,
-                maintainAspectRatio:false,
-                 type: 'horizontalBar',
-            },
+          
              chartOp3:{
                 responsive: true,
                 pieceLabel: {
@@ -224,11 +170,11 @@ export default {
 
     },
     mounted(){
-        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.borderRadius = "1.25rem";
-        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.border= "0.5px solid #757575";
-        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontWeight = "300";
-        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.fontSize = "1rem";
-        // document.querySelector("#contenedor > div > div.FormReportesRendimiento > div > div.top-titulo > div.mx-datepicker.mx-datepicker-range > div > input").style.height = "2.4em";
+        document.querySelector("#container > div > div.FormReportesRendimiento > div > div:nth-child(1) > div:nth-child(1) > div > div > input").style.borderRadius = "1.25rem";
+        document.querySelector("#container > div > div.FormReportesRendimiento > div > div:nth-child(1) > div:nth-child(1) > div > div > input").style.border= "0.5px solid #757575";
+        document.querySelector("#container > div > div.FormReportesRendimiento > div > div:nth-child(1) > div:nth-child(1) > div > div > input").style.fontWeight = "300";
+        document.querySelector("#container > div > div.FormReportesRendimiento > div > div:nth-child(1) > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
+        document.querySelector("#container > div > div.FormReportesRendimiento > div > div:nth-child(1) > div:nth-child(1) > div > div > input").style.height = "2.4em";
         this.periodo = [this.inicio,this.fin];
         this.BajoRendimiento();
         this.listarFacultades();
@@ -251,7 +197,7 @@ export default {
             return this.programas.filter(i => i != null && i.codigo != this.selectedFacultad.codigo)
         },
         listarTutores(){
-            this.showModal();
+           
             const params = {
                 id_programa : this.$store.state.programaActual.id_programa,
                 nomFacu:this.$store.state.programaActual.facultad.nombre,
@@ -260,18 +206,27 @@ export default {
             axios
             .post('/programa/tutoresListar', params)
             .then(res =>{
-                this.tutores=res.data;
-                this.hideModal();
-/*  
-                //Agrego la opción de todos
-                var tTodos=new Object();
-                tTodos.usuario.nombre="Todos";
-                tTodos.usuario.id_programa=0;
-                this.tutores.push(tTodos);    */
+                this.tutores=res.data.sort((a, b) => { return  a.usuario.nombre.localeCompare(b.usuario.nombre);});
+          
+                // this.tutores=res.data;
+               
+                console.log('tutores: ',this.tutores);
+                // this.tutores.splice(0,1);
+                // //Agrego la opción de todos
+                 var tTodos=new Object(), usuario=new Object;
+
+                 usuario.nombre="Todos";
+                 usuario.apellidos="";
+                 usuario.id_usuario=0;
+                 tTodos.usuario=usuario;
+                 
+                 tTodos.id_usuario=0;
+                 this.tutores.push(tTodos); 
+              
             })
             .catch(e => {
-                console.log('catch',e.response);
-                this.hideModal();
+                console.log('catch',e);
+              
                 Swal.fire({
                     text:"Estamos teniendo problemas al listar los tutores del programa. Vuelve a intentar en unos minutos.",
                     icon:"warning",
@@ -286,22 +241,17 @@ export default {
 
         },
         listarFacultades(){
-            this.showModal();
+        
             const params = {
                 id_institucion:1,
             };
             axios.post('facultad/listarFacultades', params)
             .then( response => {
-                this.hideModal();
+              
                 this.mipermisosUsuario=this.$store.state.permisosUsuario;
-                this.facultades=response.data;
-                var facu=new Object();
-                facu.nombre="Todos";
-                facu.id_facultad=0;
-                facu.codigo="TODOS";
-                this.facultades.push(facu);
+                this.facultades=response.data; //No lo uso
                 //Manejo de permisos
-
+                // console.log('permisos ',this.mipermisosUsuario);
                 if(this.mipermisosUsuario.includes("Usuarios")){
                     this.selectedPrograma=this.$store.state.programaActual.id_programa;
                     this.listarProgramas();
@@ -317,8 +267,8 @@ export default {
 
             })
             .catch(e => {
-                this.hideModal();
-                console.log('catch:',e.response);
+                
+                console.log('catch:',e);
             });
 
         },
@@ -327,73 +277,69 @@ export default {
                 id_facultad:this.$store.state.programaActual.id_facultad,
 
             };
+            
             axios.post('facultad/listarProgramasDefault', params)
             .then( response => {
+                // console.log(response);
                 this.programas=response.data;
-                this.programas.splice(0,1);
-                var prog=new Object();
-                prog.nombre="Todos";
-                prog.id_programa=0;
-                this.programas.push(prog);
+                // this.programas.splice(0,1);
+                // var prog=new Object();
+                // prog.nombre="Todos";
+                // prog.id_programa=0;
+                // this.programas.push(prog);
             })
             .catch(e => {
-                console.log('catch: ',e.response);
+                console.log('catch: ',e);
             });
 
         },
 
         async BajoRendimiento(){
            this.sinGrafico=false;
-            // if(this.selectedPrograma==null) this.hideModal();
-
+          
+            console.log('reporte');
             this.alumnosBR=[];
             this.alumnosBRPlan=[];
+            console.log('t: ',this.idTutores);
+            this.selectedPrograma=this.$store.state.programaActual.id_programa;
             if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){
+                 console.log('func reporte');
                 var programas=[];
-                var tutoresSeleccionados=[];
+              
                 if(this.selectedPrograma==0){
-                    var n=this.programas.length;
+                    //escogió todos los prog
+                    let n=this.programas.length;
                     for(let i=1;i<n-1;i++ ){
                         programas[i]=this.programas[i].id_programa;
-                        tutoresSeleccionados[i-1]=this.tutores[i].id_tutor;
+                     
                     }
-                }else{
+                }else if(this.idTutores==0 && this.selectedPrograma!=0 ){
+                   
+                    programas[0]=this.selectedPrograma;
+                }else if(this.idTutores!=0 && this.selectedPrograma!=0 ){
+                  
                     programas[0]=this.selectedPrograma;
                 }
 
-                const params = {
+          
+                  const params2 = {
                     id_programa: programas,
                     id_facultad: this.$store.state.programaActual.id_facultad,
-                    id_institucion: 1,
+                    id_tutor:this.idTutores,
                     fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
                     fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
-                    id_tutor:tutoresSeleccionados,
                 };
 
-                var data =await axios.post("usuarios/datosBajoRendimiento", params);
-                var dataPlan =await axios.post("usuarios/datosAlumnosPlan", params);
-
-                // if(data.data.indexOf("Se han encontrado errores")!=-1) this.sinGrafico=true;
-                //LLenado del gráfico de la izquierda
-                this.alumnosBR.push({data:">50%-Cuarta",total:data.data[4].total_alumnos});
-                this.alumnosBR.push({data:"<50%-Cuarta",total:data.data[5].total_alumnos});
-
-                this.alumnosBR.push({data:">50%-Trica",total:data.data[2].total_alumnos});
-                this.alumnosBR.push({data:"<50%-Trica",total:data.data[3].total_alumnos});
-
-                this.alumnosBR.push({data:">50%-Bica",total:data.data[0].total_alumnos});
-                this.alumnosBR.push({data:"<50%-Bica",total:data.data[1].total_alumnos});
+                var dataPlan =await axios.post("usuarios/datosAlumnosPlan", params2);
 
                 //LLenado del gráfico de la derecha
+                 console.log('datos: ',dataPlan);
 
+                 this.alumnosBRPlan.push({data:"< 50%",total:dataPlan.data[1].total_alumno});
+                 this.alumnosBRPlan.push({data:"> 50%",total:dataPlan.data[0].total_alumno});
 
-                this.alumnosBRPlan.push({data:"Cumplieron-Cuarta",total:dataPlan.data[2].total_alumnos});
-                 this.alumnosBRPlan.push({data:"Cumplieron-Trica",total:dataPlan.data[1].total_alumnos});
-                 this.alumnosBRPlan.push({data:"Cumplieron-Bica",total:dataPlan.data[0].total_alumnos});
-
-            }else{
-                this.sinGrafico=true;
             }
+         
 
         },
         handlePeriodChange(periodo) {
@@ -445,7 +391,62 @@ export default {
                     showConfirmButton: true,
                })
             }
-        }
+            else if(this.idTutores.length==0){
+                
+                 Swal.fire({
+                    text:"No ha seleccionado un tutor, pero se muestrarán los reportes con todos los tutores.",
+                    icon:"warning",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+               })
+            }
+        },
+        addTutor(){
+            //Verificamos si está seleccionando todos los tutores
+            if(!this.selectedTutor.usuario.codigo){
+                for(var tut in this.tutores){
+                    if(this.tutores[tut].usuario.codigo){
+                        this.tutorSelect.push(this.tutores[tut]);
+                        this.idTutores.push(this.tutores[tut].usuario.id_usuario);
+                    }
+                }
+
+                this.tutores=[];
+            }else{
+                this.tutorSelect.push(this.selectedTutor);
+                this.idTutores.push(this.selectedTutor.usuario.id_usuario);
+                for(var i in this.tutores)
+                    if(this.selectedTutor.usuario.codigo==this.tutores[i].usuario.codigo) {
+                        this.tutores.splice(i,1);  
+                    }
+            }
+            this.selectedTutor=null;
+            //verifico si el único que queda es "Todos"
+            if(this.tutores[0]&&!this.tutores[0].usuario.codigo){
+                this.tutores.splice(i,1); 
+            }
+
+
+        },
+        deleteTutor(index, tutor) {
+            this.tutorSelect.splice(index,1);
+            this.idTutores.splice(index,1);
+            if(this.tutores.length){
+                this.tutores.splice(this.tutores.length-1, 0, tutor);
+                
+            }else{
+                this.tutores.push(tutor);
+                var tutorNulo=new Object();
+                tutorNulo.usuario=new Object();
+                tutorNulo.usuario.nombre="Todos";
+                tutorNulo.usuario.codigo=0;
+                tutorNulo.usuario.apellidos="";
+                this.tutores.push(tutorNulo);      
+            }
+            
+        },
+
 
     }
 

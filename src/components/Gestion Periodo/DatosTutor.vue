@@ -16,6 +16,7 @@
             <div class="font-weight-bolder">Temas: </div>
             <div>
                 <label v-for="(item,index) in tipoTutoria" :key="index" style="margin-bottom: 0px;">
+                    <!--Falta decir que el tipo de tutoría solicitado sea parte del tipo de tutoria Asignado-->
                     <label v-if="item.tutor_fijo==0 || (item.tutor_fijo==1 && item.tutor_asignado==0 && tipoTutoriaAsignado)">{{item.nombre}}</label>
                     <label v-if="(item.tutor_fijo==0 || (item.tutor_fijo==1 && item.tutor_asignado==0 && tipoTutoriaAsignado)) && index<tipoTutoria.length-1" style="margin-right:5px; margin-bottom: 0px;">, </label>
                 </label>
@@ -32,90 +33,86 @@
             </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
-                          
+        <modals-container/>                 
     </div>
+    
 </template>
 
 <script>
-import Swal from 'sweetalert2'
-import axios from 'axios'
+//import Swal from 'sweetalert2'
+//import axios from 'axios'
+
+import EventModal from './../ModalSolicitud.vue'
 export default {
     props: {
         text: String,
         tutor: Object,
         tipoTutoria: Array,
-        tipoTutoriaAsignado: Object
+        tipoTutoriaAsignado: Array
         
     },
     data(){
         return{
             habilitado:"",
-            mensaje:""
+            mensaje:"",
+            tutoriaSolicitar:[],
         }
     },
+    mounted(){
+        this.obtenerTipoTutoriaAceptado();
+
+    },
     methods:{
+        obtenerTipoTutoriaAceptado(){
+            
+            for(var i=0; i<this.tipoTutoria.length; i++){
+                var iguales=false;
+                if(this.tipoTutoria[i].tutor_fijo && this.tipoTutoria[i].tutor_asignado==0){
+                    for(var j=0; j<this.tipoTutoriaAsignado.length; j++){
+                        if(this.tipoTutoria[i].id_tipo_tutoria==this.tipoTutoriaAsignado[j].id_tipo_tutoria){
+                            iguales=true;
+                            break;
+                        }
+
+                    }
+                    if(!iguales){
+                        this.tipoTutoria.splice(i,1);
+                    }else{
+                        this.tutoriaSolicitar.push(this.tipoTutoria[i]);
+                    }
+                }
+            }
+        },
         verDisponibilidad(){
-            this.$store.state.tutorDisponibilidad=this.tutor;
+            var tutorS=new Object();
+            tutorS.usuario=new Object();
+            tutorS.usuario=this.tutor;
+            tutorS.id_usuario=this.tutor.id_usuario;
+            this.$store.state.tutorDisponibilidad=tutorS;
             this.$router.push('/agendarcita');
         },
         solicitarTutor(){
-            Swal.fire({
-                text:"¿Desea solicitar a "+this.tutor.nombre+" como tutor o tutora?",
-                icon:"warning",
-                confirmButtonText: 'Sí',
-                confirmButtonColor:'#0097A7',
-                cancelButtonText: 'No',
-                cancelButtonColor:'C4C4C4',
-                showCancelButton: true,
-                showConfirmButton: true,
-            }).then((result) => {
-                if (result.value) {
-                    const params={
-                        id_tutor: this.tutor.id_usuario,
-                        id_solicitante: this.$store.state.usuario.id_usuario,
-                        id_programa: this.$store.state.programaActual.id_programa, 
-                        usuario_creacion: this.$store.state.usuario.id_usuario,
-                        motivo: ""
-                    }
-                    axios.create()
-                    .post('/solicitudes/solicitudTutor', params)
-                    .then( response=>{
-                        this.habilitado=response.data.habilitado;
-                        this.mensaje=response.data.mensaje;
-                        if(this.habilitado=="Si"){
-                            Swal.fire({
-                            text:"Registro Exitoso",
-                            icon:"success",
-                            confirmButtonText: 'OK',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                            })   
-                        }else if(this.habilitado=="No"){
-                            Swal.fire({
-                            text:this.mensaje,
-                            icon:"error",
-                            confirmButtonText: 'OK',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                            }) 
-                        }
+            this.$modal.show(EventModal,{
+                tutorSel: this.tutor,
+                tipoTutoria: this.tutoriaSolicitar,
 
-                    })
-                    .catch(e => {
-                        console.log(e.response);
-                    })
-
-                } 
-            })
-
-
+            });
         }
     }
 }
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+@import '../../assets/styles/material.css';
+@import '../../assets/styles/main.css';
+
+.vm--modal {
+    border-radius: 25px !important;
+    margin: 30px;
+    height: 260px !important;
+}
 .descripcion-tutor {
     margin-left: 170px;
 }

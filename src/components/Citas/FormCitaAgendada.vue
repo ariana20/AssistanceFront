@@ -224,7 +224,7 @@ export default Vue.extend ({
         //     //si hay info de la sesion quiere decir que ha asistido a su 
         // }
         console.log('cita  ', this.cita);
-        this.disableFields()
+        // this.disableFields()
         
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {

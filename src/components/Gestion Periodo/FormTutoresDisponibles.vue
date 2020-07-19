@@ -7,7 +7,7 @@
           <div class="row">
             <div class="col-12 col-lg-2" style="padding-top: 6px;"><h5>Nombre: </h5></div>
             <div class="col-12 col-lg-10" >
-              <input class="form-control" v-model="nomb" v-on:keyup.enter="buscarTutor" placeholder="Ingrese nombre del tutor">
+              <input maxlength="100" class="form-control" v-model="nomb" v-on:keyup.enter="buscarTutor" placeholder="Ingrese nombre del tutor">
             </div>
           </div>
         </div>
@@ -25,28 +25,18 @@
                     {{ tema.nombre}}
                 </option>
             </select>
-            
-            <!--ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
-                <li class="motivos-seleccionados list-group-item" style="text-align:left;"
-                    v-for="(tema,index) in temaSelect"  
-                    :key="index">
-                    {{ tema.nombre }}
-                    <span name="remove" class="close" @click="deleteTema(index, tema)" style="float:right;">&times;</span>           
-                </li>
-            </ul-->
+          
             </div>
-            <!--div class="col-12 col-lg-2" style="text-align: right; top: 50%;padding-top: 6px;"><h6 style="top:50%;cursor:pointer;color:#17a2b8;" 
-                :disabled="!this.selectedTema"
-                @click="addTema" 
-                >Seleccionar</h6>
-            </div-->
           </div>
         </div>
         
       </div>
-      <datosTutorAsignado v-if="tutorAsignado"
-        :tutor="tutorAsignado"
-        :tipoTutoriaAsignado="ttAsignado"/>
+
+      <div v-for="(item) in tutoresAsignado" :key="item.id_usuario">
+        <datosTutorAsignado 
+          :tutor="item"
+          :tipoTutoriaAsignado="ttAsignado"/>
+      </div>
 
       <div v-for="(item,index) in tutores" :key="index">
         <datosTutor
@@ -87,8 +77,7 @@ export default {
       temaSelect:[],
       idTemas:[],
       ttAsignado: null,
-      tutorAsignado:null,
-      
+      tutoresAsignado:[],
       
     }
   },
@@ -99,10 +88,25 @@ export default {
   },
   mounted(){
     this.listarTipoTutoria();
+    this.listarTutoresAsignados();
     
   },
   methods:{
-
+    listarTutoresAsignados(){
+        const params = {
+          id_programa : this.$store.state.programaActual.id_programa,
+          id_alumno: this.$store.state.usuario.id_usuario
+        };
+        axios
+        .post('/programa/tutoresAsignados', params)
+          .then(res =>{
+            this.tutoresAsignado=res.data;
+            console.log(res);         
+          })
+          .catch(e => {
+            console.log(e.response);
+          })
+    },
     listarTipoTutoria(){
 
         const params = {
@@ -149,7 +153,6 @@ export default {
         .then(res =>{
           console.log(res);
           this.ttAsignado=res.data.tipoAsignado;
-          this.tutorAsignado=res.data.tutor;
           this.loadMore($state, res); 
           console.log(this.tutores);          
         })
@@ -194,4 +197,6 @@ export default {
 
 }
 input:focus {outline: none;box-shadow: none;}
+.btn:focus {outline: none;box-shadow: none;}
+select:focus {outline: none;box-shadow: none;}
 </style>
