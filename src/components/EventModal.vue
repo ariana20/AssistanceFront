@@ -49,6 +49,12 @@
         <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
         <b>Motivo:</b>  {{ event.extendedProps.motivo }} <br/>
         <div id="botones">
+          <a v-if="this.event.backgroundColor=='#FFC107'"  type="button" class="btn btn-info" 
+          :href="'https://www.google.com/calendar/render?action=TEMPLATE&text='+ 
+          'Cita Tutoría Registrada' + 
+          '&details='+ 'Cita con alumno ' + tutorSel.nombre_usuario +'&location=Pontificia+Universidad+Cat%C3%B3lica+del+Per%C3%BA%2C+Av.+Universitaria+1801%2C+San+Miguel+15088%2C+Per%C3%BA&dates=' + 
+          ini+'%2F'+ fin" target="_blank"> Agregar a Google calendar
+          </a>
           <button id="button" class="btn btn-info" @click="rutaEvent">Detalle</button>
           <button id="button" class="btn btn-info" @click="removeEvent">Cancelar Cita</button>
           <button id="button" class="btn btn-secondary" @click="$emit('close')">Cerrar</button>
@@ -129,9 +135,8 @@ export default {
         updateEvent () {
           this.isDisabled = true;
           if(this.motivoSel){
-            console.log('id del motivo seleccionado ',this.motivoSel.id_tipo_tutoria)
             this.$store.commit("UPDATE_EVENT", {
-                id: this.event.id,
+                id: parseInt(this.event.id, 10),
                 title: this.$store.state.usuario.nombre + ' ' + this.$store.state.usuario.apellidos,
                 start: this.event.start,
                 color:'#009892',
