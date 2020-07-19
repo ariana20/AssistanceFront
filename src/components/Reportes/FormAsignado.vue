@@ -1,8 +1,8 @@
 <template>
   <div class="FormAsignado">
       <div class="contenedor">
-        <div class="top-titulo" style="text-align:left;">
-            <div class="col-4">
+        <div class="top-titulo row" style="text-align:left;">
+            <div class="col-12 col-md-4">
                 <h5>Fechas:</h5>
                 <date-picker style="left:0px" class="wide-date-example"
                     v-model="periodo" 
@@ -13,7 +13,7 @@
                     input-class="form-control">
                 </date-picker>
             </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <div class="row">
                     <div class="col"><h5>Tutor(a): </h5></div>
                     <div class="col" style="text-align: right; top: 50%"><h6 style="top:50%;cursor:pointer;color:#17a2b8;" 
@@ -31,19 +31,29 @@
                         {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
                     </option>
                 </select>
-                <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
-                    <li class="motivos-seleccionados list-group-item" style="text-align:left;"
-                        v-for="(tutor,index) in tutorSelect"  
-                        :key="index">
-                        {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
-                        <span name="remove" class="close" @click="deleteTutor(index, tutor)" style="float:right;">&times;</span>           
-                    </li>
-                </ul>
+
             </div>
-            <div class="botones" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+            <div class="col-12 col-md-2 offset-md-2" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
         </div>
+        <div class="top-titulo" style="text-align:left;">
+            <div class="col-1">
+                <div>Filtros: </div>
+            </div>
+            <div class="col-10 offset-1" style="text-align:left;">
+                <div class="row">
+                <ul  class="col-12 col-md-6 col-lg-4 overflow-wrap list-group list-group-flush" v-for="(tutor,index) in tutorSelect" :key="index" style="margin-bottom: 0px;text-align:left;">
+                    <li class="motivos-seleccionados list-group-item " style="text-align:left;">
+                        {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
+                        <span name="remove" class="close col-2" @click="deleteTutor(index, tutor)" >&times;</span> 
+                    </li>
+                </ul>    
+                </div>
+            </div>
+        </div>
+
+
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row">
@@ -339,7 +349,9 @@ export default {
     padding-top: 0.1rem;
     padding-right: 1rem;
     padding-bottom: 0.1rem;
+    margin-bottom: 0.1rem;
     padding-left: 1rem;
+    background-color: rgba(0, 0, 0, 0.06);
 }
 
 .close {
