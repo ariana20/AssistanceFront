@@ -226,23 +226,23 @@ export default {
             this.showModal()     
             const doc = new jsPDF('p', 'mm', 'a4');
             doc.setFontSize(29);
-            doc.text('Reporte de Atenciones',60,20);
+            doc.text('Reporte de Atenciones',65,20);
             doc.text('\n',10,10);
             const options = { background: 'white', height: 845, width: 595 };
             domtoimage.toPng(document.querySelector("#content1"), options).then((dataUrl) => {
-                doc.addImage(dataUrl,'JPEG', 10, 50, 210, 340);
+                doc.addImage(dataUrl,'JPEG', 40, 75, 210, 340);
                 doc.addPage();
                 domtoimage.toPng(document.querySelector("#content2"), options).then((dataUrl) => {
-                    doc.addImage(dataUrl,'JPEG', 10, 50, 210, 340);
+                    doc.addImage(dataUrl,'JPEG', 40, 75, 210, 340);
                     doc.addPage();
                     domtoimage.toPng(document.querySelector("#content3"), { background: 'white', height: 845, width: 700 }).then((dataUrl) => {
-                        doc.addImage(dataUrl,'JPEG', 20, 50, 210, 340);
+                        doc.addImage(dataUrl,'JPEG', 40, 75, 210, 340);
                         doc.addPage('a3', 'l');
-                        domtoimage.toPng(document.querySelector("#content4"), { background: 'white', height: 845, width: 1800 }).then((dataUrl) => {
-                            doc.addImage(dataUrl,'JPEG', 10, 50, 420, 340);
+                        domtoimage.toPng(document.querySelector("#content4"), { background: 'white', height: 750, width: 1300 }).then((dataUrl) => {
+                            doc.addImage(dataUrl,'JPEG', 0, 60, 420, 340);
                             doc.addPage('a3', 'l');
-                            domtoimage.toPng(document.querySelector("#content5"), { background: 'white', height: 845, width: 1800 }).then((dataUrl) => {
-                                doc.addImage(dataUrl,'JPEG', 30, 50, 420, 340);
+                            domtoimage.toPng(document.querySelector("#content5"), { background: 'white', height: 700, width: 1300 }).then((dataUrl) => {
+                                doc.addImage(dataUrl,'JPEG', 0, 60, 420, 340);
                                 this.hideModal()
                                 doc.save("ReporteAtenciones.pdf");
                             });

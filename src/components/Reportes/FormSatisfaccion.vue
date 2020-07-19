@@ -207,19 +207,19 @@ export default {
             doc.text('\n',10,10);
             const options = { background: 'white', height: 845, width: 900 };
             domtoimage.toPng(document.querySelector("#content1"), options).then((dataUrl) => {
-                doc.addImage(dataUrl,'PNG', 10, 50, 210, 340);
+                doc.addImage(dataUrl,'PNG', 40, 75, 210, 340);
                 doc.addPage();
                 domtoimage.toPng(document.querySelector("#content2"), options).then((dataUrl) => {
-                    doc.addImage(dataUrl,'PNG', 10, 50, 210, 340);
+                    doc.addImage(dataUrl,'PNG', 40, 75, 210, 340);
                     doc.addPage();
                     domtoimage.toPng(document.querySelector("#content3"), options).then((dataUrl) => {
-                        doc.addImage(dataUrl,'PNG', 10, 50, 210, 340);
+                        doc.addImage(dataUrl,'PNG', 40, 75, 210, 340);
                         doc.addPage();
                         domtoimage.toPng(document.querySelector("#content4"), options).then((dataUrl) => {
-                            doc.addImage(dataUrl,'PNG', 10, 50, 210, 340);
+                            doc.addImage(dataUrl,'PNG', 40, 75, 210, 340);
                             doc.addPage();
                             domtoimage.toPng(document.querySelector("#content5"), { background: 'white', height: 845, width: 990 }).then((dataUrl) => {
-                                doc.addImage(dataUrl,'PNG', -80, 50, 230, 340);
+                                doc.addImage(dataUrl,'PNG', -40, 75, 230, 340);
                                 this.hideModal()
                                 doc.save("ReporteEncuestas.pdf");
                             });
