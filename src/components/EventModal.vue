@@ -26,7 +26,7 @@
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
-      <!--<b>Tipo Tutoría:</b>  {{ event.description }} <br/>-->
+      <b>Tipo Tutoría:</b>  {{ event.description }} <br/>
       <div id="botones">
         <a type="button" class="btn btn-info" 
         :href="'https://www.google.com/calendar/render?action=TEMPLATE&text='+ 
