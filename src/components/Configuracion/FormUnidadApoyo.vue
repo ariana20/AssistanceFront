@@ -1,8 +1,8 @@
 <template>
     <div class="FormRoles contenedor">
         <div class="row" >
-            <div class="col-12 col-md-4 col-lg-1 form-inline">
-                Nombre: *
+            <div class="col-12 col-md-4 col-lg-1 form-inline" style="padding-left:28px">
+                {{"     "+"Nombre: *"}}
             </div>
             <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
                 <input style="margin-top:2%" v-model="unidad.nombre" class="form-control" type="text" 

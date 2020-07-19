@@ -1,5 +1,5 @@
 <template>
-    <div class= "formSesionTutoria container">
+    <div class= "formSesionTutoria contenedor">
         <div class="top-titulo row top-row" style="text-align:left;">
             <h4 class="row col-sm-4 tutoria-title">Tipo de Tutoría: </h4>
             <select class="col-sm-4 form-control selectedTT" v-model="selectedTipoTutoria">
@@ -11,7 +11,7 @@
                     {{ tipoTutoria.nombre }}
                 </option>
             </select>
-            <date-picker class="col-sm-3 dateSlot" v-model="datetime" type="datetime" format="YYYY-MM-DD HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
+            <date-picker class="col-sm-3 dateSlot" :lang="lang" v-model="datetime" type="datetime" format="DD-MM-YYYY HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
             <div class="row botones col-sm-4 botones-top">
             <button type="button" class="btn btn-info" @click="guardar()" >Guardar</button>
             <button type="button" class="btn btn-info" @click="cancelar()" style="border-color:gray;background-color:gray;">Cancelar</button>
@@ -183,6 +183,22 @@ export default Vue.extend ({
             unidadesApoyo: [],
             selectedUnidadApoyo: null,
             bloque:null,
+            
+            lang: {
+                formatLocale: {
+                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    // MMM
+                    monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+                    // dddd
+                    weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    // ddd
+                    weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                    // dd
+                    weekdaysMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    firstDayOfWeek: 1,
+                },
+                monthBeforeYear: true,
+            },
         }
     },
     mounted(){
@@ -190,11 +206,12 @@ export default Vue.extend ({
         if (window.matchMedia("(max-width: 767px)").matches) {
             document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo.row.top-row > div.col-sm-3.dateSlot.mx-datepicker").style.width = "100%"
         }
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.borderRadius = "1.25rem"; 
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.border= "0.5px solid #757575";    
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontWeight = "400";
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.fontSize = "1rem";
-        document.querySelector("#container > div > div.formSesionTutoria.container > div.top-titulo > div.col-sm-3.mx-datepicker > div > input").style.height = "2.4em";
+
+        document.querySelector("#container > div > div.formSesionTutoria.contenedor > div.top-titulo.row.top-row > div.col-sm-3.dateSlot.mx-datepicker > div > input").style.borderRadius = "1.25rem";
+        document.querySelector("#container > div > div.formSesionTutoria.contenedor > div.top-titulo.row.top-row > div.col-sm-3.dateSlot.mx-datepicker > div > input").style.border= "0.5px solid #757575";    
+        document.querySelector("#container > div > div.formSesionTutoria.contenedor > div.top-titulo.row.top-row > div.col-sm-3.dateSlot.mx-datepicker > div > input").style.fontWeight = "400";
+        document.querySelector("#container > div > div.formSesionTutoria.contenedor > div.top-titulo.row.top-row > div.col-sm-3.dateSlot.mx-datepicker > div > input").style.fontSize = "1rem";
+        document.querySelector("#container > div > div.formSesionTutoria.contenedor > div.top-titulo.row.top-row > div.col-sm-3.dateSlot.mx-datepicker > div > input").style.height = "2.4em"; 
         axios.post('/programa/listar/'+this.$store.state.programaActual.id_programa)
             .then( response=>{
                 this.bloque = response.data.hora_bloque

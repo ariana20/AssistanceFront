@@ -6,7 +6,9 @@
                 <h5>Fechas:</h5>
                 <date-picker style="left:0px" class="wide-date-example"
                     v-model="periodo" 
-                    width="20" lang="es" range 
+                    width="20" :lang="lang" 
+                    format="DD/MM/YYYY"
+                    range 
                     placeholder="Selecciona Rango de Fechas"
                     :disabled-date="disabledAfterToday"
                     @input="handlePeriodChange"
@@ -217,7 +219,22 @@ export default {
                 responsive: true,
                 maintainAspectRatio:false
             },
-          
+            
+            lang: {
+                formatLocale: {
+                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    // MMM
+                    monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+                    // dddd
+                    weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    // ddd
+                    weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                    // dd
+                    weekdaysMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    firstDayOfWeek: 1,
+                },
+                monthBeforeYear: true,
+            },
 
 
             

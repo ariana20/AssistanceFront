@@ -60,7 +60,7 @@
                     </div>
                     <div class="col-12 col-md-7" style="text-align:left">
                         <div v-if="cita.sesion">
-                            <div v-for="item in cita.sesion.motivo_consultas" :key="item">
+                            <div v-for="(item,index) in cita.sesion.motivo_consultas" :key="index">
                                 {{item.nombre}}
                             </div>
                         </div>

@@ -93,7 +93,7 @@ export default {
                 ListPlugin,
                 momentPlugin
             ],
-            columnFormat: 'ddd M/D',
+            columnFormat: 'ddd D/M',
             titleFormat: 'MMMM YYYY',
             calendar: null,
             locales: [esLocale],

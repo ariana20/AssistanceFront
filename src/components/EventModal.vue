@@ -31,7 +31,7 @@
         <a type="button" class="btn btn-info" 
         :href="'https://www.google.com/calendar/render?action=TEMPLATE&text='+ 
         'Cita Tutoría Registrada' + 
-        '&details='+ 'Cita con tutor ' + tutorSel.usuario.nombre + ' ' + tutorSel.usuario.apellidos +'&location=Pontificia+Universidad+Cat%C3%B3lica+del+Per%C3%BA%2C+Av.+Universitaria+1801%2C+San+Miguel+15088%2C+Per%C3%BA&dates=' + 
+        '&details='+ 'Cita con tutor ' + tutorSel.nombre + ' ' + tutorSel.apellidos +'&location=Pontificia+Universidad+Cat%C3%B3lica+del+Per%C3%BA%2C+Av.+Universitaria+1801%2C+San+Miguel+15088%2C+Per%C3%BA&dates=' + 
         ini+'%2F'+ fin" target="_blank"> Agregar a Google calendar
         </a>
         <button type="button" class="btn btn-info" @click="SolCancelar();$emit('close')">Solicitar Cancelacion</button>
@@ -52,7 +52,7 @@
           <a v-if="this.event.backgroundColor=='#FFC107'"  type="button" class="btn btn-info" 
           :href="'https://www.google.com/calendar/render?action=TEMPLATE&text='+ 
           'Cita Tutoría Registrada' + 
-          '&details='+ 'Cita con alumno ' + tutorSel.nombre_usuario +'&location=Pontificia+Universidad+Cat%C3%B3lica+del+Per%C3%BA%2C+Av.+Universitaria+1801%2C+San+Miguel+15088%2C+Per%C3%BA&dates=' + 
+          '&details='+ 'Cita con alumno ' + nombre_usuario +'&location=Pontificia+Universidad+Cat%C3%B3lica+del+Per%C3%BA%2C+Av.+Universitaria+1801%2C+San+Miguel+15088%2C+Per%C3%BA&dates=' + 
           ini+'%2F'+ fin" target="_blank"> Agregar a Google calendar
           </a>
           <button id="button" class="btn btn-info" @click="rutaEvent">Detalle</button>
@@ -280,10 +280,15 @@ export default {
     //this.fin = this.event.end.getFullYear() + ("0" + (this.event.end.getMonth() + 1)).slice(-2) + ("0" + this.event.end.getDate()).slice(-2) + "T"+ (this.event.end.getHours() + 2)+ (this.event.end.getMinutes()) + (this.event.end.getSeconds()) + "Z"
     console.log('hora ini',this.event.start.YYYYMMDDHHMMSS())
     console.log('hora fin',this.event.end.YYYYMMDDHHMMSS())
-    if(this.tutorSel) {
-      console.log('tutor ttutoria: ', this.tutorSel.tipo_tutorias)
-      this.tipoTutorias = this.tutorSel.usuario.tipo_tutorias
-      console.log('tutorias: ', this.tipoTutorias)
+    if(this.tutorSel!=undefined) {
+      this.tipoTutorias = []
+      if(this.tutorSel.ttAsignado!=undefined){
+        this.tipoTutorias.push(this.tutorSel.ttAsignado)
+      }
+      this.tutorSel.tipo_tutorias.forEach(element => {
+        console.log(element.nombre,element.tutor_asignado)
+        if(element.tutor_fijo!="1") this.tipoTutorias.push(element)
+      });
     }
     this.$store.state.curEvent = this.event;
     this.getIdCita();

@@ -9,7 +9,7 @@
                         v-model="periodo" 
                         width="20" :lang="lang" range
                         placeholder="Selecciona Rango de Fechas"
-                        format="DD/MMM/YYYY"
+                        format="DD/MM/YYYY"
                         :disabled-date="disabledAfterToday"
                         @input="handlePeriodChange"
                         input-class="form-control" style="left:10px">

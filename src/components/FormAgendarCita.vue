@@ -1,5 +1,5 @@
 <template>
-    <div class="formagendarcita container">
+    <div class="formagendarcita contenedor">
         <div class="top-titulo " style="text-align:left;">
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
             <select id="selectBox" class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" v-if="tutores[0]">
@@ -200,10 +200,10 @@ export default {
                     console.log('getreminders',response.data)
                     var rd = response.data[0]; 
                     var rd2 = response.data[1];
-                    //var today = new Date()
+                    var today = new Date()
                     for(var i in rd) {
-                        //var date = rd[i].fecha + " " + rd[i].hora_inicio
-                        //var date1 = new Date(date)
+                        var date = rd[i].fecha + " " + rd[i].hora_inicio
+                        var date1 = new Date(date)
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
                             
@@ -236,7 +236,7 @@ export default {
                                     });
                                 }
                             } else {
-                                //if(date1>today) {
+                                if(date1>today) {
                                     console.log('id cuando es llenado',rd[i].id_disponibilidad)
                                     this.$store.commit("ADD_EVENT", {
                                         id: rd[i].id_disponibilidad,
@@ -249,7 +249,7 @@ export default {
                                         usuario_actualizacion: rd[i].usuario_actualizacion,
                                         
                                     });
-                                //}
+                                }
                             }
                         //});
                     }

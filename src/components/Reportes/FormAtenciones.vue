@@ -6,7 +6,8 @@
                 <h5>Fechas:</h5>
                 <date-picker style="left:0px" class="wide-date-example"
                     v-model="periodo" 
-                    width="20" lang="es" range 
+                    width="20" :lang="lang" 
+                    format="DD/MM/YYYY" range 
                     placeholder="Selecciona Rango de Fechas"
                     :disabled-date="disabledAfterToday"
                     @input="handlePeriodChange"
@@ -83,7 +84,7 @@
 
 
 <script>
-import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image';
 import jsPDF from 'jspdf';
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
@@ -127,6 +128,21 @@ export default {
             inicio: new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
             fin: new Date(),
             periodo:'',
+            lang: {
+                formatLocale: {
+                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    // MMM
+                    monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+                    // dddd
+                    weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    // ddd
+                    weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                    // dd
+                    weekdaysMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    firstDayOfWeek: 1,
+                },
+                monthBeforeYear: true,
+            },
             //opciones de gráficos
             chartOp:{
                 scales: {
@@ -191,40 +207,24 @@ export default {
     methods:{
         downloadWithCSS() {            
             const doc = new jsPDF('p', 'mm', 'a4');
-            var img1='';
-            var img2='';
-            var img3='';
-            var img4='';
-            var img5='';
-            var canvasElement = document.createElement('canvas');
-            html2canvas(document.querySelector("#content1"), { canvas: canvasElement 
-                }).then(function (canvas) {
-                img1 = canvas.toDataURL("image/jpeg", 100);
-                html2canvas(document.querySelector("#content2"), { canvas: canvasElement 
-                    }).then(function (canvas) {
-                    img2 = canvas.toDataURL("image/jpeg", 100);
-                    html2canvas(document.querySelector("#content3"), { canvas: canvasElement 
-                        }).then(function (canvas) {
-                        img3 = canvas.toDataURL("image/jpeg", 100);
-                        html2canvas(document.querySelector("#content4"), { canvas: canvasElement 
-                            }).then(function (canvas) {
-                            img4 = canvas.toDataURL("image/jpeg",100);
-                            html2canvas(document.querySelector("#content5"), { canvas: canvasElement 
-                                }).then(function (canvas) {
-                                img5 = canvas.toDataURL("image/jpeg",100);
-                                //img5.width = 700;
-                                //img5.height = 500;
-                                doc.text('Reporte de Atenciones',80,10);
-                                doc.text('\n',10,10);
-                                doc.addImage(img1,'JPEG',40,75);
-                                doc.addPage();
-                                doc.addImage(img2,'JPEG',40,75);
-                                doc.addPage();
-                                doc.addImage(img3,'JPEG',40,75);
-                                doc.addPage('a3', 'l');
-                                doc.addImage(img4,'JPEG',0,80);
-                                doc.addPage('a3', 'l');
-                                doc.addImage(img5,'JPEG',0,80);
+            doc.setFontSize(29);
+            doc.text('Reporte de Atenciones',60,20);
+            doc.text('\n',10,10);
+            const options = { background: 'white', height: 845, width: 595 };
+            domtoimage.toPng(document.querySelector("#content1"), options).then((dataUrl) => {
+                doc.addImage(dataUrl,'JPEG', 10, 50, 210, 340);
+                doc.addPage();
+                domtoimage.toPng(document.querySelector("#content2"), options).then((dataUrl) => {
+                    doc.addImage(dataUrl,'JPEG', 10, 50, 210, 340);
+                    doc.addPage();
+                    domtoimage.toPng(document.querySelector("#content3"), { background: 'white', height: 845, width: 700 }).then((dataUrl) => {
+                        doc.addImage(dataUrl,'JPEG', 20, 50, 210, 340);
+                        doc.addPage('a3', 'l');
+                        domtoimage.toPng(document.querySelector("#content4"), { background: 'white', height: 845, width: 1800 }).then((dataUrl) => {
+                            doc.addImage(dataUrl,'JPEG', 10, 50, 420, 340);
+                            doc.addPage('a3', 'l');
+                            domtoimage.toPng(document.querySelector("#content5"), { background: 'white', height: 845, width: 1800 }).then((dataUrl) => {
+                                doc.addImage(dataUrl,'JPEG', 30, 50, 420, 340);
                                 doc.save("ReporteAtenciones.pdf");
                             });
                         });

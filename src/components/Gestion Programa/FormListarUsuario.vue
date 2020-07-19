@@ -8,11 +8,11 @@
         <div class="form-inline col-12 col-md-2 "  style="padding-left:10px">
           <h5 style="margin-top:5%;margin-bottom:5%">Nombres o Código: </h5>
         </div>
-        <div class="form-inline col-12 col-md-5"  style="padding:0px">
-          <input maxlength="100" class="form-control" v-model="criterio" @keyup.enter=" buscarUsuario" placeholder="Buscar">
-        <!-- </div>
-        <div class="form-inline col-12 col-md-2" style="padding:0px"> -->
-          <select v-model="tiposUsuariosselect" class="col sm-6 form-control" style="cursor:pointer;margin-left:5px" @change=" buscarUsuario"  >
+        <div class="form-inline col-12 col-md-2"  style="padding:0px">
+          <input maxlength="100" class="form-control" v-model="criterio" @keyup.enter=" buscarUsuario" placeholder="Buscar" style="width:100%">
+        </div>
+        <div class="form-inline col-12 col-md-4 col-xlg-2" style="padding:0px">
+          <select v-model="tiposUsuariosselect" class="col sm-6 offset-md-1 form-control" style="cursor:pointer;margin-left:5px" @change=" buscarUsuario"  >
               <option value="no" disabled    >Selecciona un tipo de usuario</option>
               <option   v-for="(tipoU,index) in tiposUsuarios" :value="tipoU.id_tipo_usuario" v-bind:key="index" style="cursor:pointer;" >
               {{ tipoU.nombre}}
@@ -20,10 +20,8 @@
             </select>
         </div>
 
-        <div class="form-inline col-12 col-md-3"> 
-          <!-- espacio xd no borrar -->
-            </div>
-         <div class="form-inline col-12 col-md-2">
+        
+        <div class="form-inline col-12 col-md-2 offset-xlg-4 offset-md-2">
           <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir Nuevo</button>
         </div>
 

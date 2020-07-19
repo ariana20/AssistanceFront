@@ -85,7 +85,7 @@
                 </tr>
             </tbody>
         </table>
-        <div v-if="!alumnosAsig.lenght" >No hay alumnos asignados</div>
+        <div v-if="alumnosAsig.lenght == 0 || tutoriaSeleccionada==null" >No hay alumnos asignados</div>
 
     </div>
 

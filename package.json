@@ -25,6 +25,7 @@
     "chartjs": "^0.3.24",
     "chartjs-plugin-datalabels": "^0.7.0",
     "core-js": "^3.6.4",
+    "dom-to-image": "^2.6.0",
     "emailjs-com": "^2.4.1",
     "hellojs": "^1.18.4",
     "html2canvas": "^1.0.0-rc.5",

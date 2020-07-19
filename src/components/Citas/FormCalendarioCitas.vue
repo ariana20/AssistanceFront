@@ -1,5 +1,5 @@
 <template>
-    <div class="formagendarcita container">
+    <div class="formagendarcita contenedor">
         <div class="top-titulo ">
             <div style="width:50%;"><ul class="legend">
                 <li><span class="realizado"></span> Realizado </li>

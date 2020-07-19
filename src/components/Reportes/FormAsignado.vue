@@ -6,7 +6,8 @@
                 <h5>Fechas:</h5>
                 <date-picker style="left:0px" class="wide-date-example"
                     v-model="periodo" 
-                    width="20" lang="es" range 
+                    width="20" :lang="lang" 
+                    format="DD/MM/YYYY" range 
                     placeholder="Selecciona Rango de Fechas"
                     :disabled-date="disabledAfterToday"
                     @input="handlePeriodChange"
@@ -61,7 +62,7 @@
 
 
 <script>
-import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image';
 import jsPDF from 'jspdf';
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
@@ -96,6 +97,21 @@ export default {
             inicio: new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
             fin: new Date(),
             periodo:'',
+            lang: {
+                formatLocale: {
+                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    // MMM
+                    monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+                    // dddd
+                    weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    // ddd
+                    weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                    // dd
+                    weekdaysMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    firstDayOfWeek: 1,
+                },
+                monthBeforeYear: true,
+            },
             //opciones de gráficos
             chartOp:{
                 scales: {
@@ -147,13 +163,12 @@ export default {
     methods:{
         downloadWithCSS() {            
             const doc = new jsPDF('l', 'mm', 'a3');
-            var canvasElement = document.createElement('canvas');
-                html2canvas(document.querySelector("#content1"), { canvas: canvasElement 
-                }).then(function (canvas) {
-                const img = canvas.toDataURL("image/jpeg", 20);
-                doc.text('Reporte de Alumnos Asignados',180,10);
-                doc.text('\n',10,10);
-                doc.addImage(img,'JPEG',10,50);
+            doc.setFontSize(29);
+            doc.text('Reporte de Alumnos Asignados',140,20);
+            doc.text('\n',10,10);
+            const options = { background: 'white', height: 845, width: 1800 };
+            domtoimage.toPng(document.querySelector("#content1"), options).then((dataUrl) => {
+                doc.addImage(dataUrl,'JPEG', 10, 50, 420, 340);
                 doc.save("ReporteAsignados.pdf");
             });
         },
