@@ -7,7 +7,7 @@
           <div class="row">
             <div class="col-12 col-lg-2" style="padding-top: 6px;"><h5>Nombre: </h5></div>
             <div class="col-12 col-lg-10" >
-              <input class="form-control" v-model="nomb" v-on:keyup.enter="buscarTutor" placeholder="Ingrese nombre del tutor">
+              <input maxlength="100" class="form-control" v-model="nomb" v-on:keyup.enter="buscarTutor" placeholder="Ingrese nombre del tutor">
             </div>
           </div>
         </div>
@@ -25,21 +25,8 @@
                     {{ tema.nombre}}
                 </option>
             </select>
-            
-            <!--ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
-                <li class="motivos-seleccionados list-group-item" style="text-align:left;"
-                    v-for="(tema,index) in temaSelect"  
-                    :key="index">
-                    {{ tema.nombre }}
-                    <span name="remove" class="close" @click="deleteTema(index, tema)" style="float:right;">&times;</span>           
-                </li>
-            </ul-->
+          
             </div>
-            <!--div class="col-12 col-lg-2" style="text-align: right; top: 50%;padding-top: 6px;"><h6 style="top:50%;cursor:pointer;color:#17a2b8;" 
-                :disabled="!this.selectedTema"
-                @click="addTema" 
-                >Seleccionar</h6>
-            </div-->
           </div>
         </div>
         
@@ -210,4 +197,6 @@ export default {
 
 }
 input:focus {outline: none;box-shadow: none;}
+.btn:focus {outline: none;box-shadow: none;}
+select:focus {outline: none;box-shadow: none;}
 </style>

@@ -73,7 +73,7 @@
 
         <div ref="crearimagen" class="row mt-2">
 
-            <div  class="col-12 col-md-6" v-if="alumnosBR.length>0">
+            <div id="content1"  class="col-12 col-md-6" v-if="alumnosBR.length>0">
                 <strong style="margin-left:10px">Cantidad de alumnos que asistieron a sus citas</strong>
                 <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp2"
                 label='Alumnos con Bajo Rendimiento'  ></horizontal-bar-chart>
@@ -241,15 +241,15 @@ export default {
             pdf.save('salida2.pdf');
         },
         downloadWithCSS() {            
-            const doc = new jsPDF();
+            const doc = new jsPDF('p', 'mm', 'a4');
             var canvasElement = document.createElement('canvas');
-                html2canvas(this.$refs.crearimagen, { canvas: canvasElement 
+                html2canvas(document.querySelector("#content1"),  { canvas: canvasElement 
                 }).then(function (canvas) {
                 const img = canvas.toDataURL("image/jpeg", 20);
-                doc.text('Reporte de asistencia',10,10);
+                doc.text('Reporte de Alumnos de Bajo Rendimiento',60,10);
                 doc.text('\n',10,10);
-                doc.addImage(img,'JPEG',10,10);
-                doc.save("ReporteAsistencia.pdf");
+                doc.addImage(img,'JPEG',10,80);
+                doc.save("ReporteBajoRendimiento.pdf");
             });
         },
         progSinDefault: function () {
@@ -393,9 +393,9 @@ export default {
                 for( let i in data.data ){
                    var grupo50;
                     if(data.data[i].grupo=="mas 50%")
-                        grupo50 =">50%-"+data.data[i].condicion;
+                        grupo50 ="> 50% - "+data.data[i].condicion;
                     else if(data.data[i].grupo=="menos 50%")
-                        grupo50 ="<50%-"+data.data[i].condicion;
+                        grupo50 ="< 50% - "+data.data[i].condicion;
 
                     this.alumnosBR.push({data:grupo50,total:data.data[i].total_alumnos});
                    

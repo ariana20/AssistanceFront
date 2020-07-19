@@ -349,7 +349,7 @@ export default Vue.extend ({
         },
         onCodigoChange: function () {
             var i;
-            console.log(this.codigos);
+            // console.log(this.codigos);
             for(i in this.codigos){
                 if(this.sel==this.codigos[i].codigo){
                     this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;   
@@ -374,20 +374,22 @@ export default Vue.extend ({
         },
   
         deleteAl: function(index) {
-            
-            var estabaAntes=this.$store.state.citaDatos.alumnos.find(alum => alum.codigo == this.listAlumnosCod[index]); 
+             var estabaAntes;
+             if(this.$store.state.citaDatos.alumnos!=null){     
+                       estabaAntes=this.$store.state.citaDatos.alumnos.find(alum => alum.codigo == this.listAlumnosCod[index]); 
+             }
+             else estabaAntes="noalumnos";        //no estaba antes obviamente, es una lista nueva           
             //Si encuentra el código, estabaAntes es un objeto, si no, estabaAntes es undefined
-            var al=  this.listAlumnosCod.splice(index,1);
-            this.listAlumnosNom.splice(index,1);
-            this.listAlumnosCond.splice(index,1);
-            this.listAlumnosId.splice(index,1);
 
             //revisar duplicado y no enviar correo a quien se agregó y eliminó de casualidad, pero como no estaba originalmente,no le envío correo
             if(estabaAntes==undefined)        
                  this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),false) //No estaba antes
-            else          
-                 this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),true)  //sí estaba antes
-
+           else if (estabaAntes=="noalumnos") estabaAntes="noalumnos";
+           else   this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),true)  //sí estaba antes
+            var al=  this.listAlumnosCod.splice(index,1);
+            this.listAlumnosNom.splice(index,1);
+            this.listAlumnosCond.splice(index,1);
+            this.listAlumnosId.splice(index,1);
         },
         addAlumno: function () {  
             var estaAl = false;
@@ -442,7 +444,7 @@ export default Vue.extend ({
                     idProg: this.$store.state.programaActual.id_programa
                 })
             .then( response => {
-                   console.log(response.data);
+                //    console.log(response.data);
                    
                         // this.codigos.push(response.data[i].codigo); //tiene todo del alumno
                         this.codigos=response.data

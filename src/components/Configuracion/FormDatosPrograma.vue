@@ -123,14 +123,27 @@ export default {
         let dirVal = this.programa.correo=='' || this.programa.correo == null;
         let bloqueVal = this.programa.hora_bloque=='' || this.programa.hora_bloque == null ;
         
-        if( nomVal || descVal || dirVal || bloqueVal){
+        var   expresion2=/\w+@pucp.edu.pe/;
+        var   expresion1=/\w+@pucp.pe/;
+        if( nomVal || descVal || dirVal || bloqueVal || (!expresion2.test(this.programa.correo) &&  !expresion1.test(this.programa.correo))){
+          if(!expresion2.test(this.programa.correo) &&  !expresion1.test(this.programa.correo)){
             Swal.fire({
-                text:"No ha completado todos los campos",
-                icon:"error",
-                confirmButtonText: 'OK',
-                confirmButtonColor:'#0097A7',
-                showConfirmButton: true,
+              text:"No es un correo válido",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
             })
+          }
+          else{
+            Swal.fire({
+              text:"No ha completado todos los campos",
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+            })
+          }
         }
         else{
           Swal.fire({

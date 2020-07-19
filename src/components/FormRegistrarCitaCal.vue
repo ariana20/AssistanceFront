@@ -3,7 +3,7 @@
         <div class="top-titulo " style="text-align:left;">
             <!-- inicia combobox de tutor -->
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select class="col-sm-4 form-control" style="left:-160px;top:26px;cursor:pointer" v-model="tutorSel"  @change="showCalendar" >
+            <select class="col-sm-4 form-control" style="left:-160px;top:26px;cursor:pointer;border: 0.5px solid #757575;" v-model="tutorSel"  @change="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
@@ -150,7 +150,7 @@ export default {
         },
         rutaEvent (arg) {
            //Aquí me lleva a la cita agendada 
-           if(arg.event.backgroundColor!='gray') {
+           if(arg.event.backgroundColor  !='#FF6961') {
                 // disponible
                 
                 this.$store.state.citaDatos={
@@ -165,8 +165,8 @@ export default {
 
                 };
              
-                // this.$router.push('/registrarCita/registrarCitaAgendada');
-            } else { 
+                 this.$router.push('/registrarCita/registrarCitaAgendada');
+            }else if (arg.event.backgroundColor=='#FF6961')  { 
                 //Gray
                
                 this.$store.state.citaDatos={
@@ -254,7 +254,7 @@ export default {
                                         start: rd[i].fecha + " " + rd[i].hora_inicio,
                                         end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
                                         tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                        color: 'gray',
+                                        color: '#FF6961',
                                         // ya no es usuario creacion
                                         usuario_creacion: rd[i].usuario_creacion,
                                         id_usuario_tutor: rd[i].id_usuario,
@@ -271,7 +271,7 @@ export default {
                                         start: rd[i].fecha + " " + rd[i].hora_inicio,
                                         end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
                                         tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                        color: 'gray',
+                                        color: '#FF6961',
                                         // ya no es usuario creacion
                                         usuario_creacion: rd[i].usuario_creacion,
                                         id_usuario_tutor: rd[i].id_usuario,
@@ -375,6 +375,11 @@ function addTimes (startTime, endTime) {
     @import '~@fullcalendar/core/main.css';
     @import '~@fullcalendar/daygrid/main.css';
     @import '~@fullcalendar/timegrid/main.css';
+    .form-control {
+    border-radius: 1.25rem;  
+    border: 0.5px solid #757575;
+    margin-bottom: 10px;
+}
     .btn:focus {
         outline:none;
         box-shadow: none;

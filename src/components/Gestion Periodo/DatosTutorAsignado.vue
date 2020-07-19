@@ -14,7 +14,7 @@
             <div class="font-weight-bolder"><h4>Tutor Asignado</h4></div>
             <div class="font-weight-bolder">{{tutor.nombre + " " + tutor.apellidos}}</div>
             <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
-            <div class="font-weight-bolder">Tema Asignado: </div>
+            <!--div class="font-weight-bolder">Tema Asignado: </div-->
             <!--div class="font-weight-bolder">{{tipoTutoriaAsignado.nombre}}
             </div-->
             <!--div>

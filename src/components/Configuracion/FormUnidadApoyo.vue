@@ -66,7 +66,7 @@
             </div>
             <div class="col-12 col-md-6 col-lg-5">
                 <select @change="Programas(facultadEl)" class= "form-control" style="color:gray;margin-top:2%" v-model="facultadEl">
-                    <option selected disabled :value="null">Elige una Facultad</option>
+                    <option selected disabled hidden :value="null">Elige una Facultad</option>
                     <option v-if="$store.state.tipoActual.nombre == 'Admin'" :value="0">General</option>
                     <option v-for="options in facultadesT" v-bind:key="options.id_facultad" :value="options">
                     {{ options.nombre}}
@@ -80,7 +80,7 @@
             </div>
             <div class="col-12 col-md-6 col-lg-5">
                 <select class= "form-control" style="color:gray;margin-top:2%" v-model="programaEl">
-                    <option selected disabled :value="null">Elige un Programa</option>
+                    <option selected disabled hidden :value="null">Elige un Programa</option>
                     <option v-if="$store.state.tipoActual.nombre == 'Admin' || $store.state.tipoActual.nombre == 'Coordinador Facultad'" :value="0">General Facultad</option>
                     <option v-for="options in programasT" v-bind:key="options.id_programa" :value="options">
                     {{ options.nombre}}

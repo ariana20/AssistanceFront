@@ -62,9 +62,9 @@
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
 
-        <div  ref="crearimagen" id="contenido" class="row mt-2">            
+        <div  ref="crearimagen" class="row mt-2">            
 
-            <div class="col-12 col-md-6" v-if="alumnosBRPlan.length>0">
+            <div id="content1"  class="col-12 col-md-6" v-if="alumnosBRPlan.length>0">
                 
                 <strong style="margin-left:80px">Cantidad de alumnos que cumplieron su Plan de Acción</strong>
                 <bar-chart :chartData="alumnosBRPlan" :options="chartOp"
@@ -211,12 +211,12 @@ export default {
         downloadWithCSS() {            
             const doc = new jsPDF();
             var canvasElement = document.createElement('canvas');
-                html2canvas(this.$refs.crearimagen, { canvas: canvasElement 
+                html2canvas(document.querySelector("#content1"), { canvas: canvasElement 
                 }).then(function (canvas) {
                 const img = canvas.toDataURL("image/jpeg", 20);
-                doc.text('Reporte de Plan de Acción',10,10);
+                doc.text('Reporte de Plan de Acción',80,10);
                 doc.text('\n',10,10);
-                doc.addImage(img,'JPEG',10,10);
+                doc.addImage(img,'JPEG',10,80);
                 doc.save("ReportePlanDeAccion.pdf");
             });
         },
@@ -362,8 +362,9 @@ export default {
 
                 //LLenado del gráfico de la derecha
                  console.log('datos: ',dataPlan);
-                 this.alumnosBRPlan.push({data:dataPlan.data[1].grupo,total:dataPlan.data[1].total_alumno});
-                 this.alumnosBRPlan.push({data:"más 50%",total:dataPlan.data[0].total_alumno});
+
+                 this.alumnosBRPlan.push({data:"< 50%",total:dataPlan.data[1].total_alumno});
+                 this.alumnosBRPlan.push({data:"> 50%",total:dataPlan.data[0].total_alumno});
 
             }
          

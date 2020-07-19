@@ -59,7 +59,7 @@
                 </div>
                 <div class="forms_field">
                   <select @change="ProgEl" class= "form-control" style="color:gray" v-model="programaElIn">
-                    <option selected disabled :value="null">Elige un Programa</option>
+                    <option selected disabled hidden :value="null">Elige un Programa</option>
                     <option v-for="(options,index) in programasT" v-bind:key="index" :value="options.nombre">
                       {{ options.nombre}}
                     </option>

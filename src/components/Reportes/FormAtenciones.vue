@@ -214,7 +214,7 @@ export default {
                                 img5 = canvas.toDataURL("image/jpeg",100);
                                 //img5.width = 700;
                                 //img5.height = 500;
-                                doc.text('Reporte de Atenciones',40,10);
+                                doc.text('Reporte de Atenciones',80,10);
                                 doc.text('\n',10,10);
                                 doc.addImage(img1,'JPEG',40,75);
                                 doc.addPage();

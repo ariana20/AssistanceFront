@@ -26,16 +26,19 @@
                 <button type="button" class="btn btn-info"  @click="DeseleccionarTodos()" >Deseleccionar Todos</button>
             </div>
         </div>
-        <div class="row" v-for="alumno in alumnos" :key="alumno.id_usuario">
-            <div class="col-12 col-md-9">
-                <datosAlumno
-                    :tutor="alumno"
-                    :tipoTutoria="null"/>
-            </div>
-            <div class="col-12 col-md-2 custom-control form-control-lg custom-checkbox">
-                <div class="centrado">
-                    <input v-model="alumno.seleccionado" type="checkbox" class="custom-control-input largerCheckbox" :id="'customCheck'+alumno.id_usuario"> 
-                    <label class="custom-control-label" :for="'customCheck'+alumno.id_usuario"></label>  
+        <div class="row">
+            <div class="col-12 col-sm-6" v-for="alumno in alumnos" :key="alumno.id_usuario" style="margin-bottom:25px">
+                <div class="row">
+                    <div class="col-12 col-md-10">
+                        <datosAlumno
+                            :tutor="alumno"
+                            :tipoTutoria="null"/>
+                    </div>
+                    <div class="col-12 col-md-2 custom-control form-control-lg custom-checkbox">
+                        <div class="centrado">
+                            <input v-model="alumno.seleccionado" type="checkbox" class="largerCheckbox" :id="'customCheck'+alumno.id_usuario"> 
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -504,13 +507,6 @@ export default {
     padding-top: 25%;
 }
 
-.custom-control-label:before{
-    background-color:#138496;
-}
-.custom-checkbox .custom-control-input:checked~.custom-control-label::before{
-    background-color:#138496;
-}
-
 .progress{
     display: unset;
     height: auto;
@@ -571,7 +567,7 @@ article {
     height: 480px;
     background-color: #fff;
     border-right: 2px dotted #757575;
-    background: radial-gradient(#138496, #2fb4c9);
+    background: rgb(0, 152, 146);
     box-shadow: 0 15px 30px rgba(0,0,0,0.2),
       0 10px 10px rgba(0,0,0,0.2);
   }
