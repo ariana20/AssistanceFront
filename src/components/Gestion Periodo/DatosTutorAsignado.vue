@@ -47,7 +47,11 @@ export default {
     },
     methods:{
         verDisponibilidad(){
-            this.$store.state.tutorDisponibilidad=this.tutor;
+            var tutorS=new Object();
+            tutorS.usuario=new Object();
+            tutorS.usuario=this.tutor;
+            tutorS.id_usuario=this.tutor.id_usuario;
+            this.$store.state.tutorDisponibilidad=tutorS;
             this.$router.push('/agendarcita');
         },
         solicitarTutor(){

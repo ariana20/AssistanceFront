@@ -36,7 +36,7 @@
                 <tr>
                     <th scope="col" style="width:150px">Código</th>
                     <th scope="col" style="width:500px">Nombre y Apellidos</th>
-                    <th scope="col" style="width:400px">Condición</th>
+                    <th scope="col" style="width:400px">Tutor Asignado</th>
                     <th scope="col" > 
                     </th>
                 </tr>
@@ -62,8 +62,8 @@
                         <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Nombre" style="color: white;background:#BEBEBE;" >Nombre Alumno</div>
                     </td>
                     <td scope="col" style="width:400px">
-                        <div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >{{alSeleccionado.condicion}}</div>
-                        <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Condición</div>
+                        <div v-if="alSeleccionado!=null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Pendiente</div>
+                        <div v-if="alSeleccionado==null" type="text" class="form-control" placeholder="Condicion" style="color: white;background:#BEBEBE;" >Pendiente</div>
                     </td>
                     <td scope="col">
                         <button  :disabled="!this.sel" type="button" class="btn btn-info" style="text-align:right;" @click="addAlumno">Asignar</button>
@@ -72,7 +72,8 @@
                 <tr v-for="(item,index) in alumnosAsig" :key="index">
                     <td v-if="item!=undefined">{{item.codigo}}</td>
                     <td v-if="item!=undefined">{{item.nombre+" "+item.apellidos}}</td>
-                    <td v-if="item!=undefined">{{item.cond}}</td>
+                    <td v-if="item!=undefined && item.tutoresAsignados[0]!=undefined" >{{item.tutoresAsignados[0].nombre+" "+item.tutoresAsignados[0].apellidos}}</td>
+                    <td v-else>Sin tutor</td>
                     <td v-if="item!=undefined"><button class="btn link" style="
                         padding-top: 0px;
                         padding-bottom: 0px;
@@ -84,6 +85,7 @@
                 </tr>
             </tbody>
         </table>
+        <div v-if="!alumnosAsig.lenght" >No hay alumnos asignados</div>
 
     </div>
 

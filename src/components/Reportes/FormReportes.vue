@@ -21,16 +21,10 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row mt-5">
-            <div class="col-12 col-md-6" v-if="asignados.length>0">
-                <strong>Cantidad de Alumnos Asignados</strong>
-                <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados'></pie-chart>
-                <div class="botones" style="margin-bottom:10px;text-align: right">
-                    <button type="button" class="btn btn-info"  @click="verDetalleAsignado()" >Ver más</button>
-                </div>
-            </div>
-            <div class="col-12 col-md-6"  v-if="atenciones.length>0">
+
+            <div class="col-12"  v-if="atenciones.length>0">
                 <strong>Cantidad de Atenciones</strong>
-                <line-chart :chartData="atenciones" :options="chartOp" label='Atenciones'></line-chart>
+                <line-chart :chartData="atenciones" :options="chartOp" label='Atenciones' style="margin-top: 20px;"></line-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleAtenciones()" >Ver más</button>
                 </div>
@@ -39,31 +33,37 @@
 
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         <div class="row">
+            <div class="col-12 col-md-6" v-if="asignados.length>0">
+                <strong>Cantidad de Alumnos Asignados</strong>
+                <pie-chart :chartData="asignados" :options="chartOp2" label='Alumnos asignados' style="margin-top: 20px;"></pie-chart>
+                <div class="botones" style="margin-bottom:10px;text-align: right">
+                    <button type="button" class="btn btn-info"  @click="verDetalleAsignado()" >Ver más</button>
+                </div>
+            </div>
             <div class="col-12 col-md-6" v-if="satisfaccion.length>0">
                 <strong>Satisfacción del alumno</strong>
-                <pie-chart :chartData="satisfaccion" :options="chartOp2" label='Satisfacción del alumno'></pie-chart>
+                <pie-chart :chartData="satisfaccion" :options="chartOp2" label='Satisfacción del alumno' style="margin-top: 20px;"></pie-chart>
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetalleSatisfaccion()" >Ver más</button>
                 </div>
             </div>
-            <div class="col-12 col-md-6" v-if="alumnosBR.length>0">
-                <strong>Asistencia Alumnos Bajo Rendimiento</strong>
-                <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp3" label='Cumplimiento de Planes de Acción'></horizontal-bar-chart>
-                <div class="botones" style="margin-bottom:10px;text-align: right">
-                    <button type="button" class="btn btn-info"  @click="verDetalleRendimiento()" >Ver más</button>
-                </div>
-             </div>
+
             
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         <div class="row">
+            <div class="col-12 col-md-6" v-if="alumnosBR.length>0">
+                <strong>Asistencia Alumnos Bajo Rendimiento</strong>
+                <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp3" label='Cumplimiento de Planes de Acción' style="margin-top: 20px;"></horizontal-bar-chart>
+                <div class="botones" style="margin-bottom:10px;text-align: right">
+                    <button type="button" class="btn btn-info"  @click="verDetalleRendimiento()" >Ver más</button>
+                </div>
+            </div>
 
            <div class="col-12 col-md-6" v-if="alumnosBRPlan.length>0">
                 <strong style="margin-left:80px">Cantidad de alumnos que cumplieron su Plan de Acción</strong>
-                <bar-chart :chartData="alumnosBRPlan" :options="chartOp4"
+                <bar-chart :chartData="alumnosBRPlan" :options="chartOp4" style="margin-top: 20px;"
                 label='Alumnos con Plan de Acción terminado' ></bar-chart>
-
-                
                 <div class="botones" style="margin-bottom:10px;text-align: right">
                     <button type="button" class="btn btn-info"  @click="verDetallePlanAccion()" >Ver más</button>
                 </div>
@@ -158,7 +158,8 @@ export default {
                 },
                 maintainAspectRatio:false,
                 legend:{
-                    position: 'right'
+                    position: 'bottom',
+                    align: 'start',
                 },
                 tooltips: {
                     enabled: true
@@ -187,6 +188,7 @@ export default {
                     }],
                     xAxes: [{
                         stacked: false,
+                        ticks:{precision:0}
                     }]
                 },
                 legend: {

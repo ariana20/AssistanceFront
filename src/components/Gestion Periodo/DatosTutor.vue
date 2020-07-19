@@ -21,8 +21,8 @@
                     <label v-if="(item.tutor_fijo==0 || (item.tutor_fijo==1 && item.tutor_asignado==0 && tipoTutoriaAsignado)) && index<tipoTutoria.length-1" style="margin-right:5px; margin-bottom: 0px;">, </label>
                 </label>
             </div>
-            <div style="text-align: right" id="botones" >
-                <button type="button"
+            <div style="text-align: right; margin-top: 0px;" id="botones" >
+                <button type="button" v-if="verDispo"
                 class="btn btn-info" v-on:click="verDisponibilidad()">Ver disponibilidad</button>
                 <!--button type="button"
                 class="btn btn-info">Ver Perfil</button> 
@@ -56,6 +56,7 @@ export default {
             habilitado:"",
             mensaje:"",
             tutoriaSolicitar:[],
+            verDispo: false,
         }
     },
     mounted(){
@@ -67,6 +68,8 @@ export default {
             
             for(var i=0; i<this.tipoTutoria.length; i++){
                 var iguales=false;
+                
+                if(this.tipoTutoria[i].tutor_fijo==0) this.verDispo=true;
                 if(this.tipoTutoria[i].tutor_fijo && this.tipoTutoria[i].tutor_asignado==0){
                     for(var j=0; j<this.tipoTutoriaAsignado.length; j++){
                         if(this.tipoTutoria[i].id_tipo_tutoria==this.tipoTutoriaAsignado[j].id_tipo_tutoria){
