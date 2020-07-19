@@ -5,7 +5,7 @@
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
-      <!--<div id="motivo"><b style="margin-top: 6px;">Motivo:</b><select class="form-control" style="width:40%" v-model="motivoSel">
+      <div id="motivo"><b style="margin-top: 6px;">Motivo:</b><select class="form-control" style="width:40%" v-model="motivoSel">
         <option disabled selected :value="null" focusable="false">Selecciona un motivo</option>
         <option v-for="(item, index) in tipoTutorias" 
                 :key="index" 
@@ -13,7 +13,7 @@
                 {{ item.nombre }}
         </option>
         </select>
-        </div>-->
+        </div>
       <div id="botones">
         <button type="button" class="btn btn-info" :disabled='isDisabled'  @click="updateEvent">Aceptar</button>
         <button type="button" class="btn btn-secondary" @click="$emit('close')">Cerrar</button>
@@ -269,10 +269,12 @@ export default {
     id_tutor: Number,
     tutorSel: Object,
   },mounted() {
-    this.ini = this.event.start.getFullYear() + ("0" + (this.event.start.getMonth() + 1)).slice(-2) + ("0" + this.event.start.getDate()).slice(-2) + "T"+ (this.event.start.getHours() + 2)+ (this.event.start.getMinutes()) + (this.event.start.getSeconds()) + "Z"
-    this.fin = this.event.end.getFullYear() + ("0" + (this.event.end.getMonth() + 1)).slice(-2) + ("0" + this.event.end.getDate()).slice(-2) + "T"+ (this.event.end.getHours() + 2)+ (this.event.end.getMinutes()) + (this.event.end.getSeconds()) + "Z"
-    console.log('hora ini',this.ini)
-    console.log('hora fin',this.fin)
+    this.ini = this.event.start.YYYYMMDDHHMMSS()
+    this.fin = this.event.end.YYYYMMDDHHMMSS()
+    //this.ini = this.event.start.getFullYear() + ("0" + (this.event.start.getMonth() + 1)).slice(-2) + ("0" + this.event.start.getDate()).slice(-2) + "T"+ (this.event.start.getHours() + 2)+ (this.event.start.getMinutes()) + (this.event.start.getSeconds()) + "Z"
+    //this.fin = this.event.end.getFullYear() + ("0" + (this.event.end.getMonth() + 1)).slice(-2) + ("0" + this.event.end.getDate()).slice(-2) + "T"+ (this.event.end.getHours() + 2)+ (this.event.end.getMinutes()) + (this.event.end.getSeconds()) + "Z"
+    console.log('hora ini',this.event.start.YYYYMMDDHHMMSS())
+    console.log('hora fin',this.event.end.YYYYMMDDHHMMSS())
     if(this.tutorSel) {
       console.log('tutor ttutoria: ', this.tutorSel.tipo_tutorias)
       this.tipoTutorias = this.tutorSel.usuario.tipo_tutorias
@@ -294,7 +296,20 @@ Vue.filter('formatHour', function(value) {
     return moment(value).format('hh:mm a')
   }
 });
+Object.defineProperty(Date.prototype, 'YYYYMMDDHHMMSS', {
+    value: function() {
+        function pad2(n) {  // always returns a string
+            return (n < 10 ? '0' : '') + n;
+        }
 
+        return this.getFullYear() +
+               pad2(this.getMonth() + 1) +
+               pad2(this.getDate()) + "T" +
+               pad2(this.getHours()+ 5) +
+               pad2(this.getMinutes()) +
+               pad2(this.getSeconds()) + "Z"
+    }
+});
 </script>
 
 <style scoped>
