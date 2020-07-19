@@ -1,7 +1,7 @@
 <template>
   <div class="FormReportesRendimiento">
       <div class="contenedor">
-        <div class="top-titulo" style="text-align:left;">
+        <div class="top-titulo row" style="text-align:left;">
             <div class="col-12 col-md-4">
                 <h5>Fechas:</h5>
                 <date-picker style="left:0px" class="wide-date-example"
@@ -33,20 +33,26 @@
                         {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
                     </option>
                 </select>
-                <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
-                    <li class="motivos-seleccionados list-group-item" style="text-align:left;"
-                        v-for="(tutor,index) in tutorSelect"  
-                        :key="index">
-                        {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
-                        <span name="remove" class="close" @click="deleteTutor(index, tutor)" style="float:right;">&times;</span>           
-                    </li>
-                </ul>
             </div>
-            <div class="botones" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+            <div class="col-12 col-md-2 offset-md-2"  style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
             </div>
         </div>
-        <!-- aqui estaba mi cabcera -->
+        <div class="top-titulo" style="text-align:left;">
+            <div class="col-1">
+                <div>Filtros: </div>
+            </div>
+            <div class="col-10 offset-1" style="text-align:left;">
+                <div class="row">
+                <ul  class="col-12 col-md-6 col-lg-4 overflow-wrap list-group list-group-flush" v-for="(tutor,index) in tutorSelect" :key="index" style="margin-bottom: 0px;text-align:left;">
+                    <li class="motivos-seleccionados list-group-item " style="text-align:left;">
+                        {{ tutor.usuario.nombre + " " + tutor.usuario.apellidos }}
+                        <span name="remove" class="close col-2" @click="deleteTutor(index, tutor)" >&times;</span> 
+                    </li>
+                </ul>    
+                </div>
+            </div>
+        </div>
         <div class="row" style="margin-left:1px;text-align:left;">
             <!-- <h4 v-if="this.isCoordinador===false">Facultad: </h4>
             <select  class="col-sm-3 form-control" v-if="this.isCoordinador===false" v-model="selectedFacultad" v-on:change="listarProgramas()">
@@ -649,6 +655,13 @@ select:focus {
     outline:none;
     box-shadow: none;
 }
-
+.list-group-item {
+    padding-top: 0.1rem;
+    padding-right: 1rem;
+    padding-bottom: 0.1rem;
+    margin-bottom: 0.1rem;
+    padding-left: 1rem;
+    background-color: rgba(0, 0, 0, 0.06);
+}
 input:focus {outline: none;box-shadow: none;}
 </style>
