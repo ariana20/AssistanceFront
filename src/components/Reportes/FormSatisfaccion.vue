@@ -25,15 +25,15 @@
             No se ha generado ningún reporte
         </div>
         <div class="row">
-            <div class="col-12 col-md-4" v-if="satisfaccion.length>0">
+            <div id="content1" class="col-12 col-md-4" v-if="satisfaccion.length>0">
                 <strong>Satisfacción con el acompañamiento</strong>
                 <pie-chart :chartData="satisfaccion" :options="chartOp2" label='Satisfacción con el acompañamiento'></pie-chart>
             </div>
-            <div class="col-12 col-md-4" v-if="utilidad.length>0">
+            <div id="content2" class="col-12 col-md-4" v-if="utilidad.length>0">
                 <strong>Utilidad del programa de tutoría</strong>
                 <pie-chart :chartData="utilidad" :options="chartOp2" label='Utilidad del programa de tutoría'></pie-chart>
             </div>
-            <div class="col-12 col-md-4" v-if="decisiones.length>0">
+            <div id="content3" class="col-12 col-md-4" v-if="decisiones.length>0">
                 <strong>Utilizó las recomendaciones para la toma de decisiones</strong>
                 <pie-chart :chartData="decisiones" :options="chartOp2" label='Utilizó las recomendaciones para la toma de decisiones'></pie-chart>
             </div>
@@ -42,18 +42,18 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row">
-            <div class="col-12" v-if="eficiencia.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
+            <div id="content4" class="col-12" v-if="eficiencia.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
                 <strong>El programa solucionó su situación</strong>
                 <pie-chart :chartData="eficiencia" :options="chartOp2" label='El programa solucionó su situación'></pie-chart>
             </div>
-            <div class="col-12" v-if="recomendado.length>0">
+            <div id="content5" class="col-12" v-if="recomendado.length>0">
                 <strong>Recomendación del programa de tutoría a sus pares</strong>
                 <pie-chart :chartData="recomendado" :options="chartOp2" label='Recomendación del programa de tutoría a sus pares'></pie-chart>
             </div>
 
         
         </div>
-
+        <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
 
       </div>
     
@@ -63,6 +63,8 @@
 
 
 <script>
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
@@ -163,7 +165,49 @@ export default {
         this.periodo = [this.inicio,this.fin];
     },
     methods:{
-
+        downloadWithCSS() {            
+            const doc = new jsPDF('p', 'mm', 'a4');
+            var img1='';
+            var img2='';
+            var img3='';
+            var img4='';
+            var img5='';
+            var canvasElement = document.createElement('canvas');
+            html2canvas(document.querySelector("#content1"), { canvas: canvasElement 
+                }).then(function (canvas) {
+                img1 = canvas.toDataURL("image/jpeg", 100);
+                html2canvas(document.querySelector("#content2"), { canvas: canvasElement 
+                    }).then(function (canvas) {
+                    img2 = canvas.toDataURL("image/jpeg", 100);
+                    html2canvas(document.querySelector("#content3"), { canvas: canvasElement 
+                        }).then(function (canvas) {
+                        img3 = canvas.toDataURL("image/jpeg", 100);
+                        html2canvas(document.querySelector("#content4"), { canvas: canvasElement 
+                            }).then(function (canvas) {
+                            img4 = canvas.toDataURL("image/jpeg",100);
+                            html2canvas(document.querySelector("#content5"), { canvas: canvasElement 
+                                }).then(function (canvas) {
+                                img5 = canvas.toDataURL("image/jpeg",100);
+                                //img5.width = 700;
+                                //img5.height = 500;
+                                doc.text('Reporte de Encuestas',40,10);
+                                doc.text('\n',10,10);
+                                doc.addImage(img1,'JPEG',40,75);
+                                doc.addPage();
+                                doc.addImage(img2,'JPEG',40,75);
+                                doc.addPage();
+                                doc.addImage(img3,'JPEG',40,75);
+                                doc.addPage();
+                                doc.addImage(img4,'JPEG',0,75);
+                                doc.addPage();
+                                doc.addImage(img5,'JPEG',0,75);
+                                doc.save("ReporteEncuestas.pdf");
+                            });
+                        });
+                    });
+                });
+            });
+        },
         handlePeriodChange(periodo) {
             this.periodo = periodo;
         },
