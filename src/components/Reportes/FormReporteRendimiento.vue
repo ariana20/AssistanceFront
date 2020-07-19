@@ -71,17 +71,17 @@
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
 
-        <div class="row mt-2">
+        <div ref="crearimagen" class="row mt-2">
 
-            <div class="col-12 col-md-6" v-if="alumnosBR.length>0">
+            <div id="content1"  class="col-12 col-md-6" v-if="alumnosBR.length>0">
                 <strong style="margin-left:10px">Cantidad de alumnos que asistieron a sus citas</strong>
                 <horizontal-bar-chart :chartData="alumnosBR" :options="chartOp2"
                 label='Alumnos con Bajo Rendimiento'  ></horizontal-bar-chart>
-            </div>
-         
+            </div>       
 
 
         </div>
+        <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
       </div>
         <!-- Modal de cargando -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
@@ -97,6 +97,8 @@
 
 
 <script>
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
@@ -227,6 +229,29 @@ export default {
     },
 
     methods:{
+        //descargar reporte
+        downloadPDF(){            
+            const pdf = new jsPDF();
+            //var reporte=document.getElementById('reporte');
+            //var imag=reporte.toDataURL('image/png');
+            //pdf.addImage(imag,'PNG',10,10);
+            //pdf.text('Hola vizcochitos',10,10);
+            const html=this.$refs.content.innerHTML;
+            pdf.fromHTML(html,15,15,{width:150});
+            pdf.save('salida2.pdf');
+        },
+        downloadWithCSS() {            
+            const doc = new jsPDF('p', 'mm', 'a4');
+            var canvasElement = document.createElement('canvas');
+                html2canvas(document.querySelector("#content1"),  { canvas: canvasElement 
+                }).then(function (canvas) {
+                const img = canvas.toDataURL("image/jpeg", 20);
+                doc.text('Reporte de Alumnos de Bajo Rendimiento',60,10);
+                doc.text('\n',10,10);
+                doc.addImage(img,'JPEG',10,80);
+                doc.save("ReporteBajoRendimiento.pdf");
+            });
+        },
         progSinDefault: function () {
             return this.programas.filter(i => i != null && i.codigo != this.selectedFacultad.codigo)
         },

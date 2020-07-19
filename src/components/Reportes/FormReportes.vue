@@ -1,5 +1,5 @@
 <template>
-  <div class="FormReportes">
+  <div ref="content"  class="FormReportes">
       <div class="contenedor">
         <div class="top-titulo" style="text-align:left;">
             <div class="col-8 col-md-4">
@@ -69,14 +69,9 @@
                 </div>
             </div>
             
-        </div>
-
-
-
-        
-      </div>
-      
-
+        </div>        
+      </div>   
+      <!--button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button-->
   </div>
 </template>
 
@@ -265,6 +260,8 @@ export default {
             //pdf.addImage(imag,'PNG',10,10);
             //pdf.text('Hola vizcochitos',10,10);
             const html=this.$refs.content.innerHTML;
+            //const html2=this.$refs.content2.innerHTML;
+            //pdf.fromHTML(html,15,15,{width:150});
             pdf.fromHTML(html,15,15,{width:150});
             pdf.save('salida2.pdf');
         },

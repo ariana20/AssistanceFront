@@ -51,44 +51,40 @@
         No se ha generado ningún reporte
         </div>
         <div class="row">
-            <div class="col-12 col-md-4" v-if="atenciones.length>0">
+            <div  ref="crearimagen" id="content1" class="col-12 col-md-4" v-if="atenciones.length>0">
                 <strong>Cantidad de Atenciones</strong>
                 <doughnut-chart :chartData="atenciones" :options="chartOp2" label='Alumnos atendidos'></doughnut-chart>
             </div>
-            <div class="col-12 col-md-4" v-if="atencionesXTipoTutoria.length>0">
+            <div  ref="crearimagenes" id="content2" class="col-12 col-md-4" v-if="atencionesXTipoTutoria.length>0">
                 <strong>Alumnos atendidos por Tipo de Tutoría</strong>
                 <pie-chart :chartData="atencionesXTipoTutoria" :options="chartOp2" label='Alumnos atendidos por Tipo de Tutoría'></pie-chart>
             </div>
-            <div class="col-12 col-md-4" v-if="atencionesXMotivoConsulta.length>0">
+            <div  ref="crearimagen3" id="content3" class="col-12 col-md-4" v-if="atencionesXMotivoConsulta.length>0">
                 <strong>Alumnos atendidos por Motivo de Consulta</strong>
                 <bar-chart :chartData="atencionesXMotivoConsulta" :options="chartOp" label='Alumnos atendidos por Motivo de Consulta'></bar-chart>
             </div>
         </div>
-
-        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
-        
+        <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>        
         <div class="row">
-            <div class="col-12" v-if="atencionesXTutor.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
+            <div  ref="crearimagen4" id="content4" class="col-12" v-if="atencionesXTutor.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
                 <strong>Cantidad de Alumnos Atendidos por Tutor</strong>
                 <bar-chart :chartData="atencionesXTutor" :options="chartOp" label='Alumnos atendidos'></bar-chart>
             </div>
-            <div class="col-12" v-if="atencionesXFecha.length>0">
+            <div  ref="crearimagen5" id="content5" class="col-12" v-if="atencionesXFecha.length>0">
                 <strong>Atenciones por Fecha</strong>
                 <line-chart :chartData="atencionesXFecha" :options="chartOp" label='Alumnos atendidos'></line-chart>
-            </div>
-
-        
+            </div>        
         </div>
-
-
-      </div>
-    
+        <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
+      </div>    
   </div>
 </template>
 
 
 
 <script>
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
@@ -193,6 +189,49 @@ export default {
         //this.RatioAtencionesXTipoTutoria();
     },
     methods:{
+        downloadWithCSS() {            
+            const doc = new jsPDF('p', 'mm', 'a4');
+            var img1='';
+            var img2='';
+            var img3='';
+            var img4='';
+            var img5='';
+            var canvasElement = document.createElement('canvas');
+            html2canvas(document.querySelector("#content1"), { canvas: canvasElement 
+                }).then(function (canvas) {
+                img1 = canvas.toDataURL("image/jpeg", 100);
+                html2canvas(document.querySelector("#content2"), { canvas: canvasElement 
+                    }).then(function (canvas) {
+                    img2 = canvas.toDataURL("image/jpeg", 100);
+                    html2canvas(document.querySelector("#content3"), { canvas: canvasElement 
+                        }).then(function (canvas) {
+                        img3 = canvas.toDataURL("image/jpeg", 100);
+                        html2canvas(document.querySelector("#content4"), { canvas: canvasElement 
+                            }).then(function (canvas) {
+                            img4 = canvas.toDataURL("image/jpeg",100);
+                            html2canvas(document.querySelector("#content5"), { canvas: canvasElement 
+                                }).then(function (canvas) {
+                                img5 = canvas.toDataURL("image/jpeg",100);
+                                //img5.width = 700;
+                                //img5.height = 500;
+                                doc.text('Reporte de Atenciones',80,10);
+                                doc.text('\n',10,10);
+                                doc.addImage(img1,'JPEG',40,75);
+                                doc.addPage();
+                                doc.addImage(img2,'JPEG',40,75);
+                                doc.addPage();
+                                doc.addImage(img3,'JPEG',40,75);
+                                doc.addPage('a3', 'l');
+                                doc.addImage(img4,'JPEG',0,80);
+                                doc.addPage('a3', 'l');
+                                doc.addImage(img5,'JPEG',0,80);
+                                doc.save("ReporteAtenciones.pdf");
+                            });
+                        });
+                    });
+                });
+            });
+        },
         listarFacultades(){
             const params = {
                 id_institucion:1,

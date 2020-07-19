@@ -47,12 +47,12 @@
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
         
         <div class="row">
-            <div v-if="asignadosXTutor.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
+            <div id="content1" v-if="asignadosXTutor.length>0" style="width:100%; margin-left: 20px; margin-right:20px">
                 <strong>Cantidad de Alumnos Asignados por Tutor</strong>
                 <bar-chart :chartData="asignadosXTutor" :options="chartOp" label='Alumnos asignados'></bar-chart>
             </div>
         </div>
-
+        <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
       </div>
     
   </div>
@@ -61,6 +61,8 @@
 
 
 <script>
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
@@ -143,6 +145,18 @@ export default {
         this.listarTutores();
     },
     methods:{
+        downloadWithCSS() {            
+            const doc = new jsPDF('l', 'mm', 'a3');
+            var canvasElement = document.createElement('canvas');
+                html2canvas(document.querySelector("#content1"), { canvas: canvasElement 
+                }).then(function (canvas) {
+                const img = canvas.toDataURL("image/jpeg", 20);
+                doc.text('Reporte de Alumnos Asignados',180,10);
+                doc.text('\n',10,10);
+                doc.addImage(img,'JPEG',10,50);
+                doc.save("ReporteAsignados.pdf");
+            });
+        },
         listarFacultades(){
             const params = {
                 id_institucion:1,
