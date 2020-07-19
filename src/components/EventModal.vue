@@ -28,9 +28,12 @@
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
       <!--<b>Tipo Tutoría:</b>  {{ event.description }} <br/>-->
       <div id="botones">
-            <a type="button" class="btn btn-info" :href="'http://www.google.com/calendar/event?action=TEMPLATE&amp;trp=false&amp;text='+nombreEvento+'&amp;location=Pontificia Universidad Católica del Perú, Av. Universitaria 1801, San Miguel 15088, Perú&amp;details='+descripcion+'&amp;dates='+new Date()+'/'+new Date((new Date).setDate((new Date).getDate() + 1))" target="_blank">
-                Agregar a Google calendar
-            </a>
+        <a type="button" class="btn btn-info" 
+        :href="'https://www.google.com/calendar/render?action=TEMPLATE&text='+ 
+        'Cita Tutoría Registrada' + 
+        '&details='+ 'Cita con tutor ' + tutorSel.usuario.nombre + ' ' + tutorSel.usuario.apellidos +'&location=Pontificia+Universidad+Cat%C3%B3lica+del+Per%C3%BA%2C+Av.+Universitaria+1801%2C+San+Miguel+15088%2C+Per%C3%BA&dates=' + 
+        ini+'%2F'+ fin" target="_blank"> Agregar a Google calendar
+        </a>
         <button type="button" class="btn btn-info" @click="SolCancelar();$emit('close')">Solicitar Cancelacion</button>
         <button type="button" class="btn btn-info" @click="$emit('close')">Cerrar</button>
       </div>
@@ -72,6 +75,8 @@ export default {
             idCita: null,
             tipoTutorias: "",
             motivoSel: null,
+            ini: null,
+            fin: null
         }
     },
     methods: {
@@ -264,7 +269,10 @@ export default {
     id_tutor: Number,
     tutorSel: Object,
   },mounted() {
-    console.log(this.event)
+    this.ini = this.event.start.getFullYear() + ("0" + (this.event.start.getMonth() + 1)).slice(-2) + ("0" + this.event.start.getDate()).slice(-2) + "T"+ (this.event.start.getHours() + 2)+ (this.event.start.getMinutes()) + (this.event.start.getSeconds()) + "Z"
+    this.fin = this.event.end.getFullYear() + ("0" + (this.event.end.getMonth() + 1)).slice(-2) + ("0" + this.event.end.getDate()).slice(-2) + "T"+ (this.event.end.getHours() + 2)+ (this.event.end.getMinutes()) + (this.event.end.getSeconds()) + "Z"
+    console.log('hora ini',this.ini)
+    console.log('hora fin',this.fin)
     if(this.tutorSel) {
       console.log('tutor ttutoria: ', this.tutorSel.tipo_tutorias)
       this.tipoTutorias = this.tutorSel.usuario.tipo_tutorias
