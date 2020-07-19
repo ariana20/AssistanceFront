@@ -74,6 +74,13 @@
         </div>        
       </div>   
       <!--button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button-->
+      
+        <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+            <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+                <b-spinner style="width: 3rem; height: 3rem;"/>
+                <br >Cargando... 
+            </div>
+        </b-modal>
   </div>
 </template>
 
@@ -249,6 +256,11 @@ export default {
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.FormReportes > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
         
+        this.RatioAsignado();
+        this.RatioAtenciones();
+        this.BajoRendimiento();
+        this.Encuestas();
+        this.PlanAccion();
         
     },
     computed: {
@@ -262,11 +274,6 @@ export default {
     created(){
         this.periodo = [this.inicio,this.fin];
         this.idPogramas.push(this.$store.state.programaActual.id_programa);
-        this.RatioAsignado();
-        this.RatioAtenciones();
-        this.BajoRendimiento();
-        this.Encuestas();
-        this.PlanAccion();
         //this.listarFacultades();
     },
     methods:{
@@ -360,6 +367,7 @@ export default {
         async PlanAccion(){
             this.alumnosBRPlan=[];
             this.selectedPrograma=this.$store.state.programaActual.id_programa;
+            this.showModal()
             console.log(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null );
             if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){
                 var programas=[];              
@@ -387,7 +395,7 @@ export default {
                 //LLenado del gráfico de la derecha
                  this.alumnosBRPlan.push({data:"< 50%",total:dataPlan.data[1].total_alumno});
                  this.alumnosBRPlan.push({data:"> 50%",total:dataPlan.data[0].total_alumno});
-
+                this.hideModal()
 
             }
         },
@@ -498,13 +506,15 @@ export default {
 
         },
 
-        generarReporte(){
+        async generarReporte(){
             //this.RatioAtenciones();
+            this.showModal()
             this.RatioAsignado();
             this.BajoRendimiento();
             this.RatioAtenciones();
             this.Encuestas();
-            this.PlanAccion();
+            await this.PlanAccion();
+            this.hideModal()
         },
         verDetalleAsignado(){
             this.$router.push('/reporteAsignado');
@@ -524,7 +534,13 @@ export default {
         verDetallePlanAccion(){
             this.$router.push('/reportePlanAccion');
 
-        }
+        },
+        showModal() {
+            this.$refs['my-modal'].show()
+        },
+        hideModal() {
+            this.$refs['my-modal'].hide()
+        },
         
     }
 

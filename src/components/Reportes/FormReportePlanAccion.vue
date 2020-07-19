@@ -34,8 +34,11 @@
                     </option>
                 </select>
             </div>
-            <div class="col-12 col-md-2 offset-md-2"  style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+            <div class="col-12 col-md-2"  style="margin-bottom:10px;text-align: right;margin-right: 0px;margin-top: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
+            </div>
+            <div v-if="generado==true" class="col-12 col-md-2" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+                <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
             </div>
         </div>
         <div class="top-titulo" style="text-align:left;">
@@ -81,7 +84,6 @@
             </div>
             
         </div>
-        <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
       </div>
         <!-- Modal de cargando -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
@@ -116,6 +118,7 @@ export default {
     data(){
         return{
             //Permisos que afectan filtros
+            generado: false,
             isCoordinador:true,
             mipermisosUsuario:null,
             nosemuestra:true,
@@ -230,7 +233,8 @@ export default {
             pdf.fromHTML(html,15,15,{width:150});
             pdf.save('salida2.pdf');
         },
-        downloadWithCSS() {            
+        downloadWithCSS() {      
+            this.showModal()      
             var doc = new jsPDF('p', 'mm', 'a4');
             doc.setFontSize(29);
             doc.text('Reporte de Plan de Acción',50,20);
@@ -238,6 +242,7 @@ export default {
             const options = { background: 'white', height: 845, width: 1050 };
             domtoimage.toPng(document.querySelector("#content1"), options).then((dataUrl) => {
                 doc.addImage(dataUrl,'PNG', 30, 50, 210, 340);
+                this.hideModal()
                 doc.save("ReportePlanDeAccion.pdf");
             });
         },
@@ -246,7 +251,7 @@ export default {
             return this.programas.filter(i => i != null && i.codigo != this.selectedFacultad.codigo)
         },
         listarTutores(){
-           
+            this.showModal()
             const params = {
                 id_programa : this.$store.state.programaActual.id_programa,
                 nomFacu:this.$store.state.programaActual.facultad.nombre,
@@ -271,7 +276,7 @@ export default {
                  
                  tTodos.id_usuario=0;
                  this.tutores.push(tTodos); 
-              
+                this.hideModal()
             })
             .catch(e => {
                 console.log('catch',e);
@@ -386,6 +391,7 @@ export default {
 
                  this.alumnosBRPlan.push({data:"< 50%",total:dataPlan.data[1].total_alumno});
                  this.alumnosBRPlan.push({data:"> 50%",total:dataPlan.data[0].total_alumno});
+                this.generado = true
 
             }
          
@@ -400,12 +406,12 @@ export default {
             return date > today;
         },
 
-        generarReporte(){
-
+        async generarReporte(){
+            this.showModal()
             this.validaciones();
             this.nosemuestra=false;
-            this.BajoRendimiento();
-
+            await this.BajoRendimiento();
+            this.hideModal()
 
         },
            filtrosSegunUsuario(){

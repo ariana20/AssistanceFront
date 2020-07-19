@@ -1,6 +1,6 @@
 <template>
-  <div name="FormSatisfaccion">
-      <div class="contenedor">
+    <div name="FormSatisfaccion">
+        <div class="contenedor">
         <div class="row" style="text-align:left;">
             <div class="col-12 col-md-4">
                 <div class="row">
@@ -16,8 +16,11 @@
                     </date-picker>
                 </div>
             </div>
-            <div class="col-12 col-md-2 offset-md-6" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+            <div class="col-12 col-md-2 offset-md-4" style="margin-bottom:10px;text-align: right;margin-right: 0px;margin-top: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
+            </div>
+            <div v-if="generado==true" class="col-12 col-md-2" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+                <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
             </div>
         </div>
 
@@ -56,11 +59,16 @@
                 <pie-chart :chartData="recomendado" :options="chartOp2" label='Recomendación del programa de tutoría a sus pares'></pie-chart>
             </div>
         </div>
-        <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
 
-      </div>
-    
-  </div>
+        </div>
+        
+        <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+            <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+                <b-spinner style="width: 3rem; height: 3rem;"/>
+                <br >Cargando... 
+            </div>
+        </b-modal>
+    </div>
 </template>
 
 
@@ -87,6 +95,7 @@ export default {
     data(){
         return{
             //filtros
+            generado:false,
             facultad:[],
             selectedFacultad:null,
             facultadSelect:[],
@@ -191,25 +200,27 @@ export default {
     },
     methods:{
         downloadWithCSS() {            
+            this.showModal()
             var doc = new jsPDF('p', 'mm', 'a4');
             doc.setFontSize(29);
             doc.text('Reporte de Encuestas',60,20);
             doc.text('\n',10,10);
-            const options = { background: 'white', height: 845, width: 595 };
+            const options = { background: 'white', height: 845, width: 900 };
             domtoimage.toPng(document.querySelector("#content1"), options).then((dataUrl) => {
-                doc.addImage(dataUrl,'PNG', 30, 50, 210, 340);
+                doc.addImage(dataUrl,'PNG', 10, 50, 210, 340);
                 doc.addPage();
                 domtoimage.toPng(document.querySelector("#content2"), options).then((dataUrl) => {
-                    doc.addImage(dataUrl,'PNG', 30, 50, 210, 340);
+                    doc.addImage(dataUrl,'PNG', 10, 50, 210, 340);
                     doc.addPage();
                     domtoimage.toPng(document.querySelector("#content3"), options).then((dataUrl) => {
-                        doc.addImage(dataUrl,'PNG', 30, 50, 210, 340);
+                        doc.addImage(dataUrl,'PNG', 10, 50, 210, 340);
                         doc.addPage();
                         domtoimage.toPng(document.querySelector("#content4"), options).then((dataUrl) => {
-                            doc.addImage(dataUrl,'PNG', 30, 50, 210, 340);
+                            doc.addImage(dataUrl,'PNG', 10, 50, 210, 340);
                             doc.addPage();
-                            domtoimage.toPng(document.querySelector("#content5"), { background: 'white', height: 845, width: 610 }).then((dataUrl) => {
-                                doc.addImage(dataUrl,'PNG', -50, 50, 210, 340);
+                            domtoimage.toPng(document.querySelector("#content5"), { background: 'white', height: 845, width: 990 }).then((dataUrl) => {
+                                doc.addImage(dataUrl,'PNG', -80, 50, 230, 340);
+                                this.hideModal()
                                 doc.save("ReporteEncuestas.pdf");
                             });
                         });
@@ -227,7 +238,7 @@ export default {
         },
 
         async Encuestas(){
-
+            this.showModal()
             this.satisfaccion=[];
             this.utilidad=[];
             this.decisiones=[];
@@ -274,10 +285,19 @@ export default {
                 }
             });
 
+            this.hideModal()
+
         },
 
         generarReporte(){
+            this.generado = true
             this.Encuestas();
+        },
+        showModal() {
+            this.$refs['my-modal'].show()
+        },
+        hideModal() {
+            this.$refs['my-modal'].hide()
         },
         
     }

@@ -34,8 +34,11 @@
                     </option>
                 </select>
             </div>
-            <div class="col-12 col-md-2 offset-md-2"  style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+            <div class="col-12 col-md-2"  style="margin-bottom:10px;text-align: right;margin-right: 0px;margin-top: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
+            </div>
+            <div v-if="generado==true" class="col-12 col-md-2" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+                <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
             </div>
         </div>
         <div class="top-titulo" style="text-align:left;">
@@ -88,7 +91,6 @@
 
 
         </div>
-        <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
       </div>
         <!-- Modal de cargando -->
       <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
@@ -128,6 +130,7 @@ export default {
     data(){
         return{
             //Permisos que afectan filtros
+            generado: false,
             isCoordinador:true,
             mipermisosUsuario:null,
             nosemuestra:true,
@@ -262,6 +265,7 @@ export default {
             pdf.save('salida2.pdf');
         },
         downloadWithCSS() {            
+            this.showModal()
             const doc = new jsPDF('l', 'mm', 'a4');
             doc.setFontSize(29);
             doc.text('Reporte de Alumnos de Bajo Rendimiento',50,20);
@@ -269,6 +273,7 @@ export default {
             const options = { background: 'white', height: 845, width: 595 };
             domtoimage.toPng(document.querySelector("#content1"), options).then((dataUrl) => {
                 doc.addImage(dataUrl,'PNG', 30, 25, 210, 340);
+                this.hideModal()
                 doc.save("ReporteBajoRendimiento.pdf");
             });
         },
@@ -276,7 +281,7 @@ export default {
             return this.programas.filter(i => i != null && i.codigo != this.selectedFacultad.codigo)
         },
         listarTutores(){
-           
+            this.showModal()
             const params = {
                 id_programa : this.$store.state.programaActual.id_programa,
                 nomFacu:this.$store.state.programaActual.facultad.nombre,
@@ -294,14 +299,14 @@ export default {
                 // //Agrego la opción de todos
                  var tTodos=new Object(), usuario=new Object;
 
-                 usuario.nombre="Todos";
-                 usuario.apellidos="";
-                 usuario.id_usuario=0;
-                 tTodos.usuario=usuario;
-                 
-                 tTodos.id_usuario=0;
-                 this.tutores.push(tTodos); 
-              
+                usuario.nombre="Todos";
+                usuario.apellidos="";
+                usuario.id_usuario=0;
+                tTodos.usuario=usuario;
+                
+                tTodos.id_usuario=0;
+                this.tutores.push(tTodos); 
+                this.hideModal()
             })
             .catch(e => {
                 console.log('catch',e);
@@ -418,6 +423,7 @@ export default {
                         grupo50 ="< 50% - "+data.data[i].condicion;
 
                     this.alumnosBR.push({data:grupo50,total:data.data[i].total_alumnos});
+                    this.generado = true
                    
                 }
                
@@ -435,11 +441,12 @@ export default {
             return date > today;
         },
 
-        generarReporte(){
-
+        async generarReporte(){
+            this.showModal()
             this.validaciones();
             this.nosemuestra=false;
-            this.BajoRendimiento();
+            await this.BajoRendimiento();
+            this.hideModal()
 
 
         },

@@ -34,8 +34,11 @@
                 </select>
 
             </div>
-            <div class="col-12 col-md-2 offset-md-2" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+            <div class="col-12 col-md-2" style="margin-bottom:10px;text-align: right;margin-right: 0px;margin-top: 0px;">
                 <button type="button" class="btn btn-info"  @click="generarReporte()" >Generar</button>
+            </div>
+            <div v-if="generado==true" class="col-12 col-md-2" style="margin-bottom:10px;text-align: up;margin-right: 0px;margin-top: 0px;">
+                <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
             </div>
         </div>
         <div class="top-titulo" style="text-align:left;">
@@ -63,9 +66,14 @@
                 <bar-chart :chartData="asignadosXTutor" :options="chartOp" label='Alumnos asignados'></bar-chart>
             </div>
         </div>
-        <button  type="button" style="border-radius: 10px" @click="downloadWithCSS()" class="btn btn-info">Descargar Reporte</button>
       </div>
     
+        <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+            <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+                <b-spinner style="width: 3rem; height: 3rem;"/>
+                <br >Cargando... 
+            </div>
+        </b-modal>  
   </div>
 </template>
 
@@ -87,6 +95,7 @@ export default {
     data(){
         return{
             //filtros
+            generado: false,
             facultad:[],
             selectedFacultad:null,
             facultadSelect:[],
@@ -156,6 +165,9 @@ export default {
         document.querySelector("#container > div > div.FormAsignado > div > div.top-titulo > div:nth-child(1) > div > div > input").style.fontSize = "1rem";
         document.querySelector("#container > div > div.FormAsignado > div > div.top-titulo > div:nth-child(1) > div > div > input").style.height = "2.4em";
   
+        this.periodo = [this.inicio,this.fin];
+        this.RatioAsignadoXTutor();
+        this.listarTutores();
     },
     computed: {
         progSinDefault: function () {
@@ -166,12 +178,10 @@ export default {
         }
     },
     created(){
-        this.periodo = [this.inicio,this.fin];
-        this.RatioAsignadoXTutor();
-        this.listarTutores();
     },
     methods:{
-        downloadWithCSS() {            
+        downloadWithCSS() {        
+            this.showModal()       
             const doc = new jsPDF('l', 'mm', 'a3');
             doc.setFontSize(29);
             doc.text('Reporte de Alumnos Asignados',140,20);
@@ -179,6 +189,7 @@ export default {
             const options = { background: 'white', height: 845, width: 1800 };
             domtoimage.toPng(document.querySelector("#content1"), options).then((dataUrl) => {
                 doc.addImage(dataUrl,'JPEG', 10, 50, 420, 340);
+                this.hideModal()
                 doc.save("ReporteAsignados.pdf");
             });
         },
@@ -220,6 +231,7 @@ export default {
 
         },
         listarTutores(){
+            this.showModal()
             const params = {
                 id_programa : this.$store.state.programaActual.id_programa,
                 nomFacu:this.$store.state.programaActual.facultad.nombre,
@@ -228,13 +240,14 @@ export default {
             axios
             .post('/programa/tutoresListar', params)
                 .then(res =>{
-                this.tutores=res.data;   
-                var tutor=new Object();
-                tutor.usuario=new Object();
-                tutor.usuario.nombre="Todos";
-                tutor.usuario.codigo=0;
-                tutor.usuario.apellidos="";
-                this.tutores.push(tutor);         
+                    this.tutores=res.data;   
+                    var tutor=new Object();
+                    tutor.usuario=new Object();
+                    tutor.usuario.nombre="Todos";
+                    tutor.usuario.codigo=0;
+                    tutor.usuario.apellidos="";
+                    this.tutores.push(tutor);  
+                    this.hideModal()       
                 })
                 .catch(e => {
                 console.log(e.response);
@@ -338,10 +351,19 @@ export default {
 
 
 
-        generarReporte(){
+        async generarReporte(){
             //this.RatioAtenciones();
-            this.RatioAsignadoXTutor();
-        }
+            this.generado = true
+            this.showModal()
+            await this.RatioAsignadoXTutor();
+            this.hideModal()
+        },
+        showModal() {
+            this.$refs['my-modal'].show()
+        },
+        hideModal() {
+            this.$refs['my-modal'].hide()
+        },
         
     }
 
