@@ -285,7 +285,7 @@ export default {
       if(this.tutorSel.ttAsignado!=undefined){
         this.tipoTutorias.push(this.tutorSel.ttAsignado)
       }
-      this.tutorSel.tipo_tutorias.forEach(element => {
+      this.tutorSel.tutoriasPrograma.forEach(element => {
         // console.log(element.nombre,element.tutor_asignado)
         if(element.tutor_fijo!="1") this.tipoTutorias.push(element)
       });
