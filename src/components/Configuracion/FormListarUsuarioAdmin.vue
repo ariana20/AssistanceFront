@@ -125,7 +125,7 @@
       </div>
     </div>
     
-    <div v-if="$store.state.usuariosA.data==null || $store.state.usuariosA.data.length==0" class="row" style="width:100%">
+    <div v-if="$store.state.usuariosA==null || $store.state.usuariosA.data==null || $store.state.usuariosA.data.length==0" class="row" style="width:100%">
       <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
         Ningún Registro de Usuario
       </div>
