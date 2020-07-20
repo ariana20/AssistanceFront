@@ -1002,6 +1002,7 @@ export default {
             if(this.compromisos.length!=0){
               let obj ={
                 id_tutor: this.$store.state.usuario.id_usuario,
+                id_programa: this.$store.state.programaActual.id_programa,
                 id_alumno: this.usr.id_usuario,
                 nombre: this.nombre,
                 descripcion: this.descripcion,
