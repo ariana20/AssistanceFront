@@ -24,7 +24,7 @@
               <th scope="col" style="width:25%">Correo</th>
               <th scope="col" style="width:25%">Programa (Tipo de Usuario)</th>
               <th scope="col">Estado</th>
-              <th scope="col">Modif/Elim</th>
+              <th scope="col">Acciones</th>
             </tr>
           </thead>
           <tbody v-if="$store.state.usuariosA!=null">
@@ -48,14 +48,29 @@
                   </div>
                 </div>  
               </td>
-              <td style=";font-size:30px;text-align:center">
+              <td style=";font-size:30px;text-align:center;
+									padding-top: 0px;
+									padding-bottom: 0px;
+									margin-top: 0px;
+									margin-bottom: 0px;
+								">
                   <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
                   <b-icon v-else icon="x" style="color:#757575;width:35px; height:35px;"/>
               </td>
               <td style="text-align: center">
                 <div class="row" style="width:100%;margin-left:0px">
-                  <button class="btn link col-3" style="padding: 0px"><b-icon icon="pencil" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
-                  <button class="btn link col-3" style="padding: 0px;margin-left:10px"><b-icon icon="dash-circle-fill"  v-on:click="eliminarUsuario(item)"></b-icon></button>
+                  <button class="btn link col-3" style="padding: 0px;
+									padding-top: 0px;
+									padding-bottom: 0px;
+									margin-top: 0px;
+									margin-bottom: 0px;
+								"><b-icon icon="pencil" style="color:#0097A7" v-on:click="llenarUsuarioEscogido(item)"></b-icon></button>
+                  <button class="btn link col-3" style="padding: 0px;margin-left:10px;
+									padding-top: 0px;
+									padding-bottom: 0px;
+									margin-top: 0px;
+									margin-bottom: 0px;
+								"><b-icon icon="dash-circle-fill" style="color:#757575" v-on:click="eliminarUsuario(item)"></b-icon></button>
                 </div>              
               </td>
             </tr>

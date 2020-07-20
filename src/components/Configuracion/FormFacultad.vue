@@ -35,8 +35,18 @@
 							<td>{{item.correo}}</td>
 							<td style="text-align: center">{{item.cantidad-1}}</td>
 							<td style="text-align: center">
-								<button class="btn link" v-on:click="Editar(item)"><b-icon icon="pencil" style="color:#0097A7"></b-icon></button>
-								<button class="btn link" v-on:click="Eliminar(item)"><b-icon icon="dash-circle-fill" style="color:#757575"></b-icon></button>
+								<button class="btn link" style="
+									padding-top: 0px;
+									padding-bottom: 0px;
+									margin-top: 0px;
+									margin-bottom: 0px;
+								" v-on:click="Editar(item)"><b-icon icon="pencil" style="color:#0097A7"></b-icon></button>
+								<button class="btn link" style="
+									padding-top: 0px;
+									padding-bottom: 0px;
+									margin-top: 0px;
+									margin-bottom: 0px;
+								" v-on:click="Eliminar(item)"><b-icon icon="dash-circle-fill" style="color:#757575"></b-icon></button>
 							</td>
 						</tr>
 					</tbody>

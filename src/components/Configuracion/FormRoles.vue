@@ -36,14 +36,34 @@
               </div>
             </td>
             <td  style="text-align: center" v-if="$store.state.tipoActual.nombre == 'Admin'">
-              <button v-on:click="Editar(item.id_tipo_usuario,false)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
-              <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
+              <button  style="
+									padding-top: 0px;
+									padding-bottom: 0px;
+									margin-top: 0px;
+									margin-bottom: 0px;
+								"  v-on:click="Editar(item.id_tipo_usuario,false)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
+              <button  style="
+									padding-top: 0px;
+									padding-bottom: 0px;
+									margin-top: 0px;
+									margin-bottom: 0px;
+								"  v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
             </td>
             <td  style="text-align: center" v-else>
               
               <div v-if="(item.programa.nombre!='Administrador' && item.programa.nombre!=$store.state.programaActual.facultad.nombre)">
-                <button v-on:click="Editar(item.id_tipo_usuario,false)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
-                <button v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
+                <button  style="
+									padding-top: 0px;
+									padding-bottom: 0px;
+									margin-top: 0px;
+									margin-bottom: 0px;
+								"  v-on:click="Editar(item.id_tipo_usuario,false)" class="btn link"><b-icon icon="pencil" style="color:#0097A7"/></button>
+                <button  style="
+									padding-top: 0px;
+									padding-bottom: 0px;
+									margin-top: 0px;
+									margin-bottom: 0px;
+								"  v-on:click="Eliminar(item)" class="btn link"><b-icon icon="dash-circle-fill" style="color:#757575"/></button>
               </div>
               
               <div v-else v-on:click="Editar(item.id_tipo_usuario,true)" style="cursor: pointer;">

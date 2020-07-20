@@ -54,7 +54,12 @@
                   <a style="font-weight:normal">Sin Asignar</a>
                 </div>
               </td>
-              <td style=";font-size:30px">
+              <td style=";font-size:30px;
+									padding-top: 0px;
+									padding-bottom: 0px;
+									margin-top: 0px;
+									margin-bottom: 0px;
+								" >
                   <b-icon v-if="item.estado == 'act'" icon="check" style="color:green"/>
                   <b-icon v-else icon="check" style="color:#757575"/>
               </td>

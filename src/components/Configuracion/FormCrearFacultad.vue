@@ -147,8 +147,18 @@
                   <td v-if="item.coordinador!=undefined">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
                   <td v-else>Sin coordinador</td>
                   <td style="text-align: center">
-                    <button class="btn link" v-on:click="Editar(item, index)"><b-icon icon="pencil"></b-icon></button>
-                    <button class="btn link" v-on:click="Eliminar(index, item)"><b-icon icon="dash-circle-fill"></b-icon></button>
+                    <button class="btn link" style="
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                      margin-top: 0px;
+                      margin-bottom: 0px;
+                    " v-on:click="Editar(item, index)"><b-icon icon="pencil" style="color:#0097A7"></b-icon></button>
+                    <button class="btn link" style="
+                      padding-top: 0px;
+                      padding-bottom: 0px;
+                      margin-top: 0px;
+                      margin-bottom: 0px;
+                    " v-on:click="Eliminar(index, item)"><b-icon icon="dash-circle-fill" style="color:#757575"></b-icon></button>
                   </td>
               </tr>
               </tbody>
