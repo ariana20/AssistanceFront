@@ -136,11 +136,14 @@ export default {
          
         this.listarTutores();
          this.bloque = this.$store.state.programaActual.hora_bloque;
-        if (this.tutorSel)
+        if (this.tutorSel){
+            
             this.showCalendar();
+           
+        }
         else
             this.$store.state.events=[];      
-             
+          
     },
     methods: {
         showCalendar() {
@@ -153,14 +156,14 @@ export default {
            //Aquí me lleva a la cita agendada 
            if(arg.event.backgroundColor  !='#FF6961') {
                 // disponible
-                
+                console.log(this.tutorSel);
                 this.$store.state.citaDatos={
                         props:arg.event.extendedProps,
                         id_disponibilidad:arg.event.id,
                         fechaIni:arg.event.start,
                         fechaFin:arg.event.end,
                         id_tutor: this.tutorSel.id_usuario,
-                        tttutorSel: this.tutorSel.usuario.tipo_tutorias,
+                        tttutorSel: this.aux,
                         isGray:false,
                         alumnos:arg.event.allow,
 
@@ -176,7 +179,7 @@ export default {
                         fechaIni:arg.event.start,
                         fechaFin:arg.event.end,
                         id_tutor: this.tutorSel.id_usuario,
-                        tttutorSel: this.tutorSel.usuario.tipo_tutorias,
+                        tttutorSel:this.aux,
                         isGray:true,
                         alumnos:arg.event.allow,
 
@@ -187,7 +190,20 @@ export default {
          
 
         },
-        
+        getTipoTutorias() {
+            const params = {
+                idTutor: this.tutorSel.id_usuario,
+                id_programa: this.$store.state.programaActual.id_programa,
+            }
+            console.log(params);
+            axios.post('usuarios/tutoriaTutor', params)
+            .then((response) => {
+                
+                this.aux= response.data
+            }).catch(e => {
+                console.log(e.response);
+            });
+        },
         listarTutores() {
             
             this.showModal();
@@ -202,10 +218,12 @@ export default {
             .post('/programa/tutoresListar', params)
             .then(res =>{
                 //Ordenadito
-                this.tutores=res.data.sort((a, b) => { return  a.usuario.nombre.localeCompare(b.usuario.nombre);});
-                 // this.tutores=res.data;  
+                // this.tutores=res.data.sort((a, b) => 
+                // { return  a.usuario.nombre.localeCompare(b.usuario.nombre);});
+                  this.tutores=res.data;  
                 
                 this.hideModal();  
+                console.log(this.tutores);
             
                       
             })
@@ -221,6 +239,8 @@ export default {
                 });
                 //  this.$router.push('/registrarCita');
             })
+
+               
         },
 
         getReminders: function() {

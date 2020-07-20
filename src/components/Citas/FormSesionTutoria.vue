@@ -235,13 +235,29 @@ export default Vue.extend ({
             .catch(e => {
                 console.log(e.response);
             });
-        axios.post('TipoTutoria/listarTodo/' + this.$store.state.programaActual.id_programa)
-            .then( response => {
-                this.tiposTutoria = response.data;
-            })
-            .catch(e => {
-            console.log(e.response);
+        // axios.post('TipoTutoria/listarTodo/' + this.$store.state.programaActual.id_programa)
+        //     .then( response => {
+        //         this.tiposTutoria = response.data;
+        //     })
+        //     .catch(e => {
+        //     console.log(e.response);
+        //     });
+             const params = {
+                idTutor: this.$store.state.usuario.id_usuario,
+                id_programa: this.$store.state.programaActual.id_programa,
+            }
+            console.log(params);
+            axios.post('usuarios/tutoriaTutor', params)
+            .then((response) => {
+                
+                this.tiposTutoria= response.data
+            }).catch(e => {
+                console.log(e.response);
             });
+
+
+
+
         axios.post('motivosConsulta/listarTodo')
             .then( response => {
                 this.motivos = response.data;
