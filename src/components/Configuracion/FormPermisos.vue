@@ -113,7 +113,7 @@ export default {
             let indexA;
             for (let mod in this.$store.state.permisos) {
               indexA = mod;
-              if(this.$store.state.permisos[mod].nombre == "Configuración") break;              
+              if(this.$store.state.permisos[mod].nombre == "Configuración General") break;              
             }
             delete this.$store.state.permisos[indexA];
           }

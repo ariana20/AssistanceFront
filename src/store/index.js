@@ -40,7 +40,7 @@ export default new Vuex.Store({
     filtroProgs:null,
     navLinks: [
       {
-        text: 'Institucion',
+        text: 'Institución',
         path: '/institucion',
         icon: 'ion-ios-globe'
       },
@@ -80,7 +80,7 @@ export default new Vuex.Store({
         icon: 'ion-ios-people'
       },
       {
-        text: 'Tipos de Tutoria',
+        text: 'Tipos de Tutoría',
         path: '/ListaTiposTutorias',
         icon: 'ion-ios-bookmarks'
       },
@@ -115,9 +115,7 @@ export default new Vuex.Store({
         icon: 'ion-ios-person-add'
       },
       {
-        // text: 'Agregar Documento',
-        // path: '/agregardocumentos',
-        text: 'Agregar Notas',
+        text: 'Agregar Documento',
         path: '/agregarNotas',
         icon: 'ion-ios-document'
       },
