@@ -72,7 +72,7 @@
                 <tr v-for="(item,index) in alumnosAsig" :key="index">
                     <td v-if="item!=undefined">{{item.codigo}}</td>
                     <td v-if="item!=undefined">{{item.nombre+" "+item.apellidos}}</td>
-                    <td v-if="item!=undefined && item.tutoresAsignados[0]!=undefined" >{{item.tutoresAsignados[0].nombre+" "+item.tutoresAsignados[0].apellidos}}</td>
+                    <td v-if="item!=undefined && item.tutoresAsignados!=undefined && item.tutoresAsignados[0]!=undefined" >{{item.tutoresAsignados[0].nombre+" "+item.tutoresAsignados[0].apellidos}}</td>
                     <td v-else>Sin tutor</td>
                     <td v-if="item!=undefined"><button class="btn link" style="
                         padding-top: 0px;
@@ -228,6 +228,7 @@ export default {
                             }) 
                             
                             this.alSeleccionado.cond=this.alSeleccionado.condicion;
+                            this.alSeleccionado.tutoresAsignados=[];
                             this.alumnosAsig.push(this.alSeleccionado);
                             this.alSeleccionado=null;
                             this.sel='';
