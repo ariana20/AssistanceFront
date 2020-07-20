@@ -125,6 +125,12 @@
       </div>
     </div>
     
+    <div v-if="$store.state.usuariosA.data==null || $store.state.usuariosA.data.length==0" class="row" style="width:100%">
+      <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
+        Ningún Registro de Usuario
+      </div>
+    </div>
+
     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
         <b-spinner style="width: 3rem; height: 3rem;"/>
@@ -219,11 +225,6 @@ export default {
             axios.post('/usuarios/eliminar/'+id.id_usuario)
             .then(res =>{
               res
-              let index = this.$store.state.usuariosA.data.indexOf(
-              function(element){
-                return element.id_usuario === id.id_usuario; 
-              })
-              this.$store.state.usuarios.splice(index, 1);
               this.hideModal()
               Swal.fire({
                 icon:'success',
@@ -232,6 +233,7 @@ export default {
                 confirmButtonColor:'#0097A7'
                 }
               )
+              this.listarUsuarios()
             })
             .catch(e => {
               console.log(e.response);

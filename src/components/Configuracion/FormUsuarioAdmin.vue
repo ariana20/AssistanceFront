@@ -463,7 +463,8 @@ export default {
           this.tiposUsuariosSel = element;
         }
       });
-      this.progSeleccionadoInd = null;
+      if(this.tiposUsuariosSel.id_programa==1)this.progSeleccionadoInd = null;
+      else this.progSeleccionadoInd = this.tiposUsuariosSel.id_programa
     },
     TipoUsEl(){
       for (let index = 0; index < this.usuario_entrante.usuario_x_programas.length; index++) {
@@ -1059,11 +1060,9 @@ export default {
               // console.log('id del usuario nuevo: ',response.data["user"].id_usuario);
               this.actualizarTT(idusuarionuevo);//tiene hide?
             }
-            else{
-              this.$store.state.usuariosA = null;
-              this.$router.push('/AListaUsuarios');
-            }
             this.$store.state.usuarioEscogido=null;//
+            this.$store.state.usuariosA = null;
+            this.$router.push('/AListaUsuarios');
             // this.hideModal();
             // //ahora va a estar en el actualizarTT
           }
