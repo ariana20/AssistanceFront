@@ -254,7 +254,7 @@ export default {
                         //});
                     }
                 }).catch(e => {
-                    // console.log(e.response);
+                    console.log(e.response);
                 });
                 //this.calendar.render();
             },
