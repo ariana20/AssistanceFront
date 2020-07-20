@@ -173,7 +173,7 @@ export default Vue.extend ({
     },
     mounted(){
         if(this.$store.state.usuario==null) this.$router.push('/login');        
-        this.listarTT();
+        this.getTipoTutorias();
         this.resultadosCita();
         if(this.$store.state.citaDatos.isGray==true){
             //no es disponible, o hay 1 alumnbo o hay varios
@@ -466,9 +466,23 @@ export default Vue.extend ({
                 });
         },
         listarTT(){
-            this.tt=this.$store.state.citaDatos.tttutorSel.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
-            // this.tt=this.$store.state.citaDatos.tttutorSel;
+            // this.tt=this.$store.state.citaDatos.tttutorSel.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
+            //  this.tt=this.$store.state.citaDatos.tttutorSel;id_tutor
             
+        },
+         getTipoTutorias() {
+            const params = {
+                idTutor: this.$store.state.citaDatos.id_tutor,
+                id_programa: this.$store.state.programaActual.id_programa,
+            }
+            console.log(params);
+            axios.post('usuarios/tutoriaTutor', params)
+            .then((response) => {
+                
+                 this.tt= response.data
+            }).catch(e => {
+                console.log(e.response);
+            });
         },
         resultadosCita(){
 
