@@ -176,7 +176,7 @@ export default new Vuex.Store({
     },
     UPDATE_EVENT: (state, {id,title,start,color}) => {
       let index = state.events.findIndex(_event => _event.id === id)
-      console.log('index event',index)
+      // console.log('index event',index)
       state.events[index].title = title;
       state.events[index].start = start;
       state.events[index].color = color;

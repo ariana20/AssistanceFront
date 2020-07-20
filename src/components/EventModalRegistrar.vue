@@ -113,7 +113,7 @@ export default {
               idDisponibilidad:this.event.id,
               usuario_actualizacion:this.$store.state.usuario.id_usuario})
             .then((response) => {
-              console.log('cancelar cita: ',response);
+              // console.log('cancelar cita: ',response);
               this.$store.commit("UPDATE_EVENT", {
                 id: this.event.id,
                 title: 'Disponible',
@@ -158,7 +158,8 @@ export default {
               //jiji aquí ya no iría mi id_usuario, si no el id del alumno
               idUsuario: this.$store.state.usuario.id_usuario,
             }).then(response => {
-              console.log('registrarCitaAl response: ', response.data);
+              // console.log('registrarCitaAl response: ', response.data);
+              response
               Swal.fire({
                       text:"Registro Exitoso",
                       icon:"success",
@@ -186,7 +187,7 @@ export default {
           });
         },
         SolCancelar(){
-          console.log('Cancelar Cita')
+          // console.log('Cancelar Cita')
           Swal.fire({
                 text:"¿Desea solicitar la cancelacion de esta cita?",
                 icon:"warning",
@@ -218,7 +219,7 @@ export default {
                       confirmButtonColor:'#0097A7',
                       showConfirmButton: true,
                       })
-                      console.log(response)
+                      response
                     })
                     .catch(e => {
                         console.log(e.response);
@@ -241,8 +242,8 @@ export default {
   
   mounted() {
     this.$store.state.curEvent = this.event;
-    console.log(this.event.id);
-    console.log('Evento',this.event.extendedProps);
+    // console.log(this.event.id);
+    // console.log('Evento',this.event.extendedProps);
     this.getIdCita();
 
   }

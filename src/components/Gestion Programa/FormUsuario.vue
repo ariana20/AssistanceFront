@@ -993,7 +993,6 @@ export default {
          Axios.create()
               .post('/usuarios/insertar',params3)
               .then( response=>{
-                console.log(response);
                   if(response.data.status=='success'){
                       
                       // this.hideModal();

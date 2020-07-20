@@ -270,7 +270,7 @@ export default {
 
         },
         listarProgramas(){
-            console.log(this.selectedFacultad);
+            // console.log(this.selectedFacultad);
             const params = {
                 id_facultad:this.selectedFacultad.id_facultad
             };
@@ -399,7 +399,7 @@ export default {
                 else if(d.data=="pen") this.atenciones.push({data:"Pendientes",total:d.total});   
                 else if(d.data=="can") this.atenciones.push({data:"Cancelados",total:d.total});                
             })
-            console.log(this.atenciones);
+            // console.log(this.atenciones);
             
         },
         async RatioAtencionesXFecha(){
@@ -416,7 +416,7 @@ export default {
             // verificar si ya no es necesario el bucle
             // se cambió la función del back
             this.atencionesXFecha=data;
-            console.log(this.atencionesXFecha);
+            // console.log(this.atencionesXFecha);
             /*
             data.forEach(d =>{
                 this.atencionesXFecha.push({data:d.fecha,total:d.count});               

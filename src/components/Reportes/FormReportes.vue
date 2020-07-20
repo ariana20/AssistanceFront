@@ -368,7 +368,7 @@ export default {
             this.alumnosBRPlan=[];
             this.selectedPrograma=this.$store.state.programaActual.id_programa;
             this.showModal()
-            console.log(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null );
+            // console.log(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null );
             if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){
                 var programas=[];              
                 if(this.selectedPrograma==0){
@@ -432,9 +432,9 @@ export default {
             this.alumnosBR=[];
 
             this.selectedPrograma=this.$store.state.programaActual.id_programa;
-            console.log(this.selectedPrograma!=null );
-            console.log(this.periodo[0]!=null );
-            console.log( this.periodo[1]!=null );
+            // console.log(this.selectedPrograma!=null );
+            // console.log(this.periodo[0]!=null );
+            // console.log( this.periodo[1]!=null );
             if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){
                
                 var programas=[];
@@ -463,7 +463,7 @@ export default {
                     // id_tutor:tutoresSeleccionados,
                      id_tutor:[],
                 };
-                console.log(params);
+                // console.log(params);
                  
                 var data =await axios.post("usuarios/datosBajoRendimiento", params);
                 for( let i in data.data ){

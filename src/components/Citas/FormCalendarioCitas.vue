@@ -142,13 +142,13 @@ export default {
         },
         
         handleSelect (arg) {
-            console.log(arg)
+            // console.log(arg)
             var today = new Date()
             var date = arg.start
             if(date>today) {
                 axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(arg.start).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
                 .then((response) => {
-                    console.log(response.data)
+                    // console.log(response.data)
                     if(response.data == 'l') {
                         Swal.fire({
                             html:'Se registrará una nueva disponibilidad el día <br> ' +  moment(arg.start).format("YYYY-MM-DD") + ' a las ' + moment(arg.start).format(" hh:mm a"),
@@ -226,7 +226,7 @@ export default {
                 elem.style.backgroundColor ="gray"
             } 
             
-            console.log(this.calendar);
+            // console.log(this.calendar);
         },
         handleClick (arg) {
             if(arg.event.backgroundColor!='#B2EBF2') {
@@ -251,7 +251,7 @@ export default {
                         alumnos:arg.event.allow,///////////agregar allow 
 
                 };             				
-                console.log('citaDatos: ',this.$store.state.citaDatos)
+                // console.log('citaDatos: ',this.$store.state.citaDatos)
                 this.$router.push('/registrarCita/registrarCitaAgendada');
 
             } else {
@@ -299,7 +299,7 @@ export default {
                     var rd3 = response.data[2];
                     var rd4 = response.data[3];
                     var today = new Date()
-                    console.log('eventos cal: ', response.data)
+                    // console.log('eventos cal: ', response.data)
                     for(var i in response.data[0]) {
                         var start_hour = rd[i].hora_inicio;
                         var date = rd[i].fecha + " " + rd[i].hora_inicio
@@ -310,7 +310,7 @@ export default {
                                 //SI ES UNA CITA INDIVIDUAL
                                 if(response.data[3][i].length == 1) {
                                     //SI YA SE REGISTRO RESULTADO DE LA CITA
-                                    console.log('alumno:',rd4[i][0].nombre,'asiste:',rd4[i][0].pivot.asistencia)
+                                    // console.log('alumno:',rd4[i][0].nombre,'asiste:',rd4[i][0].pivot.asistencia)
                                     if(rd4[i][0].pivot.asistencia!='noa' && rd4[i][0].pivot.asistencia!='pen' ) {
                                         this.$store.commit("ADD_EVENT", {
                                             allow: rd[i].alumno,

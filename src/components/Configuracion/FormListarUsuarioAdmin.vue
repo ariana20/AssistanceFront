@@ -247,7 +247,7 @@ export default {
       for (let index = 0; index < files.length; index++) {
         this.createFile(files[index]);
       }
-      console.log(this.selectedFiles);
+      // console.log(this.selectedFiles);
     },
     createFile(file) {
       let reader = new FileReader();

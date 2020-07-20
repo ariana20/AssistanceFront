@@ -294,7 +294,7 @@ export default {
           
                 // this.tutores=res.data;
                
-                console.log('tutores: ',this.tutores);
+                // console.log('tutores: ',this.tutores);
                 // this.tutores.splice(0,1);
                 // //Agrego la opción de todos
                  var tTodos=new Object(), usuario=new Object;
@@ -411,7 +411,7 @@ export default {
                      id_tutor:this.idTutores,
                 };
 
-                console.log(params);
+                // console.log(params);
                 var data =await axios.post("usuarios/datosBajoRendimiento", params);
 
                

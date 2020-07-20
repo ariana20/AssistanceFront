@@ -194,10 +194,10 @@ export default {
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
                 
-                console.log('tutorSel', this.tutorSel)
+                // console.log('tutorSel', this.tutorSel)
                 axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
-                    console.log('getreminders',response.data)
+                    // console.log('getreminders',response.data)
                     var rd = response.data[0]; 
                     var rd2 = response.data[1];
                     var today = new Date()
@@ -237,7 +237,7 @@ export default {
                                 }
                             } else {
                                 if(date1>today) {
-                                    console.log('id cuando es llenado',rd[i].id_disponibilidad)
+                                    // console.log('id cuando es llenado',rd[i].id_disponibilidad)
                                     this.$store.commit("ADD_EVENT", {
                                         id: rd[i].id_disponibilidad,
                                         title: 'Disponible',
@@ -254,7 +254,7 @@ export default {
                         //});
                     }
                 }).catch(e => {
-                    console.log(e.response);
+                    // console.log(e.response);
                 });
                 //this.calendar.render();
             },

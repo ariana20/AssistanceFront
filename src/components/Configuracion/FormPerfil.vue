@@ -194,9 +194,7 @@ export default {
                         })
                         .then( response=>{
                             this.hideModal()
-                            console.log(response)
                             let imgIns = response.data.path
-                            console.log(imgIns)
                             this.usuario.imagen = imgIns;
                         })
                         .catch(e => {

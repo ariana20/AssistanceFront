@@ -78,7 +78,7 @@ export default {
                             }) 
                         }
 
-                        console.log(response)
+                        // console.log(response)
                     })
                     .catch(e => {
                         console.log(e.response);

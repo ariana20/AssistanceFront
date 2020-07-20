@@ -70,9 +70,9 @@ export default {
   },
   mounted(){
     if(this.id_usuario_entrante!=0){
-      console.log('Id usuario entrante: ');
+      // console.log('Id usuario entrante: ');
       
-      console.log(this.id_usuario_entrante);
+      // console.log(this.id_usuario_entrante);
      Axios.create({withCredentials: true })
        .post('/usuarios/listar/'+this.id_usuario_entrante).then( response =>{
           this.codigo=response.data.codigo;
@@ -157,7 +157,7 @@ export default {
             Axios.create({withCredentials: true })
             .post('/usuarios/insertar',params)
             .then( response=>{
-            console.log(response)
+            response
             });
             Swal.fire({
               text:"Se guardaron los datos con éxito",
@@ -171,7 +171,7 @@ export default {
             Axios.create({withCredentials: true })
             .post('/usuarios/modificar/'+this.id_usuario_entrante,params2)
             .then( response=>{
-              console.log(response)
+              response
             })  .catch(e => {
                  console.log(e.response);
               });
@@ -196,7 +196,7 @@ export default {
           // Ordenadito
           let par=res.data;
           this.arrTUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-          console.log(this.arrTUsuarios);        
+          // console.log(this.arrTUsuarios);        
           
         })
         .catch(e => {
@@ -222,7 +222,7 @@ export default {
         
     },
     cambio(event){
-      console.log(event.target.checked);
+      // console.log(event.target.checked);
       if (event.target.checked) this.estado = "act";
             else this.estado = "ina";
 

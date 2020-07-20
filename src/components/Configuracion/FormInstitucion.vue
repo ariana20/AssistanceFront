@@ -122,9 +122,9 @@ export default {
             this.showModal()
             axios.post('/institucion/subirLogo',{image: this.selectedFile})
               .then( response=>{
-                console.log(response)
+                response
                 let imgIns = response.data.path
-                console.log(imgIns)
+                // console.log(imgIns)
                 this.logo = imgIns;
                 let params = {
                   logo: this.logo,

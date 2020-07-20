@@ -60,8 +60,8 @@ export default {
     },
     
     mounted() {
-      console.log(this.tipoTutoria);
-      console.log(this.tutorSel);
+      // console.log(this.tipoTutoria);
+      // console.log(this.tutorSel);
 
     },
     methods: {

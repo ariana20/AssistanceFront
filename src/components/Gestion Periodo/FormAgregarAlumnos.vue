@@ -253,7 +253,7 @@ export default Vue.extend ({
                 'Content-Type': 'multipart/form-data'
             }})
               .then( response=>{
-                console.log(response);
+                response
                 if(response.data==[]) {
                   Swal.fire({
                     text:"Estamos teniendo problemas al cargar los datos de los nuevos alumnos. Vuelve a intentar en unos minutos.",

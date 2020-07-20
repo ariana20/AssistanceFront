@@ -128,7 +128,7 @@ export default {
                 confirmButtonColor:'#0097A7',
                 showConfirmButton: true,
             }).then((result)=>{
-              console.log(result)
+              result
               this.$store.state.usuario=null;
               this.nombre = null;
               localStorage.setItem('usuarioActual', null)

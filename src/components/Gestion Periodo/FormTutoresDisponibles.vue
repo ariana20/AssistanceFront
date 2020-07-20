@@ -111,8 +111,7 @@ export default {
         axios
         .post('/programa/tutoresAsignados', params)
           .then(res =>{
-            this.tutoresAsignado=res.data;
-            console.log(res);         
+            this.tutoresAsignado=res.data;  
           })
           .catch(e => {
             console.log(e.response);
@@ -132,7 +131,6 @@ export default {
             tema.id_tipo_tutoria=0;
             tema.nombre="Todos";
             this.temas.push(tema);
-            console.log(res);         
           })
           .catch(e => {
             console.log(e.response);
@@ -162,10 +160,9 @@ export default {
       axios
       .post('/programa/tutoresAlumnoPaginado', params)
         .then(res =>{
-          console.log(res);
           this.ttAsignado=res.data.tipoAsignado;
           this.loadMore($state, res); 
-          console.log(this.tutores);          
+          // console.log(this.tutores);          
         })
         .catch(e => {
           console.log(e.response);
@@ -190,7 +187,8 @@ export default {
 
     },
     deleteTema(index, tema){
-      console.log(index + " " + tema);
+      index 
+      tema
     }
 
     

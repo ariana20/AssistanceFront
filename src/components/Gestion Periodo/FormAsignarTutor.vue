@@ -185,8 +185,7 @@ export default {
                     this.tutores[i].tiposTutoriaAsignar.push(tipo);
               }
               
-          }
-          console.log(res);           
+          }           
         })
         .catch(e => {
           console.log(e.response);
@@ -231,8 +230,7 @@ export default {
             axios
             .post('/registros/listarAlumnos', params)
             .then(res =>{
-            this.alumnosAsig=res.data;
-            console.log(res);            
+            this.alumnosAsig=res.data;       
             })
             .catch(e => {
             console.log(e.response);
@@ -272,7 +270,7 @@ export default {
                         axios
                         .post('/registros/insertar', params)
                         .then(rr =>{
-                            console.log(rr);
+                            rr
                             Swal.fire({
                                 text:"Se ha realizado correctamente la asignación",
                                 icon:"success",
@@ -360,7 +358,7 @@ export default {
                 axios
                 .post('/registros/eliminar',params)
                 .then(response=>{
-                    console.log(response);
+                    response
                     this.alumnosAsig.splice(index,1);
                     Swal.fire({
                         text:"Eliminación Exitosa",

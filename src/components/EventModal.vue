@@ -278,15 +278,15 @@ export default {
     this.fin = this.event.end.YYYYMMDDHHMMSS()
     //this.ini = this.event.start.getFullYear() + ("0" + (this.event.start.getMonth() + 1)).slice(-2) + ("0" + this.event.start.getDate()).slice(-2) + "T"+ (this.event.start.getHours() + 2)+ (this.event.start.getMinutes()) + (this.event.start.getSeconds()) + "Z"
     //this.fin = this.event.end.getFullYear() + ("0" + (this.event.end.getMonth() + 1)).slice(-2) + ("0" + this.event.end.getDate()).slice(-2) + "T"+ (this.event.end.getHours() + 2)+ (this.event.end.getMinutes()) + (this.event.end.getSeconds()) + "Z"
-    console.log('hora ini',this.event.start.YYYYMMDDHHMMSS())
-    console.log('hora fin',this.event.end.YYYYMMDDHHMMSS())
+    // console.log('hora ini',this.event.start.YYYYMMDDHHMMSS())
+    // console.log('hora fin',this.event.end.YYYYMMDDHHMMSS())
     if(this.tutorSel!=undefined) {
       this.tipoTutorias = []
       if(this.tutorSel.ttAsignado!=undefined){
         this.tipoTutorias.push(this.tutorSel.ttAsignado)
       }
       this.tutorSel.tipo_tutorias.forEach(element => {
-        console.log(element.nombre,element.tutor_asignado)
+        // console.log(element.nombre,element.tutor_asignado)
         if(element.tutor_fijo!="1") this.tipoTutorias.push(element)
       });
     }

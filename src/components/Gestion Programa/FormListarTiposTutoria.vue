@@ -148,7 +148,7 @@ computed:{
 
               Axios.post('/TipoTutoria/eliminar/'+item.id_tipo_tutoria,params)
                 .then(response=>{
-                  console.log(response);
+                  response
                   
                   this.$store.state.tipostutorias.splice(index, 1); //  
                  

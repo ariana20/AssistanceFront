@@ -264,7 +264,7 @@ export default {
           
                 // this.tutores=res.data;
                
-                console.log('tutores: ',this.tutores);
+                // console.log('tutores: ',this.tutores);
                 // this.tutores.splice(0,1);
                 // //Agrego la opción de todos
                  var tTodos=new Object(), usuario=new Object;
@@ -351,13 +351,13 @@ export default {
         async BajoRendimiento(){
            this.sinGrafico=false;
           
-            console.log('reporte');
+            // console.log('reporte');
             this.alumnosBR=[];
             this.alumnosBRPlan=[];
-            console.log('t: ',this.idTutores);
+            // console.log('t: ',this.idTutores);
             this.selectedPrograma=this.$store.state.programaActual.id_programa;
             if(this.selectedPrograma!=null && this.periodo[0]!=null && this.periodo[1]!=null  ){
-                 console.log('func reporte');
+                //  console.log('func reporte');
                 var programas=[];
               
                 if(this.selectedPrograma==0){
@@ -387,7 +387,7 @@ export default {
                 var dataPlan =await axios.post("usuarios/datosAlumnosPlan", params2);
 
                 //LLenado del gráfico de la derecha
-                 console.log('datos: ',dataPlan);
+                //  console.log('datos: ',dataPlan);
 
                  this.alumnosBRPlan.push({data:"< 50%",total:dataPlan.data[1].total_alumno});
                  this.alumnosBRPlan.push({data:"> 50%",total:dataPlan.data[0].total_alumno});

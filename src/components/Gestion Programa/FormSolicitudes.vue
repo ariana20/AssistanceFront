@@ -212,7 +212,7 @@ export default {
                                   obj.cambiar=true;
                                   this.axios.post('/registros/insertar', obj)
                                   .then(rr =>{
-                                    console.log(rr);
+                                    rr
                                     Swal.fire({
                                       text:"Se ha realizado correctamente la asignación",
                                       icon:"success",

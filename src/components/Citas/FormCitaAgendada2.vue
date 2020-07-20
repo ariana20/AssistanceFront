@@ -247,7 +247,7 @@ export default Vue.extend ({
     },
     methods: {
         fillFields() {
-            console.log('cita: ',this.cita);
+            // console.log('cita: ',this.cita);
             if(this.cita[0].cita_x_usuarios.length > 1) { //Solo muestro varios alumnos
                 for(let i in this.cita[0].cita_x_usuarios){
                      this.listAlumnosCod.push(this.cita[0].cita_x_usuarios[i].codigo);
@@ -336,7 +336,7 @@ export default Vue.extend ({
                 }
                 
             }
-            console.log(faltaron);
+            // console.log(faltaron);
             //varios un alumno
             const sesion_params = {
                 id_cita: this.$store.state.idCita,
@@ -347,7 +347,7 @@ export default Vue.extend ({
                 asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
             };
-                console.log(this.listMotivos.length);
+                // console.log(this.listMotivos.length);
                 if(this.listMotivos.length > 0) {
                        
                             
@@ -359,7 +359,7 @@ export default Vue.extend ({
 
                                 axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
-                                       console.log(response);
+                                       response
                                         this.disableFields();
                                         Swal.fire({
                                             text:"Se ha registrado la sesión con éxito",
@@ -406,7 +406,7 @@ export default Vue.extend ({
                                         if (result.value) {
                                             axios.post('/sesiones/regSesionFormal',sesion_params)
                                             .then( response=>{
-                                                   console.log(response);
+                                                   response
                                                     this.disableFields();
                                                     Swal.fire({
                                                         text:"Se ha registrado la sesión con éxito",

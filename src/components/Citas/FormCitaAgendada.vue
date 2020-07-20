@@ -204,10 +204,10 @@ export default Vue.extend ({
         }
     },
     mounted(){
-        console.log('idCita: ',this.$store.state.idCita)
+        // console.log('idCita: ',this.$store.state.idCita)
         //LLENANDO LOS CAMPOS CUANDO HAY INFO EN LA SESION
-        console.log('editar status: ',this.editar)
-        console.log('obtuve la cita: ',this.$store.state.curSesion)
+        // console.log('editar status: ',this.editar)
+        // console.log('obtuve la cita: ',this.$store.state.curSesion)
         // if(this.cita[1] != "l") {
         //     this.descripcion = this.cita[1].resultado
         //     if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
@@ -223,7 +223,7 @@ export default Vue.extend ({
         //     console.log('motivos: ', this.listMotivos)
         //     //si hay info de la sesion quiere decir que ha asistido a su 
         // }
-        console.log('cita  ', this.cita);
+        // console.log('cita  ', this.cita);
         // this.disableFields()
         
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
@@ -260,10 +260,10 @@ export default Vue.extend ({
             if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
                 this.asistencia = true
             }
-            console.log('longitud for:', this.cita[1].motivo_consultas)
+            // console.log('longitud for:', this.cita[1].motivo_consultas)
             for(var i in this.cita[1].motivo_consultas) {
                 this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
-                console.log('motivo selected: ', this.selectedMotivo)
+                // console.log('motivo selected: ', this.selectedMotivo)
                 this.addMotivos()
             }
         }
@@ -326,7 +326,7 @@ export default Vue.extend ({
         guardar: function () {
             let array = []
             array.push(this.event.extendedProps.alumno.id_usuario);
-            console.log(array);
+            // console.log(array);
             const sesion_params = {
                 id_cita: this.$store.state.idCita,
                 resultado: this.descripcion,
@@ -344,7 +344,7 @@ export default Vue.extend ({
                                 }
                                 axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
-                                        console.log(response);
+                                        response
                                         this.disableFields()
                                         Swal.fire({
                                             text:"Se ha registrado la sesión con éxito",
@@ -385,12 +385,12 @@ export default Vue.extend ({
                 if(this.sel==this.codigos[i].codigo){
                     this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
                 }
-                console.log(this.alSeleccionado);
+                // console.log(this.alSeleccionado);
                 //break;   
             }
         },
         addMotivos: function () {
-            console.log('la funcion addmotivos ha sido llamada',this.motivos)
+            // console.log('la funcion addmotivos ha sido llamada',this.motivos)
             for(var i in this.motivos)
                 if(this.selectedMotivo==this.motivos[i].id_motivo_consulta) {
                     this.listMotivos.push(this.motivos[i].nombre);

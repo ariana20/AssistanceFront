@@ -385,7 +385,7 @@ export default Vue.extend ({
                 'Content-Type': 'multipart/form-data'
             }})
           .then(res =>{
-         console.log(res);
+            res
             this.hideModal();
             Swal.fire({
                     text:"Se guardaron los datos con éxito. Ningún archivo presentó errores",
@@ -395,9 +395,9 @@ export default Vue.extend ({
                     showConfirmButton: true,
                   });
                 
-                  this.$router.push('/ListaUsuarios'); 
-                  this.$store.state.usuarioEscogido=null;//
-                  this.$store.state.usuarios=null;
+            this.$router.push('/ListaUsuarios'); 
+            this.$store.state.usuarioEscogido=null;//
+            this.$store.state.usuarios=null;
             
           })
           .catch(e => {
