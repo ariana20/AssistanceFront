@@ -15,10 +15,10 @@
             <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
             <div class="font-weight-bolder">Temas: </div>
             <div>
-                <label v-for="(item,index) in tipoTutoria" :key="index" style="margin-bottom: 0px;">
+                <label v-for="(item,index) in tutor.tipoTutoriasPrograma" :key="index" style="margin-bottom: 0px;">
                     <!--Falta decir que el tipo de tutoría solicitado sea parte del tipo de tutoria Asignado-->
-                    <label v-if="item.tutor_fijo==0 || (item.tutor_fijo==1 && item.tutor_asignado==0 && tipoTutoriaAsignado)">{{item.nombre}}</label>
-                    <label v-if="(item.tutor_fijo==0 || (item.tutor_fijo==1 && item.tutor_asignado==0 && tipoTutoriaAsignado)) && index<tipoTutoria.length-1" style="margin-right:5px; margin-bottom: 0px;">, </label>
+                    <label v-if="item.tutor_fijo=='0' || (item.tutor_fijo==1 && item.tutor_asignado=='0' && tipoTutoriaAsignado)">{{item.nombre}}</label>
+                    <label v-if="(item.tutor_fijo=='0' || (item.tutor_fijo==1 && item.tutor_asignado=='0' && tipoTutoriaAsignado)) && index<tutor.tipoTutoriasPrograma.length-1" style="margin-right:5px; margin-bottom: 0px;">, </label>
                 </label>
             </div>
             <div style="text-align: right; margin-top: 0px;" id="botones" >
@@ -59,29 +59,32 @@ export default {
             verDispo: false,
         }
     },
-    mounted(){
+    created(){
         this.obtenerTipoTutoriaAceptado();
 
     },
     methods:{
         obtenerTipoTutoriaAceptado(){
-            
-            for(var i=0; i<this.tipoTutoria.length; i++){
+            console.log(this.tutor.nombre);
+            for(let i=0; i<this.tutor.tipoTutoriasPrograma.length; i++){
                 var iguales=false;
                 
-                if(this.tipoTutoria[i].tutor_fijo==0) this.verDispo=true;
-                if(this.tipoTutoria[i].tutor_fijo && this.tipoTutoria[i].tutor_asignado==0){
+                
+                if(this.tutor.tipoTutoriasPrograma[i].tutor_fijo=="0") this.verDispo=true;
+                else if(this.tutor.tipoTutoriasPrograma[i].tutor_fijo=="1" && this.tutor.tipoTutoriasPrograma[i].tutor_asignado=='0'){
                     for(var j=0; j<this.tipoTutoriaAsignado.length; j++){
-                        if(this.tipoTutoria[i].id_tipo_tutoria==this.tipoTutoriaAsignado[j].id_tipo_tutoria){
+                        if(this.tutor.tipoTutoriasPrograma[i].id_tipo_tutoria==this.tipoTutoriaAsignado[j].id_tipo_tutoria){
                             iguales=true;
                             break;
                         }
 
                     }
+                    
                     if(!iguales){
-                        this.tipoTutoria.splice(i,1);
+                        if(this.tutor.nombre=="Emma")console.log(this.tutor.tipoTutoriasPrograma[i], i);
+                        this.tutor.tipoTutoriasPrograma.splice(i,1);i--;
                     }else{
-                        this.tutoriaSolicitar.push(this.tipoTutoria[i]);
+                        this.tutoriaSolicitar.push(this.tutor.tipoTutoriasPrograma[i]);
                     }
                 }
             }
