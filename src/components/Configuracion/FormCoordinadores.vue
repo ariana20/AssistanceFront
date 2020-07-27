@@ -5,10 +5,10 @@
 		<div style="text-align: left;">
 			<div class="row" style="width:100%">
 				<div class="form-inline col-12 col-md-2 col-lg-1">
-					<h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
+					<h5 style="margin-top:5%;margin-bottom:5%">Buscar: </h5>
 				</div>
 				<div class="form-inline col-12 col-md-4">
-					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese nombre del coordinador">
+					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar...">
 				</div>
         <div class="form-inline col-12 col-md-3">
           <select v-on:change="FacultadSel"  class="form-control" style="margin-top:4%"
@@ -44,7 +44,7 @@
           <tbody>
             <tr v-for="(item, index) in coordinadoresFiltrados" :key="index">
               <td>{{item.codigo}}</td>
-              <td>{{item.nombre}}</td>
+              <td>{{item.nombre + " " +item.apellidos}}</td>
               <td>{{item.correo}}</td>
               <td>
                 <div v-for="(lugar,ind) in item.lugares" :key="ind">
@@ -101,12 +101,15 @@ export default {
       facultades:null,
     }
   },
-  created(){
+  mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
     this.showModal();
+    this.listarCoordinadores();
+  },
+  created(){
     this.listarProgramas();
     this.listarFacultades();
-    this.listarCoordinadores();
+    this.$store.state.filtro.query = ''
   },
   computed:{
     nombre:{
@@ -142,6 +145,7 @@ export default {
       this.axios.post('/programa/listarTodo')
         .then(response=>{
           this.programas = response.data
+          this.filtroProg = null
         })
         .catch(e=>{
           console.log(e)
@@ -151,6 +155,7 @@ export default {
       this.axios.post('/programa/facultadesProg')
         .then(response=>{
           this.facultades = response.data
+          this.filtroFacu = null
         })
         .catch(e=>{
           console.log(e)

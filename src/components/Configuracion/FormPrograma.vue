@@ -3,10 +3,10 @@
     <div style="text-align: left;">
       <div class="row" style="width:100%">
         <div class="form-inline col-12 col-md-2 col-lg-1">
-          <h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
+          <h5 style="margin-top:10%;margin-bottom:5%">Buscar: </h5>
         </div>
         <div class="form-inline col-12 col-md-2">
-          <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese nombre del programa">
+          <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar...">
         </div>
         <div class="form-inline col-12 col-md-3">
           <select v-on:change="FacultadSel"  class="form-control" style="margin-top:2%"
@@ -77,14 +77,15 @@ export default {
       facultades:null,
     }
   },
-  created(){
+  mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
+    this.facuSeleccionadoInd = null
+    this.showModal()
+    this.listarProgramas();
+  },
+  created(){
     this.listarFacultades();
-    if(this.$store.state.programas.length == 0) {
-      this.showModal()
-      this.listarProgramas();
-    }
-    else this.programas = this.$store.state.programas;
+    this.$store.state.filtro.query = ''
   },
   computed:{
     nombre:{
@@ -112,6 +113,7 @@ export default {
       this.axios.post('/programa/facultadesProg')
         .then(response=>{
           this.facultades = response.data
+          this.filtroFacu = null
         })
         .catch(e=>{
           console.log(e)
@@ -144,10 +146,10 @@ export default {
         })
     },
     showModal() {
-      //this.$refs['my-modal'].show()
+      this.$refs['my-modal'].show()
     },
     hideModal() {
-      //this.$refs['my-modal'].hide()
+      this.$refs['my-modal'].hide()
     },
   }
 }

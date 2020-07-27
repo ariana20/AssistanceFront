@@ -97,11 +97,8 @@ export default {
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
-    if(this.$store.state.roles === null) {
-      this.showModal()
-      this.listarRoles();
-    }
-    else this.roles = this.$store.state.roles;
+    this.showModal()
+    this.listarRoles();
     this.nombre="";
   },
   computed:{
