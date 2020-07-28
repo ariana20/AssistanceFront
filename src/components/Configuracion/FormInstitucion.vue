@@ -156,7 +156,6 @@ export default {
       
     },
     guardarInstitucion() {
-      this.onUpload()
       let nomVal =this.nombre=='' || this.nombre == null;
       let siglasVal = this.siglas=='' || this.siglas == null;
       let dirVal = this.direccion=='' || this.direccion == null;
@@ -209,6 +208,7 @@ export default {
                     'Tus institución ha sido actualizada.',
                     'success'
                   )
+                  this.onUpload()
                 })
                 .catch(e => {
                   console.log(e.response);
