@@ -31,7 +31,6 @@
             </div>
             <div style=";text-align:center">
               <input type="file" v-on:change="onFileSelected" style="margin-top:20px"><br>
-              <button @click="onUpload" type="button" class="btn btn-info" style="margin-left: -10%;margin-top:20px">Subir</button>
             </div>
           </div>
         </div>
@@ -157,6 +156,7 @@ export default {
       
     },
     guardarInstitucion() {
+      this.onUpload()
       let nomVal =this.nombre=='' || this.nombre == null;
       let siglasVal = this.siglas=='' || this.siglas == null;
       let dirVal = this.direccion=='' || this.direccion == null;
