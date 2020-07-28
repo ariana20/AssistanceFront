@@ -1,7 +1,7 @@
 <template>
     <div class="FormRoles contenedor">
         <div class="row" >
-            <div class="col-12 col-md-4 col-lg-1 form-inline" style="padding-left:28px">
+            <div class="col-12 col-md-4 col-lg-2 form-inline">
                 {{"     "+"Nombre: *"}}
             </div>
             <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 col-md-4 col-lg-1 form-inline">
+            <div class="col-12 col-md-4 col-lg-2 form-inline">
                 Nombre del Contacto: *
             </div>
             <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 col-md-4 col-lg-1 form-inline">
+            <div class="col-12 col-md-4 col-lg-2 form-inline">
                 Correo del Contacto: *
             </div>
             <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 col-md-4 col-lg-1 form-inline">
+            <div class="col-12 col-md-4 col-lg-2 form-inline">
                 Télefono del Contacto: *
             </div>
             <div class="col-12 col-md-6 col-lg-5" v-if="$store.state.visualizacion!=true">
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div v-if="$store.state.tipoActual.nombre == 'Admin' &&  $store.state.visualizacion!=true" class="row" >
-            <div class="col-12 col-md-4 col-lg-1 form-inline">
+            <div class="col-12 col-md-4 col-lg-2 form-inline">
                 Facultad a Asignar: *
             </div>
             <div class="col-12 col-md-6 col-lg-5">
@@ -75,7 +75,7 @@
             </div>
         </div>
         <div v-if="(($store.state.tipoActual.nombre == 'Admin' && (prog) )|| $store.state.tipoActual.nombre == 'Coordinador Facultad') &&  $store.state.visualizacion!=true" class="row">
-            <div class="col-12 col-md-4 col-lg-1 form-inline">
+            <div class="col-12 col-md-4 col-lg-2 form-inline">
                 Programa a Asignar: *
             </div>
             <div class="col-12 col-md-6 col-lg-5">
@@ -95,7 +95,7 @@
         </div>
         <div  class="col-12 botones" style="text-align:center" v-if="$store.state.visualizacion!=true">   
             <button type="button" style="margin:5px" class="btn btn-info" id="btnGuardar" v-on:click="Guardar()">Guardar</button>
-            <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="Regresar()">Cancelar</button>  
+            <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray" v-on:click="Regresar()">Cancelar</button>  
         </div>
         <div  class="col-12 botones" style="text-align:center" v-else>
             <button type="button"  class="btn btn-info" style="border-color:gray;background-color:gray;margin:20px" v-on:click="Regresar()">Regresar</button>  

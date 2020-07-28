@@ -353,7 +353,7 @@ export default {
       }
       Axios.create()
         .post('/usuarios/listar/'+this.id_usuario_entrante).then( response =>{
-          document.getElementById("corr").disabled = true;
+          // document.getElementById("corr").disabled = true;
           // document.getElementById("cod").disabled = true;
           //  console.log('usuario listado para modificar',response);
           this.codigo=response.data.codigo;
@@ -480,8 +480,8 @@ export default {
       document.getElementById("btnGuarda").disabled = true; //inhabilita
       document.getElementById("btnCancela").disabled = true; //inhabilita
 
-      var   expresion2=/\w+@\w+\.+edu.pe/;
-      var   expresion1=/\w+@\w+\.+pe/;
+      var   expresion2=/\w+@pucp.edu.pe/;
+      var   expresion1=/\w+@pucp.pe/;
 
       if(this.nombre=="" ||this.apellidos=="" || this.codigo=="" || this.codigo===null || this.correo=="" || this.estado===null   ){
         //Cuando está vacio todo
@@ -621,6 +621,7 @@ export default {
                   codigo:this.codigo.trim().replace(/\s+/g, ' '), 
                   nombre:this.nombre.trim().replace(/\s+/g, ' '),
                   apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                  correo:this.correo,
                   estado:this.estado,
                   telefono:this.telefono,
                   //como es alumno inserto las condicioes
@@ -636,6 +637,7 @@ export default {
                   codigo:this.codigo.trim().replace(/\s+/g, ' '), 
                   nombre:this.nombre.trim().replace(/\s+/g, ' '),
                   apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                  correo:this.correo,
                   estado:this.estado,
                   telefono:this.telefono,
                 };
@@ -649,6 +651,7 @@ export default {
                   codigo:this.codigo.trim().replace(/\s+/g, ' '), 
                   nombre:this.nombre.trim().replace(/\s+/g, ' '),
                   apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                  correo:this.correo,
                   estado:this.estado,
                   telefono:this.telefono,    
                   // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
@@ -666,6 +669,7 @@ export default {
                   codigo:this.codigo.trim().replace(/\s+/g, ' '), 
                   nombre:this.nombre.trim().replace(/\s+/g, ' '),
                   apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                  correo:this.correo,
                   estado:this.estado,
                   telefono:this.telefono,    
                   // tengo que pasarle que modifique el tipo de rol, si el tutor id4 se modifica el tipo de tutoria
@@ -1202,8 +1206,9 @@ export default {
           }
           else if(response.data.substring(0,20)=='Excepción capturada:'){ //Luego pregunto si es este tipo de excepcion
             // console.log('no entro a data.id y entro a excepcion');
+            this.hideModal()
             Swal.fire({
-              text:"Ha ingresado un código que ya existe. Corrígalo,por favor.",
+              text:"Ha ingresado un código o correo que ya existe. Corrígalo,por favor.",
               icon:"warning",
               confirmButtonText: 'Sí',
               confirmButtonColor:'#0097A7',

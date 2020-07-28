@@ -1,6 +1,9 @@
 <template>
     <div class="contenedor">
-        <div class="top-info">
+        <div class="row">
+            <div class="col-md-2 offset-md-9">
+                <button class="btn btn-secondary col-12" type="button" @click="Regresar">Regresar</button>
+            </div>
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
             <div class="row grid-divider">
@@ -185,6 +188,9 @@ export default ({
         Elegir(item){
             this.solEl = item;
         },
+        Regresar(){
+            this.$router.push('/calendariocitas/cita-agendada')
+        }
     }
 })
 </script>
