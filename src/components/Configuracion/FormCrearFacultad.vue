@@ -458,7 +458,7 @@ export default {
                 response
                 this.hideModal();
                 Swal.fire({
-                  text:"Guardado Exitosa",
+                  text:"Se modificaron los datos con éxito",
                   icon:"success",
                   confirmButtonText: 'OK',
                   confirmButtonColor:'#0097A7',
@@ -508,7 +508,7 @@ export default {
                       response
                       this.hideModal();
                       Swal.fire({
-                        text:"Guardado Exitosa",
+                        text:"Se guardaron los datos con éxito",
                         icon:"success",
                         confirmButtonText: 'OK',
                         confirmButtonColor:'#0097A7',
@@ -631,7 +631,7 @@ export default {
     },
     Eliminar(ind, item){
       Swal.fire({
-          title: '¿Desea eliminar el programa'+item.nombre+'?',
+          title: '¿Desea eliminar el programa '+item.nombre+'?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
