@@ -352,6 +352,11 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewEncuesta.vue')
   },
   {
+    path: '/alumnosasignados',
+    name: 'Alumnos Asignados',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Gestion Periodo/ViewAlumnosAsignados.vue')
+  },
+  {
     path: '/respuesta/:id',
     name: 'Responder Encuesta',
     props: true,
