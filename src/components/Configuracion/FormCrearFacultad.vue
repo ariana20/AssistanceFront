@@ -663,6 +663,12 @@ export default {
         this.programa.coordinador=item.coordinador;
         this.programa.coordinador.nombCompleto=item.coordinador.nombre+" "+item.coordinador.apellidos;  
       }
+      /*
+      else if(item.coordinador==null){
+        this.programa.coordinador=new Object();
+        this.programa.coordinador.nombCompleto="Sin coordinador";
+      }
+      */
       this.programa.id_facultad=item.id_facultad;
       this.programa.id_programa=item.id_programa;
     },

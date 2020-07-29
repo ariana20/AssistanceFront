@@ -65,7 +65,6 @@ export default {
     },
     methods:{
         obtenerTipoTutoriaAceptado(){
-            console.log(this.tutor.nombre);
             for(let i=0; i<this.tutor.tipoTutoriasPrograma.length; i++){
                 var iguales=false;
                 
@@ -81,7 +80,6 @@ export default {
                     }
                     
                     if(!iguales){
-                        if(this.tutor.nombre=="Emma")console.log(this.tutor.tipoTutoriasPrograma[i], i);
                         this.tutor.tipoTutoriasPrograma.splice(i,1);i--;
                     }else{
                         this.tutoriaSolicitar.push(this.tutor.tipoTutoriasPrograma[i]);

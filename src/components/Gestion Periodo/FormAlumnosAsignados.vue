@@ -84,24 +84,26 @@ export default {
   methods:{
 
     listarTipoTutoria() {
-      // Necesito una función que sea según tutor
-      // CAMBIAR DE FUNCION
-      const params = {
-        id_programa : this.$store.state.programaActual.id_programa,
-        nomFacu:this.$store.state.programaActual.facultad.nombre,
-      };
-      axios
-      .post('TipoTutoria/tiposTutoriaPrograma', params)
-        .then(res =>{
-            this.tipoTutoria=res.data;  
+        const params = {
+            idTutor: this.$store.state.usuario.id_usuario,
+            id_programa: this.$store.state.programaActual.id_programa,
+        }
+        axios.post('usuarios/tutoriaTutor', params)
+        .then((response) => {
+            this.tipoTutoria=response.data; 
+            for(var i=0; i<this.tipoTutoria.length; i++){
+                if(this.tipoTutoria[i].tutor_fijo=='0'){
+                    this.tipoTutoria.splice(i,1);
+                    i--;
+                }
+            }
             var tipo= new Object();
             tipo.nombre="Todos";
             tipo.id_tipo_tutoria=0;
-            this.tipoTutoria.push(tipo);          
-        })
-        .catch(e => {
-          console.log(e.response);
-        })
+            this.tipoTutoria.push(tipo);  
+        }).catch(e => {
+            console.log(e.response);
+        });
     },
     listarAlumnos(){
         const params = {
