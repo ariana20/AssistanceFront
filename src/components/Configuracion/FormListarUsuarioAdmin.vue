@@ -15,8 +15,8 @@
 
       <br>
       <div style="width:100%;display:block ruby">
-      <div style="overflow: auto;width:95%;">
-        <table class="table" style="width:99%">
+      <div style="overflow: auto;width:100%;">
+        <table class="table" style="width:100%">
           <thead>
             <tr>
               <th scope="col" style="width:5%">Codigo</th>
