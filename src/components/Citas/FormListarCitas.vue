@@ -388,28 +388,60 @@ export default {
     nuevo(){
       this.$router.push('/Usuario/0');
     },
+
     listarTUsuarios(){
-         let obj = {
-          id_programa: this.$store.state.programaActual.id_programa,
-          id_facultad: this.$store.state.programaActual.id_facultad
-        }
-        this.axios.post('/tipoUsuarios/tiposPrograma',obj)
-          .then(res=>{
-                //Ordenadito
-              let par=res.data;     
-              this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-              this.mispermisos= this.$store.state.permisosUsuario;   
-              console.log(this.$store.state.permisosUsuario); 
-              if(  this.mispermisos.includes('Tutores') ) this.esAlumno=true;
-              if(  this.mispermisos.includes('Sesión de Tutoría') ) this.esTutor =true;
-          })
-          .catch(e=>{             console.log(e);           
-          });
-          this.mispermisos= this.$store.state.permisosUsuario;  
-          console.log(this.mispermisos);
+      let obj = {
+        usuario: this.$store.state.usuario,
+        programa: this.$store.state.programaActual.nombre
+      }
+      if(this.$store.state.permisosUsuario==null){
+        this.axios.post('/usuarios/permisos',obj)
+        .then(res=>{
+          //Ordenadito
+          let par=res.data;     
+          this.tiposUsuarios=par.sort((a, b) => { return a.localeCompare(b);});
+          this.mispermisos= this.tiposUsuarios;
           if(  this.mispermisos.includes('Tutores') ) this.esAlumno=true;
           if(  this.mispermisos.includes('Sesión de Tutoría') ) this.esTutor =true;
+        })
+        .catch(e=>{
+          console.log(e);           
+        });
+      }
+      else{
+        this.mispermisos= this.$store.state.permisosUsuario;
+        if(  this.mispermisos.includes('Tutores') ) this.esAlumno=true;
+        if(  this.mispermisos.includes('Sesión de Tutoría') ) this.esTutor =true;
+      }
     },
+
+
+
+
+
+    
+    // listarTUsuarios(){
+    //      let obj = {
+    //       id_programa: this.$store.state.programaActual.id_programa,
+    //       id_facultad: this.$store.state.programaActual.id_facultad
+    //     }
+    //     this.axios.post('/tipoUsuarios/tiposPrograma',obj)
+    //       .then(res=>{
+    //             //Ordenadito
+    //           let par=res.data;     
+    //           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+    //           this.mispermisos= this.$store.state.permisosUsuario;   
+    //           console.log(this.$store.state.permisosUsuario); 
+    //           if(  this.mispermisos.includes('Tutores') ) this.esAlumno=true;
+    //           if(  this.mispermisos.includes('Sesión de Tutoría') ) this.esTutor =true;
+    //       })
+    //       .catch(e=>{             console.log(e);           
+    //       });
+    //       this.mispermisos= this.$store.state.permisosUsuario;  
+    //       console.log(this.mispermisos);
+    //       if(  this.mispermisos.includes('Tutores') ) this.esAlumno=true;
+    //       if(  this.mispermisos.includes('Sesión de Tutoría') ) this.esTutor =true;
+    // },
     showModal() {
       this.$refs['my-modal'].show()
     },
