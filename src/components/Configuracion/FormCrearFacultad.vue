@@ -49,13 +49,13 @@
               <b-form-input id="correoF" v-model="facultad.correo"></b-form-input>
               </b-col>
           </b-row>
-          <b-row class="my-1">
+          <b-row ref="edPrograma" class="my-1">
               <b-col sm="3">
               <label>Coordinador de Facultad:</label>
               </b-col>
               <b-col sm="8">
               <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombCompleto" ></b-form-input>
-              <b-form-input id="idCoordinadorF" readonly v-else></b-form-input>
+              <b-form-input id="idCoordinadorF" readonly v-else>Sin coordinador</b-form-input>
               </b-col>
 
               
@@ -70,7 +70,7 @@
           </b-container>
           <br>
 
-          <b-container fluid>
+          <b-container  fluid>
           <b-row>
               
               <h4 class="font-weight-bold">Programas de la Facultad:</h4>
@@ -114,7 +114,7 @@
               </b-col>
               <b-col sm="8">
               <b-form-input id="idCoordinador" readonly v-if="programa.coordinador!=null" v-model="programa.coordinador.nombCompleto" ></b-form-input>
-              <b-form-input id="idCoordinador" readonly v-else></b-form-input>
+              <b-form-input id="idCoordinador" readonly v-else>Sin coordinador</b-form-input>
               </b-col>
 
               <b-col sm="1">
@@ -147,12 +147,12 @@
                   <td v-if="item.coordinador!=undefined">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
                   <td v-else>Sin coordinador</td>
                   <td style="text-align: center">
-                    <button class="btn link" style="
+                    <button class="btn link"  style="
                       padding-top: 0px;
                       padding-bottom: 0px;
                       margin-top: 0px;
                       margin-bottom: 0px;
-                    " v-on:click="Editar(item, index)"><b-icon icon="pencil" style="color:#0097A7"></b-icon></button>
+                    " v-on:click="Editar(item, index)"><b-icon icon="pencil" style="color:#0097A7"><a href="#edPrograma" ></a></b-icon></button>
                     <button class="btn link" style="
                       padding-top: 0px;
                       padding-bottom: 0px;
@@ -663,14 +663,18 @@ export default {
         this.programa.coordinador=item.coordinador;
         this.programa.coordinador.nombCompleto=item.coordinador.nombre+" "+item.coordinador.apellidos;  
       }
-      /*
+      
       else if(item.coordinador==null){
-        this.programa.coordinador=new Object();
-        this.programa.coordinador.nombCompleto="Sin coordinador";
+        this.programa.coordinador=null;
       }
-      */
+      
       this.programa.id_facultad=item.id_facultad;
       this.programa.id_programa=item.id_programa;
+
+      var element = this.$refs["edPrograma"];
+      var top=element.offsetTop;
+      window.scrollTo(0,top);
+
     },
 		showModal() {
 			this.$refs['my-modal'].show()
