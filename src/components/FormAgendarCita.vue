@@ -1,14 +1,14 @@
 <template>
-    <div class="formagendarcita contenedor">
+    <div class="formagendarcita container">
         <div class="top-titulo " style="text-align:left;">
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select id="selectBox" class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" v-if="tutores[0]">
+            <select id="selectBox" class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
                     :key="index" 
                     :value="item">
-                    {{ item.nombre + " " + item.apellidos }}
+                    {{ item.usuario.nombre + " " + item.usuario.apellidos }}
                 </option>
             </select>
             <ul class="legend">
@@ -129,6 +129,7 @@ export default {
         this.bloque = "00:"+ this.$store.state.programaActual.hora_bloque + ":00"
         this.$store.state.events = [];
         this.listarTutores();
+
         /*if(this.$store.state.tutorDisponibilidad) {
             //this.tutorSel = this.$store.state.tutorDisponibilidad
             //console.log("storestate tutor: ", this.tutorSel)
@@ -160,21 +161,23 @@ export default {
             nombre: "",
             id_alumno: this.$store.state.usuario.id_usuario,
         };
-        axios.post('/programa/tutoresAlumno', params)
+        axios
+        .post('/programa/tutoresListar', params)
             .then(res =>{
-                this.tutores=res.data;
-                if(this.$store.state.tutorDisponibilidad) {
-                    this.tutores.forEach(element => {
-                        if(element.id_usuario == this.$store.state.tutorDisponibilidad.id_usuario) {
-                            this.tutorSel = element
-                        }
-                    });
-                    this.getReminders();
-                }
+             this.tutores=res.data;
+
+           
+            console.log(res);
             })
             .catch(e => {
             console.log(e.response);
             })
+        if(this.$store.state.tutorDisponibilidad) {
+            console.log(this.$store.state.tutorDisponibilidad);
+            this.tutorSel = this.$store.state.tutorDisponibilidad;
+            console.log(this.tutorSel);
+            console.log("llega");
+        }
         },
         handleClick (arg) {
             if(arg.event.backgroundColor!='#ff6961') {
@@ -194,10 +197,10 @@ export default {
                 this.calendar = this.$refs.fullCalendar.getApi();
                 this.$store.state.events = [];
                 
-                // console.log('tutorSel', this.tutorSel)
+                console.log('tutorSel', this.tutorSel)
                 axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
-                    // console.log('getreminders',response.data)
+                    console.log('getreminders',response.data)
                     var rd = response.data[0]; 
                     var rd2 = response.data[1];
                     var today = new Date()
@@ -237,7 +240,6 @@ export default {
                                 }
                             } else {
                                 if(date1>today) {
-                                    // console.log('id cuando es llenado',rd[i].id_disponibilidad)
                                     this.$store.commit("ADD_EVENT", {
                                         id: rd[i].id_disponibilidad,
                                         title: 'Disponible',
