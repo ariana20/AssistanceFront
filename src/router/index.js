@@ -268,6 +268,14 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewAgendarCita" */ '../views/ViewAgendarCita.vue')
   },  
   {
+    path: '/listadocitas',
+    name: 'Lista de Citas',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ViewAgendarCita" */ '../views/Citas/ViewListarCitas.vue')
+  },  
+  {
     path: '/asignartutor',
     name: 'Asignar Tutor',
     props: true,
@@ -350,6 +358,11 @@ Vue.use(VueRouter)
     path: '/encuestas',
     name: 'Encuestas',
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewEncuesta.vue')
+  },
+  {
+    path: '/alumnosasignados',
+    name: 'Alumnos Asignados',
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Gestion Periodo/ViewAlumnosAsignados.vue')
   },
   {
     path: '/respuesta/:id',

@@ -95,6 +95,11 @@ export default new Vuex.Store({
         icon: 'ion-ios-contacts'
       },
       {
+        text: 'Alumnos Asignados',
+        path: '/alumnosasignados',
+        icon: 'ion-ios-contacts'
+      },
+      {
         text: 'Unidades de Apoyo',
         path: '/unidadesApoyo',
         icon: 'ion-ios-medkit'
@@ -129,6 +134,7 @@ export default new Vuex.Store({
         path: '/agendarcita',
         icon: 'ion-ios-calendar'
       },
+      
       {
         text: 'Registrar Cita',
         path: '/registrarCita',
@@ -138,6 +144,12 @@ export default new Vuex.Store({
         text: 'Calendario',
         path: '/calendariocitas',
         icon: 'ion-ios-calendar'
+      },
+      {
+        text: 'Lista de Citas',
+        path: '/listadocitas',
+        icon: 'ion-ios-list',
+        // ion-ios-calendar-outline
       },
       {
         text: 'Solicitudes',
