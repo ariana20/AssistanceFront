@@ -54,7 +54,8 @@
         Ningún Registro de Programas
       </div>
     </div>
-    <div v-if="$store.state.usuariosA!=null && $store.state.usuariosA.last_page!=1">
+
+    <!-- <div v-if="$store.state.usuariosA!=null && $store.state.usuariosA.last_page!=1">
       <nav aria-label="Page navigation example" class="paginar">
         <ul class="pagination justify-content-center">
           <li class="page-item" v-if="$store.state.usuariosA.current_page > 1">
@@ -113,7 +114,8 @@
           </li>
         </ul>
       </nav>
-    </div>
+    </div> -->
+
     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
         <b-spinner style="width: 3rem; height: 3rem;"/>
