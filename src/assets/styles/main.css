@@ -91,10 +91,7 @@ input:focus {outline: none;box-shadow: none;}
     margin-top:15px;
     text-align:center;
 }
-.contenedor{
-    margin-left:40px;
-    margin-right:40px;
-}
+
 .btn:focus {
     outline:none;
     box-shadow: none;
@@ -109,7 +106,10 @@ input:focus {
     box-shadow: none;
 }
 
-
+.contenedor{
+    margin-left:40px;
+    margin-right:40px;
+}
 @media screen and (max-width: 600px) {
     
     .contenedor{

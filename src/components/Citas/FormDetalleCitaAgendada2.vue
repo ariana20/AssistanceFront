@@ -2,16 +2,16 @@
     <div class="formcitaagendada contenedor">
         <div class="top-info" style="text-align:left;">
             <div id="botones">
-                <button v-if="this.cita[1]=='l' && !this.editar" type="button" class="btn btn-info" @click="editFields">Editar</button>
+                 <button v-if=" !this.editar && this.$store.state.citaDatos.alumnos[0].pivot.asistencia=='pen'" type="button" class="btn btn-info" @click="editFields">Editar</button>
                 <button v-else-if="this.editar" type="button" class="btn btn-info" @click="guardar">Guardar</button>
-                
+                 
                 
                 <button type="button" class="btn btn-secondary" @click="cancelar">Cancelar</button>
             </div>
-                <div class="botones list-data"><div id="left">Día:          </div> <div id="right"> {{ this.event.extendedProps.fecha }} </div></div>
-                <div class="list-data"><div id="left">Hora Inicio:  </div> <div id="right"> {{ this.event.start | formatHour}} </div></div>
-                <div class="list-data"><div id="left">Hora Fin:     </div> <div id="right"> {{ this.event.end | formatHour }} </div></div>
-                <div class="list-data"><div id="left">Tipo Tutoría: </div> <div id="right"> {{ this.event.extendedProps.description }} </div></div>
+                <div class="botones list-data"><div id="left">Día:          </div> <div id="right"> {{ this.$store.state.citaDatos.fechaIni }} </div></div>
+                 <div class="list-data"><div id="left">Hora Inicio:  </div> <div id="right"> {{ this.$store.state.citaDatos.fechaFin }} </div></div>
+               <!-- <div class="list-data"><div id="left">Hora Fin:     </div> <div id="right"> {{ this.event.end | formatHour }} </div></div>-->
+                <div class="list-data"><div id="left">Tipo Tutoría: </div> <div v-if="this.tutoriaTutor!=null" id="right"> {{ this.tutoriaTutor.nombre }} </div></div> 
                 
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
@@ -128,7 +128,7 @@ import Swal from 'sweetalert2'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import Vue from 'vue'
-import emailjs from 'emailjs-com';
+//import emailjs from 'emailjs-com';
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
 
@@ -154,7 +154,7 @@ export default Vue.extend ({
     data: function () {
         return {
             event: this.$store.state.curEvent,
-            condicion_alumno: this.$store.state.curEvent.extendedProps.alumno.condicion_alumno.toUpperCase(),
+            //condicion_alumno: this.$store.state.curEvent.extendedProps.alumno.condicion_alumno.toUpperCase(),
             fechIni: this.fecha,
             descripcion: null,
             motivo: null,
@@ -186,35 +186,62 @@ export default Vue.extend ({
             alumnosEli:[],
             miUsuario:this.$store.state.usuario, 
             mipermisosUsuario:null,
+            tutoriaTutor:null,
         }
     },
     mounted(){
        
         //LLENANDO LOS CAMPOS CUANDO HAY INFO EN LA SESION
-     
-        // if(this.cita[1] != "l") {
-        //     this.descripcion = this.cita[1].resultado
-        //     if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
-        //         this.asistencia = true
-        //     }
-        //   
-        //     for(var i in this.cita[1].motivo_consultas) {
-        //         this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
-        //        
-        //         this.addMotivos()
-        //     }
+        /*
+        console.log('Cita-: ',this.cita);
+            console.log('Cita1: ',this.cita[1]);
+         if(this.cita[1] != "l") {
+             this.descripcion = this.cita[1].resultado
+             if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
+                 this.asistencia = true
+             }
+           
+             for(var i in this.cita[1].motivo_consultas) {
+                 this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
+                
+                 this.addMotivos()
+             }
         
         //    
         //     //si hay info de la sesion quiere decir que ha asistido a su 
-        // }
-      
-        this.disableFields()
+         }
+         */
+        axios.post('motivosConsulta/listarTodo')
+        .then( response => {
+           
+            this.motivos = response.data;
+            // console.log('M',this.motivos);              
+            if(this.cita==null) this.llenarTT();
+            // console.log('?M mount', this.motivos!=null);
+            // console.log('?C mount',this.cita!=null );
+            if(this.cita!=null && this.motivos!=null){
+                if(this.cita[1] != "l") {   
+                    this.descripcion = this.cita[1].resultado;    
+                    for(var i in this.cita[1].motivo_consultas) {
+                        this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
+                        this.addMotivos();
+                    }
+            }}
+          
+        })
+        .catch(e => {
+          console.log('catch motivos:',e);
+        });
         
+        this.disableFields();
+        this.fillFields();
+        
+       
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
         .then(response => {
             this.us = response.data
         }).catch(e => {
-            console.log(e.response);
+            console.log(e);
         });
       
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
@@ -224,54 +251,70 @@ export default Vue.extend ({
                 }
                 this.hideModal()
             }).catch(e => {
-                console.log(e.response);
+                console.log(e);
                 this.hideModal()
             });
-        axios.post('motivosConsulta/listarTodo')
-            .then( response => {
-                this.motivos = response.data;
-                this.hideModal()
-            })
-            .catch(e => {
-            console.log(e.response);
-        });
-    axios.post('motivosConsulta/listarTodo')
-        .then( response => {
-            this.motivos = response.data;
-            this.fillFields()
-        })
-        .catch(e => {
-          console.log(e.response);
-        });
+
+        
+       
     
     },
     methods: {
+        llenarTT(){
+            // console.log('En tt');
+            this.showModal();
+            axios.post('disponibilidades/mostrarCita2', 
+                {idDisponibilidad:this.$store.state.citaDatos.id_disponibilidad})
+            .then((response) => {
+            
+                this.tutoriaTutor=response.data[0].tipo_tutoria;
+                //  console.log('TutoriaTutor: ',this.tutoriaTutor);
+                 this.cita=response.data;
+               
+                // console.log('Cita:',this.cita);
+                // console.log('?M tt', this.motivos!=null);
+                // console.log('?C tt',this.cita!=null );
+                if(this.cita!=null && this.motivos!=null){
+                        if(this.cita[1] != "l") {                            
+                            this.descripcion = this.cita[1].resultado;    
+                            for(var i in this.cita[1].motivo_consultas) {
+                                this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
+                                this.addMotivos();
+                            }
+                    }}
+                this.hideModal();
+            }).catch(e => {
+                console.log('catch: ',e);
+                this.hideModal();
+            });
+            
+            
+        },
         fillFields() {
-             console.log('cita: ',this.cita);
-            if(this.cita[0].cita_x_usuarios.length > 1) { //Solo muestro varios alumnos
-                for(let i in this.cita[0].cita_x_usuarios){
-                     this.listAlumnosCod.push(this.cita[0].cita_x_usuarios[i].codigo);
-                    this.listAlumnosId.push(this.cita[0].cita_x_usuarios[i].id_usuario);
+            // console.log('cita: ',this.cita);
+            // console.log('CitaDatos: ',this.$store.state.citaDatos);
+            let alumnosCita=this.$store.state.citaDatos.alumnos;
+            // console.log(alumnosCita);
+            if(alumnosCita.length > 1) { //Solo muestro varios alumnos
+                for(let i in alumnosCita){
+                     this.listAlumnosCod.push(alumnosCita[i].codigo);
+                    this.listAlumnosId.push(alumnosCita[i].id_usuario);
                     var infoAlumno=new Object();
-                    if(this.cita[0].cita_x_usuarios[i].pivot.asistencia == 'asi') {
+                    
+                    if(alumnosCita[i].pivot.asistencia == 'asi') {
                         infoAlumno.asistencia = true;
                     }
-                    else if(this.cita[0].cita_x_usuarios[i].pivot.asistencia == 'noa' || this.cita[0].cita_x_usuarios[i].pivot.asistencia == 'pen' ) {
+                    else if(alumnosCita[i].pivot.asistencia == 'noa' || alumnosCita[i].pivot.asistencia == 'pen' ) {
                         infoAlumno.asistencia = false;
+                        
                     }                    
-                    infoAlumno.nombres=this.cita[0].cita_x_usuarios[i].nombre+" " +this.cita[0].cita_x_usuarios[i].apellidos;
+                    infoAlumno.nombres=alumnosCita[i].nombre+" " +alumnosCita[i].apellidos;
                     this.listAlumnosNom.push(infoAlumno);
                     //Podría hacerlo más responsive si todo lo junto en un solo arreglo e imprimo por i
                    }             
             }
-
-            if(this.cita[1] != "l") {   
-                this.descripcion = this.cita[1].resultado;    
-                for(var i in this.cita[1].motivo_consultas) {
-                    this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
-                    this.addMotivos()
-                }
-            }
+            //console.log('1 ',this.cita);
+            
         },
         enableFields() {
 
@@ -312,16 +355,22 @@ export default Vue.extend ({
                         this.listMotivosId= [];
                         this.motivosBorrados=[];
                         this.selectedUnidadApoyo= null;
+                        this.cita=undefined;
+                        this.$store.state.curSesion=null;
+                        this.$store.state.citaDatos=null;
                         //lo redirigo
-                        this.$router.push('/calendariocitas');
+                        this.$router.push('/listadocitas');
                     } 
                 })
         },
+        
         editFields: function () {
             if(this.cita[1]=='l') {
-                this.enableFields()
-                this.editar=true
+                this.enableFields();
+                this.editar=true;
             }
+            
+
             
         },
         guardar: function () {
@@ -332,26 +381,29 @@ export default Vue.extend ({
                 else if(this.listAlumnosNom[i].asistencia==null || this.listAlumnosNom[i].asistencia==false  )  { 
                     this.asistencia[i]="noa"; 
                      faltaron=true; //Por lo menos faltó uno
-                     console.log('o es false o el null');
+                    //  console.log('o es false o el null');
                 }
                 
             }
             // console.log(faltaron);
             //varios un alumno
+            console.log(this.$store.state.citaDatos);
             const sesion_params = {
-                id_cita: this.$store.state.idCita,
+                id_cita:this.$store.state.citaDatos.props,
                 resultado: this.descripcion,
                 usuario_creacion: this.cita[1].usuario_creacion,
-                usuario_actualizacion: this.cita[1].usuario_actualizacion,
+                usuario_actualizacion:this.$store.state.usuario.id_usuario,
                 idAlumnos: this.listAlumnosId,
                 asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
             };
-                // console.log(this.listMotivos.length);
+                 console.log(sesion_params);
+
+            if(faltaron==false){
                 if(this.listMotivos.length > 0) {
                        
                             
-                            if(this.descripcion!=null  && faltaron==false ) {
+                            if(this.descripcion!=null  ) {
                                
                                 if(this.selectedUnidadApoyo) {
                                     this.enviarCorreo(this.selectedUnidadApoyo)
@@ -369,10 +421,10 @@ export default Vue.extend ({
                                             showConfirmButton: true,
                                         }) 
                                         //lo redirigo a los calendarios
-                                        this.$router.push('/calendariocitas');
+                                        this.$router.push('/listadocitas');
                                     })  
                                     .catch(e => {
-                                        console.log(e.response);
+                                        console.log(e);
                                         Swal.fire({
                                                     text:"Estamos teniendo problemas al guardar la cita. Vuelve a intentar en unos minutos.",
                                                     icon:"warning",
@@ -391,8 +443,24 @@ export default Vue.extend ({
                                         showConfirmButton: true,
                                     })
                             }
-                            else if (faltaron){
-                                    Swal.fire({
+                           
+                                 
+                          
+                   
+                
+                }
+                else {
+                    Swal.fire({
+                        text:"Debe seleccionar por lo menos un motivo",
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                }
+            }
+            else if(faltaron==true){
+                                 Swal.fire({
                                         text:"Por lo menos un alumno no asisitó a la cita. ¿Está seguro que desea guardar",
                                         icon:"warning",
                                         confirmButtonText: 'Sí',
@@ -416,9 +484,9 @@ export default Vue.extend ({
                                                         showConfirmButton: true,
                                                     }) 
                                                  //lo redirigo a los calendarios
-                                                 this.$router.push('/calendariocitas');
+                                                 this.$router.push('/listadocitas');
                                              })  .catch(e => {
-                                                 console.log(e.response);
+                                                 console.log('catch sesion: ',e);
                                                  Swal.fire({
                                                              text:"Estamos teniendo problemas al guardar la cita. Vuelve a intentar en unos minutos.",
                                                              icon:"warning",
@@ -431,19 +499,7 @@ export default Vue.extend ({
                                         }   //fin del if result.value
                                     
                                     }) //fin del then re
-                          
-                    }
-                
-                }
-                else {
-                    Swal.fire({
-                        text:"Debe seleccionar por lo menos un motivo",
-                        icon:"error",
-                        confirmButtonText: 'OK',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                    })
-                }
+            }
             
         },
         onCodigoChange: function () {
@@ -456,7 +512,8 @@ export default Vue.extend ({
             }
         },
         addMotivos: function () {
-           
+        //    console.log('selectMotivo: ',this.selectedMotivo);
+        //    console.log('motivos: ',this.motivo);
             for(var i in this.motivos)
                 if(this.selectedMotivo==this.motivos[i].id_motivo_consulta) {
                     this.listMotivos.push(this.motivos[i].nombre);
@@ -480,6 +537,7 @@ export default Vue.extend ({
 
             }
         },
+        /*
         enviarCorreo(unidad){
             let mensaje = "Se te ha derivado a "+unidad.nombre+":<br>"
                             +"Nombre Contacto: "+unidad.nombre_contacto+"<br>"
@@ -497,7 +555,7 @@ export default Vue.extend ({
                   }, (error) => {
                       console.log('FAILED...', error);
                   });
-        },
+        },*/
         Perfil(tipo){
             if(tipo == 1){
                 this.$store.state.verPdf=false;this.$store.state.verCitas=true;this.$store.state.verPlan=false;
@@ -508,7 +566,7 @@ export default Vue.extend ({
             if(tipo == 3){
                 this.$store.state.verPdf=false;this.$store.state.verCitas=false;this.$store.state.verPlan=true;
             }
-            this.$router.push('/perfil/'+this.event.extendedProps.alumno.id_usuario)
+            //this.$router.push('/perfil/'+this.event.extendedProps.alumno.id_usuario)
         },
         showModal() {
             this.$refs['my-modal'].show()
@@ -536,8 +594,7 @@ export default Vue.extend ({
            }
         
         },  
-
-       
+              
        
         listarAlumnosxProg(){
             this.showModal();

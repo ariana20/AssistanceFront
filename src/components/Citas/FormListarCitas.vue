@@ -2,15 +2,24 @@
   <div class="FormListarUsuario contenedor"  >
     <!-- para que lo vea bien un tutor y un alumno -->
    <div  >  
+
         <!-- Cabeceras  -->
         <div class="row"  >
                 <h5  class="col-12 col-sm-4 col-md-2"  style="text-align:left;margin-top:5px" >Tipo de cita:</h5>   
                 <div class="col-11 col-sm-8 col-md-3" style="text-align:left;padding:0px" >
-                    <select v-model="tipoCitaSeleccionada" class="col-12 col-sm-10 col-md-10 form-control" style="cursor:pointer;margin-left:15px;margin-right:15px"  @change="listarCitas()" >
+                    <select v-if="this.esTutor==true" v-model="tipoCitaSeleccionada" class="col-12 col-sm-10 col-md-10 form-control" style="cursor:pointer;margin-left:15px;margin-right:15px"  @change="listarCitas()" >
                       <option value="no" hidden selected  >Seleccionar</option>
-                      <option class="col-12 col-sm-10 col-md-10"    v-for="(tipoU,index) in tipoCita" :value="tipoU" v-bind:key="index" style="cursos:pointer;" >
-                      {{ tipoU}}
+                      <option  class="col-12 col-sm-10 col-md-10"    v-for="(tipoU,index) in tipoCitaTutor" :value="tipoU.value" v-bind:key="index" style="cursos:pointer;" >
+                      {{ tipoU.text}}
                       </option>
+                      
+                    </select>
+                    <select v-if="this.esAlumno==true && this.esTutor==false" v-model="tipoCitaSeleccionada" class="col-12 col-sm-10 col-md-10 form-control" style="cursor:pointer;margin-left:15px;margin-right:15px"  @change="listarCitas()" >
+                      <option value="no" hidden selected  >Seleccionar</option>
+                      <option  class="col-12 col-sm-10 col-md-10"    v-for="(tipoU,index) in tipoCitaAlumno" :value="tipoU.value" v-bind:key="index" style="cursos:pointer;" >
+                      {{ tipoU.text}}
+                      </option>
+                      
                     </select>
                 </div>
                
@@ -18,11 +27,12 @@
                  <div  class="col-12 col-sm-8 col-md-3" >
                   <date-picker style="left:0px" class="wide-date-example"
                       v-model="periodo" 
+                      v-on:change="listarCitas()"
                       width="20" :lang="lang" 
                       format="DD/MM/YYYY"
                       range 
                       placeholder="Selecciona Rango de Fechas"
-                      :disabled-date="disabledAfterToday"
+                      
                       @input="handlePeriodChange"
                       input-class="form-control">
                   </date-picker>
@@ -32,7 +42,7 @@
          <!-- Para alumno -->
          <div v-if="esAlumno==true">
             <h5 style="text-align:left;margin-top:5px;" ><strong  >  Citas con tutores </strong></h5>
-            <div style="overflow: auto;">
+            <div style="overflow: auto;" v-if="this.citasAlumno.length>=1">
                   <table responsive class="table" style="text-align:left" >
                       <thead>
                           <tr>
@@ -44,34 +54,79 @@
                           </tr>
                       </thead>
                       <tbody>
-                        
+                        <tr v-for="(item, index) in citasAlumno"  :key="index">
+                            <td >{{item.nombre +' ' + item.apellidos}}</td>                            
+                            <td >{{item.fecha}}</td>
+                            <td >{{item.hora_inicio}}</td>
+                            <td >{{item.tipo_de_cita}}</td>
+
+                        </tr>
                       </tbody>
                   </table>
-            </div>    
+            </div> 
+            <div v-else >{{"No hay citas del tipo "+this.tipoCitaSeleccionada+ " en el rango de fechas seleccionado."}} </div>
+           
          </div>    
          <!-- Fin de lista de citas de alumno   -->
 
          <!-- Para tutor-->
          <div v-if="esTutor==true">
             <h5 style="text-align:left;margin-top:5px;" ><strong  > Citas con alumnos</strong></h5>
-            <div style="overflow: auto;">
+            <div style="overflow: auto;" v-if="this.citasTutor.length>=1">
                   <table responsive class="table" style="text-align:left" >
                       <thead>
                           <tr> 
-                              <th scope="col" style="width:120px">Fecha</th>
-                              <th scope="col" style="width:120px">Hora</th>
-                              <th scope="col" style="width:120px">Tipo de Cita</th>
-                              <th scope="col" style="width:200px">Alumno(s)</th>
+                              <th scope="col" style="width:50px">Fecha</th>
+                              <th scope="col" style="width:50px">Hora</th>
+                              <th scope="col" style="width:50px">Tipo de Cita</th>
+                              <th scope="col" style="width:100px;text-align:left">Alumno(s)</th>
+                              <th scope="col" style="width:50px;text-align:left">Detalle</th>
                               <!-- <th scope="col">Detalle</th> -->
                           </tr>
                       </thead>
-                      <tbody>
-                        
+                      <tbody >
+                          <tr  v-for="(item, index) in citasTutor"  :key="index">
+                                                        
+                                <td >{{item.fecha}}</td>
+                                <td >{{item.hora_inicio}}</td>
+                                <td >{{item.tipo_de_cita}}</td>
+                                <td style="width:40%">
+                                  <div class="row">
+                                    <div v-for="(item2, index2) in item.cita_x_usuarios"  :key="index2">
+                                        <div v-if="index2!=item.cita_x_usuarios.length -1">{{item2.nombre +' ' + item2.apellidos+', '}}</div>
+                                        <div v-else>{{item2.nombre +' ' + item2.apellidos}}</div>
+                                    </div>
+                                  </div>
+                                </td>
+                              <td  style=";font-size:30px;text-align:left;
+                                  padding-top: 0px;
+                                  padding-bottom: 0px;
+                                  margin-top: 0px;
+                                  margin-bottom: 0px;
+                                ">
+                                    <h6 v-if="item.tipo_de_cita=='Cancelada'"  style="text-align:left;padding-top: 12px;">
+                                     Cancelada
+                                    </h6>
+                                    <!-- No asistió -->
+                                    <!-- {{item.cita_x_usuarios[0].pivot.asistencia}} -->
+                                   <h6 v-else-if="item.cita_x_usuarios.length==1 && item.cita_x_usuarios[0].pivot.asistencia=='noa'"  style="text-align:left;padding-top: 12px;">
+                                     No asistió
+                                      
+                                    </h6> 
+                                     <div v-else-if="item.tipo_de_cita!='Cancelada'">
+                                      <b-icon  icon="card-checklist" style="color:#009878;width:25px; height:25px;cursor:pointer" @click="detalle(index)"/>
+                                     </div>
+
+                              </td>
+                            </tr>
+                     
+                        <!-- <tr v-else>No hay datos </tr> -->
                       </tbody>
+                    
                   </table>
             </div>    
-         </div>    
-         <!-- Fin de lista de citas detutor   -->
+           <div v-else >{{"No hay citas del tipo "+this.tipoCitaSeleccionada+ " en el rango de fechas seleccionado."}} </div>
+         </div>             <!-- Fin de lista de citas detutor   -->
 
 
     </div>     <!-- fin del contenedor -->
@@ -128,7 +183,8 @@ export default {
 				'last_page': 0,
 				'from': 0,
 				'to': 0
-			},
+      },
+      
 			offset: 3, 
       miUsuario:this.$store.state.usuario, //Para sacar el id usuario
       miProg:this.$store.state.programaActual, //Para sacar el id del programa
@@ -136,12 +192,17 @@ export default {
       //Lista de citas del tutor
       citasTutor:[],
       esTutor:false,
+      alumnosxcita:[],
+      tutoriaTutor:null,
       //Lista de citas del alumno
       citasAlumno:[],
       esAlumno:false,
       //Cbx's
       tipoCitaSeleccionada:"no",
-      tipoCita:null,
+      tipoCitaTutor:null,
+      //Cbx's
+      // tipoCitaSeleccionada:"no",
+      tipoCitaAlumno:null,
       //fechas
      
       periodo:'',
@@ -161,8 +222,8 @@ export default {
                 monthBeforeYear: true,
       },
        //datepicker
-      inicio: new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
-      fin: new Date(),
+      inicio: new Date(new Date().getTime() - 21 * 24 * 3600 * 1000),
+      fin: new Date(new Date().getTime() + 7 * 24 * 3600 * 1000),
 
 
     }
@@ -209,17 +270,30 @@ export default {
   mounted(){
       
     if(this.$store.state.usuario==null) this.$router.push('/login'); 
-       
+   
     
-    this.tipoCita=["Realizada","Cancelada","Pendiente"];
+    // this.tipoCita=["Realizada","Cancelada","Pendiente"];
+    this.tipoCitaTutor=[
+        {value: 'Registrada',text: "Registrada"}, //guardo el value
+        {value: 'Cancelada',text: "Cancelada"},
+        {value: 'Próxima',text: "Próxima"},
+        {value: 'Pendiente',text: "Pendiente"},
+        {value: '',text: "Todos"},
+      ];
+      this.tipoCitaAlumno=[
+        {value: 'Registrada',text: "Registrada"}, //guardo el value
+        {value: 'Cancelada',text: "Cancelada"},
+        {value: 'Próxima',text: "Próxima"},
+        {value: '',text: "Todos"},
+      ];
     document.querySelector("#container > div > div.FormListarUsuario.contenedor > div > div > div > div > div > input").style.borderRadius = "1.25rem"; 
     document.querySelector("#container > div > div.FormListarUsuario.contenedor > div > div > div > div > div > input").style.border= "0.5px solid #757575";    
     document.querySelector("#container > div > div.FormListarUsuario.contenedor > div > div > div > div > div > input").style.fontWeight = "400";
     document.querySelector("#container > div > div.FormListarUsuario.contenedor > div > div > div > div > div > input").style.fontSize = "1rem";
     document.querySelector("#container > div > div.FormListarUsuario.contenedor > div > div > div > div > div > input").style.height = "2.4em";
-    this.listarTUsuarios();
+    this.listarTUsuarios(1);
     
-    this.listarCitas(); 
+    //this.listarCitas(1); 
 
 
 
@@ -228,86 +302,128 @@ export default {
   methods:{
 		changePage: function(page){
       this.paginate.current_page=page;
-      this.listarTUsuarios();
-      this.listarCitas(page);//trae un nuevo listadp      /////paginado
+      this.listarTUsuarios(page);
+      //this.listarCitas(page);//trae un nuevo listadp      /////paginado
       event.preventDefault();
       
 		},
 
     listarCitas(page) { /////paginado
-    // this.showModal();
- 
-     //  var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
-    
-     let params ={
-       id_usuario:this.miUsuario.id_usuario,
-      //  fecha_ini:"2020-06-12",
-      //  fecha_fin:"2020-08-12",
-       fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
-       fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
-       tipo:this.tipoCitaSeleccionada,
-       id_programa:this.miProg.id_programa,
-     }  
-    
-     if (this.esTutor ==true) {//Para tutor 
-        let url='/citas/listCitaTutor/'+'?page='+page;  
-        axios.post(url,params) 
-        .then(res =>{        
-          //ordenado this.mispermisos
-          let par=res.data.data; 
-          //para ordenar
-            // this.citasTutor=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
-          this.citasTutor=par;
-          this.esTutor=true;
-          this.paginate=res.data.paginate;/////paginado
-          //this.hideModal();
-                   
-        })
-        .catch(e => {
-          console.log('catch listar',e.response);
-           //  this.hideModal();
-          //Swal de problema
-           Swal.fire({
-                    text:"Estamos teniendo problemas al listar las citas. Vuelve a intentar en unos minutos.",
+    // if(this.esTutor==false && this.esAlumno==false) {this.listarTUsuarios();}
+    // page=1;
+      
+
+      //  var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
+      if(this.tipoCitaSeleccionada=="no") this.tipoCitaSeleccionada="";
+      if(this.periodo[0]==null && this.periodo[1]==null ){
+                Swal.fire({
+                    text:"Seleccione una fecha para actualizar el listado de citas",
                     icon:"warning",
-                    confirmButtonText: 'Sí',
+                    confirmButtonText: 'OK',
                     confirmButtonColor:'#0097A7',
                     showConfirmButton: true,
-           });
-
-        })
+               })
+               this.hideModal();
       }
-      if (this.esAlumno==true) {//Para alumno
-        let url='/citas/listCitaAlu/'+'?page='+page;  
-        axios.post(url,params) 
-        .then(res =>{        
-          //ordenado 
-          let par=res.data.data; 
-          //para ordenar
-            // this.citasAlumno=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
-          this.citasAlumno=par;
-          this.esAlumno=true;
-          //Preguntar si es null y si es tutor,luego paginar
-          this.paginate=res.data.paginate;/////paginado
-          this.hideModal();
-                   
-        })
-        .catch(e => {
-          console.log('catch listar',e.response);
-             this.hideModal();
-          //Swal de problema
-           Swal.fire({
-                    text:"Estamos teniendo problemas al listar las citas. Vuelve a intentar en unos minutos.",
-                    icon:"warning",
-                    confirmButtonText: 'Sí',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-           });
+      else{
+        this.showModal();
+          let params ={
+          id_usuario:this.miUsuario.id_usuario,
+          //  fecha_ini:"2020-06-12",
+          //  fecha_fin:"2020-08-12",
+          fecha_ini:moment(this.periodo[0]).format('YYYY-MM-DD'),
+          fecha_fin:moment(this.periodo[1]).format('YYYY-MM-DD'),
+          tipo:this.tipoCitaSeleccionada,
+          id_programa:this.miProg.id_programa,
+        }  
+        //  console.log(this.esTutor);
+        //  console.log(this.esAlumno);
+      
+        if (this.esTutor ==true) {//Para tutor 
+          // console.log('Es tutor');
+          let url='/citas/listCitaTutor'+'?page='+page;  
+          axios.post(url,params) 
+          .then(res =>{        
+            //ordenado this.mispermisos
+            // console.log(res);
+          if(res.data!="") {
+              let par=res.data.tasks.data; 
+              // console.log(par);
+              //para ordenar
+              this.citasTutor=par;
+              
+              this.esTutor=true;
+              this.paginate=res.data.paginate;/////paginado
+              //  console.log('Pivot:',   this.citasTutor[6].cita_x_usuarios[0].pivot);
+          }
+          else{
+              this.citasTutor="";
+              this.paginate='';
+          }
+            this.hideModal();//console.log(2);
+                    
+          })
+          .catch(e => {
+            console.log('catch listar',e);
+              this.hideModal();//console.log(3);
+            //Swal de problema
+            Swal.fire({
+                      text:"Estamos teniendo problemas al listar las citas. Vuelve a intentar en unos minutos.",
+                      icon:"warning",
+                      confirmButtonText: 'Sí',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+            });
 
-        })
+          })
+        }
+        if (this.esAlumno==true) {//Para alumno
+          // console.log('Es alumno');
+          let url='/citas/listCitaAlu'+'?page='+page;  
+          // let url='/citas/listCitaAlu';  
+          axios.post(url,params) 
+          .then(res =>{        
+            //ordenado 
+            // console.log(res);        
+              if(res.data!="") {
+                  
+                let par=res.data.tasks.data; 
+                // console.log(par);
+                this.citasAlumno=par;
+                this.esAlumno=true;
+                //Preguntar si es null y si es tutor,luego paginar
+                this.paginate=res.data.paginate;/////paginado
+              }
+              else {
+                this.citasAlumno="";
+                this.paginate='';
+              }
+            this.hideModal();//console.log(4);
+                    
+          })
+          .catch(e => {
+            console.log('catch listar',e);
+              this.hideModal();//console.log(5);
+            //Swal de problema
+            Swal.fire({
+                      text:"Estamos teniendo problemas al listar las citas. Vuelve a intentar en unos minutos.",
+                      icon:"warning",
+                      confirmButtonText: 'Sí',
+                      confirmButtonColor:'#0097A7',
+                      showConfirmButton: true,
+            });
+
+          })
+
+
+        }
+        this.hideModal();
+
+
 
 
       }
+      
       //Si es ambos(JP), ambas listas le van a aparecer
       //Cada lista tendrá un encabezado por si sucede ese caso jeje
       //Creo que mato al paginado con dos listas 
@@ -385,11 +501,9 @@ export default {
 
     
     },
-    nuevo(){
-      this.$router.push('/Usuario/0');
-    },
 
-    listarTUsuarios(){
+
+    listarTUsuarios(page){
       let obj = {
         usuario: this.$store.state.usuario,
         programa: this.$store.state.programaActual.nombre
@@ -401,47 +515,27 @@ export default {
           let par=res.data;     
           this.tiposUsuarios=par.sort((a, b) => { return a.localeCompare(b);});
           this.mispermisos= this.tiposUsuarios;
+          // console.log(this.mispermisos);
           if(  this.mispermisos.includes('Tutores') ) this.esAlumno=true;
           if(  this.mispermisos.includes('Sesión de Tutoría') ) this.esTutor =true;
+          this.listarCitas(page);
         })
         .catch(e=>{
-          console.log(e);           
+          console.log('catch Permisos: ',e);           
         });
       }
       else{
-        this.mispermisos= this.$store.state.permisosUsuario;
-        if(  this.mispermisos.includes('Tutores') ) this.esAlumno=true;
-        if(  this.mispermisos.includes('Sesión de Tutoría') ) this.esTutor =true;
+          this.mispermisos= this.$store.state.permisosUsuario;
+          // console.log(this.mispermisos);
+          if(  this.mispermisos.includes('Tutores') ) this.esAlumno=true;
+          if(  this.mispermisos.includes('Sesión de Tutoría') ) this.esTutor =true;
+          this.listarCitas(page);
       }
+      // if(this.esTutor==true || this.esAlumno==true) this.listarCitas();
     },
 
 
 
-
-
-    
-    // listarTUsuarios(){
-    //      let obj = {
-    //       id_programa: this.$store.state.programaActual.id_programa,
-    //       id_facultad: this.$store.state.programaActual.id_facultad
-    //     }
-    //     this.axios.post('/tipoUsuarios/tiposPrograma',obj)
-    //       .then(res=>{
-    //             //Ordenadito
-    //           let par=res.data;     
-    //           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-    //           this.mispermisos= this.$store.state.permisosUsuario;   
-    //           console.log(this.$store.state.permisosUsuario); 
-    //           if(  this.mispermisos.includes('Tutores') ) this.esAlumno=true;
-    //           if(  this.mispermisos.includes('Sesión de Tutoría') ) this.esTutor =true;
-    //       })
-    //       .catch(e=>{             console.log(e);           
-    //       });
-    //       this.mispermisos= this.$store.state.permisosUsuario;  
-    //       console.log(this.mispermisos);
-    //       if(  this.mispermisos.includes('Tutores') ) this.esAlumno=true;
-    //       if(  this.mispermisos.includes('Sesión de Tutoría') ) this.esTutor =true;
-    // },
     showModal() {
       this.$refs['my-modal'].show()
     },
@@ -456,7 +550,55 @@ export default {
             today.setHours(0, 0, 0, 0);
             return date > today;
     },
+    detalle(indice){
+      //Tengo que pasarle cosas
+         let cita;
+       if(this.esTutor==true){
+        cita=this.citasTutor[indice]; 
+         this.$store.state.curSesion=null;    
+         /*
+          cita_x_usuarios: Array(x)
+          fecha: (...)
+          hora_inicio: (...)
+          id_cita: (...)
+          id_disponibilidad: 119
+          tipo_de_cita: ""
+         */
+        axios.post('disponibilidades/mostrarCita2', {idDisponibilidad:cita.id_disponibilidad})
+            .then((response) => {
+                 this.$store.state.curSesion=  response.data;        
+           
+            }).catch(e => {
+                console.log('catch: ',e);
+            
+            });
+          
+        
+            this.$store.state.citaDatos={
+                        props:cita.id_cita,
+                        id_disponibilidad:cita.id_disponibilidad,
+                        fechaIni:cita.fecha,
+                        fechaFin:cita.hora_inicio,
+                        id_tutor: this.$store.state.usuario.id_usuario,
+                        tttutorSel:null,
+                        isGray:false,
+                        alumnos:cita.cita_x_usuarios,///////////agregar allow 
+                        pantalla:'listado',
 
+            };   
+            if(cita.cita_x_usuarios.length>1){ 
+              indice=null;
+              this.$router.push('/listadocitas/cita-agendada-alumnos');
+              // console.log('CitaDatos:', this.$store.state.citaDatos);
+              
+            }       
+            else if(cita.cita_x_usuarios.length==1){ 
+              this.$router.push('/listadocitas/cita-agendada');
+              
+            }       
+       }
+
+    }
   }
 }
 </script>

@@ -166,9 +166,10 @@ export default {
                         tttutorSel: this.aux,
                         isGray:false,
                         alumnos:arg.event.allow,
+                        pantalla:"calendarioExterno",
 
                 };
-             
+                     console.log('citaDatos: ',this.$store.state.citaDatos)
                  this.$router.push('/registrarCita/registrarCitaAgendada');
             }else if (arg.event.backgroundColor=='#FF6961')  { 
                 //Gray
@@ -182,8 +183,10 @@ export default {
                         tttutorSel:this.aux,
                         isGray:true,
                         alumnos:arg.event.allow,
+                        pantalla:"calendarioExterno",
 
                 };
+                 console.log('citaDatos: ',this.$store.state.citaDatos)
                 this.$router.push('/registrarCita/registrarCitaAgendada');
                  }
 
