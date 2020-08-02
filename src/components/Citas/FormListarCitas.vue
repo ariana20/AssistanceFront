@@ -2,15 +2,24 @@
   <div class="FormListarUsuario contenedor"  >
     <!-- para que lo vea bien un tutor y un alumno -->
    <div  >  
+
         <!-- Cabeceras  -->
         <div class="row"  >
                 <h5  class="col-12 col-sm-4 col-md-2"  style="text-align:left;margin-top:5px" >Tipo de cita:</h5>   
                 <div class="col-11 col-sm-8 col-md-3" style="text-align:left;padding:0px" >
-                    <select v-model="tipoCitaSeleccionada" class="col-12 col-sm-10 col-md-10 form-control" style="cursor:pointer;margin-left:15px;margin-right:15px"  @change="listarCitas()" >
+                    <select v-if="this.esTutor==true" v-model="tipoCitaSeleccionada" class="col-12 col-sm-10 col-md-10 form-control" style="cursor:pointer;margin-left:15px;margin-right:15px"  @change="listarCitas()" >
                       <option value="no" hidden selected  >Seleccionar</option>
-                      <option class="col-12 col-sm-10 col-md-10"    v-for="(tipoU,index) in tipoCita" :value="tipoU.value" v-bind:key="index" style="cursos:pointer;" >
+                      <option  class="col-12 col-sm-10 col-md-10"    v-for="(tipoU,index) in tipoCitaTutor" :value="tipoU.value" v-bind:key="index" style="cursos:pointer;" >
                       {{ tipoU.text}}
                       </option>
+                      
+                    </select>
+                    <select v-if="this.esAlumno==true && this.esTutor==false" v-model="tipoCitaSeleccionada" class="col-12 col-sm-10 col-md-10 form-control" style="cursor:pointer;margin-left:15px;margin-right:15px"  @change="listarCitas()" >
+                      <option value="no" hidden selected  >Seleccionar</option>
+                      <option  class="col-12 col-sm-10 col-md-10"    v-for="(tipoU,index) in tipoCitaAlumno" :value="tipoU.value" v-bind:key="index" style="cursos:pointer;" >
+                      {{ tipoU.text}}
+                      </option>
+                      
                     </select>
                 </div>
                
@@ -95,12 +104,7 @@
                                   margin-top: 0px;
                                   margin-bottom: 0px;
                                 ">
-                                  <!-- <b-icon v-if="item.estado == 'act'" icon="caret-right-square" style="color:green"/> -->
-                                  <!-- <b-icon v-if="item.estado == 'act'" icon="caret-right-square" style="color:green"/> -->
-                                  <!-- <b-icon icon="caret-right-square" style="color:#009878;width:25px; height:25px;"/> -->
-                                  <!-- <b-icon  icon="card-text" style="color:#009878;width:25px; height:25px;"/> -->
-                                 
-                                   <h6 v-if="item.tipo_de_cita=='Cancelada'"  style="text-align:left;padding-top: 12px;">
+                                    <h6 v-if="item.tipo_de_cita=='Cancelada'"  style="text-align:left;padding-top: 12px;">
                                      Cancelada
                                     </h6>
                                     <!-- No asistió -->
@@ -195,7 +199,10 @@ export default {
       esAlumno:false,
       //Cbx's
       tipoCitaSeleccionada:"no",
-      tipoCita:null,
+      tipoCitaTutor:null,
+      //Cbx's
+      // tipoCitaSeleccionada:"no",
+      tipoCitaAlumno:null,
       //fechas
      
       periodo:'',
@@ -215,8 +222,8 @@ export default {
                 monthBeforeYear: true,
       },
        //datepicker
-      inicio: new Date(new Date().getTime() - 30 * 24 * 3600 * 1000),
-      fin: new Date(),
+      inicio: new Date(new Date().getTime() - 21 * 24 * 3600 * 1000),
+      fin: new Date(new Date().getTime() + 7 * 24 * 3600 * 1000),
 
 
     }
@@ -266,10 +273,17 @@ export default {
    
     
     // this.tipoCita=["Realizada","Cancelada","Pendiente"];
-    this.tipoCita=[
-        {value: 'Realizada',text: "Realizada"}, //guardo el value
+    this.tipoCitaTutor=[
+        {value: 'Registrada',text: "Registrada"}, //guardo el value
         {value: 'Cancelada',text: "Cancelada"},
-        {value: 'Futura',text: "Futura"},
+        {value: 'Próxima',text: "Próxima"},
+        {value: 'Pendiente',text: "Pendiente"},
+        {value: '',text: "Todos"},
+      ];
+      this.tipoCitaAlumno=[
+        {value: 'Registrada',text: "Registrada"}, //guardo el value
+        {value: 'Cancelada',text: "Cancelada"},
+        {value: 'Próxima',text: "Próxima"},
         {value: '',text: "Todos"},
       ];
     document.querySelector("#container > div > div.FormListarUsuario.contenedor > div > div > div > div > div > input").style.borderRadius = "1.25rem"; 
