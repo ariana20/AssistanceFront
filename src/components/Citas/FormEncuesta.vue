@@ -35,9 +35,9 @@
                             :tutor="alumno"
                             :tipoTutoria="null"/>
                     </div>
-                    <div class="col-12 col-md-2 custom-control form-control-lg custom-checkbox">
+                    <div class="col-12 col-md-2">
                         <div class="centrado">
-                            <input style="font-size:25px" v-model="alumno.seleccionado" type="checkbox" class="largerCheckbox" :id="'customCheck'+alumno.id_usuario"> 
+                            <input v-model="alumno.seleccionado" type="checkbox" :id="'customCheck'+alumno.id_usuario"> 
                         </div>
                     </div>
                 </div>

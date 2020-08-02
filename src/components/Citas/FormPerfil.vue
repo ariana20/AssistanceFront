@@ -191,6 +191,7 @@ export default ({
         Regresar(){ 
             if (this.$store.state.citaDatos==null) this.$router.push('/calendariocitas/cita-agendada');
             else if(this.$store.state.citaDatos.pantalla=='listado') this.$router.push('/listadocitas/cita-agendada');
+            else if(this.$store.state.citaDatos.pantalla=='alumnosAsignados') this.$router.push('/alumnosasignados');
             
         }
     }
