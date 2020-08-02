@@ -8,7 +8,7 @@
 					<h5 style="margin-top:5%;margin-bottom:5%">Buscar: </h5>
 				</div>
 				<div class="form-inline col-12 col-md-6 col-lg-4">
-					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar...">
+					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar">
 				</div>
         <div class="form-inline col-12 col-md-6 col-lg-3">
           <select v-on:change="FacultadSel"  class="form-control" style="margin-top:4%"
