@@ -335,7 +335,7 @@ export default Vue.extend ({
                 idAlumnos: array,
                 asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
-            };
+            }; console.log(sesion_params );
                 if(this.listMotivos.length > 0) {
                         
                             if(this.descripcion!=null) {

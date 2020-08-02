@@ -2,8 +2,9 @@
     <div class="formcitaagendada container">
         <div class="top-info" style="text-align:left;">
             <div id="botones">
-                <!-- <button v-if="this.cita[1]=='l' && !this.editar" type="button" class="btn btn-info" @click="editFields">Editar</button>
-                <button v-else-if="this.editar" type="button" class="btn btn-info" @click="guardar">Guardar</button> -->
+                <button v-if=" this.editar==false && this.$store.state.citaDatos.alumnos[0].pivot.asistencia=='pen'" type="button" class="btn btn-info" @click="editFields">Editar</button>
+                <button v-else-if="this.editar==true " type="button" class="btn btn-info" @click="guardar">Guardar</button>
+                <div v-else-if="this.editar==false && this.$store.state.citaDatos.alumnos[0].pivot.asistencia!='pen'"  ></div>
                 
                 
                 <button type="button" class="btn btn-secondary" @click="cancelar">Cancelar</button>
@@ -203,6 +204,7 @@ export default Vue.extend ({
             editar: false,
             us:null,
              tutoriaTutor:null,
+             lleno:false,
         }
     },
     mounted(){
@@ -241,7 +243,8 @@ export default Vue.extend ({
             if(this.cita!=null && this.motivos!=null){
                 this.soloTT();
                 if(this.cita[1] != "l") {   
-                    this.descripcion = this.cita[1].resultado;   
+                    this.descripcion = this.cita[1].resultado; 
+                    if(this.descripcion !=null || this.descripcion !="") this.lleno=true;  
                     if(this.$store.state.citaDatos.alumnos[0].pivot.asistencia == 'asi') {
                         this.asistencia = true;
                     }
@@ -286,6 +289,7 @@ export default Vue.extend ({
         else if(this.condicion_alumno=="PRI") this.condicion_alumno="Cachimbo";
     },
     methods: {
+        
         llenarTT(){
             this.showModal();
             axios.post('disponibilidades/mostrarCita2', 
@@ -301,6 +305,7 @@ export default Vue.extend ({
                 if(this.cita!=null && this.motivos!=null){
                         if(this.cita[1] != "l") {                            
                             this.descripcion = this.cita[1].resultado;
+                              if(this.descripcion !=null || this.descripcion !="") this.lleno=true; 
                             if(this.$store.state.citaDatos.alumnos[0].pivot.asistencia == 'asi') {
                                 this.asistencia = true;
                             }
@@ -340,7 +345,7 @@ export default Vue.extend ({
             // if(this.cita[1] != "l") {
             //     this.descripcion = this.cita[1].resultado;
             //     console.log('Asistencia: ',this.$store.state.citaDatos.alumnos[0].pivot.asistencia);
-            //     if(this.$store.state.citaDatos.alumnos[0].pivot.asistencia == 'asi') {
+            //     if(this.$store.state.usuario == 'asi') {
             //         this.asistencia = true;
             //     }
             //     else if(this.$store.state.citaDatos.alumnos[0].pivot.asistencia == 'noa' || this.$store.state.citaDatos.alumnos[0].pivot.asistencia == 'pen' ) {
@@ -406,31 +411,41 @@ export default Vue.extend ({
                 })
         },
         editFields: function () {
-            if(this.cita[1]=='l') {
+           
                 this.enableFields()
-                this.editar=true
-            }
+                this.editar=true;
+                
+            
+           
+            
             
         },
         guardar: function () {
             let array = []
-            array.push(this.$store.state.citaDatos.alumnos[1].id_usuario);
-            // console.log(array);
-            const sesion_params = {
-                id_cita: this.$store.state.idCita,
-                resultado: this.descripcion,
-                usuario_creacion: this.cita[1].usuario_creacion,
-                usuario_actualizacion: this.cita[1].usuario_actualizacion,
-                idAlumnos: array,
-                asistencia: this.asistencia,
-                idMotivos: this.listMotivosId,
-            };
-                if(this.listMotivos.length > 0) {
+            array.push(this.$store.state.citaDatos.alumnos[0].id_usuario);
+
+            let asistencia=[];
+            if(this.asistencia==true) asistencia[0]='asi';
+            else if(this.asistencia==false) asistencia[0]='noa';
+             
+            if(asistencia[0]=='asi'){
+
+                if(this.listMotivos.length > 0  ) {
                         
-                            if(this.descripcion!=null) {
+                            if( this.descripcion!=null ) {
+
                                 if(this.selectedUnidadApoyo) {
                                     this.enviarCorreo(this.selectedUnidadApoyo)
                                 }
+                                let sesion_params = {
+                                    id_cita: this.$store.state.citaDatos.props,
+                                    resultado: this.descripcion,
+                                    usuario_creacion: this.cita[1].usuario_creacion,
+                                    usuario_actualizacion: this.cita[1].usuario_actualizacion,
+                                    idAlumnos: array,
+                                    asistencia: asistencia,
+                                    idMotivos: this.listMotivosId,
+                                }; 
                                 axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
                                         response
@@ -442,12 +457,14 @@ export default Vue.extend ({
                                             confirmButtonColor:'#0097A7',
                                             showConfirmButton: true,
                                         }) 
+                                        this.$router.push('/listadocitas');
                                     })  
                                     .catch(e => {
                                         console.log(e);
                                     });
                                 }
-                                else {
+                              
+                                else if( this.descripcion==null) {
                                     Swal.fire({
                                         text:"Debe llenar el campo descripción",
                                         icon:"error",
@@ -466,6 +483,56 @@ export default Vue.extend ({
                         showConfirmButton: true,
                     })
                 }
+            }
+            else if(asistencia[0]=='noa'){
+                Swal.fire({
+                        text:"¿Está seguro que sea desea guardar esta cita con No Asistió del alumno?",
+                        icon:"warning",
+                        confirmButtonText: 'Sí',
+                        confirmButtonColor:'#0097A7',
+                        cancelButtonText: 'Corregir',
+                        cancelButtonColor:'C4C4C4',
+                        showCancelButton: true,
+                        showConfirmButton: true,
+                    })
+                .then((result) => {
+                         if (result.value) {
+                              let sesion_params = {
+                                id_cita: this.$store.state.citaDatos.props,
+                                resultado: "",
+                                usuario_creacion: this.cita[1].usuario_creacion,
+                                usuario_actualizacion: this.cita[1].usuario_actualizacion,
+                                idAlumnos: array,
+                                asistencia: asistencia,
+                                idMotivos: [],
+                            }; 
+                             axios.post('/sesiones/regSesionFormal',sesion_params)
+                                    .then( response=>{
+                                        response
+                                        this.disableFields();
+                                        Swal.fire({
+                                            text:"Se ha registrado la sesión con éxito",
+                                            icon:"success",
+                                            confirmButtonText: 'OK',
+                                            confirmButtonColor:'#0097A7',
+                                            showConfirmButton: true,
+                                        }) 
+                                        this.$router.push('/listadocitas');
+                                    })  
+                                    .catch(e => {
+                                        console.log(e);
+                                    });
+                         }
+                         else  if( result.dismiss === Swal.DismissReason.cancel ) {
+                             //Nada que corrija
+                         }
+
+                        
+
+                });
+
+                
+            }
             
         },
         onCodigoChange: function () {

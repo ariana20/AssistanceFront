@@ -2,9 +2,9 @@
     <div class="formcitaagendada contenedor">
         <div class="top-info" style="text-align:left;">
             <div id="botones">
-                <!-- <button v-if="this.cita[1]=='l' && !this.editar" type="button" class="btn btn-info" @click="editFields">Editar</button>
-                <button v-else-if="this.editar" type="button" class="btn btn-info" @click="guardar">Guardar</button> -->
-                
+                 <button v-if=" !this.editar && this.$store.state.citaDatos.alumnos[0].pivot.asistencia=='pen'" type="button" class="btn btn-info" @click="editFields">Editar</button>
+                <button v-else-if="this.editar" type="button" class="btn btn-info" @click="guardar">Guardar</button>
+                 
                 
                 <button type="button" class="btn btn-secondary" @click="cancelar">Cancelar</button>
             </div>
@@ -268,7 +268,7 @@ export default Vue.extend ({
             .then((response) => {
             
                 this.tutoriaTutor=response.data[0].tipo_tutoria;
-                 console.log('TutoriaTutor: ',this.tutoriaTutor);
+                //  console.log('TutoriaTutor: ',this.tutoriaTutor);
                  this.cita=response.data;
                
                 // console.log('Cita:',this.cita);
@@ -306,6 +306,7 @@ export default Vue.extend ({
                     }
                     else if(alumnosCita[i].pivot.asistencia == 'noa' || alumnosCita[i].pivot.asistencia == 'pen' ) {
                         infoAlumno.asistencia = false;
+                        
                     }                    
                     infoAlumno.nombres=alumnosCita[i].nombre+" " +alumnosCita[i].apellidos;
                     this.listAlumnosNom.push(infoAlumno);
@@ -362,14 +363,16 @@ export default Vue.extend ({
                     } 
                 })
         },
-        /*
+        
         editFields: function () {
             if(this.cita[1]=='l') {
                 this.enableFields();
-                this.editar=true
+                this.editar=true;
             }
             
-        },*/
+
+            
+        },
         guardar: function () {
 
             let faltaron=false;            
@@ -384,20 +387,23 @@ export default Vue.extend ({
             }
             // console.log(faltaron);
             //varios un alumno
+            console.log(this.$store.state.citaDatos);
             const sesion_params = {
-                id_cita: this.$store.state.idCita,
+                id_cita:this.$store.state.citaDatos.props,
                 resultado: this.descripcion,
                 usuario_creacion: this.cita[1].usuario_creacion,
-                usuario_actualizacion: this.cita[1].usuario_actualizacion,
+                usuario_actualizacion:this.$store.state.usuario.id_usuario,
                 idAlumnos: this.listAlumnosId,
                 asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
             };
-                // console.log(this.listMotivos.length);
+                 console.log(sesion_params);
+
+            if(faltaron==false){
                 if(this.listMotivos.length > 0) {
                        
                             
-                            if(this.descripcion!=null  && faltaron==false ) {
+                            if(this.descripcion!=null  ) {
                                
                                 if(this.selectedUnidadApoyo) {
                                     this.enviarCorreo(this.selectedUnidadApoyo)
@@ -415,7 +421,7 @@ export default Vue.extend ({
                                             showConfirmButton: true,
                                         }) 
                                         //lo redirigo a los calendarios
-                                        this.$router.push('/calendariocitas');
+                                        this.$router.push('/listadocitas');
                                     })  
                                     .catch(e => {
                                         console.log(e);
@@ -437,8 +443,24 @@ export default Vue.extend ({
                                         showConfirmButton: true,
                                     })
                             }
-                            else if (faltaron){
-                                    Swal.fire({
+                           
+                                 
+                          
+                   
+                
+                }
+                else {
+                    Swal.fire({
+                        text:"Debe seleccionar por lo menos un motivo",
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                }
+            }
+            else if(faltaron==true){
+                                 Swal.fire({
                                         text:"Por lo menos un alumno no asisitó a la cita. ¿Está seguro que desea guardar",
                                         icon:"warning",
                                         confirmButtonText: 'Sí',
@@ -462,7 +484,7 @@ export default Vue.extend ({
                                                         showConfirmButton: true,
                                                     }) 
                                                  //lo redirigo a los calendarios
-                                                 this.$router.push('/calendariocitas');
+                                                 this.$router.push('/listadocitas');
                                              })  .catch(e => {
                                                  console.log('catch sesion: ',e);
                                                  Swal.fire({
@@ -477,19 +499,7 @@ export default Vue.extend ({
                                         }   //fin del if result.value
                                     
                                     }) //fin del then re
-                          
-                    }
-                
-                }
-                else {
-                    Swal.fire({
-                        text:"Debe seleccionar por lo menos un motivo",
-                        icon:"error",
-                        confirmButtonText: 'OK',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                    })
-                }
+            }
             
         },
         onCodigoChange: function () {

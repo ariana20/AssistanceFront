@@ -99,9 +99,19 @@
                                   <!-- <b-icon v-if="item.estado == 'act'" icon="caret-right-square" style="color:green"/> -->
                                   <!-- <b-icon icon="caret-right-square" style="color:#009878;width:25px; height:25px;"/> -->
                                   <!-- <b-icon  icon="card-text" style="color:#009878;width:25px; height:25px;"/> -->
-                                  <div v-if="item.tipo_de_cita!='Cancelada'">
-                                  <b-icon  icon="card-checklist" style="color:#009878;width:25px; height:25px;cursor:pointer" @click="detalle(index)"/>
-                                  </div>
+                                 
+                                   <h6 v-if="item.tipo_de_cita=='Cancelada'"  style="text-align:left;padding-top: 12px;">
+                                     Cancelada
+                                    </h6>
+                                    <!-- No asistió -->
+                                    <!-- {{item.cita_x_usuarios[0].pivot.asistencia}} -->
+                                   <h6 v-else-if="item.cita_x_usuarios.length==1 && item.cita_x_usuarios[0].pivot.asistencia=='noa'"  style="text-align:left;padding-top: 12px;">
+                                     No asistió
+                                      
+                                    </h6> 
+                                     <div v-else-if="item.tipo_de_cita!='Cancelada'">
+                                      <b-icon  icon="card-checklist" style="color:#009878;width:25px; height:25px;cursor:pointer" @click="detalle(index)"/>
+                                     </div>
 
                               </td>
                             </tr>
@@ -253,7 +263,7 @@ export default {
   mounted(){
       
     if(this.$store.state.usuario==null) this.$router.push('/login'); 
-       
+   
     
     // this.tipoCita=["Realizada","Cancelada","Pendiente"];
     this.tipoCita=[
@@ -330,6 +340,7 @@ export default {
               
               this.esTutor=true;
               this.paginate=res.data.paginate;/////paginado
+              //  console.log('Pivot:',   this.citasTutor[6].cita_x_usuarios[0].pivot);
           }
           else{
               this.citasTutor="";
@@ -550,7 +561,7 @@ export default {
           
         
             this.$store.state.citaDatos={
-                        props:"",
+                        props:cita.id_cita,
                         id_disponibilidad:cita.id_disponibilidad,
                         fechaIni:cita.fecha,
                         fechaFin:cita.hora_inicio,
