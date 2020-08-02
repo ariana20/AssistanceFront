@@ -1050,7 +1050,11 @@ export default {
               showConfirmButton: true,
             })
             if(this.tiposUsuariosselect==2 || this.tiposUsuariosselect==3){
-              this.axios.post('/usuarios/veificarCoordinador',{id_programa:params.id_programaNuevo,tipo_usuario:this.tiposUsuariosselect})
+              this.axios.post('/usuarios/veificarCoordinador',{
+                id_programa:params.id_programaNuevo,
+                tipo_usuario:this.tiposUsuariosselect,
+                id_usuario: response.data.user.id_usuario,
+                nuevo: 1})
                 .then(response=>{
                   response
                 })
@@ -1118,7 +1122,11 @@ export default {
                       id_programa:params2.id_programa,
                     }
                     if(this.tiposUsuariosselect==2 || this.tiposUsuariosselect==3){
-                      this.axios.post('/usuarios/veificarCoordinador',{id_programa:params2.id_programa,tipo_usuario:this.tiposUsuariosselect,id_usuario:this.id_usuario_entrante})
+                      this.axios.post('/usuarios/veificarCoordinador',{
+                        id_programa:params2.id_programa,
+                        tipo_usuario:this.tiposUsuariosselect,
+                        id_usuario:this.id_usuario_entrante,
+                        nuevo: 0})
                         .then(response=>{
                           response
                             this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)
@@ -1167,7 +1175,12 @@ export default {
                   id_programa:params2.id_programa,
                 }
                 if(this.tiposUsuariosselect==2 || this.tiposUsuariosselect==3){
-                  this.axios.post('/usuarios/veificarCoordinador',{id_programa:params2.id_programa,tipo_usuario:this.tiposUsuariosselect,id_usuario:this.id_usuario_entrante})
+                  this.axios.post('/usuarios/veificarCoordinador',{
+                    id_programa:params2.id_programa,
+                    tipo_usuario:this.tiposUsuariosselect,
+                    id_usuario:this.id_usuario_entrante,
+                    nuevo: 0
+                  })
                   .then(response=>{
                     response
                     this.axios.post('/usuarios/nuevoPrograma/'+this.usuario_entrante.id_usuario,obj)

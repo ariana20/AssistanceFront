@@ -95,6 +95,11 @@ export default new Vuex.Store({
         icon: 'ion-ios-contacts'
       },
       {
+        text: 'Alumnos Asignados',
+        path: '/alumnosasignados',
+        icon: 'ion-ios-contacts'
+      },
+      {
         text: 'Unidades de Apoyo',
         path: '/unidadesApoyo',
         icon: 'ion-ios-medkit'

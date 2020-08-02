@@ -87,6 +87,7 @@ export default {
                   confirmButtonColor:'#0097A7',
                   showConfirmButton: true,
                   })   
+                  this.$emit('close');
               }else if(this.habilitado=="No"){
                   Swal.fire({
                   text:this.mensaje,

@@ -18,10 +18,10 @@
 				<table responsive class="table" style="text-align: left;margin-top:1.5%">
 					<thead>
 						<tr>
-							<th scope="col" style="width:100px">Código</th>
-							<th scope="col" style="width:350px">Nombre</th>
-							<th scope="col" style="width:200px">Coordinador</th>
-							<th scope="col" style="width:250px">Correo</th>
+							<th scope="col" style="width:5%">Código</th>
+							<th scope="col" style="width:25%">Nombre</th>
+							<th scope="col" style="width:25%">Coordinador</th>
+							<th scope="col" style="width:20%">Correo</th>
 							<th scope="col" style="text-align: center">N° Programas</th>
 							<th scope="col" style="text-align: center">Acciones</th>
 						</tr>
@@ -35,18 +35,16 @@
 							<td>{{item.correo}}</td>
 							<td style="text-align: center">{{item.cantidad-1}}</td>
 							<td style="text-align: center">
-								<button class="btn link" style="
-									padding-top: 0px;
-									padding-bottom: 0px;
+								<button class="btn link col-3" style="
+									padding: 0px;
 									margin-top: 0px;
 									margin-bottom: 0px;
 								" v-on:click="Editar(item)"><b-icon icon="pencil" style="color:#0097A7"></b-icon></button>
-								<button class="btn link" style="
-									padding-top: 0px;
-									padding-bottom: 0px;
+								<button class="btn link col-3" style="
+									padding: 0px;
 									margin-top: 0px;
 									margin-bottom: 0px;
-								" v-on:click="Eliminar(item)"><b-icon icon="dash-circle-fill" style="color:#757575"></b-icon></button>
+								" v-on:click="Eliminar(item, index)"><b-icon icon="dash-circle-fill" style="color:#757575"></b-icon></button>
 							</td>
 						</tr>
 					</tbody>
@@ -202,7 +200,7 @@ export default {
 			this.$router.push('/crearFacultad');
 		},
 		
-		Eliminar(item){
+		Eliminar(item, index){
 			Swal.fire({
 					text: '¿Desea eliminar '+item.nombre+'?',
 					icon: 'warning',
@@ -221,10 +219,6 @@ export default {
 						this.axios.post('/facultad/eliminar',params)
 							.then(response=>{
 								response
-								let index = this.$store.state.facultades.indexOf(
-									function(element){
-										return element.id_facultad === item.id_facultad;
-									})
 								this.$store.state.facultades.splice(index, 1);
 								this.hideModal()
 								Swal.fire({
