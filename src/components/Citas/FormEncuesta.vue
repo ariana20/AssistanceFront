@@ -7,6 +7,7 @@
                     <h5 class="col-12 col-md-3">Fechas:</h5>
                     <date-picker class="wide-date-example col-12 col-md-8"
                         v-model="periodo" 
+                        v-on:change="ListarElementos"
                         width="20" :lang="lang" range
                         placeholder="Selecciona Rango de Fechas"
                         format="DD/MM/YYYY"
