@@ -188,8 +188,9 @@ export default ({
         Elegir(item){
             this.solEl = item;
         },
-        Regresar(){
-            this.$router.push('/calendariocitas/cita-agendada')
+        Regresar(){ 
+            if(this.$store.state.citaDatos.pantalla=='listado') this.$router.push('/listadocitas/cita-agendada')
+            else  this.$router.push('/calendariocitas/cita-agendada')
         }
     }
 })

@@ -324,6 +324,19 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewCitaAgendada2.vue')
   },
   {
+    path: '/listadocitas/cita-agendada-alumnos',
+    name: 'Detalle Cita Agendada Alumnos',
+    // props: true,
+    component: () => import(/* webpackChunkName: "ViewReportes" */ '../views/Citas/ViewDetalleCitaAgendada2.vue')
+  },
+  {
+    path: '/listadocitas/cita-agendada',
+    name: 'Detalle Cita Agendada',
+    props: true,
+    component: () => import(/* webpackChunkName: "ViewCitaAgendada" */ '../views/Citas/ViewDetalleCitaAgendada.vue')
+  },
+
+  {
     path: '/asignarTipoTutoria',
     name: 'Asignar Tipo de Tutoría',
     // props: true,
