@@ -2,77 +2,69 @@
   <div class="FormCrearFacultad contenedor">
 
     <div style="text-align: left">
-      <!--<div class="top-title title-container" style="text-align:right">
-        <button type="button" class="btn btn-info" style="margin-left:30px" v-on:click="guardarFacultad()">Guardar</button>
-            
-            <router-link to="/facultad">
-              <button type="button" class="btn btn-secondary" style="margin-left:30px">Cancelar</button>
-            </router-link>
-      </div>-->
-        <b-container fluid>
-          <b-row class="my-1"  style="text-align: right">
-              <b-col class="col-12 col-md-12" style=";margin-top:5%">
+        <b-container fluid style="margin-top:30px">
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
+              <label>Código de la Facultad:*</label>
+              </div>
+              <div class="col-12 col-lg-6">
+              <b-form-input v-if="idFacultad" id="codigoF" v-model="codVerifF"></b-form-input>
+              <b-form-input v-else id="codigoF" v-model="codVerifF"></b-form-input>
+
+              </div>
+
+          </div>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
+              <label>Nombre de la Facultad:*</label>
+              </div>
+              <div class="col-12 col-lg-6">
+              <b-form-input v-if="idFacultad" id="nombreF" v-model="nombreVerifF"></b-form-input>
+              <b-form-input v-else id="nombreF" v-model="nombreVerifF"></b-form-input>
+
+              </div>
+
+          </div>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
+              <label>Correo Electrónico:*</label>
+              </div>
+              <div class="col-12 col-lg-6">
+              <b-form-input id="correoF" v-model="facultad.correo"></b-form-input>
+              </div>
+          </div>
+          <div ref="edPrograma" class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
+              <label>Coordinador de Facultad:</label>
+              </div>
+              <div class="col-12 col-lg-5">
+              <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombCompleto" ></b-form-input>
+              <b-form-input id="idCoordinadorF" readonly v-else>Sin coordinador</b-form-input>
+              </div>
+
+              
+              <div class="col-1" style="text-align:center">
+              <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>            
+              </div>
+             
+          </div>
+          <div class="row"  style="text-align: center">
+              <div class="col-12 col-md-12" style=";margin-top:10px">
                 <button type="button" class="btn btn-info"  v-on:click="guardarFacultad()">Guardar</button>
                 
                 <router-link to="/facultad">
                   <button type="button" class="btn btn-secondary" style="margin-left:20px">Cancelar</button>
                 </router-link>
-              </b-col>
-          </b-row>
-          <b-row class="my-1">
-              <b-col sm="3">
-              <label>Código de la Facultad:*</label>
-              </b-col>
-              <b-col sm="9">
-              <b-form-input v-if="idFacultad" id="codigoF" v-model="codVerifF"></b-form-input>
-              <b-form-input v-else id="codigoF" v-model="codVerifF"></b-form-input>
-
-              </b-col>
-
-          </b-row>
-          <b-row class="my-1">
-              <b-col sm="3">
-              <label>Nombre de la Facultad:*</label>
-              </b-col>
-              <b-col sm="9">
-              <b-form-input v-if="idFacultad" id="nombreF" v-model="nombreVerifF"></b-form-input>
-              <b-form-input v-else id="nombreF" v-model="nombreVerifF"></b-form-input>
-
-              </b-col>
-
-          </b-row>
-          <b-row class="my-1">
-              <b-col sm="3">
-              <label>Correo Electrónico:*</label>
-              </b-col>
-              <b-col sm="9">
-              <b-form-input id="correoF" v-model="facultad.correo"></b-form-input>
-              </b-col>
-          </b-row>
-          <b-row ref="edPrograma" class="my-1">
-              <b-col sm="3">
-              <label>Coordinador de Facultad:</label>
-              </b-col>
-              <b-col sm="8">
-              <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombCompleto" ></b-form-input>
-              <b-form-input id="idCoordinadorF" readonly v-else>Sin coordinador</b-form-input>
-              </b-col>
-
-              
-              <b-col sm="1">
-              <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>            
-              </b-col>
-             
-          </b-row>
+              </div>
+          </div>
           <b-row></b-row>
 
 
           </b-container>
-          <br>
+          
 
-          <b-container  fluid>
+          <b-container  fluid style="margin-top:30px">
           <b-row>
-              
               <h4 class="font-weight-bold">Programas de la Facultad:</h4>
               <b-col sm="12" style="text-align: right">
               <b-button v-if="nuevoProg==0 && editProg==0" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="agregarPrograma()">Añadir Programa</b-button>
