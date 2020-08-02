@@ -5,10 +5,10 @@
         <div class="form-inline col-12 col-md-2 col-lg-1">
           <h5 style="margin-top:10%;margin-bottom:5%">Buscar: </h5>
         </div>
-        <div class="form-inline col-12 col-md-2">
+        <div class="form-inline col-12 col-md-5 col-lg-4">
           <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar...">
         </div>
-        <div class="form-inline col-12 col-md-3">
+        <div class="form-inline col-12 col-md-5 col-lg-4">
           <select v-on:change="FacultadSel"  class="form-control" style="margin-top:2%"
             v-model="facuSeleccionadoInd">  <!--aqui guardo-->
             <option selected :value="null">Selecciona una facultad</option>
