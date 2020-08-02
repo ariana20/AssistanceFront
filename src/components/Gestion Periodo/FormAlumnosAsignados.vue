@@ -77,6 +77,10 @@ export default {
   },
   mounted(){
     this.listarTipoTutoria();
+    this.$store.state.citaDatos={
+        pantalla:'alumnosAsignados',
+    };   
+
   },
   computed:{
 
