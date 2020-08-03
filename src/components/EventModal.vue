@@ -34,7 +34,7 @@
         '&details='+ 'Cita con tutor ' + tutorSel.nombre + ' ' + tutorSel.apellidos +'&location=Pontificia+Universidad+Cat%C3%B3lica+del+Per%C3%BA%2C+Av.+Universitaria+1801%2C+San+Miguel+15088%2C+Per%C3%BA&dates=' + 
         ini+'%2F'+ fin" target="_blank"> Agregar a Google calendar
         </a>
-        <button type="button" class="btn btn-info" @click="SolCancelar();$emit('close')">Solicitar Cancelacion</button>
+        <button v-show="new Date(event.start)>new Date()" type="button" class="btn btn-info" @click="SolCancelar();$emit('close')">Solicitar Cancelacion</button>
         <button type="button" class="btn btn-info" @click="$emit('close')">Cerrar</button>
       </div>
       <div style="margin-bottom: 20px;"></div>
@@ -56,7 +56,7 @@
           ini+'%2F'+ fin" target="_blank"> Agregar a Google calendar
           </a>
           <button id="button" class="btn btn-info" @click="rutaEvent">Detalle</button>
-          <button id="button" class="btn btn-info" @click="removeEvent">Cancelar Cita</button>
+          <button v-show="new Date(event.start)>new Date()" id="button" class="btn btn-info" @click="removeEvent">Cancelar Cita</button>
           <button id="button" class="btn btn-secondary" @click="$emit('close')">Cerrar</button>
         </div>
         <div style="margin-bottom: 20px;"></div>
@@ -111,8 +111,9 @@ export default {
               usuario_actualizacion:this.$store.state.usuario.id_usuario})
             .then((response) => {
               if(response) {
+                console.log('cita cancelada')
                 this.$store.commit("UPDATE_EVENT", {
-                  id: this.event.id,
+                  id: parseInt(this.event.id, 10),
                   title: 'Disponible',
                   start: this.event.start,
                   color:'#B2EBF2',
@@ -154,12 +155,12 @@ export default {
             }).then(response => {
               if(response) {
                 Swal.fire({
-                        text:"Registro Exitoso",
-                        icon:"success",
-                        confirmButtonText: 'Continuar',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                      });
+                  text:"Registro Exitoso",
+                  icon:"success",
+                  confirmButtonText: 'Continuar',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+                });
                       this.$emit('close');
               }
             }).catch(e => {
@@ -280,19 +281,20 @@ export default {
     //this.fin = this.event.end.getFullYear() + ("0" + (this.event.end.getMonth() + 1)).slice(-2) + ("0" + this.event.end.getDate()).slice(-2) + "T"+ (this.event.end.getHours() + 2)+ (this.event.end.getMinutes()) + (this.event.end.getSeconds()) + "Z"
     // console.log('hora ini',this.event.start.YYYYMMDDHHMMSS())
     // console.log('hora fin',this.event.end.YYYYMMDDHHMMSS())
+    //cuanto se selecciona del combobox
     if(this.tutorSel!=undefined) {
       this.tipoTutorias = []
-      if(this.tutorSel.ttAsignado!=undefined){
-        this.tipoTutorias.push(this.tutorSel.ttAsignado)
+      if(this.tutorSel.usuario.tipo_tutorias!=undefined){
+        //this.tipoTutorias = this.tutorSel.usuario.tipo_tutorias
+      
+        this.tutorSel.usuario.tipo_tutorias.forEach(element => {
+          // console.log(element.nombre,element.tutor_asignado)
+          if(element.tutor_fijo!="1") this.tipoTutorias.push(element)
+        });
       }
-      this.tutorSel.tutoriasPrograma.forEach(element => {
-        // console.log(element.nombre,element.tutor_asignado)
-        if(element.tutor_fijo!="1") this.tipoTutorias.push(element)
-      });
     }
     this.$store.state.curEvent = this.event;
     this.getIdCita();
-
   }
 };
 
