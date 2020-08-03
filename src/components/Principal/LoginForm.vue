@@ -157,12 +157,25 @@ import CryptoJS from 'crypto-js'
             else this.$router.push('/userNuevo');
           }
           else{
-            let password = 'assistancesoporte'
-            let encrypted = CryptoJS.AES.encrypt(this.state.password, password)
-            console.log(encrypted.ciphertext)
+            var CryptoJSAesJson = {
+              stringify: function (cipherParams) {
+                  var j = {ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64)};
+                  if (cipherParams.iv) j.iv = cipherParams.iv.toString();
+                  if (cipherParams.salt) j.s = cipherParams.salt.toString();
+                  return JSON.stringify(j);
+              },
+              parse: function (jsonStr) {
+                  var j = JSON.parse(jsonStr);
+                  var cipherParams = CryptoJS.lib.CipherParams.create({ciphertext: CryptoJS.enc.Base64.parse(j.ct)});
+                  if (j.iv) cipherParams.iv = CryptoJS.enc.Hex.parse(j.iv)
+                  if (j.s) cipherParams.salt = CryptoJS.enc.Hex.parse(j.s)
+                  return cipherParams;
+              }
+            }
+            var data = CryptoJS.AES.encrypt(JSON.stringify(this.state.password), "assistancesoporte", {format: CryptoJSAesJson}).toString();
             const params ={
               correo: this.state.email,
-              password: encrypted,
+              password: data,
             }
             
             axios.post('/vuelogin', params,)
