@@ -26,7 +26,7 @@
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
-      <b>Tipo Tutoría:</b>  {{ event.description }} <br/>
+      <!--b>Tipo Tutoría:</!--b>  {{ event.descripcion }} <br/-->
       <div id="botones">
         <a type="button" class="btn btn-info" 
         :href="'https://www.google.com/calendar/render?action=TEMPLATE&text='+ 
@@ -287,11 +287,12 @@ export default {
       if(this.tutorSel.ttAsignado!=undefined){
         this.tipoTutorias.push(this.tutorSel.ttAsignado);
         
-        this.tutorSel.tutoriasPrograma.forEach(element => {
-        // console.log(element.nombre,element.tutor_asignado)
-        if(element.tutor_fijo!="1") this.tipoTutorias.push(element)
-      });
+        
       }
+      this.tutorSel.tutoriasPrograma.forEach(element => {
+           console.log(element)
+          if(element.tutor_fijo=="0") this.tipoTutorias.push(element)
+      });
     }
     this.$store.state.curEvent = this.event;
     this.getIdCita();
