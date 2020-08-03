@@ -35,7 +35,7 @@
             <div class="col-12 col-lg-2" style="padding-top: 6px;"><h5>Temas: </h5></div>
             <div class="col-12 col-lg-8">
             <select class="form-control"  v-model="selectedTema" v-on:change="buscarTutor">
-                <option disabled selected :value="null" focusable="false">Selecciona un tema</option>
+                <!--option disabled selected :value="null" focusable="false">Selecciona un tema</!--option-->
                 <option 
                     v-for="(tema, index) in temas" 
                     :key="index" 
