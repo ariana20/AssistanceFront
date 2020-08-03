@@ -284,13 +284,13 @@ export default {
     //cuanto se selecciona del combobox
     if(this.tutorSel!=undefined) {
       this.tipoTutorias = []
-      if(this.tutorSel.tipo_tutorias!=undefined){
-        //this.tipoTutorias = this.tutorSel.usuario.tipo_tutorias
-      
-        this.tutorSel.tipo_tutorias.forEach(element => {
-          // console.log(element.nombre,element.tutor_asignado)
-          if(element.tutor_fijo!="1") this.tipoTutorias.push(element)
-        });
+      if(this.tutorSel.ttAsignado!=undefined){
+        this.tipoTutorias.push(this.tutorSel.ttAsignado);
+        
+        this.tutorSel.tutoriasPrograma.forEach(element => {
+        // console.log(element.nombre,element.tutor_asignado)
+        if(element.tutor_fijo!="1") this.tipoTutorias.push(element)
+      });
       }
     }
     this.$store.state.curEvent = this.event;
