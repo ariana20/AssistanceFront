@@ -56,7 +56,7 @@ export default {
 	.contenid{
 		font-size:70px;
 		margin-top:5%;
-		margin-left:25%;
+		margin-left:35%;
 		height: 80%;
 		color: black !important;
 	}
