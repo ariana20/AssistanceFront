@@ -441,6 +441,7 @@ export default Vue.extend ({
             if(tipo == 3){
                 this.$store.state.verPdf=false;this.$store.state.verCitas=false;this.$store.state.verPlan=true;
             }
+            this.$store.state.citaDatos=null;
             this.$router.push('/perfil/'+this.event.extendedProps.alumno.id_usuario)
         },
         showModal() {
