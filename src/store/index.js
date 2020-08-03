@@ -75,15 +75,16 @@ export default new Vuex.Store({
         icon: 'ion-md-people'
       },
       {
-        text: 'Usuarios',
-        path: '/ListaUsuarios',
-        icon: 'ion-ios-people'
-      },
-      {
         text: 'Tipos de Tutoría',
         path: '/ListaTiposTutorias',
         icon: 'ion-ios-bookmarks'
       },
+      {
+        text: 'Usuarios',
+        path: '/ListaUsuarios',
+        icon: 'ion-ios-people'
+      },
+     
       {
         text: 'Asignar Tipo de Tutoría',
         path: '/asignarTipoTutoria',

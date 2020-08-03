@@ -116,13 +116,15 @@
                         </div>
                     </form>
                 </div>
-                <div class="actions">
-                    <button class="col-5" style="font-size:80%" v-if="activeStep - 1 >= 0 && activeStep!=preguntas.length-1" @click="checkFields(false)">Anterior</button>
-                    <button class="col-12" style="font-size:80%" v-if="activeStep + 1 < preguntas.length -1 && activeStep==0" @click="checkFields(true)">Siguiente</button>
-                    <button class="col-5" style="font-size:80%" v-if="activeStep + 1 < preguntas.length -1 && activeStep!=0" @click="checkFields(true)">Siguiente</button>
-                    <button class="col-5" style="font-size:80%; margin-left:0" v-if="activeStep + 1 === preguntas.length -1" @click="checkFields(true)">Finalizar</button>
-                    <button class="col-12" style="font-size:80%" v-if="activeStep=== preguntas.length-1" @click="Cancelar()">Regresar a Encuestas</button>
-                </div>
+                <div class="row actions" style="width:100%;text-align:center;margin:0px">
+                    <div class= "row col-12" style="width:100%;text-align:center">
+                        <button class="col-3" style="font-size:80%" v-if="activeStep - 1 >= 0 && activeStep!=preguntas.length-1" @click="checkFields(false)">Anterior</button>
+                        <button class="col-3" style="font-size:80%" v-if="activeStep + 1 < preguntas.length -1 && activeStep==0" @click="checkFields(true)">Siguiente</button>
+                        <button class="col-3" style="font-size:80%" v-if="activeStep + 1 < preguntas.length -1 && activeStep!=0" @click="checkFields(true)">Siguiente</button>
+                        <button class="col-3" style="font-size:80%; margin-left:0" v-if="activeStep + 1 === preguntas.length -1" @click="checkFields(true)">Finalizar</button>
+                        <button class="col-3" style="font-size:80%" v-if="activeStep=== preguntas.length-1" @click="Cancelar()">Regresar a Encuestas</button>
+                    </div>
+              </div>
             </section>
         </article>
     </b-modal>

@@ -18,7 +18,7 @@
               </div >
         </div>
         <div class="row" style="text-align:left">       
-              <div class="col-12 col-md-3" >Celular:*</div>   
+              <div class="col-12 col-md-3" >Celular:</div>   
               <div class="col-12 col-md-9"> <input  type="text" class="form-control"  v-model="telefono"  value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
               </div >
         </div>
@@ -159,7 +159,7 @@ export default {
       // ap_materno:"",
       apellidos:"",
       correo:"",
-      telefono:"",
+      telefono:null,
       tiposUsuarios:"",
       tiposUsuariosselect:0,
       estado:"act",
@@ -307,7 +307,8 @@ export default {
         }) 
        
       }
-      else if(this.telefono<10000000 && this.telefono>0){ //Esto será válido?
+      else if(this.telefono!=null){
+        if(this.telefono<10000000 && this.telefono>0){ //Esto será válido?
           // this.hideModal();
           Swal.fire({
               text:"No ha colocado un número de teléfono válido. Mínimo 7 dígitos",
@@ -315,7 +316,8 @@ export default {
               confirmButtonText: 'OK',
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
-          })   
+          }) 
+        }  
       }
       else if(this.tiposUsuariosselect=="no" || this.tiposUsuariosselect.length==0 ){
         // this.hideModal();
@@ -710,7 +712,7 @@ export default {
           const paramsTT={
             id_programa:this.miprog.id_programa,
             tutorias_insertar:this.listTTId,
-          }
+          }; 
      
        //actualizo el tipo de tutoria
           Axios.post('/usuarios/updateTipoTutoria/'+i ,paramsTT)
