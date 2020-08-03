@@ -8,7 +8,7 @@
                     v-for="(item, index) in tutores" 
                     :key="index" 
                     :value="item">
-                    {{ item.usuario.nombre + " " + item.usuario.apellidos }}
+                    {{ item.nombre + " " + item.apellidos }}
                 </option>
             </select>
             <ul class="legend">
@@ -167,27 +167,29 @@ export default {
             this.getReminders();
         },
         listarTutores() {
-        const params = {
-            id_programa : this.$store.state.programaActual.id_programa,
-            nomFacu:this.$store.state.programaActual.facultad.nombre,
-            nombre: "",
-            id_alumno: this.$store.state.usuario.id_usuario,
-        };
-        axios
-        .post('/programa/tutoresListar', params)
-            .then(res =>{
-             this.tutores=res.data;
-            console.log(res);
-            })
-            .catch(e => {
-                console.log(e.response);
-            })
-        if(this.$store.state.tutorDisponibilidad) {
-            console.log(this.$store.state.tutorDisponibilidad);
-            this.tutorSel = this.$store.state.tutorDisponibilidad;
-            console.log(this.tutorSel);
-            console.log("llega");
-        }
+            const params = {
+                id_programa : this.$store.state.programaActual.id_programa,
+                nomFacu:this.$store.state.programaActual.facultad.nombre,
+                nombre: "",
+                id_alumno: this.$store.state.usuario.id_usuario,
+            };
+            axios
+            .post('/programa/tutoresAlumno', params)
+                .then(res =>{
+                    this.tutores=res.data;
+                    console.log(res.data);
+                    if(this.$store.state.tutorDisponibilidad) {
+                        this.tutores.forEach(element => {
+                            if(element.id_usuario == this.$store.state.tutorDisponibilidad.id_usuario) {
+                                this.tutorSel = element
+                            }
+                        });
+                        this.getReminders();
+                    }
+                })
+                .catch(e => {
+                    console.log(e.response);
+                })
         },
         handleClick (arg) {
             if(arg.event.backgroundColor!='#ff6961') {
