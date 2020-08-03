@@ -49,7 +49,8 @@
                 </tr>
             </tbody>
         </table>
-        <div v-if="alumnosAsig.lenght == 0 || tutoriaSeleccionada==null" >No hay alumnos asignados</div>
+        <div v-if="mensaje!=''">{{mensaje}}</div>
+        <div v-if="tutoriaSeleccionada==null" >No ha seleccionado un tipo de tutoría</div>
 
     </div>
 
@@ -69,6 +70,7 @@ export default {
         tutoriaSeleccionada:null,
         tipoTutoria:[],
         alumnosAsig:[],
+        mensaje: ''
 
     }
   },
@@ -120,7 +122,9 @@ export default {
         axios
         .post('/registros/listarAlumnos', params)
         .then(res =>{
-        this.alumnosAsig=res.data;       
+        this.alumnosAsig=res.data;   
+        if(this.alumnosAsig.length==0) this.mensaje='No hay alumnos asignados';
+        else this.mensaje='';    
         })
         .catch(e => {
         console.log(e.response);
