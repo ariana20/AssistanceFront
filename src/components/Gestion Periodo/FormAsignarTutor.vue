@@ -290,6 +290,7 @@ export default {
                             this.alSeleccionado=null;
                             this.sel='';
                             this.cambiar=false; 
+                            this.mensaje='';
                             
 
                         }).catch(e => {
@@ -314,7 +315,8 @@ export default {
                 this.alumnosAsig.push(this.alSeleccionado);
                 this.enviarCorreo();
                 this.alSeleccionado=null;
-                this.sel='';  
+                this.sel=''; 
+                this.mensaje=''; 
                 
             }
             
