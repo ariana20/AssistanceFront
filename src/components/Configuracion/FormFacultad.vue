@@ -3,8 +3,8 @@
 		<div style="text-align: left;">
 
 			<div class="row" style="width:100%">
-				<div class="form-inline col-12 col-md-2 col-lg-1">
-				<h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
+				<div class="form-inline col-12 col-md-3 col-lg-1">
+				<h5 style="margin-top:0%;margin-bottom:5%">Nombre: </h5>
 				</div>
 				<div class="form-inline col-12 col-md-4">
 					<input class="form-control" style="margin-top:3%" v-on:keyup.enter="buscarFacultades(nomb)" v-model="nomb" placeholder="Ingrese nombre de la facultad">
@@ -249,11 +249,12 @@ export default {
 <style scoped>
 
 .form-control {
-	border-radius: 1rem;  
-	border: 1px solid #757575;
+	border-radius: 1.25rem;  
+	border: 0.5px solid #757575;
 	text-align-last: left;
 	margin-bottom:1.3em;
 	width: 100%;
+
 }
 .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
 select:focus {outline: none;box-shadow: none;}
