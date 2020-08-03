@@ -45,7 +45,12 @@
                           />
             <modals-container/>
         </div>
-        
+        <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+            <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+                <b-spinner style="width: 3rem; height: 3rem;"/>
+                <br >Cargando... 
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -127,9 +132,12 @@ export default {
     },
      mounted() {
         this.bloque = "00:"+ this.$store.state.programaActual.hora_bloque + ":00"
-        this.$store.state.events = [];
         this.listarTutores();
-
+        if(!this.tutorSel) {
+            this.$store.state.events = [];
+            this.hideModal()
+            this.$refs.calendar.fireMethod("rerenderEvents");
+        }
         /*if(this.$store.state.tutorDisponibilidad) {
             //this.tutorSel = this.$store.state.tutorDisponibilidad
             //console.log("storestate tutor: ", this.tutorSel)
@@ -151,7 +159,11 @@ export default {
         ...mapGetters(["EVENTS"])
     },
     methods: {
+        deleteEvent(arg) {
+            this.$store.commit("DELETE_EVENT", arg.event)                 
+        },
         showCalendar() {
+            this.showModal()
             this.getReminders();
         },
         listarTutores() {
@@ -165,12 +177,10 @@ export default {
         .post('/programa/tutoresListar', params)
             .then(res =>{
              this.tutores=res.data;
-
-           
             console.log(res);
             })
             .catch(e => {
-            console.log(e.response);
+                console.log(e.response);
             })
         if(this.$store.state.tutorDisponibilidad) {
             console.log(this.$store.state.tutorDisponibilidad);
@@ -195,9 +205,9 @@ export default {
         },
         getReminders: function() {
                 this.calendar = this.$refs.fullCalendar.getApi();
-                this.$store.state.events = [];
-                
+                this.$store.state.events = [];                
                 console.log('tutorSel', this.tutorSel)
+                this.showModal()
                 axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
                     console.log('getreminders',response.data)
@@ -255,15 +265,24 @@ export default {
                             }
                         //});
                     }
+                    this.hideModal()
                 }).catch(e => {
+                    this.hideModal()
                     console.log(e.response);
                 });
                 //this.calendar.render();
             },
+            showModal() {
+            this.$refs['my-modal'].show()
+            },
+            hideModal() {
+                this.$refs['my-modal'].hide()
+            },
     },
     watch: {    
         eventFilter() {
-        this.$refs.calendar.fireMethod("rerenderEvents");
+            //this.$refs.calendar.$emit('refetchEvents')
+            this.$refs.calendar.fireMethod("rerenderEvents");
         }
     }
 }

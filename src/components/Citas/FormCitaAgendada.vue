@@ -58,13 +58,13 @@
                             </svg>
                         </div>
                         <div id="botones" v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')">
-                            <button type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Histórico de Citas</button>
-                            <button v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" type="button" class="btn btn-info" @click="Perfil(2)">Histórico del Alumno</button>
-                            <button type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
+                            <button v-show="!this.asistencia" type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Histórico de Citas</button>
+                            <button v-show="!this.asistencia" v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" type="button" class="btn btn-info" @click="Perfil(2)">Histórico del Alumno</button>
+                            <button v-show="!this.asistencia" type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
                         </div>
                         <div v-else>
-                            <button type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Historico de Citas</button>
-                            <button type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
+                            <button v-show="!this.asistencia"  type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Historico de Citas</button>
+                            <button v-show="!this.asistencia"  type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
                         </div>
                     </div>
                     <div style="margin-top:10%;float:left;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>
@@ -190,7 +190,7 @@ export default Vue.extend ({
             motivos: [],
             newMotivo: null,
             asistencia:false,
-            listMotivos:[],
+            listMotivos:[], 
             listMotivosId: [],
             motivosBorrados:[],
             listAlumnosNom: [],
@@ -224,14 +224,9 @@ export default Vue.extend ({
         //     //si hay info de la sesion quiere decir que ha asistido a su 
         // }
         // console.log('cita  ', this.cita);
-        // this.disableFields()
+        this.disableFields()
         
-        axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
-        .then(response => {
-            this.us = response.data
-        }).catch(e => {
-            console.log(e.response);
-        });
+        
         //console.log('evento actual: ', this.$store.state.programaActual);
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
             .then(response => {
@@ -326,6 +321,7 @@ export default Vue.extend ({
         guardar: function () {
             let array = []
             array.push(this.event.extendedProps.alumno.id_usuario);
+            let arrayAsis = [this.asistencia]
             // console.log(array);
             const sesion_params = {
                 id_cita: this.$store.state.idCita,
@@ -333,7 +329,7 @@ export default Vue.extend ({
                 usuario_creacion: this.cita[1].usuario_creacion,
                 usuario_actualizacion: this.cita[1].usuario_actualizacion,
                 idAlumnos: array,
-                asistencia: this.asistencia,
+                asistencia: arrayAsis,
                 idMotivos: this.listMotivosId,
             };
                 if(this.listMotivos.length > 0) {
@@ -353,6 +349,7 @@ export default Vue.extend ({
                                             confirmButtonColor:'#0097A7',
                                             showConfirmButton: true,
                                         }) 
+                                        this.$router.push('/calendariocitas')
                                     })  
                                     .catch(e => {
                                         console.log(e.response);
@@ -367,6 +364,7 @@ export default Vue.extend ({
                                         showConfirmButton: true,
                                     })
                                 }
+                                
                 }
                 else {
                     Swal.fire({
