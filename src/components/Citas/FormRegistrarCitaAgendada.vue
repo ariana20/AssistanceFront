@@ -400,7 +400,8 @@ export default Vue.extend ({
                     }
             }
             
-            if(this.alSeleccionado != 'Nombre del alumno' && !estaAl && this.sel.length == 8){ 
+            // if(this.alSeleccionado != 'Nombre del alumno' && !estaAl && this.sel.length == 8){ 
+            if(this.alSeleccionado != 'Nombre del alumno' && !estaAl ){ 
 
                 this.listAlumnosNom.push(this.alSeleccionado);
                 this.listAlumnosCod.push(this.sel);
@@ -475,7 +476,7 @@ export default Vue.extend ({
                 idTutor: this.$store.state.citaDatos.id_tutor,
                 id_programa: this.$store.state.programaActual.id_programa,
             }
-            console.log(params);
+            // console.log(params);
             axios.post('usuarios/tutoriaTutor', params)
             .then((response) => {
                 

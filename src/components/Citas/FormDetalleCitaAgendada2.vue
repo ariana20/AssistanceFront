@@ -1,84 +1,63 @@
 <template>
-    <div class="formcitaagendada container">
+    <div class="formcitaagendada contenedor">
         <div class="top-info" style="text-align:left;">
             <div id="botones">
-                <button v-if="this.cita[1]=='l' && !this.editar" type="button" class="btn btn-info" @click="editFields">Editar</button>
+                 <button v-if=" !this.editar && this.$store.state.citaDatos.alumnos[0].pivot.asistencia=='pen'" type="button" class="btn btn-info" @click="editFields">Editar</button>
                 <button v-else-if="this.editar" type="button" class="btn btn-info" @click="guardar">Guardar</button>
-                
+                 
                 
                 <button type="button" class="btn btn-secondary" @click="cancelar">Cancelar</button>
             </div>
-                <div class="botones list-data"><div id="left">Día:          </div> <div id="right"> {{ this.event.extendedProps.fecha }} </div></div>
-                <div class="list-data"><div id="left">Hora Inicio:  </div> <div id="right"> {{ this.event.start | formatHour}} </div></div>
-                <div class="list-data"><div id="left">Hora Fin:     </div> <div id="right"> {{ this.event.end | formatHour }} </div></div>
-                <div class="list-data"><div id="left">Tipo Tutoría: </div> <div id="right"> {{ this.event.extendedProps.description }} </div></div>
+                <div class="botones list-data"><div id="left">Día:          </div> <div id="right"> {{ this.$store.state.citaDatos.fechaIni }} </div></div>
+                 <div class="list-data"><div id="left">Hora Inicio:  </div> <div id="right"> {{ this.$store.state.citaDatos.fechaFin }} </div></div>
+               <!-- <div class="list-data"><div id="left">Hora Fin:     </div> <div id="right"> {{ this.event.end | formatHour }} </div></div>-->
+                <div class="list-data"><div id="left">Tipo Tutoría: </div> <div v-if="this.tutoriaTutor!=null" id="right"> {{ this.tutoriaTutor.nombre }} </div></div> 
                 
         </div>
         <div style="width:100%; border-bottom:1px solid #bababa; height:1px;padding-top:15px; margin-bottom:15px;"></div>
             <div class="row grid-divider">
             <div class="izq col-lg-6 col-xm-2 col-md-12" style="text-align:left;">
-                <div class="font-weight-bolder text-left">Alumno</div>
+                <!--LADO IZQUIERDO-->
+                <div class="font-weight-bolder text-left">Alumno(s)</div>
                 <div class="row">
-                    <div class="col center-block">
-                        <div class="list-data"><div id="left">Código:          </div> <div id="right"> {{ this.event.extendedProps.alumno.codigo }} </div></div>
-                        <div class="list-data"><div id="left">Nombre:  </div> <div id="right"> {{ this.event.extendedProps.alumno.nombre }} </div></div>
-                        <div class="list-data"><div id="left">Apellidos:     </div> <div id="right"> {{ this.event.extendedProps.alumno.apellidos }} </div></div>
-                        <div class="list-data"><div id="left">Condición: </div> <div v-if="us" id="right"> {{ this.$store.state.cond }} </div></div>
-                    </div>
-                    <div class="col center-block text-center">
-                        <figure v-if="this.event.extendedProps.alumno.imagen!='' && this.event.extendedProps.alumno.imagen!=null" id="floated" class="image-logo" style="margin-bottom:15%">
-                                <img  :src="this.event.extendedProps.alumno.imagen" height="110px" width="110px" />		
-                        </figure>
-                        <figure v-if="this.event.extendedProps.alumno.imagen=='' || this.event.extendedProps.alumno.imagen==null" id="floated" class="image-logo" style="margin-bottom:15%">	
-                                <b-avatar size="7rem" ></b-avatar>		
-                        </figure>
-                        <button type="button" class="btn btn-info" style="margin-left: 4%;" @click="Perfil(3)">Ver Perfil</button>
-                    </div>
-                </div>
-                <div style="bottom:30px;">
-                    <div>
-                        <div class="font-weight-bolder text-left">Información Adicional</div>
-                        <div v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" id="botones" style="justify-content: space-between;margin-left: 55px;margin-right: 75px;">
-                            <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M44.4444 5H41.6667V2.5C41.6667 1.125 40.4167 0 38.8889 0C37.3611 0 36.1111 1.125 36.1111 2.5V5H13.8889V2.5C13.8889 1.125 12.6389 0 11.1111 0C9.58333 0 8.33333 1.125 8.33333 2.5V5H5.55556C2.47222 5 0.0277778 7.25 0.0277778 10L0 45C0 46.3261 0.585316 47.5979 1.62718 48.5355C2.66905 49.4732 4.08213 50 5.55556 50H44.4444C47.5 50 50 47.75 50 45V10C50 7.25 47.5 5 44.4444 5ZM44.4444 42.5C44.4444 43.875 43.1944 45 41.6667 45H8.33333C6.80556 45 5.55556 43.875 5.55556 42.5V17.5H44.4444V42.5ZM11.1111 22.5H16.6667V27.5H11.1111V22.5ZM22.2222 22.5H27.7778V27.5H22.2222V22.5ZM33.3333 22.5H38.8889V27.5H33.3333V22.5Z" fill="black"/>
-                            </svg>
-                            <svg width="53" height="52" viewBox="0 0 53 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M16.4737 13.6579H16.1329L16.0083 13.9751L1.53462 50.8172L1.26637 51.5H2H7.78947H8.13869L8.25891 51.1721L11.0334 43.6053H26.6508L29.4253 51.1721L29.5455 51.5H29.8947H36.2105H36.9442L36.6759 50.8172L22.2022 13.9751L22.0776 13.6579H21.7368H16.4737ZM52.5 8.89474V8.39474H52H44.6053V1V0.5H44.1053H38.8421H38.3421V1V8.39474H30.9474H30.4474V8.89474V14.1579V14.6579H30.9474H38.3421V22.0526V22.5526H38.8421H44.1053H44.6053V22.0526V14.6579H52H52.5V14.1579V8.89474ZM13.515 37.3421L19.1053 22.6677L24.6955 37.3421H13.515Z" fill="black" stroke="black"/>
-                            </svg>
-                            <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1.57247 26.0949L10.6574 30.0712L36.8383 15.7898L21.0476 34.2107L43.6809 44.5158C44.068 44.6853 44.4902 44.7592 44.9119 44.7311C45.3335 44.7029 45.7422 44.5737 46.1033 44.3543C46.4645 44.1349 46.7674 43.8318 46.9867 43.4706C47.2059 43.1093 47.3349 42.7006 47.3628 42.279L49.9946 2.80565C50.0239 2.34877 49.9337 1.89213 49.733 1.48066C49.5322 1.0692 49.2278 0.71709 48.8496 0.458985C48.4715 0.20088 48.0326 0.0456746 47.5763 0.00864158C47.1199 -0.0283915 46.6618 0.0540238 46.2469 0.247778L1.50668 21.3002C1.0503 21.5167 0.665713 21.8598 0.398658 22.2885C0.131603 22.7172 -0.00668216 23.2137 0.000248292 23.7187C0.00717875 24.2238 0.159033 24.7162 0.437752 25.1374C0.71647 25.5587 1.11032 25.891 1.57247 26.0949ZM15.7841 50L28.3535 43.9053L15.7841 38.0422V50Z" fill="black"/>
-                            </svg>
+                    <div class="col-md-4 col-sm-4">
+                        <div class="col-sm-6"><label for="formGroupExampleInput">Código</label></div>
+                        <hr style="width:335%;">
+                        <ul class="col-sm-12 col-md-12" style="text-align:left;margin-left:-8px;">
+                            <li class="form-control" style="width:120%;text-align:center;margin-top:8px;"
+                                v-for="(newAlumnoCod,alcIndex) in listAlumnosCod"  
+                                :key="alcIndex">
+                                {{newAlumnoCod}}           
+                            </li>
+                        </ul>
+
+                    </div>  <!-- termina la columa de codigos -->
+                    <div class="col-md-8 col-xs-4">
+                        <div class="col" style="text-align:left;padding-bottom:30px;">
+                            <label for="formGroupExampleInput" style="margin-right:50px">Nombre y Apellidos</label>
+                            <label for="formGroupExampleInput">Asistencia</label>
                         </div>
-                        <div v-else style="justify-content: space-between;margin-left: 55px;margin-right: 75px;">
-                            <svg style="margin-left:2%" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M44.4444 5H41.6667V2.5C41.6667 1.125 40.4167 0 38.8889 0C37.3611 0 36.1111 1.125 36.1111 2.5V5H13.8889V2.5C13.8889 1.125 12.6389 0 11.1111 0C9.58333 0 8.33333 1.125 8.33333 2.5V5H5.55556C2.47222 5 0.0277778 7.25 0.0277778 10L0 45C0 46.3261 0.585316 47.5979 1.62718 48.5355C2.66905 49.4732 4.08213 50 5.55556 50H44.4444C47.5 50 50 47.75 50 45V10C50 7.25 47.5 5 44.4444 5ZM44.4444 42.5C44.4444 43.875 43.1944 45 41.6667 45H8.33333C6.80556 45 5.55556 43.875 5.55556 42.5V17.5H44.4444V42.5ZM11.1111 22.5H16.6667V27.5H11.1111V22.5ZM22.2222 22.5H27.7778V27.5H22.2222V22.5ZM33.3333 22.5H38.8889V27.5H33.3333V22.5Z" fill="black"/>
-                            </svg>
-                            <svg style="margin-left:28%" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1.57247 26.0949L10.6574 30.0712L36.8383 15.7898L21.0476 34.2107L43.6809 44.5158C44.068 44.6853 44.4902 44.7592 44.9119 44.7311C45.3335 44.7029 45.7422 44.5737 46.1033 44.3543C46.4645 44.1349 46.7674 43.8318 46.9867 43.4706C47.2059 43.1093 47.3349 42.7006 47.3628 42.279L49.9946 2.80565C50.0239 2.34877 49.9337 1.89213 49.733 1.48066C49.5322 1.0692 49.2278 0.71709 48.8496 0.458985C48.4715 0.20088 48.0326 0.0456746 47.5763 0.00864158C47.1199 -0.0283915 46.6618 0.0540238 46.2469 0.247778L1.50668 21.3002C1.0503 21.5167 0.665713 21.8598 0.398658 22.2885C0.131603 22.7172 -0.00668216 23.2137 0.000248292 23.7187C0.00717875 24.2238 0.159033 24.7162 0.437752 25.1374C0.71647 25.5587 1.11032 25.891 1.57247 26.0949ZM15.7841 50L28.3535 43.9053L15.7841 38.0422V50Z" fill="black"/>
-                            </svg>
-                        </div>
-                        <div id="botones" v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')">
-                            <button v-show="!this.asistencia" type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Histórico de Citas</button>
-                            <button v-show="!this.asistencia" v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" type="button" class="btn btn-info" @click="Perfil(2)">Histórico del Alumno</button>
-                            <button v-show="!this.asistencia" type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
-                        </div>
-                        <div v-else>
-                            <button v-show="!this.asistencia"  type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Historico de Citas</button>
-                            <button v-show="!this.asistencia"  type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
-                        </div>
-                    </div>
-                    <div style="margin-top:10%;float:left;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>
-                </div>
-                
-                
-                <!--<div style="position:absolute; bottom:30px;">
-                    <input type="checkbox" v-model="asistencia"/>Asistencia
-                </div>-->
-            </div>
+                        <ul class="col" style="text-align:center;width:200%;margin-left:-10px;padding-top:4px;">
+                            <li class="form-control list-group-item" style="padding: 0.4rem 0.5rem;"
+                                v-for="(newAlumno,alIndex) in listAlumnosNom"  
+                                :key="alIndex">
+                                {{newAlumno.nombres}}    
+                                <input id="asis" type="checkbox" style="height:20px;width:20px;text-indent: 25px" v-model="newAlumno.asistencia" />                                  
+                            </li>
+ 
+                             
+                        </ul>
+                        
+                    </div> 
+                     <!-- termina la columna de nombres -->
+                    
+                </div> <!-- termina row1 que es todos los alumnos -->
+                <!-- <div style="margin-top:10%;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div> -->
+            </div>  <!-- termina     LADO IZQUIERDO -->
             <div class="der col-lg-6 col-xm col-md-12">
                 <div class="font-weight-bolder text-left">Resultado</div>
                  <div class="top-titulo" style="margin-bottom:20px;">
-                    <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
+                    <div class="col-sm-3 motivo-dropdown-title">Motivo:* </div>
                     <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="selectedMotivo">
                         <option selected disabled :value="null" >Selecciona un motivo</option>
                         <option
@@ -109,7 +88,7 @@
                     </ul>
                     <hr>
                     <div class="form-group" style="text-align:left;margin-bottom:20px;">
-                        <label for="descripcion">Descripción:</label>
+                        <label for="descripcion">Descripción:*</label>
                         <textarea class="form-control" id="descripcion-motivo" rows="7" v-model="descripcion"></textarea>
                     </div>
                     <div class="top-titulo" style="text-align:left;">
@@ -149,7 +128,7 @@ import Swal from 'sweetalert2'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import Vue from 'vue'
-import emailjs from 'emailjs-com';
+//import emailjs from 'emailjs-com';
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
 
@@ -175,7 +154,7 @@ export default Vue.extend ({
     data: function () {
         return {
             event: this.$store.state.curEvent,
-            condicion_alumno: this.$store.state.curEvent.extendedProps.alumno.condicion_alumno.toUpperCase(),
+            //condicion_alumno: this.$store.state.curEvent.extendedProps.alumno.condicion_alumno.toUpperCase(),
             fechIni: this.fecha,
             descripcion: null,
             motivo: null,
@@ -187,10 +166,10 @@ export default Vue.extend ({
             selectedTipoTutoria: null,
             tiposTutoria: [],
             selectedMotivo: null,
-            motivos: [],
+            motivos: null,
             newMotivo: null,
-            asistencia:false,
-            listMotivos:[], 
+            asistencia:[],
+            listMotivos:[],
             listMotivosId: [],
             motivosBorrados:[],
             listAlumnosNom: [],
@@ -201,33 +180,70 @@ export default Vue.extend ({
             cita: this.$store.state.curSesion,
             editar: false,
             us:null,
+            tt:[],
+            ttselect:"no",
+            idCita:null,
+            alumnosEli:[],
+            miUsuario:this.$store.state.usuario, 
+            mipermisosUsuario:null,
+            tutoriaTutor:null,
         }
     },
     mounted(){
-        // console.log('idCita: ',this.$store.state.idCita)
+       
         //LLENANDO LOS CAMPOS CUANDO HAY INFO EN LA SESION
-        // console.log('editar status: ',this.editar)
-        // console.log('obtuve la cita: ',this.$store.state.curSesion)
-        // if(this.cita[1] != "l") {
-        //     this.descripcion = this.cita[1].resultado
-        //     if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
-        //         this.asistencia = true
-        //     }
-        //     console.log('longitud for:', this.cita[1].motivo_consultas)
-        //     for(var i in this.cita[1].motivo_consultas) {
-        //         this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
-        //         console.log('motivo selected: ', this.selectedMotivo)
-        //         this.addMotivos()
-        //     }
+        /*
+        console.log('Cita-: ',this.cita);
+            console.log('Cita1: ',this.cita[1]);
+         if(this.cita[1] != "l") {
+             this.descripcion = this.cita[1].resultado
+             if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
+                 this.asistencia = true
+             }
+           
+             for(var i in this.cita[1].motivo_consultas) {
+                 this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
+                
+                 this.addMotivos()
+             }
         
-        //     console.log('motivos: ', this.listMotivos)
+        //    
         //     //si hay info de la sesion quiere decir que ha asistido a su 
-        // }
-        // console.log('cita  ', this.cita);
-        this.disableFields()
+         }
+         */
+        axios.post('motivosConsulta/listarTodo')
+        .then( response => {
+           
+            this.motivos = response.data;
+            // console.log('M',this.motivos);              
+            if(this.cita==null) this.llenarTT();
+            // console.log('?M mount', this.motivos!=null);
+            // console.log('?C mount',this.cita!=null );
+            if(this.cita!=null && this.motivos!=null){
+                if(this.cita[1] != "l") {   
+                    this.descripcion = this.cita[1].resultado;    
+                    for(var i in this.cita[1].motivo_consultas) {
+                        this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
+                        this.addMotivos();
+                    }
+            }}
+          
+        })
+        .catch(e => {
+          console.log('catch motivos:',e);
+        });
         
+        this.disableFields();
+        this.fillFields();
         
-        //console.log('evento actual: ', this.$store.state.programaActual);
+       
+        axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
+        .then(response => {
+            this.us = response.data
+        }).catch(e => {
+            console.log(e);
+        });
+      
         axios.post('unidadesApoyo/unidadesxProg',{idProg:this.$store.state.programaActual.id_programa})
             .then(response => {
                 for(var i in response.data) {
@@ -235,55 +251,88 @@ export default Vue.extend ({
                 }
                 this.hideModal()
             }).catch(e => {
-                console.log(e.response);
+                console.log(e);
                 this.hideModal()
             });
-        axios.post('motivosConsulta/listarTodo')
-            .then( response => {
-                this.motivos = response.data;
-                this.fillFields()
-                this.hideModal()
-            })
-            .catch(e => {
-            console.log(e.response);
-        });    
+
+        
+       
+    
     },
     methods: {
+        llenarTT(){
+            // console.log('En tt');
+            this.showModal();
+            axios.post('disponibilidades/mostrarCita2', 
+                {idDisponibilidad:this.$store.state.citaDatos.id_disponibilidad})
+            .then((response) => {
+            
+                this.tutoriaTutor=response.data[0].tipo_tutoria;
+                //  console.log('TutoriaTutor: ',this.tutoriaTutor);
+                 this.cita=response.data;
+               
+                // console.log('Cita:',this.cita);
+                // console.log('?M tt', this.motivos!=null);
+                // console.log('?C tt',this.cita!=null );
+                if(this.cita!=null && this.motivos!=null){
+                        if(this.cita[1] != "l") {                            
+                            this.descripcion = this.cita[1].resultado;    
+                            for(var i in this.cita[1].motivo_consultas) {
+                                this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
+                                this.addMotivos();
+                            }
+                    }}
+                this.hideModal();
+            }).catch(e => {
+                console.log('catch: ',e);
+                this.hideModal();
+            });
+            
+            
+        },
         fillFields() {
-            if(this.cita[1] != "l") {
-            this.descripcion = this.cita[1].resultado
-            if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
-                this.asistencia = true
+            // console.log('cita: ',this.cita);
+            // console.log('CitaDatos: ',this.$store.state.citaDatos);
+            let alumnosCita=this.$store.state.citaDatos.alumnos;
+            // console.log(alumnosCita);
+            if(alumnosCita.length > 1) { //Solo muestro varios alumnos
+                for(let i in alumnosCita){
+                     this.listAlumnosCod.push(alumnosCita[i].codigo);
+                    this.listAlumnosId.push(alumnosCita[i].id_usuario);
+                    var infoAlumno=new Object();
+                    
+                    if(alumnosCita[i].pivot.asistencia == 'asi') {
+                        infoAlumno.asistencia = true;
+                    }
+                    else if(alumnosCita[i].pivot.asistencia == 'noa' || alumnosCita[i].pivot.asistencia == 'pen' ) {
+                        infoAlumno.asistencia = false;
+                        
+                    }                    
+                    infoAlumno.nombres=alumnosCita[i].nombre+" " +alumnosCita[i].apellidos;
+                    this.listAlumnosNom.push(infoAlumno);
+                    //Podría hacerlo más responsive si todo lo junto en un solo arreglo e imprimo por i
+                   }             
             }
-            // console.log('longitud for:', this.cita[1].motivo_consultas)
-            for(var i in this.cita[1].motivo_consultas) {
-                this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
-                // console.log('motivo selected: ', this.selectedMotivo)
-                this.addMotivos()
-            }
-        }
+            //console.log('1 ',this.cita);
+            
         },
         enableFields() {
-            let elems = document.getElementsByTagName('input')
-            elems[0].disabled = false;
+
             let elems2 = document.getElementsByTagName('select');
             for(let i = 0; i < elems2.length; i++) {
                 elems2[i].disabled = false;
             }
             let elems3 = document.getElementsByTagName('textarea');
             elems3[0].disabled = false;
-            
         },
         disableFields() {
-            let elems = document.getElementsByTagName('input')
-            elems[0].disabled = true;
+
             let elems2 = document.getElementsByTagName('select');
             for(let i = 0; i < elems2.length; i++) {
                 elems2[i].disabled = true;
             }
             let elems3 = document.getElementsByTagName('textarea');
             elems3[0].disabled = true;
-            document.querySelector("#app > nav.navbar.navbar-dark.navbar-expand-lg > select").disabled = false
         },
         cancelar: function(){
             Swal.fire({
@@ -306,42 +355,64 @@ export default Vue.extend ({
                         this.listMotivosId= [];
                         this.motivosBorrados=[];
                         this.selectedUnidadApoyo= null;
+                        this.cita=undefined;
+                        this.$store.state.curSesion=null;
+                        this.$store.state.citaDatos=null;
                         //lo redirigo
-                        this.$router.push('/calendariocitas');
+                        this.$router.push('/listadocitas');
                     } 
                 })
         },
+        
         editFields: function () {
             if(this.cita[1]=='l') {
-                this.enableFields()
-                this.editar=true
+                this.enableFields();
+                this.editar=true;
             }
+            
+
             
         },
         guardar: function () {
-            let array = []
-            array.push(this.event.extendedProps.alumno.id_usuario);
-            let arrayAsis = [this.asistencia]
-            // console.log(array);
+
+            let faltaron=false;            
+            for(let i in this.listAlumnosNom ){
+                if(this.listAlumnosNom[i].asistencia==true)            this.asistencia[i]="asi";
+                else if(this.listAlumnosNom[i].asistencia==null || this.listAlumnosNom[i].asistencia==false  )  { 
+                    this.asistencia[i]="noa"; 
+                     faltaron=true; //Por lo menos faltó uno
+                    //  console.log('o es false o el null');
+                }
+                
+            }
+            // console.log(faltaron);
+            //varios un alumno
+            console.log(this.$store.state.citaDatos);
             const sesion_params = {
-                id_cita: this.$store.state.idCita,
+                id_cita:this.$store.state.citaDatos.props,
                 resultado: this.descripcion,
                 usuario_creacion: this.cita[1].usuario_creacion,
-                usuario_actualizacion: this.cita[1].usuario_actualizacion,
-                idAlumnos: array,
-                asistencia: arrayAsis,
+                usuario_actualizacion:this.$store.state.usuario.id_usuario,
+                idAlumnos: this.listAlumnosId,
+                asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
-            }; console.log(sesion_params );
+            };
+                 console.log(sesion_params);
+
+            if(faltaron==false){
                 if(this.listMotivos.length > 0) {
-                        
-                            if(this.descripcion!=null) {
+                       
+                            
+                            if(this.descripcion!=null  ) {
+                               
                                 if(this.selectedUnidadApoyo) {
                                     this.enviarCorreo(this.selectedUnidadApoyo)
                                 }
+
                                 axios.post('/sesiones/regSesionFormal',sesion_params)
                                     .then( response=>{
-                                        response
-                                        this.disableFields()
+                                       response
+                                        this.disableFields();
                                         Swal.fire({
                                             text:"Se ha registrado la sesión con éxito",
                                             icon:"success",
@@ -349,13 +420,21 @@ export default Vue.extend ({
                                             confirmButtonColor:'#0097A7',
                                             showConfirmButton: true,
                                         }) 
-                                        this.$router.push('/calendariocitas')
+                                        //lo redirigo a los calendarios
+                                        this.$router.push('/listadocitas');
                                     })  
                                     .catch(e => {
-                                        console.log(e.response);
+                                        console.log(e);
+                                        Swal.fire({
+                                                    text:"Estamos teniendo problemas al guardar la cita. Vuelve a intentar en unos minutos.",
+                                                    icon:"warning",
+                                                     confirmButtonText: 'Continuar',
+                                                     confirmButtonColor:'#0097A7',
+                                                     showConfirmButton: true,
+                                         });
                                     });
-                                }
-                                else {
+                            }
+                            else if(this.descripcion==null) {
                                     Swal.fire({
                                         text:"Debe llenar el campo descripción",
                                         icon:"error",
@@ -363,8 +442,12 @@ export default Vue.extend ({
                                         confirmButtonColor:'#0097A7',
                                         showConfirmButton: true,
                                     })
-                                }
-                                
+                            }
+                           
+                                 
+                          
+                   
+                
                 }
                 else {
                     Swal.fire({
@@ -375,6 +458,48 @@ export default Vue.extend ({
                         showConfirmButton: true,
                     })
                 }
+            }
+            else if(faltaron==true){
+                                 Swal.fire({
+                                        text:"Por lo menos un alumno no asisitó a la cita. ¿Está seguro que desea guardar",
+                                        icon:"warning",
+                                        confirmButtonText: 'Sí',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+
+                                        cancelButtonText: 'No',
+                                        cancelButtonColor:'C4C4C4',
+                                        showCancelButton: true,
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            axios.post('/sesiones/regSesionFormal',sesion_params)
+                                            .then( response=>{
+                                                   response
+                                                    this.disableFields();
+                                                    Swal.fire({
+                                                        text:"Se ha registrado la sesión con éxito",
+                                                        icon:"success",
+                                                        confirmButtonText: 'OK',
+                                                        confirmButtonColor:'#0097A7',
+                                                        showConfirmButton: true,
+                                                    }) 
+                                                 //lo redirigo a los calendarios
+                                                 this.$router.push('/listadocitas');
+                                             })  .catch(e => {
+                                                 console.log('catch sesion: ',e);
+                                                 Swal.fire({
+                                                             text:"Estamos teniendo problemas al guardar la cita. Vuelve a intentar en unos minutos.",
+                                                             icon:"warning",
+                                                              confirmButtonText: 'Continuar',
+                                                              confirmButtonColor:'#0097A7',
+                                                              showConfirmButton: true,
+                                                  });
+                                             });
+
+                                        }   //fin del if result.value
+                                    
+                                    }) //fin del then re
+            }
             
         },
         onCodigoChange: function () {
@@ -383,12 +508,12 @@ export default Vue.extend ({
                 if(this.sel==this.codigos[i].codigo){
                     this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
                 }
-                // console.log(this.alSeleccionado);
-                //break;   
+              
             }
         },
         addMotivos: function () {
-            // console.log('la funcion addmotivos ha sido llamada',this.motivos)
+        //    console.log('selectMotivo: ',this.selectedMotivo);
+        //    console.log('motivos: ',this.motivo);
             for(var i in this.motivos)
                 if(this.selectedMotivo==this.motivos[i].id_motivo_consulta) {
                     this.listMotivos.push(this.motivos[i].nombre);
@@ -396,6 +521,7 @@ export default Vue.extend ({
                     this.motivosBorrados.push(this.motivos[i]);
                     this.motivos.splice(i,1);  
                 }
+            this.selectedMotivo=null;
         },
         deleteMotivo: function (index) {
             var i;
@@ -411,6 +537,7 @@ export default Vue.extend ({
 
             }
         },
+        /*
         enviarCorreo(unidad){
             let mensaje = "Se te ha derivado a "+unidad.nombre+":<br>"
                             +"Nombre Contacto: "+unidad.nombre_contacto+"<br>"
@@ -428,7 +555,7 @@ export default Vue.extend ({
                   }, (error) => {
                       console.log('FAILED...', error);
                   });
-        },
+        },*/
         Perfil(tipo){
             if(tipo == 1){
                 this.$store.state.verPdf=false;this.$store.state.verCitas=true;this.$store.state.verPlan=false;
@@ -439,14 +566,63 @@ export default Vue.extend ({
             if(tipo == 3){
                 this.$store.state.verPdf=false;this.$store.state.verCitas=false;this.$store.state.verPlan=true;
             }
-            this.$store.state.citaDatos=null;
-            this.$router.push('/perfil/'+this.event.extendedProps.alumno.id_usuario)
+            //this.$router.push('/perfil/'+this.event.extendedProps.alumno.id_usuario)
         },
         showModal() {
             this.$refs['my-modal'].show()
         },
         hideModal() {
             this.$refs['my-modal'].hide()
+        },
+        //METODOS PARA LLENAR ALUMNOS 
+        llenarAlumnos(){
+           // this.codigo  //Los alumnos que lista
+        
+           let n=this.$store.state.citaDatos.alumnos.length;
+           
+           if(n==1){
+             this.listAlumnosNom.push(this.$store.state.citaDatos.alumnos[0].nombre +" " +this.$store.state.citaDatos.alumnos[0].apellidos);
+             this.listAlumnosCod.push(this.$store.state.citaDatos.alumnos[0].codigo);
+             this.listAlumnosId.push(this.$store.state.citaDatos.alumnos[0].id_usuario);
+           }
+           else if(n>1){
+                for(let i=0;i<n;i++){
+                    this.listAlumnosNom.push(this.$store.state.citaDatos.alumnos[i].nombre+" " +this.$store.state.citaDatos.alumnos[i].apellidos);
+                     this.listAlumnosCod.push(this.$store.state.citaDatos.alumnos[i].codigo);
+                    this.listAlumnosId.push(this.$store.state.citaDatos.alumnos[i].id_usuario);
+                }
+           }
+        
+        },  
+              
+       
+        listarAlumnosxProg(){
+            this.showModal();
+            axios.post('sesiones/alumnoProg', {
+                    idTipoU:5, //Id=5 lista los alumnos, 
+                    idProg: this.$store.state.programaActual.id_programa
+                })
+            .then( response => {
+                   
+                    for(var i in response.data){ 
+                        this.codigos.push(response.data[i][0]);
+                    }
+                    this.hideModal();
+                   this.mipermisosUsuario=this.$store.state.permisosUsuario;
+                  
+                })
+            .catch(e => {
+                    console.log('catch',e.response);
+                    this.hideModal();
+                    Swal.fire({
+                     text:"Estamos teniendo problemas al cargar el listado de alumnos. Vuelva a intentar en unos minutos",
+                     icon:"error",
+                     confirmButtonText: 'OK',
+                     confirmButtonColor:'#0097A7',
+                     showConfirmButton: true,
+                 }) 
+
+                });
         },
     }
 })
@@ -576,5 +752,7 @@ export default Vue.extend ({
         outline:none;
         box-shadow: none;
     }
-    
+ .btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}   
 </style>

@@ -247,7 +247,7 @@ export default Vue.extend ({
     },
     methods: {
         fillFields() {
-            // console.log('cita: ',this.cita);
+             console.log('cita: ',this.cita);
             if(this.cita[0].cita_x_usuarios.length > 1) { //Solo muestro varios alumnos
                 for(let i in this.cita[0].cita_x_usuarios){
                      this.listAlumnosCod.push(this.cita[0].cita_x_usuarios[i].codigo);
@@ -536,62 +536,8 @@ export default Vue.extend ({
            }
         
         },  
-        deleteAl: function(index) {
-            
-            var estabaAntes=this.$store.state.citaDatos.alumnos.find(alum => alum.codigo == this.listAlumnosCod[index]); 
-            //Si encuentra el código, estabaAntes es un objeto, si no, estabaAntes es undefined
-            var al=  this.listAlumnosCod.splice(index,1);
-            this.listAlumnosNom.splice(index,1);
-            this.listAlumnosId.splice(index,1);
-          
-            //revisar duplicado y no enviar correo a quien se agregó y eliminó de casualidad, pero como no estaba originalmente,no le envío correo
-            if(estabaAntes==undefined)        
-                 this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),false) //No estaba antes
-            else          
-                 this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),true)  //sí estaba antes
 
-        },
-        addAlumno: function () {  
-            var estaAl = false;
-            for( var i in this.listAlumnosCod ){
-                    if(this.sel == this.listAlumnosCod[i]){
-                        estaAl = true;
-                        break;
-                    }
-            }
-            
-            if(this.alSeleccionado != 'Nombre del alumno' && !estaAl && this.sel.length == 8){ 
-                this.listAlumnosNom.push(this.alSeleccionado);
-                this.listAlumnosCod.push(this.sel);
-                for(var j in this.codigos){
-                    if(this.sel == this.codigos[j].codigo)
-                        this.listAlumnosId.push(this.codigos[j].id_usuario);
-                }
-                this.alSeleccionado='Nombre del alumno';
-                this.sel= '';
-            }
-            else if(estaAl) {
-                 Swal.fire({
-                     text:"Ya se encuentra este alumno en la lista.",
-                     icon:"warning",
-                     confirmButtonText: 'OK',
-                     confirmButtonColor:'#0097A7',
-                     showConfirmButton: true,
-                 }) 
-            
-            }
-            else if (this.alSeleccionado == 'Nombre del alumno'){
-                 Swal.fire({
-                     text:"Selección de alumno inválida",
-                     icon:"warning",
-                     confirmButtonText: 'OK',
-                     confirmButtonColor:'#0097A7',
-                     showConfirmButton: true,
-                 }) 
-            }
-          
-            
-        },
+       
        
         listarAlumnosxProg(){
             this.showModal();
