@@ -322,7 +322,13 @@ export default new Vuex.Store({
             coordinadoresL2.forEach(element => {
               coordinadores.push(element)
             });
-            coordinadoresL = coordinadores
+            const seen = new Set();
+            const filteredArr = coordinadores.filter(el => {
+              const duplicate = seen.has(el.id_usuario);
+              seen.add(el.id_usuario);
+              return !duplicate;
+            });
+            coordinadoresL = filteredArr
           }
         }
         else if(state.filtro.programa!=null){
@@ -351,7 +357,13 @@ export default new Vuex.Store({
           coordinadoresL2.forEach(element => {
             coordinadores.push(element)
           });
-          coordinadoresL = coordinadores
+          const seen = new Set();
+          const filteredArr = coordinadores.filter(el => {
+            const duplicate = seen.has(el.id_usuario);
+            seen.add(el.id_usuario);
+            return !duplicate;
+          });
+          coordinadoresL = filteredArr
         }
         return coordinadoresL;
       }
