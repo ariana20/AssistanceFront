@@ -70,7 +70,7 @@
             </div>
           </div>
           <div v-else>
-            <div v-if="this.planAccion.descripcion==null && nuevo!=true && this.planAccion">
+            <div v-if="this.planAccion && nuevo!=true && this.planAccion.descripcion==null">
               'No tiene descripción registrada'
             </div>
             <div v-else>
