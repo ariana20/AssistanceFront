@@ -13,7 +13,7 @@
       </div>
       <div class="row" style="margin-top:3%;text-align:left">
         <div class="col-12 col-md-2" style="margin-bottom:3%">
-          <strong>Titulo:</strong>
+          <strong>Título:</strong>
         </div>
         <div class="col-12 col-md-3">
           <div v-if="planAccion!=undefined && planAccion.compromisos!=undefined && this.nuevo==false">
@@ -70,7 +70,12 @@
             </div>
           </div>
           <div v-else>
-            <textarea  v-model="descripcion" class="perso inp" id="subject" name="subject" placeholder="Esriba la descripción del plan.." style="resize: none;padding-top:2%;height:100px;width:100%"/>
+            <div v-if="this.planAccion.descripcion==null && nuevo!=true && this.planAccion">
+              'No tiene descripción registrada'
+            </div>
+            <div v-else>
+              <textarea v-on:change="edito=true;" v-model="descripcion" class="perso inp" id="subject" name="subject" placeholder="Esriba la descripción del plan.." style="resize: none;padding-top:2%;height:100px;width:100%"/>
+            </div>
           </div>
         </div>
       </div>

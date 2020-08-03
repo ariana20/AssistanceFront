@@ -96,12 +96,11 @@
   
 </template>
 
-
 <script>
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import emailjs from 'emailjs-com';
-
+import emailjs from 'emailjs-com'
+import CryptoJS from 'crypto-js'
   export default {
       mounted() {
         if(this.$store.state.usuario!=null) this.$router.push('/seleccion')
@@ -158,9 +157,12 @@ import emailjs from 'emailjs-com';
             else this.$router.push('/userNuevo');
           }
           else{
+            let password = 'assistancesoporte'
+            let encrypted = CryptoJS.AES.encrypt(this.state.password, password)
+            console.log(encrypted.ciphertext)
             const params ={
               correo: this.state.email,
-              password: this.state.password,
+              password: encrypted,
             }
             
             axios.post('/vuelogin', params,)
