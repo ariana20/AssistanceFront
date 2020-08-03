@@ -24,7 +24,7 @@
                               center: '',
                               right: 'prev today next'
                           }"
-                          :slotDuration= bloque
+                          :slotDuration= this.bloque
                           :businessHours="businessHours"
                           :columnHeaderFormat="columnFormat"
                           :titleFormat="titleFormat"
@@ -245,11 +245,24 @@ export default {
                                     d = new Date( date2.setDate(date2.getDate()+1))
                                     listaFechas.push(d)
                                 } 
+                                var o = i
                                 axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(d).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
                                 .then((response) => {
                                     console.log('response disp',response.data[0])
-                                    if(response.data[0] == 'l' && i==4) {
+                                    if(response.data[0] != 'l') {
+                                        this.estaOcupado = true
+                                        Swal.fire({
+                                            text:"Las fechas seleccionadas ya se encuentran ocupados",
+                                            icon:"error",
+                                            confirmButtonText: 'OK',
+                                            confirmButtonColor:'#0097A7',
+                                            showConfirmButton: true,
+                                        })
+                                        throw new FatalError("Something went badly wrong!")
+                                    } else if(o==4 && !this.estaOcupado) {
+                                        console.log('libre')
                                         for (var i in listaFechas) {
+                                            if(o==4) {
                                             axios.post('disponibilidades/insertar',{
                                                 id_usuario:this.$store.state.usuario.id_usuario,
                                                 id_programa: this.$store.state.programaActual.id_programa,
@@ -276,16 +289,9 @@ export default {
                                                 console.log(e.response);
 
                                             });
+                                            }
                                         }
-                                    } else if(response.data[0] != 'l') {
-                                        i=6
-                                        Swal.fire({
-                                            text:"Las fechas seleccionadas ya se encuentran ocupados",
-                                            icon:"error",
-                                            confirmButtonText: 'OK',
-                                            confirmButtonColor:'#0097A7',
-                                            showConfirmButton: true,
-                                        })
+                                        o++
                                     }
                                 }).catch(e => {
                                     Swal.showValidationmessage('Request failed: ', e)
@@ -676,6 +682,10 @@ export default {
     }
     
 }
+function FatalError(){ Error.apply(this, arguments); this.name = "FatalError"; }
+FatalError.prototype = Object.create(Error.prototype);
+
+
 function disableAlert () {
     document.querySelector("body > div.swal2-container.swal2-center.swal2-backdrop-show > div > div.swal2-content > select > option:nth-child(3)").disabled = "true"
     document.querySelector("body > div.swal2-container.swal2-center.swal2-backdrop-show > div > div.swal2-content > select > option:nth-child(4)").disabled = "true"                                  
