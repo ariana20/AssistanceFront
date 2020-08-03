@@ -284,10 +284,10 @@ export default {
     //cuanto se selecciona del combobox
     if(this.tutorSel!=undefined) {
       this.tipoTutorias = []
-      if(this.tutorSel.usuario.tipo_tutorias!=undefined){
+      if(this.tutorSel.tipo_tutorias!=undefined){
         //this.tipoTutorias = this.tutorSel.usuario.tipo_tutorias
       
-        this.tutorSel.usuario.tipo_tutorias.forEach(element => {
+        this.tutorSel.tipo_tutorias.forEach(element => {
           // console.log(element.nombre,element.tutor_asignado)
           if(element.tutor_fijo!="1") this.tipoTutorias.push(element)
         });
