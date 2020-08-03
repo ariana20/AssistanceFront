@@ -127,6 +127,7 @@ export default {
         ...mapGetters(["EVENTS"])
     },
     methods: {
+        
         getTipoTutorias() {
             const params = {
                 idTutor: this.$store.state.usuario.id_usuario,
@@ -143,67 +144,206 @@ export default {
         
         handleSelect (arg) {
             // console.log(arg)
+            var i = 0
             var today = new Date()
-            var date = arg.start
+            var date = new Date(arg.start)
             if(date>today) {
-                axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(arg.start).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
-                .then((response) => {
-                    // console.log(response.data)
-                    if(response.data == 'l') {
-                        Swal.fire({
-                            html:'Se registrará una nueva disponibilidad el día <br> ' +  moment(arg.start).format("YYYY-MM-DD") + ' a las ' + moment(arg.start).format(" hh:mm a"),
-                            icon:"warning",
-                            confirmButtonText: 'Continuar',
-                            showCancelButton: true,
-                            cancelButtonText: 'Cancelar',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                        }).then((result) => {
-                            if(result.value) {
+                Swal.fire({
+                    title: 'Nueva Disponibilidad',
+                    input: 'select',
+                    inputOptions: {
+                        '1': 'Una vez',
+                        '2': 'Diaria',
+                        '3': 'Semanal',
+                        '4': 'Mensual'
+                    },
+                    inputPlaceholder: 'Seleccione Frecuencia',
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancelar',                  
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                }).then((result) => {
+                    switch(result.value) {
+                        //UNICA VEZ
+                        case "1":
+                            axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(arg.start).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
+                            .then((response) => {
+                                if(response.data == 'o') {
+                                    Swal.fire({
+                                        text:"Ya tiene registrado este horario en otro programa",
+                                        icon:"error",
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+                                    })
+                                } else {
+                                    axios.post('disponibilidades/insertar',{
+                                        id_usuario:this.$store.state.usuario.id_usuario,
+                                        id_programa: this.$store.state.programaActual.id_programa,
+                                        fecha:moment(arg.start).format("YYYY-MM-DD"),
+                                        usuario_creacion: this.$store.state.usuario.id_usuario,
+                                        usuario_actualizacion: this.$store.state.usuario.id_usuario,
+                                        tipo_disponibilidad: 'fij',
+                                        hora_inicio:moment(arg.start).format('HH:mm:ss')
+                                    }).then((response) => {
+                                        if(response.data){
+                                            Swal.fire({
+                                                text:"Se registró una nueva disponibilidad",
+                                                icon:"success",
+                                                confirmButtonText: 'Continuar',
+                                                confirmButtonColor:'#0097A7',
+                                                showConfirmButton: true,
+                                            });
+                                            this.getReminders();
+                                        }
+                                    })
+                                }
+                            }).catch(e => {
+                                console.log(e.response);
+                            });
+                            break;
+
+                        //FRECUENCIA DIARIA
+                        case "2":
+                            var d
+                            var estaOcupado = false
+                            var listaDias = []
+                            var date2 = getMonday(date)
+                            while (i<5) {
+                                if(i==0) {
+                                    d = new Date( date2.setDate(date2.getDate()))
+                                    listaDias.push(d)
+                                }else{
+                                    d = new Date( date2.setDate(date2.getDate()+1))
+                                    listaDias.push(d)
+                                }
+                                axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(d).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
+                                .then((response) => {
+                                    if(response.data == 'o') {
+                                        Swal.fire({
+                                            text:"El día" + d.toLocaleDateString('es', { weekday: 'long' }) +" ya se encuentra ocupado en otro programa",
+                                            icon:"error",
+                                            confirmButtonText: 'OK',
+                                            confirmButtonColor:'#0097A7',
+                                            showConfirmButton: true,
+                                        })
+                                        estaOcupado = true
+                                    }
+                                }).catch(e => {
+                                    console.log(e.response);
+                                });
+                                if(estaOcupado) break;
+                                i++
+                            }
+                            for (var j in listaDias) {
                                 axios.post('disponibilidades/insertar',{
                                     id_usuario:this.$store.state.usuario.id_usuario,
                                     id_programa: this.$store.state.programaActual.id_programa,
-                                    fecha:moment(arg.start).format("YYYY-MM-DD"),
+                                    fecha:moment(listaDias[j]).format("YYYY-MM-DD"),
                                     usuario_creacion: this.$store.state.usuario.id_usuario,
                                     usuario_actualizacion: this.$store.state.usuario.id_usuario,
                                     tipo_disponibilidad: 'fij',
                                     hora_inicio:moment(arg.start).format('HH:mm:ss')
-                                })
-                                .then((response) => {
-                                    
-                                    if(response.data){
-                                        this.$store.commit("ADD_EVENT", {
-                                            title: "Disponible",
-                                            start: arg.start,
-                                            end: arg.end,
-                                        })
+                                }).catch(e => {
+                                    console.log(e.response);
+                                });
+                                
+                            }
+                            Swal.fire({
+                                text:"Disponibilidades registradas éxitosamente",
+                                icon:"success",
+                                confirmButtonText: 'Continuar',
+                                confirmButtonColor:'#0097A7',
+                                showConfirmButton: true,
+                            }).then((result) => {
+                                if(result)
+                                    this.getReminders();
+                            })
+                            break;
+                        
+                        //FRECUENCIA SEMANAL
+                        case "3":
+                            var veces
+                            var s
+                            var estaOcupadoS = false
+                            var listaSemanal = []
+                            Swal.fire({
+                                text: 'Ingrese número de repeticiones',
+                                input: 'number'
+                            }).then(function(result) {
+                                if (result.value) {
+                                    veces = parseInt(result.value, 10)
+                                    while (i<veces) { 
+                                        if(i==0) {
+                                            s = new Date( date.setDate(date.getDate()))
+                                            listaSemanal.push(s)
+                                        }else{
+                                            s = new Date( date.setDate(date.getDate()+7))
+                                            listaSemanal.push(s)
+                                        }
+                                        axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(s).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
+                                        .then((response) => {
+                                            if(response.data == 'o') {
+                                                Swal.fire({
+                                                    text:"El día" + d.toLocaleDateString('es', { weekday: 'long' }) + " " + d.getDate() +" ya se encuentra ocupado en otro programa",
+                                                    icon:"error",
+                                                    confirmButtonText: 'OK',
+                                                    confirmButtonColor:'#0097A7',
+                                                    showConfirmButton: true,
+                                                })
+                                                estaOcupado = true
+                                            }
+                                        }).catch(e => {
+                                            console.log(e.response);
+                                        });
+                                        if(estaOcupadoS) break;
+                                        i++
+                                    }
+                                    /*var success  
+                                    for (var k in listaSemanal) {
+                                        axios.post('disponibilidades/insertar',{
+                                            id_usuario:this.$store.state.usuario.id_usuario,
+                                            id_programa: this.$store.state.programaActual.id_programa,
+                                            fecha:moment(listaSemanal[k]).format("YYYY-MM-DD"),
+                                            usuario_creacion: this.$store.state.usuario.id_usuario,
+                                            usuario_actualizacion: this.$store.state.usuario.id_usuario,
+                                            tipo_disponibilidad: 'fij',
+                                            hora_inicio:moment(arg.start).format('HH:mm:ss')
+                                        }).then((response) => {
+                                            if(response)
+                                                succ=true                          
+                                        }).catch(e => {
+                                            console.log(e.response);
+                                            success=false
+                                        });
+                                        if(!success) break
+                                    }
+                                    if(succ){
                                         Swal.fire({
-                                            text:"Se registró una nueva disponibilidad",
+                                            text:"Disponibilidades registradas éxitosamente",
                                             icon:"success",
                                             confirmButtonText: 'Continuar',
                                             confirmButtonColor:'#0097A7',
                                             showConfirmButton: true,
-                                        });
-                                    }
-                                    this.getReminders();   
-                                }).catch(e => {
+                                        }).then((result) => {
+                                        if(result)
+                                            this.getReminders();
+                                        })
+                                    }*/
+                                }
+                            })
+
+                            break;
+                        /*case "4":
+                            axios.post('disponibilidades/consultarDisp',{idUsuario:this.$store.state.usuario.id_usuario,fecha:moment(arg.start).format("YYYY-MM-DD"),horaInicio:moment(arg.start).format('HH:mm:ss')})
+                            .then((response) => {
+
+                            }).catch(e => {
                                 console.log(e.response);
-                                });
-                            }
-                        })
-                    } else {
-                        Swal.fire({
-                            text:"Ya tiene registrado en otro programa este horario",
-                            icon:"error",
-                            confirmButtonText: 'OK',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                        })
+                            });
+                            break;*/
                     }
-                }).catch(e => {
-                        console.log(e.response);
-                    });
-                    //this.calendar.render();
+                })
             }
             
         },
@@ -260,7 +400,7 @@ export default {
         },
         deleteEvent(arg) {
             Swal.fire({
-                text:'¿Estás seguro que desea cancelar al cita?',
+                text:'¿Estás seguro que desea eliminar la disponibilidad?',
                 icon:"warning",
                 confirmButtonText: 'Si',
                 showCancelButton: true,
@@ -486,9 +626,17 @@ export default {
         //this.calendar = this.$refs.fullCalendar.getApi();
         //idUsuario: this.$store.state.usuario.id_usuario
         //this.calendar.render();
+        
     }
     
 }
+function getMonday(d) {
+  d = new Date(d);
+  var day = d.getDay(),
+      diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+  return new Date(d.setDate(diff));
+}
+
 function addTimes (startTime, endTime) {
   var times = [ 0, 0, 0 ]
   var max = times.length

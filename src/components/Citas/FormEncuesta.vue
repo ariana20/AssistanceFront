@@ -7,6 +7,7 @@
                     <h5 class="col-12 col-md-3">Fechas:</h5>
                     <date-picker class="wide-date-example col-12 col-md-8"
                         v-model="periodo" 
+                        v-on:change="ListarElementos"
                         width="20" :lang="lang" range
                         placeholder="Selecciona Rango de Fechas"
                         format="DD/MM/YYYY"
@@ -34,9 +35,9 @@
                             :tutor="alumno"
                             :tipoTutoria="null"/>
                     </div>
-                    <div class="col-12 col-md-2 custom-control form-control-lg custom-checkbox">
+                    <div class="col-12 col-md-2">
                         <div class="centrado">
-                            <input v-model="alumno.seleccionado" type="checkbox" class="largerCheckbox" :id="'customCheck'+alumno.id_usuario"> 
+                            <input v-model="alumno.seleccionado" type="checkbox" :id="'customCheck'+alumno.id_usuario"> 
                         </div>
                     </div>
                 </div>
@@ -115,12 +116,12 @@
                         </div>
                     </form>
                 </div>
-                <div class="actions">
-                    <button class="col-5" style="font-size:80%" v-if="activeStep - 1 >= 0 && activeStep!=preguntas.length-1" @click="checkFields(false)">Anterior</button>
-                    <button class="col-12" style="font-size:80%" v-if="activeStep + 1 < preguntas.length -1 && activeStep==0" @click="checkFields(true)">Siguiente</button>
-                    <button class="col-5" style="font-size:80%" v-if="activeStep + 1 < preguntas.length -1 && activeStep!=0" @click="checkFields(true)">Siguiente</button>
-                    <button class="col-5" style="font-size:80%; margin-left:0" v-if="activeStep + 1 === preguntas.length -1" @click="checkFields(true)">Finalizar</button>
-                    <button class="col-12" style="font-size:80%" v-if="activeStep=== preguntas.length-1" @click="Cancelar()">Regresar a Encuestas</button>
+                <div class="actions" style="width:100%;margin-top:5%;margin-left:5%">
+                    <button class="col-3 offset-2" style="font-size:80%" v-if="activeStep - 1 >= 0 && activeStep!=preguntas.length-1" @click="checkFields(false)">Anterior</button>
+                    <button class="col-3 offset-4" style="font-size:80%" v-if="activeStep + 1 < preguntas.length -1 && activeStep==0" @click="checkFields(true)">Siguiente</button>
+                    <button class="col-3 offset-1" style="font-size:80%" v-if="activeStep + 1 < preguntas.length -1 && activeStep!=0" @click="checkFields(true)">Siguiente</button>
+                    <button class="col-3 offset-4" style="font-size:80%; margin-left:5%" v-if="activeStep + 1 === preguntas.length -1" @click="checkFields(true)">Finalizar</button>
+                    <button class="col-3 offset-4" style="font-size:80%" v-if="activeStep=== preguntas.length-1" @click="Cancelar()">Regresar a Encuestas</button>
                 </div>
             </section>
         </article>
@@ -681,7 +682,6 @@ article {
         background-color: #138496;
         font-size: 1.35rem;
         padding: 5px 20px;
-        margin: 0 10px;
         text-transform: uppercase;
         border-radius: 3px;
         cursor: pointer;

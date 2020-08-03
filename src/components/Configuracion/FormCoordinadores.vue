@@ -7,10 +7,10 @@
 				<div class="form-inline col-12 col-md-2 col-lg-1">
 					<h5 style="margin-top:5%;margin-bottom:5%">Buscar: </h5>
 				</div>
-				<div class="form-inline col-12 col-md-4">
-					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar...">
+				<div class="form-inline col-12 col-md-6 col-lg-4">
+					<input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar">
 				</div>
-        <div class="form-inline col-12 col-md-3">
+        <div class="form-inline col-12 col-md-6 col-lg-3">
           <select v-on:change="FacultadSel"  class="form-control" style="margin-top:4%"
             v-model="facuSeleccionadoInd">  <!--aqui guardo-->
             <option selected :value="null">Selecciona una facultad</option>
@@ -19,7 +19,7 @@
             </option>
           </select>
         </div>
-        <div class="form-inline col-12 col-md-3">
+        <div class="form-inline col-12 col-md-6 col-lg-3">
           <select v-on:change="ProgramaSel"  class="form-control" style="margin-top:4%"
             v-model="progSeleccionadoInd">  <!--aqui guardo-->
             <option selected :value="null">Selecciona un programa</option>
@@ -175,26 +175,35 @@ export default {
       }
     },
     FacultadSel(){
-      this.progSeleccionadoInd = null;
-      this.filtroProg = null;
-      if(this.facuSeleccionadoInd == null){
-        this.filtroFacu = null;
-        this.listarProgramas();
-      }
-      else{
-        this.facultades.forEach(element => {
-          if(element.id_programa == this.facuSeleccionadoInd){
-            this.facuSeleccionado = element;
-            this.filtroFacu = element;
+      this.showModal();
+      this.axios.post('/programa/listarTodo')
+        .then(response=>{
+          this.programas = response.data
+          this.progSeleccionadoInd = null;
+          this.filtroProg = null;
+          if(this.facuSeleccionadoInd == null){
+            this.filtroFacu = null;
+            this.listarProgramas();
           }
-        });
-        let aux = []
-        this.programas.forEach(element => {
-          if(element.id_facultad == this.facuSeleccionado.id_facultad) aux.push(element);
-        });
-        this.programas = aux
-        this.$store.state.filtroProgs = aux;
-      }
+          else{
+            this.facultades.forEach(element => {
+              if(element.id_programa == this.facuSeleccionadoInd){
+                this.facuSeleccionado = element;
+                this.filtroFacu = element;
+              }
+            });
+            let aux = []
+            this.programas.forEach(element => {
+              if(element.id_facultad == this.facuSeleccionado.id_facultad) aux.push(element);
+            });
+            this.programas = aux
+            this.$store.state.filtroProgs = aux;
+          }
+          this.hideModal();
+        })
+        .catch(e=>{
+          console.log(e)
+        })
     },
     listarCoordinadores() {
       this.axios.post('/facultad/coordinadoresPyF')
@@ -277,4 +286,8 @@ export default {
 .botones {
     margin:auto;
 }
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
+
 </style>

@@ -417,7 +417,7 @@ export default Vue.extend ({
                         break;
                     }
             }
-            if(this.alSeleccionado != 'Nombre Alumno' && !estaAl && this.sel.length == 8){ 
+            if(this.alSeleccionado != 'Nombre Alumno' && !estaAl ){ 
                 this.listAlumnosNom.push(this.alSeleccionado);
                 this.listAlumnosCod.push(this.sel);
                 for(var j in this.codigos){

@@ -10,11 +10,11 @@
             </figure>
         </div>
         <div class=" col-12 col-md-5" style="margin-top:3%">
-            <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
-            <div class="font-weight-bolder">Correo: {{tutor.correo}}</div>
-            <div class="font-weight-bolder">Telefono: {{tutor.telefono}}</div>
-            <div class="font-weight-bolder" v-if="this.$store.state.programaActual">Programa: {{this.$store.state.programaActual.nombre}}</div>
-            <div class="font-weight-bolder">Condicion: {{tutor.cond}}</div>
+            <div><strong>Código:</strong> {{tutor.codigo}}</div>
+            <div><strong>Correo:</strong> {{tutor.correo}}</div>
+            <div><strong>Telefono:</strong> {{tutor.telefono}}</div>
+            <div v-if="this.$store.state.programaActual"><strong>Programa:</strong> {{this.$store.state.programaActual.nombre}}</div>
+            <div><strong>Condicion:</strong> {{tutor.cond}}</div>
         </div>
                           
     </div>

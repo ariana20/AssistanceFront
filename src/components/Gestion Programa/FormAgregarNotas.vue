@@ -139,62 +139,7 @@ export default Vue.extend ({
    
     },
     methods: {
-    
-        onCodigoChange: function () {
-            var i;
-            for(i in this.codigos){
-                if(this.sel==this.codigos[i].codigo){
-                    this.alSeleccionado = this.codigos[i].nombre + ' ' + this.codigos[i].apellidos;                
-                }
-               
-                //break;   
-            }
-        },
-        addMotivos: function () {
-            for(var i in this.motivos)
-                if(this.selectedMotivo==this.motivos[i].id_motivo_consulta) {
-                    this.listMotivos.push(this.motivos[i].nombre);
-                    this.listMotivosId.push(this.motivos[i].id_motivo_consulta);
-                    this.motivosBorrados.push(this.motivos[i]);
-                    this.motivos.splice(i,1);  
-                }
-        },
-        deleteMotivo: function (index) {
-            var i;
-            for(i in this.motivosBorrados)
-                if(this.listMotivos[index]==this.motivosBorrados[i].nombre) {
-                    this.motivos.push(this.motivosBorrados[i]);
-                    break;
-                }
-            this.listMotivos.splice(index,1);
-            this.listMotivosId.splice(index,1);
-        },
-        deleteAl: function(index) {
-            this.listAlumnosCod.splice(index,1);
-            this.listAlumnosNom.splice(index,1);
-        },
-        addAlumno: function () {  
-            var estaAl = false;
-            for( var i in this.listAlumnosCod ){
-                    if(this.sel == this.listAlumnosCod[i]){
-                        estaAl = true;
-                        break;
-                    }
-            }
-            if(this.alSeleccionado != 'Nombre del alumno' && !estaAl && this.sel.length == 8){ 
-                this.listAlumnosNom.push(this.alSeleccionado);
-                this.listAlumnosCod.push(this.sel);
-                for(var j in this.codigos){
-                    if(this.sel == this.codigos[j].codigo)
-                        this.listAlumnosId.push(this.codigos[j].id_usuario);
-                }
-                this.alSeleccionado='Nombre del alumno';
-                this.sel= '';
-            }
-           
-            
-            
-        },
+
         cancelarNotas(){
                 Swal.fire({
                    text:"¿Está seguro que desea cancelar?",
