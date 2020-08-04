@@ -382,11 +382,15 @@ export default Vue.extend ({
             //Si encuentra el código, estabaAntes es un objeto, si no, estabaAntes es undefined
 
             //revisar duplicado y no enviar correo a quien se agregó y eliminó de casualidad, pero como no estaba originalmente,no le envío correo
-            if(estabaAntes==undefined)        
+           var al=  this.listAlumnosCod.splice(index,1);
+           if(estabaAntes==undefined)        
                  this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),false) //No estaba antes
            else if (estabaAntes=="noalumnos") estabaAntes="noalumnos";
-           else   this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),true)  //sí estaba antes
-            var al=  this.listAlumnosCod.splice(index,1);
+           else  { 
+               this.analizarAlumnoEliminado(this.codigos.find( alumno => alumno.codigo === al[0]),true)  //sí estaba antes
+           
+           }
+           
             this.listAlumnosNom.splice(index,1);
             this.listAlumnosCond.splice(index,1);
             this.listAlumnosId.splice(index,1);

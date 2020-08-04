@@ -258,10 +258,8 @@ export default {
                 })
                 .then((response) => {
                     
-                    var rd = response.data[0];
-                   
-
-                    var rd2 = response.data[1];
+                    var rd = response.data[0]; 
+                    var rd2 = response.data[1]; 
                     for(var i in rd) {
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
