@@ -82,7 +82,8 @@ export default {
             tipoTutorias: "",
             motivoSel: null,
             ini: null,
-            fin: null
+            fin: null,
+            solicitud: null,
         }
     },
     methods: {
@@ -191,78 +192,81 @@ export default {
         },
         SolCancelar(){
           Swal.fire({
-                text:"¿Desea solicitar la cancelacion de esta cita?",
-                icon:"warning",
-                confirmButtonText: 'Sí',
-                confirmButtonColor:'#0097A7',
-                cancelButtonText: 'No',
-                cancelButtonColor:'C4C4C4',
-                showCancelButton: true,
-                showConfirmButton: true,
-            })
-              .then((result) => {
-                if (result.value) {
+            title: 'Ingrese el motivo de la cancelación',
+            input: 'text',
+            inputAttributes: {
+              autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Enviar',
+            confirmButtonColor:'#0097A7',
+            cancelButtonText: 'Cancelar',
+            cancelButtonColor:'C4C4C4',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+              const params={
+                id_remitente: this.id_tutor,
+                id_solicitante: this.$store.state.usuario.id_usuario,
+                tipo_solicitud: 'Cita',
+                descripcion: 'Solicitud para la cancelacion de una cita',
+                id_programa: this.$store.state.programaActual.id_programa, 
+                motivo: "Cita con fecha "+moment(this.event.start).format('MM/DD/YYYY')+" y hora "+moment(this.event.start).format('hh:mm a')+" cancelada debido a "+login,
+                usuario_creacion: this.$store.state.usuario.id_usuario,
+                usuario_actualizacion: this.$store.state.usuario.id_usuario,
+                id_usuario_relacionado: this.id_tutor,
+                id_cita: this.$store.state.idCita,
+              }
+              this.solicitud = params
+              return axios.post('/solicitudes/insertar', params)
+              .then( response=>{
+                return response
+              })
+              .catch(e => {
+                console.log(e.response);
+                Swal.showValidationMessage(
+                  `Request failed: ${e}`
+                )
+              })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+            if(result.value.data.status == 'error'){
+              Swal.fire({
+              text:result.value.data.mensaje,
+              icon:"error",
+              confirmButtonText: 'OK',
+              confirmButtonColor:'#0097A7',
+              showConfirmButton: true,
+              })
+            }
+            else{
+              axios.post('citas/cancelarCita',{
+                idCita: this.idCita,
+                idDisponibilidad:this.event.id,
+                usuario_actualizacion:this.$store.state.usuario.id_usuario})
+              .then((response) => {
+                if(response) {
+                  this.$store.commit("UPDATE_EVENT", {
+                    id: parseInt(this.event.id, 10),
+                    title: 'Disponible',
+                    start: this.event.start,
+                    color:'#B2EBF2',
+                  });
                   Swal.fire({
-                    title: 'Ingrese el motivo de la cancelación',
-                    input: 'text',
-                    inputAttributes: {
-                      autocapitalize: 'off'
-                    },
-                    showCancelButton: true,
-                    confirmButtonText: 'Enviar',
+                    text:"La cita ha sido cancelada",
+                    icon:"success",
+                    confirmButtonText: 'Aceptar',
                     confirmButtonColor:'#0097A7',
-                    cancelButtonText: 'Cancelar',
-                    cancelButtonColor:'C4C4C4',
-                    showLoaderOnConfirm: true,
-                    preConfirm: (login) => {
-                      const params={
-                        id_remitente: this.id_tutor,
-                        id_solicitante: this.$store.state.usuario.id_usuario,
-                        tipo_solicitud: 'Cita',
-                        descripcion: 'Solicitud para la cancelacion de una cita',
-                        id_programa: this.$store.state.programaActual.id_programa, 
-                        motivo: login,
-                        usuario_creacion: this.$store.state.usuario.id_usuario,
-                        usuario_actualizacion: this.$store.state.usuario.id_usuario,
-                        id_usuario_relacionado: this.id_tutor,
-                        id_cita: this.$store.state.idCita,
-                      }
-                      return axios.post('/solicitudes/insertar', params)
-                      .then( response=>{
-                        return response
-                      })
-                      .catch(e => {
-                        console.log(e.response);
-                        Swal.showValidationMessage(
-                          `Request failed: ${e}`
-                        )
-                      })
-                    },
-                    allowOutsideClick: () => !Swal.isLoading()
-                  }).then((result) => {
-                    if(result.value.data.status == 'error'){
-                        Swal.fire({
-                        text:result.value.data.mensaje,
-                        icon:"error",
-                        confirmButtonText: 'OK',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                        })
-                      }
-                      else{
-                        Swal.fire({
-                        text:"Solicitud Enviada Exitosamente",
-                        icon:"success",
-                        confirmButtonText: 'OK',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                        })
-                      }
-                  })
-                  
-
-                } 
-            })
+                    showConfirmButton: true,
+                  });
+                }
+              }).catch(e => {
+                console.log(e.response);
+              });
+              this.$emit('close');
+            }
+          })
+            
 
         },
     },
@@ -290,8 +294,7 @@ export default {
         
       }
       this.tutorSel.tutoriasPrograma.forEach(element => {
-           console.log(element)
-          if(element.tutor_fijo=="0") this.tipoTutorias.push(element)
+        if(element.tutor_fijo=="0") this.tipoTutorias.push(element)
       });
     }
     this.$store.state.curEvent = this.event;

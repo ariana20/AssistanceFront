@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" style="width:100%;margin-top:2%;margin-bottom:2%">
+                <div class="row" style="width:100%;margin-top:2%;margin-bottom:2%" v-if="solicitud.tipo_solicitud!='Cita'">
                     <div class="col-6" style="text-align:right">
                         <a href="#close">
                             <button type="button" class="btn btn-info" v-on:click="$emit('childToParentFacu','Aceptar')"  style="border-color:transparent;background-color:#0097A7;">
@@ -79,6 +79,15 @@
                         <a href="#close">
                             <button type="button" class="btn btn-info" v-on:click="$emit('childToParentFacu','Rechazar')" style="border-color:#757575;background-color:#757575;">
                                 Rechazar
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <div class="row" style="width:100%;margin-top:2%;margin-bottom:2%" v-else>
+                    <div class="col-4 offset-4" style="text-align:center">
+                        <a href="#close">
+                            <button type="button" class="btn btn-info" v-on:click="$emit('childToParentFacu','Rechazar')" style="border-color:#757575;background-color:#757575;">
+                                Revisado
                             </button>
                         </a>
                     </div>

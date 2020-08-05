@@ -220,6 +220,7 @@ import CryptoJS from 'crypto-js'
               correo: this.reg.email,
               password: this.reg.password,
               programa: this.programaEl,
+              condicion_alumno: 'reg',
             }
             if(this.programaEl==null){
               Swal.fire({
@@ -368,6 +369,7 @@ import CryptoJS from 'crypto-js'
                   apellidos: profile.family_name,
                   institucion: profile.hd,
                   programa: _this.programaEl,
+                  condicion_alumno: 'reg',
                 }
                 axios.post('/googleregister', obj,)
                   .then(response=>{

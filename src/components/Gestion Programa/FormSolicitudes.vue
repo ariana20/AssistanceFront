@@ -33,12 +33,17 @@
             <td v-if="item.usuarioRelacionado">{{item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos}}</td>
             <td v-else style="text-align:center">Ninguno</td>
             <td>{{item.fecha_creacion}}</td>
-            <td >
+            <td  v-if="item.tipo_solicitud!='Cita'">
               <button style="padding-left: 5px;padding-right: 5px;width:25px;margin-left:5px" v-on:click="Aceptar(item)" class="btn link">
                   <b-icon icon="check-circle-fill" style="color:#0097A7"/>
               </button>
               <button style="padding-left: 5px;padding-right: 5px;margin-left:5px;width:25px" v-on:click="Rechazar(item)" class="btn link">
                   <b-icon icon="x-circle-fill" style="color:#757575"/>
+              </button>
+            </td>
+            <td  v-else>
+              <button style="padding-left: 5px;padding-right: 5px;margin-left:5px;width:25px" v-on:click="Rechazar(item)" class="btn link">
+                  <b-icon icon="check-circle-fill" style="color:#0097A7"/>
               </button>
             </td>
             <td >
@@ -315,8 +320,10 @@ export default {
       
     },
     Rechazar(item){
+      let title = '¿Desea rechazar la solicitud?'
+      if(item.tipo_solicitud=='Cita') title = '¿Desea eliminar la notificación?'
       Swal.fire({
-          title: '¿Desea rechazar la solicitud?',
+          title: title,
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
