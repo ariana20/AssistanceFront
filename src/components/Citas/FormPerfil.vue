@@ -36,12 +36,12 @@
                             Plan de Acción
                         </b-button><br><br>
 
-                        <svg v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" width="53" height="52" viewBox="0 0 53 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Documentos')" width="53" height="52" viewBox="0 0 53 52" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M16.4737 13.6579H16.1329L16.0083 13.9751L1.53462 50.8172L1.26637 51.5H2H7.78947H8.13869L8.25891 51.1721L11.0334 43.6053H26.6508L29.4253 51.1721L29.5455 51.5H29.8947H36.2105H36.9442L36.6759 50.8172L22.2022 13.9751L22.0776 13.6579H21.7368H16.4737ZM52.5 8.89474V8.39474H52H44.6053V1V0.5H44.1053H38.8421H38.3421V1V8.39474H30.9474H30.4474V8.89474V14.1579V14.6579H30.9474H38.3421V22.0526V22.5526H38.8421H44.1053H44.6053V22.0526V14.6579H52H52.5V14.1579V8.89474ZM13.515 37.3421L19.1053 22.6677L24.6955 37.3421H13.515Z" fill="black" stroke="black"/>
                         </svg>
-                        <b-button v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" v-on:click="$store.state.verPdf=true;$store.state.verCitas=false;$store.state.verPlan=false" style="background: #0097A7;border: 0px;width:40%;margin-left:5%">
+                        <b-button v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Documentos')" v-on:click="$store.state.verPdf=true;$store.state.verCitas=false;$store.state.verPlan=false" style="background: #0097A7;border: 0px;width:40%;margin-left:5%">
                             Histórico del Alumno
-                        </b-button><br v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')"><br v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')">
+                        </b-button><br v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Documentos')"><br v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Documentos')">
 
                         <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M44.4444 5H41.6667V2.5C41.6667 1.125 40.4167 0 38.8889 0C37.3611 0 36.1111 1.125 36.1111 2.5V5H13.8889V2.5C13.8889 1.125 12.6389 0 11.1111 0C9.58333 0 8.33333 1.125 8.33333 2.5V5H5.55556C2.47222 5 0.0277778 7.25 0.0277778 10L0 45C0 46.3261 0.585316 47.5979 1.62718 48.5355C2.66905 49.4732 4.08213 50 5.55556 50H44.4444C47.5 50 50 47.75 50 45V10C50 7.25 47.5 5 44.4444 5ZM44.4444 42.5C44.4444 43.875 43.1944 45 41.6667 45H8.33333C6.80556 45 5.55556 43.875 5.55556 42.5V17.5H44.4444V42.5ZM11.1111 22.5H16.6667V27.5H11.1111V22.5ZM22.2222 22.5H27.7778V27.5H22.2222V22.5ZM33.3333 22.5H38.8889V27.5H33.3333V22.5Z" fill="black"/>

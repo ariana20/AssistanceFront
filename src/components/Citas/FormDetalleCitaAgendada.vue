@@ -39,7 +39,7 @@
                 <div style="bottom:30px;">
                     <div>
                         <div class="font-weight-bolder text-left">Información Adicional</div>
-                        <div v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" id="botones" style="justify-content: space-between;margin-left: 55px;margin-right: 75px;">
+                        <div v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Documentos')" id="botones" style="justify-content: space-between;margin-left: 55px;margin-right: 75px;">
                             <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M44.4444 5H41.6667V2.5C41.6667 1.125 40.4167 0 38.8889 0C37.3611 0 36.1111 1.125 36.1111 2.5V5H13.8889V2.5C13.8889 1.125 12.6389 0 11.1111 0C9.58333 0 8.33333 1.125 8.33333 2.5V5H5.55556C2.47222 5 0.0277778 7.25 0.0277778 10L0 45C0 46.3261 0.585316 47.5979 1.62718 48.5355C2.66905 49.4732 4.08213 50 5.55556 50H44.4444C47.5 50 50 47.75 50 45V10C50 7.25 47.5 5 44.4444 5ZM44.4444 42.5C44.4444 43.875 43.1944 45 41.6667 45H8.33333C6.80556 45 5.55556 43.875 5.55556 42.5V17.5H44.4444V42.5ZM11.1111 22.5H16.6667V27.5H11.1111V22.5ZM22.2222 22.5H27.7778V27.5H22.2222V22.5ZM33.3333 22.5H38.8889V27.5H33.3333V22.5Z" fill="black"/>
                             </svg>
@@ -58,9 +58,9 @@
                                 <path d="M1.57247 26.0949L10.6574 30.0712L36.8383 15.7898L21.0476 34.2107L43.6809 44.5158C44.068 44.6853 44.4902 44.7592 44.9119 44.7311C45.3335 44.7029 45.7422 44.5737 46.1033 44.3543C46.4645 44.1349 46.7674 43.8318 46.9867 43.4706C47.2059 43.1093 47.3349 42.7006 47.3628 42.279L49.9946 2.80565C50.0239 2.34877 49.9337 1.89213 49.733 1.48066C49.5322 1.0692 49.2278 0.71709 48.8496 0.458985C48.4715 0.20088 48.0326 0.0456746 47.5763 0.00864158C47.1199 -0.0283915 46.6618 0.0540238 46.2469 0.247778L1.50668 21.3002C1.0503 21.5167 0.665713 21.8598 0.398658 22.2885C0.131603 22.7172 -0.00668216 23.2137 0.000248292 23.7187C0.00717875 24.2238 0.159033 24.7162 0.437752 25.1374C0.71647 25.5587 1.11032 25.891 1.57247 26.0949ZM15.7841 50L28.3535 43.9053L15.7841 38.0422V50Z" fill="black"/>
                             </svg>
                         </div>
-                        <div id="botones" v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')">
+                        <div id="botones" v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Documentos')">
                             <button type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Histórico de Citas</button>
-                            <button v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Notas')" type="button" class="btn btn-info" @click="Perfil(2)">Histórico del Alumno</button>
+                            <button v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Documentos')" type="button" class="btn btn-info" @click="Perfil(2)">Histórico del Alumno</button>
                             <button type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
                         </div>
                         <div v-else>
