@@ -23,7 +23,7 @@
                         <div class="list-data"><div id="left">Código:          </div> <div id="right"> {{ this.event.extendedProps.alumno.codigo }} </div></div>
                         <div class="list-data"><div id="left">Nombre:  </div> <div id="right"> {{ this.event.extendedProps.alumno.nombre }} </div></div>
                         <div class="list-data"><div id="left">Apellidos:     </div> <div id="right"> {{ this.event.extendedProps.alumno.apellidos }} </div></div>
-                        <div class="list-data"><div id="left">Condición: </div> <div v-if="us" id="right"> {{ this.$store.state.cond }} </div></div>
+                        <div class="list-data"><div id="left">Condición: </div> <div id="right"> {{ this.condicion_alumno }} </div></div>
                     </div>
                     <div class="col center-block text-center">
                         <figure v-if="this.event.extendedProps.alumno.imagen!='' && this.event.extendedProps.alumno.imagen!=null" id="floated" class="image-logo" style="margin-bottom:15%">
@@ -175,7 +175,8 @@ export default Vue.extend ({
     data: function () {
         return {
             event: this.$store.state.curEvent,
-            condicion_alumno: this.$store.state.curEvent.extendedProps.alumno.condicion_alumno.toUpperCase(),
+            condicion_alumno: null,
+            //this.$store.state.curEvent.extendedProps.alumno.condicion_alumno.toUpperCase(),
             fechIni: this.fecha,
             descripcion: null,
             motivo: null,
@@ -204,6 +205,10 @@ export default Vue.extend ({
         }
     },
     mounted(){
+        if (this.$store.state.cond) 
+            this.condicion_alumno=this.$store.state.cond.toUpperCase();
+        else 
+            this.condicion_alumno='Sin asignar';
         // console.log('idCita: ',this.$store.state.idCita)
         //LLENANDO LOS CAMPOS CUANDO HAY INFO EN LA SESION
         // console.log('editar status: ',this.editar)
