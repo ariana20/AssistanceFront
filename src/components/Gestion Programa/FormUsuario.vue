@@ -60,10 +60,10 @@
       
               <div class="row">
                    <div   class="col-12 col-md-4"
-                    v-if="this.arrTutoAlum[tiposUsuariosselect].esAlumno ===1 " style="text-align:left;margin-top:5px" >Condición del alumno: 
+                    v-if="this.estetipoususarioselect.esAlumno ===1 " style="text-align:left;margin-top:5px" >Condición del alumno: 
                    </div>
                     <div class="col-12 col-md-7">
-                      <select v-if="this.arrTutoAlum[tiposUsuariosselect].esAlumno ===1 " class="col-sm-12 form-control" style="margin-top:5px;"
+                      <select v-if="this.estetipoususarioselect.esAlumno ===1 " class="col-sm-12 form-control" style="margin-top:5px;"
                       v-model="condiAlumnosselect">  <!--aqui guardo-->
                           <option selected disabled value="no">Selecciona una condición</option>
                           <option v-for="(condi, i) in condiAlumnos"  :key="i" :value="condi.abreviatura"  > <!--falta agregar value, creo que abreviatura le mando-->
@@ -75,9 +75,9 @@
               </div> 
                 
               <div class="row" style="text-align:left">  
-                  <div  class="col-12 col-md-4" style="text-align:left;margin-top:5px"  v-if="this.arrTutoAlum[tiposUsuariosselect].esTutor ===1 " >Tipos de tutorias:*     </div>
+                  <div  class="col-12 col-md-4" style="text-align:left;margin-top:5px"  v-if="this.estetipoususarioselect.esTutor ===1 " >Tipos de tutorias:*     </div>
                   <div class="col-12 col-md-7">  
-                    <select v-if="this.arrTutoAlum[tiposUsuariosselect].esTutor ===1 " class="col-sm-12 form-control"    v-model="tipostutoriasselect" style="cursor:pointer">
+                    <select v-if="this.estetipoususarioselect.esTutor ===1 " class="col-sm-12 form-control"    v-model="tipostutoriasselect" style="cursor:pointer">
                         <option selected disabled value="no">Selecciona un tipo de tutoria</option>
                         <option v-for="(tt, i) in tipostutorias"  :key="i"   :value="tt.id_tipo_tutoria">
                         {{ tt.nombre }}
@@ -87,18 +87,18 @@
               </div>
                     <!-- <div class="col-sm-6" > -->
                           
-               <button  type="button"  v-if="this.arrTutoAlum[tiposUsuariosselect].esTutor ===1 " class="col-sm-4 btn btn-info"                     
+               <button  type="button"  v-if="this.estetipoususarioselect.esTutor ===1 " class="col-sm-4 btn btn-info"                     
                                style="margin-left:10px;margin:5px;border-radius: 10px;"
                             @click="addMTT(i)">Seleccionar
                 </button>
                    
                 
-               <div class="left-content" v-if="this.arrTutoAlum[tiposUsuariosselect].esTutor ===1" >
+               <div class="left-content" v-if="this.estetipoususarioselect.esTutor ===1" >
                
           
               <div class ="row">
                 <div class="col-12 col-md-9" >
-                    <div style="color:black;font-weight:900;text-align:left;" v-if="this.arrTutoAlum[tiposUsuariosselect].esTutor ===1">Tipos de tutoria seleccionados</div>
+                    <div style="color:black;font-weight:900;text-align:left;" v-if="this.estetipoususarioselect.esTutor ===1">Tipos de tutoria seleccionados</div>
                     <!-- <hr >  -->
                     <ul class="overflow-wrap list-group list-group-flush" style="text-align:left;">
                         <div v-if="listTT.length == 0">No tiene tipos de tutorias seleccionados</div>
@@ -185,90 +185,122 @@ export default {
       cboxTU:true,
       arrTutoAlum:[],
       miUsuario:null,
+     
+      estetipoususario:null,
+      estetipoususarioselect:null,
     }
   },
   created(){  
-     for(let i=0;i<1000;i++)  {
-        var aux= new Object;
-        aux.esTutor=0;
-        aux.esAlumno=0;
-        this.arrTutoAlum[i]=aux;
-     }
+    //  for(let i=0;i<10;i++)  {
+    //     var aux= new Object;
+    //     aux.esTutor=0;
+    //     aux.esAlumno=0;
+    //     this.arrTutoAlum[i]=aux;
+    //  }
+    this.listarTUsuarios(); 
      this.cboxTU=true;
-   
+      
+       if(parseInt((this.$route.path).substring(9,15),10) ==0){
+      this.id_usuario_entrante=0;
+      //no hay usuario entrante, pero puede que aparezca 
+  
+    }
+    else if (parseInt((this.$route.path).substring(9,15),10) !=0) { 
+      //  this.showModal();
+      //99051669
+      if(this.$store.state.usuarioEscogido){
+              this.id_usuario_entrante=this.$store.state.usuarioEscogido.id_usuario;
+              this.usuario_entrante=this.$store.state.usuarioEscogido;     
+              this.tiposUsuariosselect=this.usuario_entrante.id_tipo_usuario;
+              // document.getElementById("corr").disabled = true;
+            
+              this.codigo=this.usuario_entrante.codigo;
+              this.nombre= this.usuario_entrante.nombre;
+              this.apellidos=this.usuario_entrante.apellidos;
+              this.correo=this.usuario_entrante.correo;
+              this.telefono=this.usuario_entrante.telefono;
+              this.estado=this.usuario_entrante.estado;
+              this.banderaUsuProg=true;
+              this.estetipoususarioselect={
+                  esTutor:0,
+                  esAlumno:0,
+                };
+              if(this.usuario_entrante.condicion_alumno==null) this.condiAlumnosselect="no"; //no tiene
+              else this.condiAlumnosselect=this.usuario_entrante.condicion_alumno; //sí tiene
+              
+              if(this.id_usuario_entrante==this.$store.state.usuario.id_usuario){
+                Swal.fire({
+                            text:"Es su propio usuario",  icon:"warning",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor:'#0097A7',
+                            showConfirmButton: true,
+                          }); 
+                this.cboxTU=false; 
+
+              }
+      }
+    }
+      //   this.estetipoususarioselect={
+      //     esTutor:0,
+      //     esAlumno:0,
+      //   };
+
     
   },
   mounted(){
     
     if(this.$store.state.usuario==null) this.$router.push('/login');
-  this.cboxTU=true;
+    this.cboxTU=true;
     this.listarTUsuarios(); 
     this.IsmsgUsuario=false;
     this.msgUsuario="Assistance";
   
-    
-
+     
+      this.estetipoususarioselect={
+          esTutor:0,
+          esAlumno:0,
+        };
     this.listarCA();  
     this.miUsuario=this.$store.state.usuario;
-    if(parseInt((this.$route.path).substring(9,11),10) ==0){
+    if(parseInt((this.$route.path).substring(9,15),10) ==0){
       this.id_usuario_entrante=0;
       //no hay usuario entrante, pero puede que aparezca 
-      
+   
     }
     else if (parseInt((this.$route.path).substring(9,15),10) !=0) {
+   
       
-       this.showModal();
+      //  this.showModal();
       
-      
-      this.id_usuario_entrante=this.$store.state.usuarioEscogido.id_usuario;
-      this.usuario_entrante=this.$store.state.usuarioEscogido;     
-      this.tiposUsuariosselect=this.usuario_entrante.id_tipo_usuario;
-      
-      Axios.create()
-       .post('/usuarios/listar/'+this.id_usuario_entrante).then( response =>{
-         document.getElementById("corr").disabled = true;
-    
-           this.codigo=response.data.codigo;
-           this.nombre= response.data.nombre;
-           this.apellidos=response.data.apellidos;
-           this.correo=response.data.correo;
-           this.telefono=response.data.telefono;
-           this.estado=response.data.estado;
-           this.banderaUsuProg=true;
+       if(this.$store.state.usuarioEscogido){
+          this.id_usuario_entrante=this.$store.state.usuarioEscogido.id_usuario;
+          this.usuario_entrante=this.$store.state.usuarioEscogido;     
+          this.tiposUsuariosselect=this.usuario_entrante.id_tipo_usuario;
+          // document.getElementById("corr").disabled = true;
+        
+              this.codigo=this.usuario_entrante.codigo;
+              this.nombre= this.usuario_entrante.nombre;
+              this.apellidos=this.usuario_entrante.apellidos;
+              this.correo=this.usuario_entrante.correo;
+              this.telefono=this.usuario_entrante.telefono;
+              this.estado=this.usuario_entrante.estado;
+              this.banderaUsuProg=true;
+              if(this.usuario_entrante.condicion_alumno==null) this.condiAlumnosselect="no"; //no tiene
+              else this.condiAlumnosselect=this.usuario_entrante.condicion_alumno; //sí tiene
+              
+              if(this.id_usuario_entrante==this.$store.state.usuario.id_usuario){
+                Swal.fire({
+                            text:"Es su propio usuario",  icon:"warning",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor:'#0097A7',
+                            showConfirmButton: true,
+                          }); 
+                this.cboxTU=false; 
 
-           //Si tiene el permiso alumno, lleno sus condiciones...pero todos tienen,igual lo lleno
-         
-          //  console.log('cond: ',this.condiAlumnosselect);
-           if(response.data.condicion_alumno==null) this.condiAlumnosselect="no"; //no tiene
-           else this.condiAlumnosselect=response.data.condicion_alumno; //sí tiene
-          
-          if(this.id_usuario_entrante==this.$store.state.usuario.id_usuario){
-            Swal.fire({
-                        text:"Es su propio usuario",  icon:"warning",
-                        confirmButtonText: 'OK',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                      }); 
-            this.cboxTU=false; 
-          }      
-          //inhabilitar el tipo de usuario
-          this.listarTT();
-           this.hideModal();
-         }).catch(e => {
-                 console.log('catch listar usuario entrante',e.response);
-                  this.hideModal();
-                 Swal.fire({
-                    text:"Estamos teniendo problemas al obtener los datos del usuario que desea modificar. Vuelve a intentar en unos minutos.",
-                    icon:"warning",
-                    confirmButtonText: 'OK',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                  }); 
-                  this.$store.state.usuarios=null;
-                   //this.$router.push('/ListaUsuarios');          
-                } );
-
-    }
+              }
+        }
+     
+    } 
     //Primero verifico que el usuario pertenece a mi programa
     //Si el tipo de usuario es tutor, cargo sus tipos de tutoras
     
@@ -278,9 +310,9 @@ export default {
     
     guardarUsuario() { //Para usuarios nuevecitos más que nada, si no, se van a una función
       
-     
-      document.getElementById("btnGuarda").disabled = true; //inhabilita
-      document.getElementById("btnCancela").disabled = true; //inhabilita
+      
+      // document.getElementById("btnGuarda").disabled = false; //inhabilita
+      // document.getElementById("btnCancela").disabled = true; //inhabilita
 
       var   expresion2=/\w+@\w+\.+edu.pe/;
       var   expresion1=/\w+@\w+\.+pe/;
@@ -307,9 +339,8 @@ export default {
         }) 
        
       }
-      else if(this.telefono!=null){
-        if(this.telefono<10000000 && this.telefono>0){ //Esto será válido?
-          // this.hideModal();
+      else if(this.telefono!=null && ( this.telefono<10000000 && this.telefono>0 ) ){
+       
           Swal.fire({
               text:"No ha colocado un número de teléfono válido. Mínimo 7 dígitos",
               icon:"error",
@@ -317,7 +348,9 @@ export default {
               confirmButtonColor:'#0097A7',
               showConfirmButton: true,
           }) 
-        }  
+      
+
+       
       }
       else if(this.tiposUsuariosselect=="no" || this.tiposUsuariosselect.length==0 ){
         // this.hideModal();
@@ -330,7 +363,7 @@ export default {
           })  
       }
       //Si escogió el tipo de usuario tutor
-      else if( this.arrTutoAlum[this.tiposUsuariosselect].esTutor ===1 &&  this.listTTId.length==0 ){
+      else if( this.estetipoususarioselect.esTutor ===1 &&  this.listTTId.length==0 ){
         // this.hideModal();
          //evito que deje en 0 los tipos de tutoria al que pertenece el tutor
          Swal.fire({
@@ -344,72 +377,108 @@ export default {
       else{//está bien y envío
       
       //primero evaluo si es alumno       
-           
-          
+         
           if(this.id_usuario_entrante==0){ //Se insertar un usuario nuevecito
-            if(this.estado=="ina"){
-                  //  this.hideModal();
-                Swal.fire({
-              text:"No puede crear un nuevo usuario como inactivo.",
-              icon:"warning",
-              confirmButtonText: 'Sí',
-              confirmButtonColor:'#0097A7',              
-                  showConfirmButton: true,
-                 });
-              }
             
-            else{
-                
-              if(this.arrTutoAlum[this.tiposUsuariosselect].esAlumno ===1){
+              if(this.estado=="ina"){
+                    //  this.hideModal();
+                  Swal.fire({
+                    text:"No puede crear un nuevo usuario como inactivo.",
+                    icon:"warning",
+                    confirmButtonText: 'Sí',
+                    confirmButtonColor:'#0097A7',              
+                    showConfirmButton: true,
+                  });
+              }              
+              else{
+
+                // id=0 o es nuevecito o es existente
+                if(this.banderaUsuProg==false){
+                     //usuario existente
+              
+                    //primero evaluo si es alumno
+                    if(this.estetipoususarioselect.esAlumno ===1 && this.estetipoususarioselect.esTutor ===1){
+                        const params3={
+                              id_usuario:this.id_usuario_entrante,
+                              id_tipo_usuario:this.tiposUsuariosselect,
+                              id_programaNuevo:this.miprog.id_programa,
+                              condicion_alumno:this.condiAlumnosselect,//le doy el value
+                          }
+                          this.insertarUsuario(params3); //Insertar un usuario existente en el programa
+                      }
+                    else if(this.estetipoususarioselect.esAlumno ===1){
+                        const params3 = {
+                            //Parametros insertar de usuario
+                            id_usuario:this.id_usuario_entrante,
+                            id_tipo_usuario:this.tiposUsuariosselect,
+                            id_programaNuevo:this.miprog.id_programa,
+                            //como es alumno inserto las condicioes
+                            condicion_alumno:this.condiAlumnosselect,//le doy el value
+                        };
+                            this.insertarUsuario(params3); //Insertar un usuario existente en el programa
+                    }
+                    else if(this.estetipoususarioselect.esTutor ===1){            
+                          const params3={
+                              id_usuario:this.id_usuario_entrante,
+                              id_tipo_usuario:this.tiposUsuariosselect,
+                              id_programaNuevo:this.miprog.id_programa,
+                          }
+                          this.insertarUsuario(params3); //Insertar un usuario existente en el programa
+
+                      }
+                }  
+                else if(this.estetipoususarioselect.esAlumno ===1){
+                    const params = {
+                        //Parametros insertar de usuario
+                      codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+                      nombre:this.nombre.trim().replace(/\s+/g, ' '),
+                      apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                      correo:this.correo.trim().replace(/\s+/g, ' '), //replace o no replace?
+                      telefono:this.telefono,
+                      password:"12345",
+                      estado:this.estado,
+                      id_programaNuevo:this.miprog.id_programa,
+                      id_tipo_usuario:this.tiposUsuariosselect,  
+                      usuario_creacion:this.miUsuario.id_usuario, 
+                      //como es alumno inserto las condicioes
+                      condicion_alumno:this.condiAlumnosselect,//le doy el value
+                  
+                    };
+                    this.usuarioNuevo(params);
+                }
+                else if(this.estetipoususarioselect.esTutor ===1){
+          
                   const params = {
-                      //Parametros insertar de usuario
-                    codigo:this.codigo.trim().replace(/\s+/g, ' '), 
-                    nombre:this.nombre.trim().replace(/\s+/g, ' '),
-                    apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
-                    correo:this.correo.trim().replace(/\s+/g, ' '), //replace o no replace?
-                    telefono:this.telefono,
-                    password:"12345",
-                    estado:this.estado,
-                    id_programaNuevo:this.miprog.id_programa,
-                    id_tipo_usuario:this.tiposUsuariosselect,  
-                    usuario_creacion:this.miUsuario.id_usuario, 
-                    //como es alumno inserto las condicioes
-                    condicion_alumno:this.condiAlumnosselect,//le doy el value
-                
+                  //Parametros insertar de usuario
+                      codigo:this.codigo.trim().replace(/\s+/g, ' '), 
+                      nombre:this.nombre.trim().replace(/\s+/g, ' '),
+                      apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
+                      correo:this.correo.trim().replace(/\s+/g, ' '), //replace o no replace?
+                      telefono:this.telefono,
+                      password:"12345",
+                      estado:this.estado,
+                      id_programaNuevo:this.miprog.id_programa,
+                      id_tipo_usuario:this.tiposUsuariosselect,
+                      usuario_creacion:this.miUsuario.id_usuario, 
+                      
                   };
+              
                   this.usuarioNuevo(params);
               }
-              else if(this.arrTutoAlum[this.tiposUsuariosselect].esTutor ===1){
-        
-                const params = {
-                //Parametros insertar de usuario
-                    codigo:this.codigo.trim().replace(/\s+/g, ' '), 
-                    nombre:this.nombre.trim().replace(/\s+/g, ' '),
-                    apellidos:this.apellidos.trim().replace(/\s+/g, ' '),
-                    correo:this.correo.trim().replace(/\s+/g, ' '), //replace o no replace?
-                    telefono:this.telefono,
-                    password:"12345",
-                    estado:this.estado,
-                    id_programaNuevo:this.miprog.id_programa,
-                    id_tipo_usuario:this.tiposUsuariosselect,
-                    usuario_creacion:this.miUsuario.id_usuario, 
-                    
-                };
-            
-                this.usuarioNuevo(params);
+                
+                  
             }
-              
-                 
-          }
 
           }
           
           else if (this.id_usuario_entrante!=0){
             // this.hideModal();
             //if pertenece al programa
+        
             if(this.banderaUsuProg==true){
-                     
-              if(this.arrTutoAlum[this.tiposUsuariosselect].esAlumno ===1 && this.arrTutoAlum[this.tiposUsuariosselect].esTutor ===1){
+                     //es un usuario entrante, de la lista de usuarios
+               
+              if(this.estetipoususarioselect.esAlumno ===1 && this.estetipoususarioselect.esTutor ===1){
                 const params2 = {
                   //Parametros modificados de usuario
                     codigo:this.codigo.trim().replace(/\s+/g, ' '), 
@@ -423,7 +492,8 @@ export default {
                     id_programa:this.miprog.id_programa,
                   };
                  
-                  if(this.telefono== this.usuario_entrante.telefono &&  this.nombre == this.usuario_entrante.nombre && 
+                  // if(this.telefono== this.usuario_entrante.telefono &&  this.nombre == this.usuario_entrante.nombre && 
+                  if(  this.nombre == this.usuario_entrante.nombre && 
                     this.apellidos== this.usuario_entrante.apellidos && 
                     this.estado==this.usuario_entrante.estado  && 
                     this.codigo== this.usuario_entrante.codigo)   
@@ -449,7 +519,7 @@ export default {
 
               }
               //primero evaluo si es alumno
-              else if(this.arrTutoAlum[this.tiposUsuariosselect].esAlumno ===1){
+              else if(this.estetipoususarioselect.esAlumno ===1){
                   const params2 = {
                       codigo:this.codigo.trim().replace(/\s+/g, ' '), 
                       nombre:this.nombre.trim().replace(/\s+/g, ' '),
@@ -468,7 +538,7 @@ export default {
                   };
                   this.modificarUsuario(params2);
               }
-              else if(this.arrTutoAlum[this.tiposUsuariosselect].esTutor ===1){
+              else if(this.estetipoususarioselect.esTutor ===1){
                   //aqui verifico
                   const params2 = {
                   //Parametros modificados de usuario
@@ -504,76 +574,34 @@ export default {
 
               }
             } 
-            else{
-              //usuario existente
-              
-                 //primero evaluo si es alumno
-                  if(this.arrTutoAlum[this.tiposUsuariosselect].esAlumno ===1 && this.arrTutoAlum[this.tiposUsuariosselect].esTutor ===1){
-                     const params3={
-                          id_usuario:this.id_usuario_entrante,
-                           id_tipo_usuario:this.tiposUsuariosselect,
-                           id_programaNuevo:this.miprog.id_programa,
-                           condicion_alumno:this.condiAlumnosselect,//le doy el value
-                      }
-                      this.insertarUsuario(params3); //Insertar un usuario existente en el programa
-                  }
-                 else if(this.arrTutoAlum[this.tiposUsuariosselect].esAlumno ===1){
-                    const params3 = {
-                        //Parametros insertar de usuario
-                        id_usuario:this.id_usuario_entrante,
-                        id_tipo_usuario:this.tiposUsuariosselect,
-                        id_programaNuevo:this.miprog.id_programa,
-                        //como es alumno inserto las condicioes
-                        condicion_alumno:this.condiAlumnosselect,//le doy el value
-                    };
-                        this.insertarUsuario(params3); //Insertar un usuario existente en el programa
-                 }
-                 else if(this.arrTutoAlum[this.tiposUsuariosselect].esTutor ===1){            
-                       const params3={
-                          id_usuario:this.id_usuario_entrante,
-                           id_tipo_usuario:this.tiposUsuariosselect,
-                           id_programaNuevo:this.miprog.id_programa,
-                      }
-                      this.insertarUsuario(params3); //Insertar un usuario existente en el programa
-
-                  }
-
-
             
-            }
-          
-      }
+          }
       
       }
+     
       document.getElementById("btnGuarda").disabled = false; //habilita
       document.getElementById("btnCancela").disabled = false; //habilita
     },
 
     listarTUsuarios() {
      
-       if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
-        let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
-        this.axios.post('/tipoUsuarios/tiposFacultad',obj)
-          .then(res=>{
-               //Ordenadito
-           let par=res.data;
-          //cord de facultad
-           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-            for (let i in this.tiposUsuarios){
-             
-              var aux= new Object;
-              aux.esTutor=this.tiposUsuarios.esTutor;
-              aux.esAlumno=this.tiposUsuarios.esAlumno;
-              this.arrTutoAlum[this.tiposUsuarios[i].id_tipo_usuario]=aux;
-            }
-          
+      //  if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+      //   let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
+      //   this.axios.post('/tipoUsuarios/tiposFacultad',obj)
+      //     .then(res=>{
+      //          //Ordenadito
+      //      let par=res.data;
+      //     //cord de facultad
+      //      this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+            
+      //       this.listarTT(); //Para que cuando tenga los tipos de usuarios recién llene los TT
            
-          })
-          .catch(e=>{
-            console.log('catch del tipo de usuario: ',e)
+      //     })
+      //     .catch(e=>{
+      //       console.log('catch del tipo de usuario: ',e)
          
-          });
-      }
+      //     });
+      // }
       if(this.$store.state.tipoActual.nombre != 'Admin'){
         let obj = {
           id_programa: this.$store.state.programaActual.id_programa,
@@ -584,17 +612,10 @@ export default {
           .then(res=>{
                 //Ordenadito
            let par=res.data;
-         
-           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-             for (let i in this.tiposUsuarios){
-             
-              var aux= new Object;
-              aux.esTutor=this.tiposUsuarios[i].esTutor;
-              aux.esAlumno=this.tiposUsuarios[i].esAlumno;
-              this.arrTutoAlum[this.tiposUsuarios[i].id_tipo_usuario]=aux;
-            }
           
-           
+           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+              this.listarTT();
+             
             
            
           })
@@ -602,6 +623,7 @@ export default {
              console.log('catch del tipo de usuario: ',e);
            
           });
+  
       }
 
     },
@@ -621,14 +643,32 @@ export default {
               //this.$store.state.usuarios=null;
               this.$store.state.usuarioEscogido=null;//
                  this.$store.state.usuarios=null;
+                  this.banderaTT=false;
               this.$router.push('/ListaUsuarios');
             } 
           })
         
     },
     listarTT() {
-      if(this.banderaTT==false){
-        this.banderaTT=true;
+    
+
+      if(this.banderaTT==false ){
+  
+        this.banderaTT=true;      
+        if(this.usuario_entrante != null)  {   //buscar por usuario entrante       
+            if(this.usuario_entrante.id_tipo_usuario!= null)     //buscar por usuario entrante       
+                this.estetipoususarioselect= this.tiposUsuarios.find(elem => elem.id_tipo_usuario === this.usuario_entrante.id_tipo_usuario);
+            else if(this.usuario_entrante.id_tipo_usuario !=  this.estetipoususarioselect) //si son diferentes, ha cambiado el TU
+            this.estetipoususarioselect= this.tiposUsuarios.find(elem => elem.id_tipo_usuario === this.tiposUsuariosselect);
+            else if(this.usuario_entrante.id_tipo_usuario ==  this.estetipoususarioselect) //si son iguales mejor q use el seleccionado
+              this.estetipoususarioselect= this.tiposUsuarios.find(elem => elem.id_tipo_usuario === this.tiposUsuariosselect);
+     
+        
+        }
+    
+
+
+
       //listo todos los tipos de tutorias de mi programa
       Axios.post('/TipoTutoria/listarActivos/'+ this.miprog.id_programa)
       // Axios.post('/TipoTutoria/listarActivos/'+ this.miprog.id_programa)  //falta que esté en el servidor
@@ -636,45 +676,53 @@ export default {
           //ordenado
             this.tipostutorias=response.data.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
             // this.tipostutorias = response.data; //
-            if(this.id_usuario_entrante!=0){
-            //Despues de llenar los tipos de tutorias veo cuales son del tutor 
-
-              for (var t_usu in this.usuario_entrante.tipo_usuario){ //t_usu es indice
-              //aquí verifico si es tutor del programa en el que estoy
-             if(this.tiposUsuarios=="" ) {this.listarTUsuarios();}
-             
-              if(this.arrTutoAlum[this.usuario_entrante.tipo_usuario[t_usu].id_tipo_usuario].esTutor==1 && 
-                  this.usuario_entrante.tipo_usuario[t_usu].pivot.id_programa==this.miprog.id_programa ){
-                  //como sí es tutor en mi programa, cargo los tt
-                  for(var i in this.usuario_entrante.tipo_tutorias){
-                
-                      this.listTT.push(this.usuario_entrante.tipo_tutorias[i].nombre);
-                      this.listTTId.push(this.usuario_entrante.tipo_tutorias[i].id_tipo_tutoria);
-                      this.listTTBorrados.push(this.usuario_entrante.tipo_tutorias[i]);
-                      // this.tipostutorias.splice(i,1);
-                      this.tipostutoriasselect=this.usuario_entrante.tipo_tutorias[i].id_tipo_tutoria;
+         
+            if(this.id_usuario_entrante!=0 ){
+            //Despues de llenar los tipos de tutorias veo cuales son del tutor   
+              if(this.estetipoususarioselect!=undefined){
                     
-                      for(var j in this.tipostutorias){
-                        if(this.tipostutorias[j].id_tipo_tutoria==this.tipostutoriasselect){
-                            this.tipostutorias.splice(j,1);
-                          break; //Si ya es uno igual,salgo
-                        }
-                      }
-                      this.tipostutoriasselect="no";
-                  }
-             }
-            }
+                    //aquí verifico si es tutor del programa en el que estoy   
+
+                          if(this.estetipoususarioselect.esTutor==1  ){
+                              //como sí es tutor en mi programa, cargo los tt
+                            
+                              for(var i in this.usuario_entrante.tipo_tutorias){
+                            
+                                  this.listTT.push(this.usuario_entrante.tipo_tutorias[i].nombre);
+                                  this.listTTId.push(this.usuario_entrante.tipo_tutorias[i].id_tipo_tutoria); 
+                                  this.listTTBorrados.push(this.usuario_entrante.tipo_tutorias[i]);
+                                  // this.tipostutorias.splice(i,1);
+                                  this.tipostutoriasselect=this.usuario_entrante.tipo_tutorias[i].id_tipo_tutoria;
+                                
+                                  for(var j in this.tipostutorias){
+                                      if(this.tipostutorias[j].id_tipo_tutoria==this.tipostutoriasselect){
+                                          this.tipostutorias.splice(j,1);
+                                        break; //Si ya es uno igual,salgo
+                                      }
+                                  }
+                                  this.tipostutoriasselect="no";
+                              }
+                        
+
+                     
+                          }
+
+              }//fin del if- es undefined
           }
-
-
-
-
-
+     
 
         })
         .catch(e=>console.log('catch listarTipoT',e));
 
       }
+      else{
+       
+        if(this.tiposUsuariosselect!=0){
+          this.estetipoususarioselect= this.tiposUsuarios.find(elem => elem.id_tipo_usuario === this.tiposUsuariosselect);
+        
+       }
+      }
+    
 
     },
     addMTT: function () {
@@ -706,7 +754,7 @@ export default {
     actualizarTT(i){ //verifica si es tutor
       //Si es tutor
  
-        if (this.arrTutoAlum[this.tiposUsuariosselect].esTutor ===1 && this.listTTId.length!=0){  ///Tipo de usuario de tutor
+        if (this.estetipoususarioselect.esTutor ===1 && this.listTTId.length!=0){  ///Tipo de usuario de tutor
         //Si escogió por lo menos 1 tipo de tutoria
 
           const paramsTT={
@@ -889,12 +937,12 @@ export default {
                   }) ;
                     var esJP=false;
                    //Como se guardaron con éxito ahora agrego el titutoria
-                  if(this.arrTutoAlum[this.tiposUsuariosselect].esTutor ===1){
+                  if(this.estetipoususarioselect.esTutor ===1){
                         var idusuarionuevo=response.data["user"].id_usuario;
                         this.actualizarTT(idusuarionuevo);//tiene hide?
                         esJP=true;
                   }
-                  if(this.arrTutoAlum[this.tiposUsuariosselect].esAlumno ===1){
+                  if(this.estetipoususarioselect.esAlumno ===1){
                     if(esJP==false)                     this.$router.push('/ListaUsuarios');
                   }
                   this.$store.state.usuarioEscogido=null;//
@@ -922,12 +970,12 @@ export default {
                }
             );
     },
-    modificarUsuario(params2){
+    modificarUsuario(parametros){
         //pertenezco al método guardar usuario
         //Ya existe un id del usuario
           var esJP=false;
             Axios.create()
-            .post('/usuarios/modificar/'+this.id_usuario_entrante,params2)
+            .post('/usuarios/modificar/'+this.id_usuario_entrante,parametros)
             .then( response=>{
 
               //Saltaba error si quiero modificar algo normal y la respuesta era un objeto
@@ -944,12 +992,12 @@ export default {
                   }) 
               //Como se guardaron con éxito ahora agrego el titutoria, solo si tiene demonios
                   //Si es tutor actualizo el tt
-                if(this.arrTutoAlum[this.tiposUsuariosselect].esTutor ===1){
+                if(this.estetipoususarioselect.esTutor ===1){
                    this.actualizarTT(this.id_usuario_entrante);
                   //  this.hideModal();
                   esJP=true;
                 }
-                if(this.arrTutoAlum[this.tiposUsuariosselect].esAlumno ===1){    
+                if(this.estetipoususarioselect.esAlumno ===1){    
                   if (esJP==false)    this.$router.push('/ListaUsuarios');
                 }
                   this.$store.state.usuarios=null;
@@ -1008,12 +1056,12 @@ export default {
                       
                       this.$store.state.usuarios=null;
                       //Como se guardaron con éxito ahora agrego el titutoria, pero ya tengo el id usuario
-                      if(this.arrTutoAlum[this.tiposUsuariosselect].esTutor ===1){
+                      if(this.estetipoususarioselect.esTutor ===1){
                         this.actualizarTT(this.id_usuario_entrante);
                         esJP=true;
                         //this.hideModal();
                       }
-                      if(this.arrTutoAlum[this.tiposUsuariosselect].esAlumno ===1){
+                      if(this.estetipoususarioselect.esAlumno ===1){
                         if (esJP==false)      this.$router.push('/ListaUsuarios');
                       }
                          this.$store.state.usuarios=null;
@@ -1023,6 +1071,7 @@ export default {
                   //Si es tutor
                   }
                   else{
+                    console.log(response.data);
                      if(response.data.includes("Excepción capturada")){
                         Swal.fire({
                           text:"No puede guardar al usuario existente, porque ya pertenece al programa o el nuevo usuario no puede tener el nuevo tipo de usuario en este programa.",
