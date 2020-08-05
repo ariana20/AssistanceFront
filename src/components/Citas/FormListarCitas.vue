@@ -281,7 +281,7 @@ export default {
         {value: '',text: "Todos"},
       ];
       this.tipoCitaAlumno=[
-        {value: 'Registrada',text: "Registrada"}, //guardo el value
+        {value: 'Pasada',text: "Pasada"}, //guardo el value
         {value: 'Cancelada',text: "Cancelada"},
         {value: 'Próxima',text: "Próxima"},
         {value: '',text: "Todos"},

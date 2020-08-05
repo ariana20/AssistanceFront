@@ -177,7 +177,7 @@ export default Vue.extend ({
         return {
             event: this.$store.state.curEvent,
             // condicion_alumno: this.$store.state.curEvent.extendedProps.alumno.condicion_alumno.toUpperCase(),
-            condicion_alumno: this.$store.state.citaDatos.alumnos[0].condicion_alumno.toUpperCase(),
+            condicion_alumno:null ,
             fechIni: this.fecha,
             descripcion: null,
             motivo: null,
@@ -231,6 +231,11 @@ export default Vue.extend ({
         // this.disableFields()
 
         // console.log('Cita datos: ',this.$store.state.citaDatos);
+   
+        if (this.$store.state.citaDatos.alumnos[0].condicion_alumno.toUpperCase()!=null) 
+            this.condicion_alumno=this.$store.state.citaDatos.alumnos[0].condicion_alumno.toUpperCase();
+        else 
+            this.condicion_alumno='Sin asignar';
           axios.post('motivosConsulta/listarTodo')
         .then( response => {
            

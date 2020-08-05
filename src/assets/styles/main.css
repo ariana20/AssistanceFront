@@ -82,6 +82,7 @@ input:focus {outline: none;box-shadow: none;}
 .legend .proximo { background-color: #FFC107; }
 .legend .pendiente { background-color: red; }
 .legend .disponible { background-color: #B2EBF2; }
+.legend .nodisponible { background-color: #c4c4c4; }
 .legend .citareservada { background-color: #009892; }
 
 /*Para alinear las fotos de los usuarios*/
