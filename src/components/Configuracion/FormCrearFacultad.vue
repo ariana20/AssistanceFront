@@ -622,12 +622,13 @@ export default {
     },
     Eliminar(ind, item){
       Swal.fire({
-          title: '¿Desea eliminar el programa '+item.nombre+'?',
+          text: '¿Desea eliminar el programa '+item.nombre+'?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
           cancelButtonColor: '#757575',
-          confirmButtonText: 'Confirmar'
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar'
         }).then((result) => {
           if (result.value) {
             this.programas.splice(ind,1 );
