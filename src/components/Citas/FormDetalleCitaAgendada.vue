@@ -68,7 +68,9 @@
                             <button type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
                         </div>
                     </div>
-                    <div style="margin-top:10%;float:left;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>
+                    <!--<div style="margin-top:10%;float:left;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>-->
+                    <p><br><input type="radio" id="asistio" v-model="asistencia" value="asistio"><label for="asistio">Asistió</label><br>
+                    <input type="radio" id="noAsistio" v-model="asistencia" value="noasistio"><label for="noasistio">No asistió</label></p>  
                 </div>
                 
                 
@@ -78,6 +80,11 @@
             </div>
             <div class="der col-lg-6 col-xm col-md-12">
                 <div class="font-weight-bolder text-left">Resultado</div>
+                 <p class="col-sm-12" style="text-align:left">
+                    <nobr style="margin-right:30px"><input type="radio" class="col-sm-1" id="asistio" v-model="asistencia" value="asistio">Asistió</nobr>
+                    <input type="radio" class="col-sm-1" id="noasistio" v-model="asistencia" value="noasistio">No asistió
+                </p> 
+                
                  <div class="top-titulo" style="margin-bottom:20px;">
                     <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
                     <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="selectedMotivo">
@@ -430,8 +437,8 @@ export default Vue.extend ({
             array.push(this.$store.state.citaDatos.alumnos[0].id_usuario);
 
             let asistencia=[];
-            if(this.asistencia==true) asistencia[0]='asi';
-            else if(this.asistencia==false) asistencia[0]='noa';
+            if(this.asistencia.value == 'asistio') asistencia[0]='asi';
+            else asistencia[0]='noa';
              
             if(asistencia[0]=='asi'){
 

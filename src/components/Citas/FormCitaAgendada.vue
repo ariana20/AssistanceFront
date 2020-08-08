@@ -67,7 +67,8 @@
                             <button v-show="!this.asistencia"  type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
                         </div>
                     </div>
-                    <div style="margin-top:10%;float:left;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>
+                    <!--<div style="margin-top:10%;float:left;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>-->
+                                 
                 </div>
                 
                 
@@ -77,6 +78,10 @@
             </div>
             <div class="der col-lg-6 col-xm col-md-12">
                 <div class="font-weight-bolder text-left">Resultado</div>
+                <p class="col-sm-12" style="text-align:left">
+                    <nobr style="margin-right:30px"><input type="radio" class="col-sm-1" id="asistio" v-model="asistencia" value="asistio">Asistió</nobr>
+                    <input type="radio" class="col-sm-1" id="noasistio" v-model="asistencia" value="noasistio">No asistió
+                </p> 
                  <div class="top-titulo" style="margin-bottom:20px;">
                     <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
                     <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="selectedMotivo">
@@ -205,6 +210,7 @@ export default Vue.extend ({
         }
     },
     mounted(){
+        console.log('datos', this.cita[0])
         if (this.$store.state.cond) 
             this.condicion_alumno=this.$store.state.cond.toUpperCase();
         else 
@@ -258,9 +264,11 @@ export default Vue.extend ({
             if(this.cita[1] != "l") {
             this.descripcion = this.cita[1].resultado
             if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'asi') {
-                this.asistencia = true
-            }
-            // console.log('longitud for:', this.cita[1].motivo_consultas)
+                document.getElementById('asistio').checked = true
+            } 
+            else if(this.cita[0].cita_x_usuarios[0].pivot.asistencia == 'noa')
+                document.getElementById('noasistio').checked = true
+            //console.log('longitud for:', this.cita[1].motivo_consultas)
             for(var i in this.cita[1].motivo_consultas) {
                 this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta
                 // console.log('motivo selected: ', this.selectedMotivo)
@@ -271,6 +279,7 @@ export default Vue.extend ({
         enableFields() {
             let elems = document.getElementsByTagName('input')
             elems[0].disabled = false;
+            elems[1].disabled = false;
             let elems2 = document.getElementsByTagName('select');
             for(let i = 0; i < elems2.length; i++) {
                 elems2[i].disabled = false;
@@ -281,7 +290,7 @@ export default Vue.extend ({
         },
         disableFields() {
             let elems = document.getElementsByTagName('input')
-            elems[0].disabled = true;
+            elems[0].disabled = true;elems[1].disabled = true;
             let elems2 = document.getElementsByTagName('select');
             for(let i = 0; i < elems2.length; i++) {
                 elems2[i].disabled = true;
@@ -325,9 +334,13 @@ export default Vue.extend ({
         },
         guardar: function () {
             let array = []
+            let arrayAsis = []
             array.push(this.event.extendedProps.alumno.id_usuario);
-            let arrayAsis = [this.asistencia]
-            // console.log(array);
+            if(this.asistencia.value == 'asistio') 
+                arrayAsis[0] = 'asi'
+            else
+                arrayAsis[0] = 'noa'
+            //console.log(arrayAsis);
             const sesion_params = {
                 id_cita: this.$store.state.idCita,
                 resultado: this.descripcion,
@@ -371,16 +384,50 @@ export default Vue.extend ({
                                 }
                                 
                 }
-                else {
+                else if(arrayAsis[0]=='noa'){
                     Swal.fire({
-                        text:"Debe seleccionar por lo menos un motivo",
-                        icon:"error",
-                        confirmButtonText: 'OK',
+                        text:"¿Está seguro que sea desea guardar esta cita con No Asistió del alumno?",
+                        icon:"warning",
+                        confirmButtonText: 'Sí',
                         confirmButtonColor:'#0097A7',
+                        cancelButtonText: 'Corregir',
+                        cancelButtonColor:'C4C4C4',
+                        showCancelButton: true,
                         showConfirmButton: true,
                     })
-                }
-            
+                    .then((result) => {
+                            if (result.value) {
+                                let sesion_params = {
+                                    id_cita: this.$store.state.idCita,
+                                    resultado: "",
+                                    usuario_creacion: this.cita[1].usuario_creacion,
+                                    usuario_actualizacion: this.cita[1].usuario_actualizacion,
+                                    idAlumnos: array,
+                                    asistencia: arrayAsis,
+                                    idMotivos: [],
+                                }; 
+                                axios.post('/sesiones/regSesionFormal',sesion_params)
+                                        .then( response=>{
+                                            response
+                                            this.disableFields();
+                                            Swal.fire({
+                                                text:"Se ha registrado la sesión con éxito",
+                                                icon:"success",
+                                                confirmButtonText: 'OK',
+                                                confirmButtonColor:'#0097A7',
+                                                showConfirmButton: true,
+                                            }) 
+                                            this.$router.push('/listadocitas');
+                                        })  
+                                        .catch(e => {
+                                            console.log(e);
+                                        });
+                            }
+                            else  if( result.dismiss === Swal.DismissReason.cancel ) {
+                                //Nada que corrija
+                            }
+                    });
+                    }            
         },
         onCodigoChange: function () {
             var i;
