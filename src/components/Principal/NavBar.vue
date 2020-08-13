@@ -37,14 +37,14 @@
       </b-navbar-nav>
       <figure v-if="(usuario!=null && usuario.imagen!='' && usuario.imagen!=null)" id="floated" class="image-logo" >
         <img v-if="usuario!=null && usuario.imagen[0]!='u'" :src="usuario.imagen" alt="Foto"/>
-        <img v-else :src="'https://tutoriaback.inf.pucp.edu.pe/'+usuario.imagen" alt="Foto" />
+        <img v-else :src="'http://tutoriaback.inf.pucp.edu.pe/'+usuario.imagen" alt="Foto" />
       </figure>
       <figure v-if="usuario!=null && (usuario.imagen=='' || usuario.imagen==null)" id="floated" class="image-logo">	
         <b-avatar size="2rem" style="margin-left:-10px;width:40px"></b-avatar>		
       </figure>
       <figure v-if="usuario==null && $store.state.usuario!=null && $store.state.usuario.imagen!='' && $store.state.usuario.imagen!=null" id="floated" class="image-logo">	
         <img v-if="$store.state.usuario.imagen[0]!='u'" :src="$store.state.usuario.imagen" alt="Foto"/>
-        <img v-else :src="'https://tutoriaback.inf.pucp.edu.pe/'+$store.state.usuario.imagen" alt="Foto" />
+        <img v-else :src="'http://tutoriaback.inf.pucp.edu.pe/'+$store.state.usuario.imagen" alt="Foto" />
       </figure>
       <figure v-if="usuario==null && $store.state.usuario!=null && ($store.state.usuario.imagen=='' || $store.state.usuario.imagen==null)" id="floated" class="image-logo">
         <b-avatar size="2rem" style="margin-left:-10px;width:40px" ></b-avatar>		

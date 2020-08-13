@@ -9,7 +9,7 @@
                             <img v-if="this.selectedFile!==null" alt="Foto" :src="selectedFile" height="140px" width="100%">
                             <div v-else>
                                 <img v-if="usuario.imagen[0]!='u'" :src="usuario.imagen" alt="Foto" height="140px" width="100%" />
-                                <img v-else :src="'https://tutoriaback.inf.pucp.edu.pe/'+usuario.imagen" alt="Foto" height="140px" width="100%" />
+                                <img v-else :src="'http://tutoriaback.inf.pucp.edu.pe/'+usuario.imagen" alt="Foto" height="140px" width="100%" />
                             </div>
                         </figure>
                         <figure v-if="(usuario.imagen=='' || usuario.imagen==null) && this.selectedFile==null" id="floated" class="image-logo">	
