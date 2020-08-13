@@ -3,7 +3,7 @@
         <div style="text-align:center">
         <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo" style="margin-left: 0px;">
                 <img v-if="tutor.imagen[0]!='u'" :src="tutor.imagen" height="110px" width="110px"/>
-				<img v-else  :src="'https://assisstanceproyecto20201.vizcochitos.cloudns.cl/'+tutor.imagen" height="110px" width="110px" />		
+				<img v-else  :src="'https://tutoriaback.inf.pucp.edu.pe/'+tutor.imagen" height="110px" width="110px" />		
 		</figure>
         <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo" style="margin-left: 0px;">	
                 <b-avatar size="7rem" ></b-avatar>		
