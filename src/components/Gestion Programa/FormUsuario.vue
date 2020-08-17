@@ -181,7 +181,7 @@ export default {
       banderaTT:false, //Bandera para no llenar el combo box de TT y condialumnos varias veces
       banderaUsuProg:false, //Bandera que me indica que el usuario vino del listar y pertenece a mi programa
       msgUsuario:"",
-      IsmsgUsuario:false,
+      IsmsgUsuario:false, //bandera que me indica que se ha cargado en pantalla un usuario existente
       cboxTU:true,
       arrTutoAlum:[],
       miUsuario:null,
@@ -378,7 +378,7 @@ export default {
       
       //primero evaluo si es alumno       
          
-          if(this.id_usuario_entrante==0){ //Se insertar un usuario nuevecito
+          if(this.id_usuario_entrante==0){ //Se insertar un usuario nuevecito o uno existente
             
               if(this.estado=="ina"){
                     //  this.hideModal();
@@ -393,8 +393,8 @@ export default {
               else{
 
                 // id=0 o es nuevecito o es existente
-                if(this.banderaUsuProg==false){
-                     //usuario existente
+                if(this.IsmsgUsuario==true){
+                     //usuario existente, esa bandera me dijo que envié el mensaje de USUARIO EXISTENTE
               
                     //primero evaluo si es alumno
                     if(this.estetipoususarioselect.esAlumno ===1 && this.estetipoususarioselect.esTutor ===1){
@@ -407,7 +407,7 @@ export default {
                           this.insertarUsuario(params3); //Insertar un usuario existente en el programa
                       }
                     else if(this.estetipoususarioselect.esAlumno ===1){
-                        const params3 = {
+                        const params5 = {
                             //Parametros insertar de usuario
                             id_usuario:this.id_usuario_entrante,
                             id_tipo_usuario:this.tiposUsuariosselect,
@@ -415,7 +415,7 @@ export default {
                             //como es alumno inserto las condicioes
                             condicion_alumno:this.condiAlumnosselect,//le doy el value
                         };
-                            this.insertarUsuario(params3); //Insertar un usuario existente en el programa
+                            this.insertarUsuario(params5); //Insertar un usuario existente en el programa
                     }
                     else if(this.estetipoususarioselect.esTutor ===1){            
                           const params3={
@@ -427,7 +427,7 @@ export default {
 
                       }
                 }  
-                else if(this.estetipoususarioselect.esAlumno ===1){
+                else if(this.estetipoususarioselect.esAlumno ===1){ //no mandé un mensaje de usuario existente, pregunto si es alumno
                     const params = {
                         //Parametros insertar de usuario
                       codigo:this.codigo.trim().replace(/\s+/g, ' '), 
