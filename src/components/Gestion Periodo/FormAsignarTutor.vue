@@ -95,6 +95,8 @@
                 </tr>
             </tbody>
         </table>
+        <div v-if="mensaje!=''">{{mensaje}}</div>
+        <div v-if="tutorSeleccionado==null">No ha seleccionado un tutor</div>
 
     </div>
 
@@ -125,6 +127,7 @@ export default {
         codigos:[],
         campoCodigo: {value:'codigo'},  
         cambiar: false,
+        mensaje:''
 
     }
   },
@@ -201,12 +204,11 @@ export default {
                 this.tutoriaSeleccionada=this.tutorSeleccionado.tiposTutoriaAsignar[0];
                 this.tutoriaAlumno=this.tutorSeleccionado.tiposTutoriaAsignar[0];
             }else{
-                this.tutoriaSeleccionada=null;
+                this.tutoriaSeleccionada=this.tipoTutoria[this.tipoTutoria.length-1];
                 this.tutoriaAlumno=null;
             }
-            if(this.tutoriaSeleccionada){
-                this.listarAlumnos();
-            }
+            this.listarAlumnos();
+
         }
 
 
@@ -230,7 +232,9 @@ export default {
             axios
             .post('/registros/listarAlumnos', params)
             .then(res =>{
-            this.alumnosAsig=res.data;       
+            this.alumnosAsig=res.data;    
+            if(this.alumnosAsig.length==0) this.mensaje="No hay alumnos asignados";
+            else this.mensaje="";   
             })
             .catch(e => {
             console.log(e.response);
@@ -286,6 +290,7 @@ export default {
                             this.alSeleccionado=null;
                             this.sel='';
                             this.cambiar=false; 
+                            this.mensaje='';
                             
 
                         }).catch(e => {
@@ -310,7 +315,8 @@ export default {
                 this.alumnosAsig.push(this.alSeleccionado);
                 this.enviarCorreo();
                 this.alSeleccionado=null;
-                this.sel='';  
+                this.sel=''; 
+                this.mensaje=''; 
                 
             }
             
@@ -340,12 +346,13 @@ export default {
 
     Eliminar: function(item, index) {
         Swal.fire({
-            title: '¿Desea eliminar la asignación de '+item.nombre+'?',
+            text: '¿Desea eliminar la asignación de '+item.nombre+'?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',
             cancelButtonColor: '#757575',
-            confirmButtonText: 'Confirmar'
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
         }).then((result) => {
             if (result.value) {
                 const params = {

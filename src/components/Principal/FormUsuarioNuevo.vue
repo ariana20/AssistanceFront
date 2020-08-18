@@ -1,7 +1,7 @@
 <template>
 	<div name="UsuarioNuevo">
 		<div class="wrapper margen">
-			<div class="container contenido">
+			<div class="container contenid">
 				<strong>Aún no te encuentras inscrito en un programa o no cuentas con permisos</strong>
 			</div>
 			
@@ -53,15 +53,19 @@ export default {
 		margin-top:-423px;
 	}
 
-	.contenido{
-		font-size:70px;margin-top:5%;margin-left:35%
+	.contenid{
+		font-size:70px;
+		margin-top:5%;
+		margin-left:35%;
+		height: 80%;
+		color: black !important;
 	}
     @media only screen and (max-width: 600px) {
 		.margen{
 			margin-top:-323px;
 		}
 		
-		.contenido{
+		.contenid{
 			font-size:30px;
 			margin-top:25%;
 			margin-left:15%;

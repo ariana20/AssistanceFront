@@ -1,33 +1,52 @@
 <template>
   <div style="margin-top:15px; margin-left: 15px;">
     <fieldset>
-      <legend>Solicitar Tutor</legend>
-        <div class="row">
-          <div class="col-12 col-lg-2" style="padding-top: 6px;">
-            <h5>Nombre: </h5>
+      <legend>Configuración de un Programa</legend>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
+              <label>Código del Programa:*</label>
+              </div>
+              <div class="col-12 col-lg-6" style="margin-top: 8px">
+              <b-form-input v-if="nuevoProg==1 || editProg==1" id="codigoP" v-model="codVerifP"></b-form-input>
+              <b-form-input v-else readonly id="codigoP" v-model="codVerifP"></b-form-input>
+              </div>
+
           </div>
-          <div class="col-12 col-lg-8" style="padding-top: 6px;">
-            <h5>{{tutorSel.nombre+" "+tutorSel.apellidos}} </h5>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
+              <label>Nombre del Programa:*</label>
+              </div>
+              <div class="col-12 col-lg-6" style="margin-top: 8px">
+              <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombreP" v-model="nombreVerifP"></b-form-input>
+              <b-form-input v-else readonly id="nombreP" v-model="nombreVerifP"></b-form-input>
+              </div>
+
           </div>
-        </div>
-        <div class="row">
-          <div class="col-12 col-lg-2" style="padding-top: 6px;"><h5>Temas: </h5></div>
-          <div class="col-12 col-lg-8">
-          <select class="form-control"  v-model="selectedTema" style="border: 0.5px solid #757575;">
-              <option disabled selected :value="null" focusable="false">Selecciona un tema</option>
-              <option 
-                  v-for="(tema, index) in tipoTutoria" 
-                  :key="index" 
-                  :value="tema">
-                  {{ tema.nombre}}
-              </option>
-          </select>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
+              <label>Correo Electrónico:*</label>
+              </div>
+              <div class="col-12 col-lg-6" style="margin-top: 8px">
+              <b-form-input v-if="nuevoProg==1 || editProg==1" id="correo" v-model="programa.correo"></b-form-input>
+              <b-form-input v-else readonly id="correo" v-model="programa.correo"></b-form-input>
+              </div>
           </div>
-        </div>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
+              <label>Coordinador de Programa:</label>
+              </div>
+              <div class="col-12 col-lg-5" style="margin-top: 8px">
+              <b-form-input id="idCoordinador" readonly v-if="programa.coordinador!=null" v-model="programa.coordinador.nombCompleto" ></b-form-input>
+              <b-form-input id="idCoordinador" readonly v-else>Sin coordinador</b-form-input>
+              </div>
+
+              <div class="col-1">
+              <modalJ v-on:childToParentProg="onChildClickProg"/>
+              </div>
+          </div>
         
         <div class="row" style="text-align: right" id="botones" >
-            <button type="button"
-            class="btn btn-info" v-on:click="solicitarTutor()">Enviar Solicitud</button>
+            <button class="btn btn-info" v-on:click="guardar()">Enviar</button>
         </div>
         
         
@@ -55,8 +74,8 @@ export default {
         }
     },
     props: {
-      tutorSel: Object,
-      tipoTutoria: Array,
+      programa: Object,
+      facultad: Object
     },
     
     mounted() {
@@ -125,7 +144,7 @@ fieldset {
     padding:0;
     /*border:1px solid #757575;*/
     font-family: "Brandon Bold",Helvetica,Arial,sans-serif !important;
-    height: 230px;
+    height: 500px !important;
     
     
 }

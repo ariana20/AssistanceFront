@@ -3,7 +3,7 @@
         <div class="row  " style="text-align:left;">
             <!-- inicia combobox de tutor -->
             <div class="col-md-1 col-12" style="padding-top:5px;font-size:20px;">Tutor:</div>
-            <select class="col-md-5 col-xs-11 offset-xs-1 form-control" style="cursor:pointer;border: 0.5px solid #757575;padding-left:10px" v-model="tutorSel"  @change="showCalendar" >
+            <select class="col-md-4 col-xs-11 offset-xs-1 form-control" style="cursor:pointer;border: 0.5px solid #757575;padding-left:10px" v-model="tutorSel"  @change="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
@@ -14,8 +14,9 @@
             </select>
             <!-- leyenda -->
             <div class="legend col-md-4  col-12">             
-                    <div class="col-md-2 offset-md-2 col-5 " style="padding-top:7px" ><span class="ocupado"></span> Ocupado </div >
-                    <div class="col-md-2 col-6" style="padding-top:7px"><span class="disponible"></span> Disponible</div >
+                    <div class="col-md-2 offset-md-0 col-3 " style="padding-top:7px" ><span class="ocupado"></span> Ocupado </div >
+                    <div class="col-md-2 col-3" style="padding-top:7px;padding-left:0px"><span class="disponible"></span> Disponible</div >
+                    <div class="col-md-2 col-3" style="padding-top:7px;padding-left:0px"><span class="nodisponible"></span>No Disponible</div >
                     <!-- <li><span class="citareservada"></span> Cita Resevada </li> -->
                
             </div>
@@ -154,9 +155,18 @@ export default {
         },
         rutaEvent (arg) {
            //Aquí me lleva a la cita agendada 
-           if(arg.event.backgroundColor  !='#FF6961') {
+           if(arg.event.backgroundColor=='#c4c4c4'){
+                 Swal.fire({
+                    text:"No puede registrar una cita con una fecha de hoy y hora anterior.",
+                    icon:"warning",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                     showConfirmButton: true,
+                });
+           }
+           else if(arg.event.backgroundColor  !='#FF6961') {
                 // disponible
-                console.log(this.tutorSel);
+                //console.log(this.tutorSel);
                 this.$store.state.citaDatos={
                         props:arg.event.extendedProps,
                         id_disponibilidad:arg.event.id,
@@ -166,9 +176,10 @@ export default {
                         tttutorSel: this.aux,
                         isGray:false,
                         alumnos:arg.event.allow,
+                        pantalla:"calendarioExterno",
 
                 };
-             
+                    // console.log('citaDatos: ',this.$store.state.citaDatos)
                  this.$router.push('/registrarCita/registrarCitaAgendada');
             }else if (arg.event.backgroundColor=='#FF6961')  { 
                 //Gray
@@ -182,10 +193,13 @@ export default {
                         tttutorSel:this.aux,
                         isGray:true,
                         alumnos:arg.event.allow,
+                        pantalla:"calendarioExterno",
 
                 };
+                 console.log('citaDatos: ',this.$store.state.citaDatos)
                 this.$router.push('/registrarCita/registrarCitaAgendada');
-                 }
+            }
+       
 
          
 
@@ -255,10 +269,8 @@ export default {
                 })
                 .then((response) => {
                     
-                    var rd = response.data[0];
-                   
-
-                    var rd2 = response.data[1];
+                    var rd = response.data[0]; 
+                    var rd2 = response.data[1]; 
                     for(var i in rd) {
                         var start_hour = rd[i].hora_inicio;
                         //this.events.push({
@@ -302,18 +314,36 @@ export default {
                                } 
                                // }
                             } else {
-                                this.$store.commit("ADD_EVENT", {
-                                    
-                                    id: rd[i].id_disponibilidad,
-                                    title: 'Disponible',
-                                    start: rd[i].fecha + " " + rd[i].hora_inicio,
-                                    end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
-                                    tipo_disponibilidad: rd[i].tipo_disponibilidad,
-                                    usuario_creacion: rd[i].usuario_creacion,
-                                    id_usuario_tutor: rd[i].id_usuario,
-                                    usuario_actualizacion: rd[i].usuario_actualizacion,
-                                    
-                                });
+                                var date = rd[i].fecha + " " + rd[i].hora_inicio;
+                                var date1 = new Date(date);
+                                var today = new Date();
+                                if(today<date1){
+                                    this.$store.commit("ADD_EVENT", {
+                                        
+                                        id: rd[i].id_disponibilidad,
+                                        title: 'Disponible',
+                                        start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                        tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                        usuario_creacion: rd[i].usuario_creacion,
+                                        id_usuario_tutor: rd[i].id_usuario,
+                                        usuario_actualizacion: rd[i].usuario_actualizacion,
+                                        
+                                    });
+                                }
+                                else{
+                                    this.$store.commit("ADD_EVENT", {                                        
+                                        id: rd[i].id_disponibilidad,
+                                        title: 'No Disponible',
+                                        start: rd[i].fecha + " " + rd[i].hora_inicio,
+                                        end: rd[i].fecha + " " + addTimes(start_hour, '00:30:00'),
+                                        tipo_disponibilidad: rd[i].tipo_disponibilidad,
+                                        usuario_creacion: rd[i].usuario_creacion,
+                                        id_usuario_tutor: rd[i].id_usuario,
+                                        usuario_actualizacion: rd[i].usuario_actualizacion,
+                                        color: '#c4c4c4',
+                                    });
+                                }
                             }
 
                         //});

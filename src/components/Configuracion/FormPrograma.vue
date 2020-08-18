@@ -3,12 +3,12 @@
     <div style="text-align: left;">
       <div class="row" style="width:100%">
         <div class="form-inline col-12 col-md-2 col-lg-1">
-          <h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
+          <h5 style="margin-top:10%;margin-bottom:5%">Buscar: </h5>
         </div>
-        <div class="form-inline col-12 col-md-2">
-          <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Ingrese nombre del programa">
+        <div class="form-inline col-12 col-md-5 col-lg-4">
+          <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar">
         </div>
-        <div class="form-inline col-12 col-md-3">
+        <div class="form-inline col-12 col-md-5 col-lg-4">
           <select v-on:change="FacultadSel"  class="form-control" style="margin-top:2%"
             v-model="facuSeleccionadoInd">  <!--aqui guardo-->
             <option selected :value="null">Selecciona una facultad</option>
@@ -55,6 +55,67 @@
       </div>
     </div>
 
+    <!-- <div v-if="$store.state.usuariosA!=null && $store.state.usuariosA.last_page!=1">
+      <nav aria-label="Page navigation example" class="paginar">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" v-if="$store.state.usuariosA.current_page > 1">
+            <a class="page-link" href="#" tabindex="-1" @click.prevent="Page($store.state.usuariosA.current_page - 1)" style="color:rgb(0, 152, 146)">
+              <span>Anterior</span>
+            </a>
+          </li>
+          <li class="page-item">
+            <a  v-if="$store.state.usuariosA.current_page!=1" class="page-link" href="#" @click.prevent="Page(1)" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ '1' }}
+            </a>
+            <a v-else class="page-link" href="#" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ '1' }}
+            </a>
+          </li>
+          <li class="page-item" v-if="$store.state.usuariosA.last_page > 3 && $store.state.usuariosA.current_page != 2 && ($store.state.usuariosA.current_page != 1 && $store.state.usuariosA.current_page != $store.state.usuariosA.last_page)">
+            <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ '...' }}
+            </a>
+          </li>
+          <li class="page-item" v-if="$store.state.usuariosA.last_page > 2 && ($store.state.usuariosA.current_page == 1 || $store.state.usuariosA.current_page == $store.state.usuariosA.last_page)">
+            <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ '...' }}
+            </a>
+          </li>
+          <li class="page-item" v-if="$store.state.usuariosA.current_page!=1 && $store.state.usuariosA.current_page!=$store.state.usuariosA.last_page">
+            <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ $store.state.usuariosA.current_page }}
+            </a>
+          </li>
+          <li class="page-item" v-if="$store.state.usuariosA.last_page > 3 && $store.state.usuariosA.current_page != $store.state.usuariosA.last_page-1 && ($store.state.usuariosA.current_page != 1 && $store.state.usuariosA.current_page != $store.state.usuariosA.last_page)">
+            <a class="page-link" href="#" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ '...' }}
+            </a>
+          </li>
+          <li class="page-item" v-if="$store.state.usuariosA.last_page!=1">
+            <a  v-if="  $store.state.usuariosA.current_page!=$store.state.usuariosA.last_page" class="page-link" href="#" @click.prevent="Page($store.state.usuariosA.last_page)" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ $store.state.usuariosA.last_page }}
+            </a>
+            <a v-else class="page-link" href="#" style="color:rgb(0, 152, 146)">
+              <span class="sr-only">(current_page)</span>
+              {{ $store.state.usuariosA.last_page }}
+            </a>
+          </li>
+          <li class="page-item" v-if="$store.state.usuariosA.current_page < $store.state.usuariosA.last_page">
+            <a class="page-link" href="#" @click.prevent="Page($store.state.usuariosA.current_page + 1)" style="color:rgb(0, 152, 146)">
+              <span>Siguiente</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div> -->
+
     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
       <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
         <b-spinner style="width: 3rem; height: 3rem;"/>
@@ -77,14 +138,15 @@ export default {
       facultades:null,
     }
   },
-  created(){
+  mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
+    this.facuSeleccionadoInd = null
+    this.showModal()
+    this.listarProgramas();
+  },
+  created(){
     this.listarFacultades();
-    if(this.$store.state.programas.length == 0) {
-      this.showModal()
-      this.listarProgramas();
-    }
-    else this.programas = this.$store.state.programas;
+    this.$store.state.filtro.query = ''
   },
   computed:{
     nombre:{
@@ -112,6 +174,7 @@ export default {
       this.axios.post('/programa/facultadesProg')
         .then(response=>{
           this.facultades = response.data
+          this.filtroFacu = null
         })
         .catch(e=>{
           console.log(e)
@@ -144,10 +207,10 @@ export default {
         })
     },
     showModal() {
-      //this.$refs['my-modal'].show()
+      this.$refs['my-modal'].show()
     },
     hideModal() {
-      //this.$refs['my-modal'].hide()
+      this.$refs['my-modal'].hide()
     },
   }
 }
@@ -171,4 +234,7 @@ export default {
 .botones {
     margin:auto;
 }
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
 </style>

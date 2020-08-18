@@ -1,8 +1,8 @@
 <template>
-    <div class="formagendarcita contenedor">
+    <div class="formagendarcita container">
         <div class="top-titulo " style="text-align:left;">
             <h4 class="col-md-2 col-xs-2 title-container">Tutor: </h4>
-            <select id="selectBox" class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" v-if="tutores[0]">
+            <select id="selectBox" class="col-sm-4 form-control" style="left:-160px;top:26px;" v-model="tutorSel"  @change="showCalendar" >
                 <option disabled selected :value="null" focusable="false">Selecciona un tutor</option>
                 <option 
                     v-for="(item, index) in tutores" 
@@ -45,7 +45,12 @@
                           />
             <modals-container/>
         </div>
-        
+        <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
+            <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
+                <b-spinner style="width: 3rem; height: 3rem;"/>
+                <br >Cargando... 
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -127,8 +132,12 @@ export default {
     },
      mounted() {
         this.bloque = "00:"+ this.$store.state.programaActual.hora_bloque + ":00"
-        this.$store.state.events = [];
         this.listarTutores();
+        if(!this.tutorSel) {
+            this.$store.state.events = [];
+            this.hideModal()
+            this.$refs.calendar.fireMethod("rerenderEvents");
+        }
         /*if(this.$store.state.tutorDisponibilidad) {
             //this.tutorSel = this.$store.state.tutorDisponibilidad
             //console.log("storestate tutor: ", this.tutorSel)
@@ -150,31 +159,37 @@ export default {
         ...mapGetters(["EVENTS"])
     },
     methods: {
+        deleteEvent(arg) {
+            this.$store.commit("DELETE_EVENT", arg.event)                 
+        },
         showCalendar() {
+            this.showModal()
             this.getReminders();
         },
         listarTutores() {
-        const params = {
-            id_programa : this.$store.state.programaActual.id_programa,
-            nomFacu:this.$store.state.programaActual.facultad.nombre,
-            nombre: "",
-            id_alumno: this.$store.state.usuario.id_usuario,
-        };
-        axios.post('/programa/tutoresAlumno', params)
-            .then(res =>{
-                this.tutores=res.data;
-                if(this.$store.state.tutorDisponibilidad) {
-                    this.tutores.forEach(element => {
-                        if(element.id_usuario == this.$store.state.tutorDisponibilidad.id_usuario) {
-                            this.tutorSel = element
-                        }
-                    });
-                    this.getReminders();
-                }
-            })
-            .catch(e => {
-            console.log(e.response);
-            })
+            const params = {
+                id_programa : this.$store.state.programaActual.id_programa,
+                nomFacu:this.$store.state.programaActual.facultad.nombre,
+                nombre: "",
+                id_alumno: this.$store.state.usuario.id_usuario,
+            };
+            axios
+            .post('/programa/tutoresAlumno', params)
+                .then(res =>{
+                    this.tutores=res.data;
+                    console.log(res.data);
+                    if(this.$store.state.tutorDisponibilidad) {
+                        this.tutores.forEach(element => {
+                            if(element.id_usuario == this.$store.state.tutorDisponibilidad.id_usuario) {
+                                this.tutorSel = element
+                            }
+                        });
+                        this.getReminders();
+                    }
+                })
+                .catch(e => {
+                    console.log(e.response);
+                })
         },
         handleClick (arg) {
             if(arg.event.backgroundColor!='#ff6961') {
@@ -192,12 +207,12 @@ export default {
         },
         getReminders: function() {
                 this.calendar = this.$refs.fullCalendar.getApi();
-                this.$store.state.events = [];
-                
-                // console.log('tutorSel', this.tutorSel)
+                this.$store.state.events = [];                
+                console.log('tutorSel', this.tutorSel)
+                this.showModal()
                 axios.post('disponibilidades/dispSemanalVistaAl',{idUsuario:this.tutorSel.id_usuario,idPrograma:this.$store.state.programaActual.id_programa,fechaIni:this.calendar.view.activeStart,fechaFin:this.calendar.view.activeEnd })
                 .then((response) => {
-                    // console.log('getreminders',response.data)
+                    console.log('getreminders',response.data)
                     var rd = response.data[0]; 
                     var rd2 = response.data[1];
                     var today = new Date()
@@ -237,7 +252,6 @@ export default {
                                 }
                             } else {
                                 if(date1>today) {
-                                    // console.log('id cuando es llenado',rd[i].id_disponibilidad)
                                     this.$store.commit("ADD_EVENT", {
                                         id: rd[i].id_disponibilidad,
                                         title: 'Disponible',
@@ -253,15 +267,24 @@ export default {
                             }
                         //});
                     }
+                    this.hideModal()
                 }).catch(e => {
+                    this.hideModal()
                     console.log(e.response);
                 });
                 //this.calendar.render();
             },
+            showModal() {
+            this.$refs['my-modal'].show()
+            },
+            hideModal() {
+                this.$refs['my-modal'].hide()
+            },
     },
     watch: {    
         eventFilter() {
-        this.$refs.calendar.fireMethod("rerenderEvents");
+            //this.$refs.calendar.$emit('refetchEvents')
+            this.$refs.calendar.fireMethod("rerenderEvents");
         }
     }
 }

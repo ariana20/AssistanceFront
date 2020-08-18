@@ -2,129 +2,117 @@
   <div class="FormCrearFacultad contenedor">
 
     <div style="text-align: left">
-      <!--<div class="top-title title-container" style="text-align:right">
-        <button type="button" class="btn btn-info" style="margin-left:30px" v-on:click="guardarFacultad()">Guardar</button>
-            
-            <router-link to="/facultad">
-              <button type="button" class="btn btn-secondary" style="margin-left:30px">Cancelar</button>
-            </router-link>
-      </div>-->
-        <b-container fluid>
-          <b-row class="my-1"  style="text-align: right">
-              <b-col class="col-12 col-md-12" style=";margin-top:5%">
+        <b-container fluid style="margin-top:30px">
+          <div class="row"  style="text-align: right; margin-bottom:10px">
+              <div class="col-12 col-md-12">
                 <button type="button" class="btn btn-info"  v-on:click="guardarFacultad()">Guardar</button>
                 
                 <router-link to="/facultad">
                   <button type="button" class="btn btn-secondary" style="margin-left:20px">Cancelar</button>
                 </router-link>
-              </b-col>
-          </b-row>
-          <b-row class="my-1">
-              <b-col sm="3">
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-12 col-lg-3">
               <label>Código de la Facultad:*</label>
-              </b-col>
-              <b-col sm="9">
+              </div>
+              <div class="col-12 col-lg-9">
               <b-form-input v-if="idFacultad" id="codigoF" v-model="codVerifF"></b-form-input>
               <b-form-input v-else id="codigoF" v-model="codVerifF"></b-form-input>
 
-              </b-col>
+              </div>
 
-          </b-row>
-          <b-row class="my-1">
-              <b-col sm="3">
+          </div>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
               <label>Nombre de la Facultad:*</label>
-              </b-col>
-              <b-col sm="9">
+              </div>
+              <div class="col-12 col-lg-9">
               <b-form-input v-if="idFacultad" id="nombreF" v-model="nombreVerifF"></b-form-input>
               <b-form-input v-else id="nombreF" v-model="nombreVerifF"></b-form-input>
 
-              </b-col>
+              </div>
 
-          </b-row>
-          <b-row class="my-1">
-              <b-col sm="3">
+          </div>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
               <label>Correo Electrónico:*</label>
-              </b-col>
-              <b-col sm="9">
+              </div>
+              <div class="col-12 col-lg-9">
               <b-form-input id="correoF" v-model="facultad.correo"></b-form-input>
-              </b-col>
-          </b-row>
-          <b-row class="my-1">
-              <b-col sm="3">
+              </div>
+          </div>
+          <div ref="edPrograma" class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
               <label>Coordinador de Facultad:</label>
-              </b-col>
-              <b-col sm="8">
+              </div>
+              <div class="col-12 col-lg-8">
               <b-form-input id="idCoordinadorF" readonly v-if="facultad.coordinador!=null" v-model="facultad.coordinador.nombCompleto" ></b-form-input>
-              <b-form-input id="idCoordinadorF" readonly v-else></b-form-input>
-              </b-col>
+              <b-form-input id="idCoordinadorF" readonly v-else>Sin coordinador</b-form-input>
+              </div>
 
               
-              <b-col sm="1">
+              <div class="col-1" style="text-align:center">
               <modalJ2 v-on:childToParentFacu="onChildClickFacu" tipoF="Facultad"/>            
-              </b-col>
+              </div>
              
-          </b-row>
-          <b-row></b-row>
+          </div>
 
 
-          </b-container>
-          <br>
+        </b-container>
 
-          <b-container fluid>
-          <b-row>
-              
+        <b-container  fluid style="margin-top:30px">
+          <div class="row">
               <h4 class="font-weight-bold">Programas de la Facultad:</h4>
-              <b-col sm="12" style="text-align: right">
+              <div class="col-12" style="text-align: right; margin-bottom:10px">
               <b-button v-if="nuevoProg==0 && editProg==0" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="agregarPrograma()">Añadir Programa</b-button>
               <b-button v-if="nuevoProg==1 || editProg==1" class="btn btn-info" style="margin-left:50px" type="submit" v-on:click="guardarPrograma()">Guardar Programa</b-button>
-              </b-col>
-          </b-row>
-          <b-row class="my-1">
-              <b-col sm="3">
+              <!--button class="btn btn-info" v-on:click="confPrograma()">hola</!--button-->
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
               <label>Código del Programa:*</label>
-              </b-col>
-              <b-col sm="9">
+              </div>
+              <div class="col-12 col-lg-9">
               <b-form-input v-if="nuevoProg==1 || editProg==1" id="codigoP" v-model="codVerifP"></b-form-input>
               <b-form-input v-else readonly id="codigoP" v-model="codVerifP"></b-form-input>
-              </b-col>
+              </div>
 
-          </b-row>
-          <b-row class="my-1">
-              <b-col sm="3">
+          </div>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
               <label>Nombre del Programa:*</label>
-              </b-col>
-              <b-col sm="9">
+              </div>
+              <div class="col-12 col-lg-9">
               <b-form-input v-if="nuevoProg==1 || editProg==1" id="nombreP" v-model="nombreVerifP"></b-form-input>
               <b-form-input v-else readonly id="nombreP" v-model="nombreVerifP"></b-form-input>
-              </b-col>
+              </div>
 
-          </b-row>
-          <b-row class="my-1">
-              <b-col sm="3">
+          </div>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
               <label>Correo Electrónico:*</label>
-              </b-col>
-              <b-col sm="9">
+              </div>
+              <div class="col-12 col-lg-9">
               <b-form-input v-if="nuevoProg==1 || editProg==1" id="correo" v-model="programa.correo"></b-form-input>
               <b-form-input v-else readonly id="correo" v-model="programa.correo"></b-form-input>
-              </b-col>
-          </b-row>
-          <b-row class="my-1">
-              <b-col sm="3">
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-12 col-lg-3" style="margin-top: 8px">
               <label>Coordinador de Programa:</label>
-              </b-col>
-              <b-col sm="8">
+              </div>
+              <div class="col-12 col-lg-8">
               <b-form-input id="idCoordinador" readonly v-if="programa.coordinador!=null" v-model="programa.coordinador.nombCompleto" ></b-form-input>
-              <b-form-input id="idCoordinador" readonly v-else></b-form-input>
-              </b-col>
+              <b-form-input id="idCoordinador" readonly v-else>Sin coordinador</b-form-input>
+              </div>
 
-              <b-col sm="1">
+              <div class="col-1">
               <modalJ v-on:childToParentProg="onChildClickProg"/>
-              </b-col>
-          </b-row>
-          <br>
-
-
-        
+              </div>
+          </div>
+          
         </b-container>
         <div style="overflow: auto;width:100%;">
           <table class="table">
@@ -147,12 +135,12 @@
                   <td v-if="item.coordinador!=undefined">{{item.coordinador.nombre+" "+item.coordinador.apellidos}}</td>
                   <td v-else>Sin coordinador</td>
                   <td style="text-align: center">
-                    <button class="btn link" style="
+                    <button class="btn link"  style="
                       padding-top: 0px;
                       padding-bottom: 0px;
                       margin-top: 0px;
                       margin-bottom: 0px;
-                    " v-on:click="Editar(item, index)"><b-icon icon="pencil" style="color:#0097A7"></b-icon></button>
+                    " v-on:click="Editar(item, index)"><b-icon icon="pencil" style="color:#0097A7"><a href="#edPrograma" ></a></b-icon></button>
                     <button class="btn link" style="
                       padding-top: 0px;
                       padding-bottom: 0px;
@@ -172,7 +160,9 @@
         <b-spinner style="width: 3rem; height: 3rem;"/>
         <br >Cargando... 
       </div>
-      </b-modal>
+    </b-modal>
+    
+    <modals-container/> 
   </div>
 </template>
 
@@ -185,6 +175,7 @@ import Vue from 'vue'
 import {MultiSelectPlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(MultiSelectPlugin);
 import Swal from 'sweetalert2'
+import EventModal from './../ModalPrograma.vue'
 
 export default {
 
@@ -458,7 +449,7 @@ export default {
                 response
                 this.hideModal();
                 Swal.fire({
-                  text:"Guardado Exitosa",
+                  text:"Se modificaron los datos con éxito",
                   icon:"success",
                   confirmButtonText: 'OK',
                   confirmButtonColor:'#0097A7',
@@ -508,7 +499,7 @@ export default {
                       response
                       this.hideModal();
                       Swal.fire({
-                        text:"Guardado Exitosa",
+                        text:"Se guardaron los datos con éxito",
                         icon:"success",
                         confirmButtonText: 'OK',
                         confirmButtonColor:'#0097A7',
@@ -631,12 +622,13 @@ export default {
     },
     Eliminar(ind, item){
       Swal.fire({
-          title: '¿Desea eliminar el programa'+item.nombre+'?',
+          text: '¿Desea eliminar el programa '+item.nombre+'?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
           cancelButtonColor: '#757575',
-          confirmButtonText: 'Confirmar'
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar'
         }).then((result) => {
           if (result.value) {
             this.programas.splice(ind,1 );
@@ -663,8 +655,25 @@ export default {
         this.programa.coordinador=item.coordinador;
         this.programa.coordinador.nombCompleto=item.coordinador.nombre+" "+item.coordinador.apellidos;  
       }
+      
+      else if(item.coordinador==null){
+        this.programa.coordinador=null;
+      }
+      
       this.programa.id_facultad=item.id_facultad;
       this.programa.id_programa=item.id_programa;
+
+      var element = this.$refs["edPrograma"];
+      var top=element.offsetTop;
+      window.scrollTo(0,top);
+
+    },
+    confPrograma(){
+        this.$modal.show(EventModal,{
+          programa: this.programa,
+          facultad: this.facultad                    
+
+        });
     },
 		showModal() {
 			this.$refs['my-modal'].show()
@@ -676,7 +685,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+@import '../../assets/styles/material.css';
+@import '../../assets/styles/main.css';
+
+.vm--modal {
+    border-radius: 25px !important;
+    margin: 30px;
+    height: 500px !important;
+}
 
 .form-control {
     border-radius: 1.25rem;  

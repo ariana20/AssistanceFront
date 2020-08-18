@@ -4,7 +4,7 @@
         <div style="text-align:center">
         <figure v-if="tutor.imagen!='' && tutor.imagen!=null" id="floated" class="image-logo" style="margin-left: 0px;">
                 <img v-if="tutor.imagen[0]!='u'" :src="tutor.imagen" height="110px" width="110px"/>
-				<img v-else  :src="'https://assisstanceproyecto20201.vizcochitos.cloudns.cl/'+tutor.imagen" height="110px" width="110px" />		
+				<img v-else  :src="'http://tutoriaback.inf.pucp.edu.pe/'+tutor.imagen" height="110px" width="110px" />		
 		</figure>
         <figure v-if="tutor.imagen=='' || tutor.imagen==null" id="floated" class="image-logo" style="margin-left: 0px;">	
                 <b-avatar size="7rem" ></b-avatar>		
@@ -15,11 +15,7 @@
             <div class="font-weight-bolder">Código: {{tutor.codigo}}</div>
             <div class="font-weight-bolder">Temas: </div>
             <div>
-                <label v-for="(item,index) in tutor.tipoTutoriasPrograma" :key="index" style="margin-bottom: 0px;">
-                    <!--Falta decir que el tipo de tutoría solicitado sea parte del tipo de tutoria Asignado-->
-                    <label v-if="item.tutor_fijo=='0' || (item.tutor_fijo==1 && item.tutor_asignado=='0' && tipoTutoriaAsignado)">{{item.nombre}}</label>
-                    <label v-if="(item.tutor_fijo=='0' || (item.tutor_fijo==1 && item.tutor_asignado=='0' && tipoTutoriaAsignado)) && index<tutor.tipoTutoriasPrograma.length-1" style="margin-right:5px; margin-bottom: 0px;">, </label>
-                </label>
+                <label>{{mensaje}}</label>
             </div>
             <div style="text-align: right; margin-top: 0px;" id="botones" >
                 <button type="button" v-if="verDispo"
@@ -65,26 +61,30 @@ export default {
     },
     methods:{
         obtenerTipoTutoriaAceptado(){
-            console.log(this.tutor.nombre);
             for(let i=0; i<this.tutor.tipoTutoriasPrograma.length; i++){
                 var iguales=false;
-                
-                
-                if(this.tutor.tipoTutoriasPrograma[i].tutor_fijo=="0") this.verDispo=true;
-                else if(this.tutor.tipoTutoriasPrograma[i].tutor_fijo=="1" && this.tutor.tipoTutoriasPrograma[i].tutor_asignado=='0'){
+                if(this.tutor.tipoTutoriasPrograma[i].tutor_fijo=="0"){
+                    //Tutorías variables del tutor
+                    this.verDispo=true;
+                    if(this.mensaje!="") this.mensaje=this.mensaje+", ";
+                    this.mensaje=this.mensaje+this.tutor.tipoTutoriasPrograma[i].nombre;
+
+                }else if(this.tutor.tipoTutoriasPrograma[i].tutor_fijo=="1" && this.tutor.tipoTutoriasPrograma[i].tutor_asignado=='0'){
+                    //Tutorías fijas y solicitadas del tutor 
                     for(var j=0; j<this.tipoTutoriaAsignado.length; j++){
                         if(this.tutor.tipoTutoriasPrograma[i].id_tipo_tutoria==this.tipoTutoriaAsignado[j].id_tipo_tutoria){
                             iguales=true;
                             break;
                         }
-
                     }
-                    
                     if(!iguales){
-                        if(this.tutor.nombre=="Emma")console.log(this.tutor.tipoTutoriasPrograma[i], i);
+                        //Si el alumno no tiene esta tutoría como asignada
                         this.tutor.tipoTutoriasPrograma.splice(i,1);i--;
                     }else{
+                        //Si el alumno tiene esta tutoría como asignada
                         this.tutoriaSolicitar.push(this.tutor.tipoTutoriasPrograma[i]);
+                        if(this.mensaje!="") this.mensaje=this.mensaje+", ";
+                        this.mensaje=this.mensaje+this.tutor.tipoTutoriasPrograma[i].nombre;
                     }
                 }
             }

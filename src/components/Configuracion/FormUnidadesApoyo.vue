@@ -3,10 +3,10 @@
     <div style="text-align: left">  
       <div class="row">
         <div class="form-inline col-12 col-md-2 col-lg-1">
-          <h5 style="margin-top:10%;margin-bottom:5%">Nombre: </h5>
+          <h5 style="margin-top:10%;margin-bottom:5%">Buscar: </h5>
         </div>
         <div class="form-inline col-12 col-md-2">
-          <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar por nombre">
+          <input class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar">
         </div>
         <div class="form-inline col-12 col-md-2" v-if="this.$store.state.tipoActual.nombre == 'Admin'">
           <select v-on:change="FacultadSel"  class="form-control"
@@ -182,14 +182,13 @@ export default {
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
-    if(this.$store.state.unidades == null) {
-      this.showModal()
-      this.listarUnidades();
-    }
-    else this.unidades = this.$store.state.unidades;
+    this.showModal()
+    this.listarUnidades();
     this.listarProgramas();
     this.listarFacultades();
     this.nombre="";
+    this.filtroProg = null
+    this.filtroFacu = null
   },
   computed:{
     nombre:{

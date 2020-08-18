@@ -75,15 +75,16 @@ export default new Vuex.Store({
         icon: 'ion-md-people'
       },
       {
-        text: 'Usuarios',
-        path: '/ListaUsuarios',
-        icon: 'ion-ios-people'
-      },
-      {
         text: 'Tipos de Tutoría',
         path: '/ListaTiposTutorias',
         icon: 'ion-ios-bookmarks'
       },
+      {
+        text: 'Usuarios',
+        path: '/ListaUsuarios',
+        icon: 'ion-ios-people'
+      },
+     
       {
         text: 'Asignar Tipo de Tutoría',
         path: '/asignarTipoTutoria',
@@ -92,6 +93,11 @@ export default new Vuex.Store({
       {
         text: 'Asignar Tutor',
         path: '/asignartutor',
+        icon: 'ion-ios-contacts'
+      },
+      {
+        text: 'Alumnos Asignados',
+        path: '/alumnosasignados',
         icon: 'ion-ios-contacts'
       },
       {
@@ -129,6 +135,7 @@ export default new Vuex.Store({
         path: '/agendarcita',
         icon: 'ion-ios-calendar'
       },
+      
       {
         text: 'Registrar Cita',
         path: '/registrarCita',
@@ -138,6 +145,12 @@ export default new Vuex.Store({
         text: 'Calendario',
         path: '/calendariocitas',
         icon: 'ion-ios-calendar'
+      },
+      {
+        text: 'Lista de Citas',
+        path: '/listadocitas',
+        icon: 'ion-ios-list',
+        // ion-ios-calendar-outline
       },
       {
         text: 'Solicitudes',
@@ -193,7 +206,7 @@ export default new Vuex.Store({
   },
   getters:{
     filtrarRoles(state){
-      if(state.filtro.query.length > 0){
+      if(state.filtro.query.length > 0 && state.roles){
         let roles = state.roles.filter(rol => rol.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
         return roles;
       }
@@ -208,7 +221,7 @@ export default new Vuex.Store({
     },
     filtrarCoordinadores(state){
       if(state.filtro.query.length > 0){
-        let coordinadores = state.coordinadores.filter(coordinador => coordinador.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        let coordinadores = state.coordinadores.filter(coordinador => (coordinador.nombre.toLowerCase()+" "+coordinador.apellidos.toLowerCase()).includes(state.filtro.query.toLowerCase()))
         return coordinadores;
       }
       return state.coordinadores;
@@ -258,14 +271,14 @@ export default new Vuex.Store({
       if(state.filtro.query.length > 0){
         let unidades
         if(state.filtro.facultad!=null){
-          unidades = state.unidades.filter(unidad => unidad.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+          unidades = state.unidades.filter(unidad => (unidad.nombre+" "+unidad.nombre_contacto+" "+unidad.correo_contacto).toLowerCase().includes(state.filtro.query.toLowerCase()))
           unidades = unidades.filter(unidad => unidad.programas[0].id_facultad == state.filtro.facultad.id_facultad)
           if(state.filtro.programa!=null){
             unidades = unidades.filter(unidad => unidad.programas[0].id_programa == state.filtro.programa.id_programa)
           }
         }
         else{
-          unidades = state.unidades.filter(unidad => unidad.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+          unidades = state.unidades.filter(unidad => (unidad.nombre+" "+unidad.nombre_contacto+" "+unidad.correo_contacto).toLowerCase().includes(state.filtro.query.toLowerCase()))
           if(state.filtro.programa!=null){
             unidades = unidades.filter(unidad => unidad.programas[0].id_programa == state.filtro.programa.id_programa)
           }
@@ -288,8 +301,8 @@ export default new Vuex.Store({
     filtrarCoordinadoresL(state){
       if(state.filtro.query.length > 0){
         let coordinadoresL
-        coordinadoresL = state.coordinadoresL.filter(coordinador => coordinador.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
-        if(state.filtro.facultad!=null){
+        coordinadoresL = state.coordinadoresL.filter(coordinador => (coordinador.codigo+" "+coordinador.nombre+" "+coordinador.apellidos+" "+coordinador.correo).toLowerCase().includes(state.filtro.query.toLowerCase()))
+        if(state.filtro.facultad!=null  && state.filtroProgs){
           if(state.filtro.programa!=null){
             coordinadoresL = coordinadoresL.filter(coordinador => coordinador.lugares.includes(state.filtro.programa.nombre))
           }
@@ -309,7 +322,13 @@ export default new Vuex.Store({
             coordinadoresL2.forEach(element => {
               coordinadores.push(element)
             });
-            coordinadoresL = coordinadores
+            const seen = new Set();
+            const filteredArr = coordinadores.filter(el => {
+              const duplicate = seen.has(el.id_usuario);
+              seen.add(el.id_usuario);
+              return !duplicate;
+            });
+            coordinadoresL = filteredArr
           }
         }
         else if(state.filtro.programa!=null){
@@ -317,7 +336,7 @@ export default new Vuex.Store({
         }
         return coordinadoresL;
       }
-      else if(state.filtro.facultad!=null){
+      else if(state.filtro.facultad!=null && state.filtroProgs){
         let coordinadoresL = state.coordinadoresL;
         if(state.filtro.programa!=null){
           coordinadoresL = coordinadoresL.filter(coordinador => coordinador.lugares.includes(state.filtro.programa.nombre))
@@ -338,7 +357,13 @@ export default new Vuex.Store({
           coordinadoresL2.forEach(element => {
             coordinadores.push(element)
           });
-          coordinadoresL = coordinadores
+          const seen = new Set();
+          const filteredArr = coordinadores.filter(el => {
+            const duplicate = seen.has(el.id_usuario);
+            seen.add(el.id_usuario);
+            return !duplicate;
+          });
+          coordinadoresL = filteredArr
         }
         return coordinadoresL;
       }
@@ -350,7 +375,10 @@ export default new Vuex.Store({
     },
     filtrarProgramas(state){
       if(state.filtro.query.length > 0){
-        let programas = state.programas.filter(programa => programa.programa.nombre.toLowerCase().includes(state.filtro.query.toLowerCase()))
+        let programas = state.programas.filter(programa =>{
+          if (programa.coordinador) return (programa.programa.codigo+" "+programa.programa.nombre+" "+programa.programa.correo+" "+programa.coordinador.nombre+" "+programa.coordinador.apellidos).toLowerCase().includes(state.filtro.query.toLowerCase())
+          else return (programa.programa.codigo+" "+programa.programa.nombre+" "+programa.programa.correo+" Sin Coordinador").toLowerCase().includes(state.filtro.query.toLowerCase())
+        })
         if(state.filtro.facultad!=null){
           programas = programas.filter(programa => programa.facultad.id_facultad == state.filtro.facultad.id_facultad)
         }

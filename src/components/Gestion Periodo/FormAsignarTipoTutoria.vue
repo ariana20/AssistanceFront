@@ -85,8 +85,8 @@
                 </tr>
             </tbody>
         </table>
-        <div v-if="alumnosAsig.lenght == 0 || tutoriaSeleccionada==null" >No hay alumnos asignados</div>
-
+        <div v-if="mensaje!=''">{{mensaje}}</div>
+        <div v-if="tutoriaSeleccionada==null" >No ha seleccionado un tipo de tutoría</div>
     </div>
 
   </div>
@@ -115,6 +115,7 @@ export default {
         codigos:[],
         campoCodigo: {value:'codigo'},  
         cambiar: false,
+        mensaje:''
 
     }
   },
@@ -180,7 +181,9 @@ export default {
             axios
             .post('TipoTutoria/listaAlumnosConTT', params)
             .then(res =>{
-            this.alumnosAsig=res.data;     
+            this.alumnosAsig=res.data;  
+            if(this.alumnosAsig==0) this.mensaje="No hay alumnos asignados";
+            else this.mensaje="";
             })
             .catch(e => {
             console.log(e.response);
@@ -233,6 +236,7 @@ export default {
                             this.alSeleccionado=null;
                             this.sel='';
                             this.cambiar=false; 
+                            this.mensaje='';
                             
 
                         }).catch(e => {
@@ -271,12 +275,13 @@ export default {
 
     Eliminar: function(item, index) {
         Swal.fire({
-            title: '¿Desea eliminar la asignación de '+item.nombre+'?',
+            text: '¿Desea eliminar la asignación de '+item.nombre+'?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#0097A7',
             cancelButtonColor: '#757575',
-            confirmButtonText: 'Confirmar'
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
         }).then((result) => {
             if (result.value) {
                 const params = {

@@ -6,7 +6,7 @@
           <h5 style="margin-top:10%;margin-bottom:5%">Buscar: </h5>
         </div>
         <div class="form-inline col-12 col-md-4">
-          <input v-on:change="Buscar(nombre)" class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar...">
+          <input v-on:change="Buscar(nombre)" class="form-control" style="margin-top:3%" v-model="nombre" placeholder="Buscar">
         </div>
         <div class="form-inline col-12 col-md-2 offset-md-2 offset-lg-5">
           <button  type="button" style="border-radius: 10px" @click="nuevo()" class="btn btn-info">Añadir</button>
@@ -15,8 +15,8 @@
 
       <br>
       <div style="width:100%;display:block ruby">
-      <div style="overflow: auto;width:95%;">
-        <table class="table" style="width:99%">
+      <div style="overflow: auto;width:100%;">
+        <table class="table" style="width:100%">
           <thead>
             <tr>
               <th scope="col" style="width:5%">Codigo</th>
@@ -325,4 +325,7 @@ export default {
   }
 }
 
+.btn:focus {outline: none;box-shadow: none;border:2.3px solid transparent;}
+select:focus {outline: none;box-shadow: none;}
+input:focus {outline: none;box-shadow: none;}
 </style>

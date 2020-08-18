@@ -11,7 +11,14 @@
                     {{ tipoTutoria.nombre }}
                 </option>
             </select>
-            <date-picker class="col-sm-3 dateSlot" :lang="lang" v-model="datetime" type="datetime" format="DD-MM-YYYY HH:mm" :time-picker-options="timePickerOptions" width="500" placeholder="Selecciona Hora y Fecha"></date-picker>
+            <date-picker class="col-sm-3 dateSlot" 
+                        :lang="lang" 
+                        v-model="datetime" 
+                        type="datetime" 
+                        format="DD-MM-YYYY HH:mm" 
+                        :time-picker-options="timePickerOptions" 
+                        width="500" 
+                        placeholder="Selecciona Hora y Fecha"></date-picker>
             <div class="row botones col-sm-4 botones-top">
             <button type="button" class="btn btn-info" @click="guardar()" >Guardar</button>
             <button type="button" class="btn btn-info" @click="cancelar()" style="border-color:gray;background-color:gray;">Cancelar</button>
@@ -158,7 +165,7 @@ export default Vue.extend ({
             time: '',
             timePickerOptions:{
                 start: '07:00',
-                step: '00:30',
+                step: '00:'+ this.$store.state.programaActual.hora_bloque ,
                 end: '21:00'
             },
             datetime: '',
@@ -274,7 +281,7 @@ export default Vue.extend ({
                 id_usuario: this.$store.state.usuario.id_usuario,
                 id_programa: this.$store.state.programaActual.id_programa,
                 fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
-                hora_inicio: moment(new Date(String(this.datetime))).format('hh:mm:ss'), 
+                hora_inicio: moment(new Date(String(this.datetime))).format('HH:mm:ss'), 
                 usuario_creacion: this.$store.state.usuario.id_usuario,
                 usuario_actualizacion: this.$store.state.usuario.id_usuario,
                 id_tipo_tutoria: this.selectedTipoTutoria,
@@ -417,7 +424,7 @@ export default Vue.extend ({
                         break;
                     }
             }
-            if(this.alSeleccionado != 'Nombre Alumno' && !estaAl && this.sel.length == 8){ 
+            if(this.alSeleccionado != 'Nombre Alumno' && !estaAl ){ 
                 this.listAlumnosNom.push(this.alSeleccionado);
                 this.listAlumnosCod.push(this.sel);
                 for(var j in this.codigos){
