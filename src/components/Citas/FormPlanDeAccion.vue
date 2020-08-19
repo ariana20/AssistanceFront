@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="col-12 col-md-5" v-if="completado!=true">
-          <b-button v-if="this.nuevo==false && editar==false" v-on:click="editar=true" style="background: #0097A7;border: 0px;margin-top:-0.9%">
+          <b-button v-if="this.nuevo==false && editar==false" v-on:click="editar=true;edito=false" style="background: #0097A7;border: 0px;margin-top:-0.9%">
             Editar
           </b-button>
           <b-button v-else v-on:click="Elegir()" style="background: #757575;border: 0px;margin-top:-0.9%">
@@ -58,6 +58,52 @@
       </div>
       <div class="row" style="margin-top:3%;text-align:left">
         <div class="col-12 col-md-2" style="margin-bottom:3%">
+          <strong>Fecha:</strong>
+        </div>
+        <div class="col-12 col-md-7">
+          <div v-if="nuevo!=true && this.planAccion && this.planAccion.fecha_inicio">
+            <div v-if="editar==false">
+              {{this.planAccion.fecha_inicio}}
+            </div>
+            <div v-else style="margin-left:-15px">
+              <date-picker v-on:change="edito=true;"
+                          class="col-12" 
+                          :lang="lang" 
+                          v-model="planAccion.fecha_inicio" 
+                          type="date" 
+                          format="DD-MM-YYYY"
+                          width="500" 
+                          placeholder="Selecciona Hora y Fecha"/>
+            </div>
+          </div>
+          <div v-else>
+            <div v-if="this.planAccion && nuevo!=true && editar==false && this.planAccion.fecha_inicio==null">
+              'No tiene fecha registrada'
+            </div>
+            <div v-else-if="nuevo!=true">
+              <date-picker v-on:change="edito=true;"
+                          class="col-12" 
+                          :lang="lang" 
+                          v-model="planAccion.fecha_inicio"
+                          type="date" 
+                          format="DD-MM-YYYY"
+                          width="500" 
+                          placeholder="Seleccionar Fecha"/>
+            </div>
+            <div v-else style="margin-left:-15px">
+              <date-picker class="col-12" 
+                          :lang="lang" 
+                          v-model="fecha_inicio"
+                          type="date" 
+                          format="DD-MM-YYYY"
+                          width="500" 
+                          placeholder="Seleccionar Fecha"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:3%;text-align:left">
+        <div class="col-12 col-md-2" style="margin-bottom:3%">
           <strong>Descripción:</strong>
         </div>
         <div class="col-12 col-md-7">
@@ -70,11 +116,14 @@
             </div>
           </div>
           <div v-else>
-            <div v-if="this.planAccion && nuevo!=true && this.planAccion.descripcion==null">
+            <div v-if="this.planAccion && nuevo!=true && editar==false && this.planAccion.descripcion==null">
               'No tiene descripción registrada'
             </div>
+            <div v-else-if="nuevo!=true">
+              <textarea v-on:change="edito=true;" v-model="planAccion.descripcion" class="perso inp" id="subject" name="subject" placeholder="Esriba la descripción del plan.." style="resize: none;padding-top:2%;height:100px;width:100%;margin-left:-2%"/>
+            </div>
             <div v-else>
-              <textarea v-on:change="edito=true;" v-model="descripcion" class="perso inp" id="subject" name="subject" placeholder="Esriba la descripción del plan.." style="resize: none;padding-top:2%;height:100px;width:100%"/>
+              <textarea v-model="descripcion" class="perso inp" id="subject" name="subject" placeholder="Esriba la descripción del plan.." style="resize: none;padding-top:2%;height:100px;width:100%"/>
             </div>
           </div>
         </div>
@@ -238,6 +287,8 @@
 </template>
 
 <script>
+import DatePicker from 'vue2-datepicker'
+import 'vue2-datepicker/index.css'
 import draggable from 'vuedraggable'
 import Swal from 'sweetalert2'
 export default {
@@ -253,6 +304,7 @@ export default {
       completado:false,
       nombre:'',
       descripcion:'',
+      fecha_inicio:null,
       eliminados:[],
       compromisos: [],
       cambios:[],
@@ -261,12 +313,27 @@ export default {
       arrInProgress: [],
       arrTested: [],
       arrDone: [],
-
+      lang: {
+          formatLocale: {
+              months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+              // MMM
+              monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+              // dddd
+              weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+              // ddd
+              weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+              // dd
+              weekdaysMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+              firstDayOfWeek: 1,
+          },
+          monthBeforeYear: true,
+      },
     }
   },
   props: ['usr'],
   components:{
     draggable,
+    DatePicker,
   },
   mounted(){
     this.listarPlan()
@@ -979,6 +1046,7 @@ export default {
                 descripcion: this.descripcion,
                 compromisos: this.compromisos,
                 cambios: this.cambios,
+                fecha:this.fecha_inicio,
               }
               this.axios.post('/planAccion/insertar',obj)
                 .then(response=>{
