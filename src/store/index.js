@@ -80,7 +80,7 @@ export default new Vuex.Store({
         icon: 'ion-ios-bookmarks'
       },
       {
-        text: 'Usuarios',
+        text: 'Usuarios Programa',
         path: '/ListaUsuarios',
         icon: 'ion-ios-people'
       },
@@ -111,7 +111,7 @@ export default new Vuex.Store({
         icon: 'ion-ios-school'
       },
       {
-        text: 'Usuarios Admin',
+        text: 'Usuarios',
         path: '/AListaUsuarios',
         icon: 'ion-ios-people'
       },

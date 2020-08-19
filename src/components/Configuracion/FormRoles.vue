@@ -1,7 +1,8 @@
 <template>
   <div class="FormRoles contenedor" style="text-align: left">
 
-    <div class="row" style="width:100%">
+    <div class="row" style="width:100%"
+      v-if="$store.state.permisosUsuario!=null && ($store.state.permisosUsuario.includes('Usuarios') || $store.state.permisosUsuario.includes('Datos Facultad') || $store.state.permisosUsuario.includes('Datos Programa'))">
       <div class="form-inline col-11 col-md-2 col-lg-1">
         <h5 style="margin-top:5%;margin-bottom:5%">Nombre: </h5>
       </div>
@@ -13,13 +14,14 @@
       </div>
     </div>
 
-    <div style="overflow: auto;width:99%;margin-top:2%">
+    <div style="overflow: auto;width:99%;margin-top:2%"
+      v-if="$store.state.permisosUsuario!=null && ($store.state.permisosUsuario.includes('Usuarios') || $store.state.permisosUsuario.includes('Datos Facultad') || $store.state.permisosUsuario.includes('Datos Programa'))">
       <table class="table" style="width:99%">
         <thead>
           <tr>
             <th scope="col">N°</th>
             <th scope="col">Nombre</th>
-            <th v-if="$store.state.tipoActual.nombre == 'Admin'" scope="col">Facultad/Programa</th>
+            <th v-if="$store.state.permisosUsuario.includes('Usuarios')" scope="col">Facultad/Programa</th>
             <th scope="col" style="text-align: center">Acciones</th>
           </tr>
         </thead>
@@ -27,7 +29,7 @@
           <tr v-for="(item, index) in rolesFiltrados" :key="index">
             <th scope="row">{{index+1}}</th>
             <td>{{item.nombre}}</td>
-            <td v-if="$store.state.tipoActual.nombre == 'Admin' && item.programa!=null">
+            <td v-if="$store.state.permisosUsuario.includes('Usuarios') && item.programa!=null">
               <div v-if="item.programa.nombre == 'Administrador'">
                 General
               </div>
@@ -35,7 +37,7 @@
                 {{item.programa.nombre}}
               </div>
             </td>
-            <td  style="text-align: center" v-if="$store.state.tipoActual.nombre == 'Admin'">
+            <td  style="text-align: center" v-if="$store.state.permisosUsuario.includes('Usuarios')">
               <button  style="
 									padding-top: 0px;
 									padding-bottom: 0px;
@@ -76,6 +78,12 @@
       </table>
     </div>
 
+    <div v-else class="row" style="width:100%">
+        <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
+            Su tipo de usuario no soporta esta funcionalidad comuníquese con Soporte
+        </div>
+    </div>
+
     <b-modal ref="my-modal" style="margin-left:20%;" size="md" centered hide-header hide-footer no-close-on-backdrop no-close-on-esc hideHeaderClose>
     <div style="font-size:20px;padding-top:25px;color:#0097A7;text-align:center;height:150px" class="text-center">
       <b-spinner style="width: 3rem; height: 3rem;"/>
@@ -97,7 +105,6 @@ export default {
   },
   mounted(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
-    this.showModal()
     this.listarRoles();
     this.nombre="";
   },
@@ -115,9 +122,18 @@ export default {
     })
   },
   methods:{
-    listarRoles() {
-      this.showModal()
-      if(this.$store.state.tipoActual.nombre == 'Admin'){
+    async listarRoles() {
+      if(this.$store.state.permisosUsuario==null){
+        await this.axios.post('/usuarios/permisos',{
+                usuario: this.$store.state.usuario,
+                programa: this.$store.state.programaActual.nombre
+              })
+              .then(response=>{
+                this.$store.state.permisosUsuario = response.data
+              })
+      }
+      if(this.$store.state.permisosUsuario.includes('Usuarios')){
+        this.showModal()
         this.axios.post('/tipoUsuarios/tiposAdmin')
           .then(response=>{
               this.$store.state.roles = response.data;
@@ -128,8 +144,9 @@ export default {
             this.hideModal()
           });
       }
-      if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+      else if(this.$store.state.permisosUsuario.includes('Datos Facultad')){
         let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
+        this.showModal()
         this.axios.post('/tipoUsuarios/tiposFacultad',obj)
           .then(response=>{
               this.$store.state.roles = response.data;
@@ -140,11 +157,12 @@ export default {
             this.hideModal()
           });
       }
-      if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+      else if(this.$store.state.permisosUsuario.includes('Datos Programa')){
         let obj = {
           id_programa: this.$store.state.programaActual.id_programa,
           id_facultad: this.$store.state.programaActual.id_facultad
         }
+        this.showModal()
         this.axios.post('/tipoUsuarios/tiposPrograma',obj)
           .then(response=>{
               this.$store.state.roles = response.data;
@@ -155,7 +173,6 @@ export default {
             this.hideModal()
           });
       }
-      
     },
     Editar(id,Visualización){
       this.$store.state.visualizacion = Visualización;  

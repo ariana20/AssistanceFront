@@ -105,7 +105,7 @@ export default {
       this.showModal()
       axios.post('ModuloPermiso/listarTodoPermisos')
         .then(response=>{
-          if(this.$store.state.tipoActual.nombre == 'Admin'){
+          if(this.$store.state.permisosUsuario.includes('Usuarios')){
             this.$store.state.permisos = response.data;
           }
           else{
@@ -159,7 +159,7 @@ export default {
           }).then((result) => {
             if (result.value) {
               let prog;
-              if(this.$store.state.tipoActual.nombre == 'Admin'){
+              if(this.$store.state.permisosUsuario.includes('Usuarios')){
                 prog = 1;
               }
               else{

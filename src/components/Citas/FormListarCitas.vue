@@ -1,5 +1,5 @@
 <template>
-  <div class="FormListarUsuario contenedor"  >
+  <div class="contenedor"  >
     <!-- para que lo vea bien un tutor y un alumno -->
    <div  >  
 
@@ -443,7 +443,7 @@ export default {
       
       var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
       
-       if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador   
+       if(this.$store.state.permisosUsuario.includes('Usuarios')){ //Para coordinador   
        
         axios.post(url,paramsB) //Por ahora dsp será x program
         .then(res =>{  

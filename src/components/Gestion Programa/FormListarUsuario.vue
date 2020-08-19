@@ -201,38 +201,36 @@ export default {
     //2 es el id de usuairo admin
     
     listarUsuarios(page) {
-     this.showModal();
+      this.showModal();
  
-    var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
-    
-     if(this.$store.state.tipoActual.nombre!="Admin"){//Para coordinador   
+      var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
+        
 
-        axios.post(url) //Por ahora dsp será x program
-        .then(res =>{
-         
-          //ordenado por estado
-          let par=res.data.tasks.data; 
-          // this.$store.state.usuarios=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
-          //this.$store.state.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-          this.usuarios=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
-          this.paginate=res.data.paginate;
-          this.hideModal();
-                   
-        })
-        .catch(e => {
-          console.log('catch listar',e.response);
-             this.hideModal();
-          //Swal de problema
-           Swal.fire({
-                    text:"Estamos teniendo problemas al listar los usuarios. Vuelve a intentar en unos minutos.",
-                    icon:"warning",
-                    confirmButtonText: 'Sí',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-           });
+      axios.post(url) //Por ahora dsp será x program
+      .then(res =>{
+        
+        //ordenado por estado
+        let par=res.data.tasks.data; 
+        // this.$store.state.usuarios=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
+        //this.$store.state.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+        this.usuarios=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
+        this.paginate=res.data.paginate;
+        this.hideModal();
+                  
+      })
+      .catch(e => {
+        console.log('catch listar',e.response);
+            this.hideModal();
+        //Swal de problema
+          Swal.fire({
+                  text:"Estamos teniendo problemas al listar los usuarios. Vuelve a intentar en unos minutos.",
+                  icon:"warning",
+                  confirmButtonText: 'Sí',
+                  confirmButtonColor:'#0097A7',
+                  showConfirmButton: true,
+          });
 
-        })
-      }
+      })
       
      
      
@@ -250,7 +248,7 @@ export default {
       
       var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
       
-       if(this.$store.state.tipoActual.nombre!="Admin"){ //Para coordinador   
+       if(this.$store.state.permisosUsuario.includes('Usuarios')){ //Para coordinador   
        
         axios.post(url,paramsB) //Por ahora dsp será x program
         .then(res =>{  
@@ -376,7 +374,7 @@ export default {
     },
     listarTUsuarios() {
       this.showModal();
-       if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+       if(this.$store.state.permisosUsuario.includes('Datos Facultad')){
         let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
         this.axios.post('/tipoUsuarios/tiposFacultad',obj)
           .then(res=>{
@@ -398,7 +396,7 @@ export default {
             
           });
        }
-      if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+      if(this.$store.state.permisosUsuario.includes('Datos Programa')){
         let obj = {
           id_programa: this.$store.state.programaActual.id_programa,
           id_facultad: this.$store.state.programaActual.id_facultad

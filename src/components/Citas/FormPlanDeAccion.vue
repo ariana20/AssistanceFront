@@ -109,7 +109,7 @@
 
       <div class="row" v-if="this.completado!=true">
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Pendiente</h3>
             <draggable class="list-group kanban-column" :list="arrBacklog" group="tasks">
@@ -128,7 +128,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> En Proceso</h3>
             <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
@@ -147,26 +147,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%">
-          <div class="p-2 redondo">
-            <h3> Por Revisar</h3>
-            <draggable class="list-group kanban-column" :list="arrTested" group="tasks">
-              <div style="cursor: grab;" class="list-group-item" v-for="(element,index) in arrTested" :key="element.name">
-                <div class="row tooltipx">
-                  <div class="contenido col-8">
-                    {{element.name}} 
-                  </div>
-                  <div class="col-1">
-                    <a class="btn" v-on:click="Eliminar(index,3)" style="padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;margin-left:1%">X</a>
-                  </div>
-                  <span class="tooltiptext">{{element.name}} </span>
-                </div>
-              </div>
-            </draggable>
-          </div>
-        </div>
-
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Hecho</h3>
             <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
@@ -188,7 +169,7 @@
       </div>
       <div class="row" v-else style="pointer-events: none;opacity: 0.5;">
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Pendiente</h3>
             <draggable class="list-group kanban-column" :list="arrBacklog" group="tasks">
@@ -207,7 +188,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> En Proceso</h3>
             <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
@@ -226,26 +207,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%">
-          <div class="p-2 redondo">
-            <h3> Por Revisar</h3>
-            <draggable class="list-group kanban-column" :list="arrTested" group="tasks">
-              <div style="cursor: grab;" class="list-group-item" v-for="(element,index) in arrTested" :key="element.name">
-                <div class="row tooltipx">
-                  <div class="contenido col-8">
-                    {{element.name}} 
-                  </div>
-                  <div class="col-1">
-                    <a class="btn" v-on:click="Eliminar(index,3)" style="padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;margin-left:1%">X</a>
-                  </div>
-                  <span class="tooltiptext">{{element.name}} </span>
-                </div>
-              </div>
-            </draggable>
-          </div>
-        </div>
-
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Hecho</h3>
             <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
@@ -329,6 +291,10 @@ export default {
               if(element.estado == 'rev') this.arrTested.push({name: element.nombre})
               if(element.estado == 'hec') this.arrDone.push({name: element.nombre})
             });
+            
+            if(this.arrBacklog.length == 0 && this.arrInProgress.length == 0 && this.arrTested.length == 0){
+              this.completado = true
+            }
           }
           this.hideModal();
         })
@@ -1173,6 +1139,7 @@ export default {
           arr.forEach(element => {
             this.arrDone.push({name: element.nombre})
           });
+          this.completado = true
         }
       })
       
