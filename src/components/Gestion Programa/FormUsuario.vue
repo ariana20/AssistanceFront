@@ -394,7 +394,7 @@ export default {
 
                 // id=0 o es nuevecito o es existente
                 if(this.IsmsgUsuario==true){
-                     //usuario existente, esa bandera me dijo que envié el mensaje de USUARIO EXISTENTE
+                    //usuario existente, esa bandera me dijo que envié el mensaje de USUARIO EXISTENTE
               
                     //primero evaluo si es alumno
                     if(this.estetipoususarioselect.esAlumno ===1 && this.estetipoususarioselect.esTutor ===1){
@@ -584,47 +584,26 @@ export default {
     },
 
     listarTUsuarios() {
-     
-      //  if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
-      //   let obj = { id_facultad: this.$store.state.programaActual.id_facultad}
-      //   this.axios.post('/tipoUsuarios/tiposFacultad',obj)
-      //     .then(res=>{
-      //          //Ordenadito
-      //      let par=res.data;
-      //     //cord de facultad
-      //      this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-            
-      //       this.listarTT(); //Para que cuando tenga los tipos de usuarios recién llene los TT
-           
-      //     })
-      //     .catch(e=>{
-      //       console.log('catch del tipo de usuario: ',e)
-         
-      //     });
-      // }
-      if(this.$store.state.tipoActual.nombre != 'Admin'){
-        let obj = {
-          id_programa: this.$store.state.programaActual.id_programa,
-          id_facultad: this.$store.state.programaActual.id_facultad
-        }
-        
-        this.axios.post('/tipoUsuarios/tiposPrograma',obj)
-          .then(res=>{
-                //Ordenadito
-           let par=res.data;
-          
-           this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
-              this.listarTT();
-             
-            
-           
-          })
-          .catch(e=>{
-             console.log('catch del tipo de usuario: ',e);
-           
-          });
-  
+      let obj = {
+        id_programa: this.$store.state.programaActual.id_programa,
+        id_facultad: this.$store.state.programaActual.id_facultad
       }
+      
+      this.axios.post('/tipoUsuarios/tiposPrograma',obj)
+        .then(res=>{
+              //Ordenadito
+          let par=res.data;
+        
+          this.tiposUsuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
+            this.listarTT();
+            
+          
+          
+        })
+        .catch(e=>{
+            console.log('catch del tipo de usuario: ',e);
+          
+        });
 
     },
     cancelarUsuario(){
