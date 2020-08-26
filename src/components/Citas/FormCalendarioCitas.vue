@@ -214,7 +214,8 @@ export default {
                                         usuario_creacion: this.$store.state.usuario.id_usuario,
                                         usuario_actualizacion: this.$store.state.usuario.id_usuario,
                                         tipo_disponibilidad: 'fij',
-                                        hora_inicio:moment(slots[k]).format('HH:mm:ss')
+                                        hora_inicio:moment(slots[k]).format('HH:mm:ss'),
+                                        hora_fin: addTimes(moment(slots[k]).format('HH:mm:ss'), this.bloque)
                                     }).then((response) => {
                                         if(response && k == slots.length-1) {
                                             Swal.fire({
@@ -270,7 +271,8 @@ export default {
                                                 usuario_creacion: this.$store.state.usuario.id_usuario,
                                                 usuario_actualizacion: this.$store.state.usuario.id_usuario,
                                                 tipo_disponibilidad: 'fij',
-                                                hora_inicio:moment(arg.start).format('HH:mm:ss')
+                                                hora_inicio:moment(arg.start).format('HH:mm:ss'),
+                                                hora_fin: addTimes(moment(slots[k]).format('HH:mm:ss'), this.bloque)
                                             }).then((response) => {
                                                 if(response && i == listaFechas.length-1) {
                                                     Swal.fire({
@@ -352,7 +354,8 @@ export default {
                                                     usuario_creacion: this.$store.state.usuario.id_usuario,
                                                     usuario_actualizacion: this.$store.state.usuario.id_usuario,
                                                     tipo_disponibilidad: 'fij',
-                                                    hora_inicio:moment(arg.start).format('HH:mm:ss')
+                                                    hora_inicio:moment(arg.start).format('HH:mm:ss'),
+                                                    hora_fin: addTimes(moment(slots[k]).format('HH:mm:ss'), this.bloque)
                                                 }).then((response) => {
                                                     if(response && j == listaFechas.length-1) {
                                                         Swal.fire({
