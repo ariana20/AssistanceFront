@@ -182,10 +182,10 @@ export default {
         getIdCita () {
           axios.post('disponibilidades/mostrarCita2', {idDisponibilidad:this.event.id})
           .then((response) => {
-            this.idCita = response.data[0].id_cita;
-            this.$store.state.idCita = response.data[0].id_cita;
-            this.$store.state.curSesion = response.data
-            this.$store.state.cond = response.data[0].cond
+            this.idCita = response.data[0][0].id_cita;
+            this.$store.state.idCita = response.data[0][0].id_cita;
+            this.$store.state.curSesion = response.data[0];
+            this.$store.state.cond = response.data[0][0].cond
           }).catch(e => {
             console.log(e.response);
           });

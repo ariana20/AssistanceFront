@@ -40,7 +40,7 @@
         </div>        <!-- fin de cabeceras -->
 
          <!-- Para alumno -->
-         <div v-if="esAlumno==true">
+         <div v-if="esAlumno==true && esTutor==false">
             <h5 style="text-align:left;margin-top:5px;" ><strong  >  Citas con tutores </strong></h5>
             <div style="overflow: auto;" v-if="this.citasAlumno.length>=1">
                   <table responsive class="table" style="text-align:left" >
@@ -286,11 +286,12 @@ export default {
         {value: 'Próxima',text: "Próxima"},
         {value: '',text: "Todos"},
       ];
-    document.querySelector("#container > div > div.FormListarUsuario.contenedor > div > div > div > div > div > input").style.borderRadius = "1.25rem"; 
-    document.querySelector("#container > div > div.FormListarUsuario.contenedor > div > div > div > div > div > input").style.border= "0.5px solid #757575";    
-    document.querySelector("#container > div > div.FormListarUsuario.contenedor > div > div > div > div > div > input").style.fontWeight = "400";
-    document.querySelector("#container > div > div.FormListarUsuario.contenedor > div > div > div > div > div > input").style.fontSize = "1rem";
-    document.querySelector("#container > div > div.FormListarUsuario.contenedor > div > div > div > div > div > input").style.height = "2.4em";
+    document.querySelector("#container > div > div.contenedor > div > div > div > div > div > input").style.borderRadius = "1.25rem"; 
+    document.querySelector("#container > div > div.contenedor > div > div > div > div > div > input").style.border= "0.5px solid #757575";    
+    document.querySelector("#container > div > div.contenedor > div > div > div > div > div > input").style.fontWeight = "400";
+    document.querySelector("#container > div > div.contenedor > div > div > div > div > div > input").style.fontSize = "1rem";
+    document.querySelector("#container > div > div.contenedor > div > div > div > div > div > input").style.height = "2.4em";
+    // document.querySelector("#container > div > div.contenedor > div > div > div > div > div > input")
     this.listarTUsuarios(1);
     
     //this.listarCitas(1); 
@@ -347,14 +348,11 @@ export default {
             //ordenado this.mispermisos
             // console.log(res);
           if(res.data!="") {
-              let par=res.data.tasks.data; 
-              // console.log(par);
-              //para ordenar
+              let par=res.data.tasks.data;             
               this.citasTutor=par;
               
               this.esTutor=true;
               this.paginate=res.data.paginate;/////paginado
-              //  console.log('Pivot:',   this.citasTutor[6].cita_x_usuarios[0].pivot);
           }
           else{
               this.citasTutor="";
@@ -554,7 +552,7 @@ export default {
       //Tengo que pasarle cosas
          let cita;
        if(this.esTutor==true){
-        cita=this.citasTutor[indice]; 
+         cita=this.citasTutor[indice]; 
          this.$store.state.curSesion=null;    
          /*
           cita_x_usuarios: Array(x)
@@ -564,9 +562,12 @@ export default {
           id_disponibilidad: 119
           tipo_de_cita: ""
          */
+        /*
+        update 23/08/2020: Ahora ya tenemos hora_fin
+        */
         axios.post('disponibilidades/mostrarCita2', {idDisponibilidad:cita.id_disponibilidad})
             .then((response) => {
-                 this.$store.state.curSesion=  response.data;        
+                 this.$store.state.curSesion=  response.data[0];        
            
             }).catch(e => {
                 console.log('catch: ',e);
@@ -579,6 +580,7 @@ export default {
                         id_disponibilidad:cita.id_disponibilidad,
                         fechaIni:cita.fecha,
                         fechaFin:cita.hora_inicio,
+                        // fechaFin: cita.hora_inicio + '-' + cita.hora_fin,
                         id_tutor: this.$store.state.usuario.id_usuario,
                         tttutorSel:null,
                         isGray:false,

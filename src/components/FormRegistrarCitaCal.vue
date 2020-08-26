@@ -80,7 +80,7 @@ import esLocale from '@fullcalendar/core/locales/es'
 import axios from 'axios'
 //import Vue from 'vue'
 import{mapGetters} from 'vuex'
-//import EventModal from './EventModalRegistrar'
+
 import Swal from 'sweetalert2'
 export default {
     name: 'formRegistrarCitaCal',
