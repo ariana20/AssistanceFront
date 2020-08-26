@@ -8,9 +8,11 @@
                 
                 <button type="button" class="btn btn-secondary" @click="cancelar">Cancelar</button>
             </div>
+            <!-- fechaIni contiene la fecha de la cita, y fechaFin contiene el horario de la cita(desde -hasta) -->
                 <div class="botones list-data"><div id="left">Día:          </div> <div id="right"> {{ this.$store.state.citaDatos.fechaIni }} </div></div>
                  <div class="list-data"><div id="left">Hora Inicio:  </div> <div id="right"> {{ this.$store.state.citaDatos.fechaFin }} </div></div>
-               <!-- <div class="list-data"><div id="left">Hora Fin:     </div> <div id="right"> {{ this.event.end | formatHour }} </div></div>-->
+                 <!-- <div class="list-data"><div id="left">Hora:  </div> <div id="right"> {{ this.$store.state.citaDatos.fechaFin }} </div></div> -->
+               <div class="list-data"><div id="left">Hora Fin:     </div> <div id="right"> {{ hora_fin }} </div></div>
                 <div class="list-data"><div id="left">Tipo Tutoría: </div> <div v-if="this.tutoriaTutor!=null" id="right"> {{ this.tutoriaTutor.nombre }} </div></div> 
                 
         </div>
@@ -187,6 +189,7 @@ export default Vue.extend ({
             miUsuario:this.$store.state.usuario, 
             mipermisosUsuario:null,
             tutoriaTutor:null,
+            hora_fin:null,
         }
     },
     mounted(){
@@ -267,9 +270,10 @@ export default Vue.extend ({
                 {idDisponibilidad:this.$store.state.citaDatos.id_disponibilidad})
             .then((response) => {
             
-                this.tutoriaTutor=response.data[0].tipo_tutoria;
+                this.tutoriaTutor=response.data[0][0].tipo_tutoria;
                 //  console.log('TutoriaTutor: ',this.tutoriaTutor);
                  this.cita=response.data;
+                 this.hora_fin=response.data[1][0].hora_fin;
                
                 // console.log('Cita:',this.cita);
                 // console.log('?M tt', this.motivos!=null);

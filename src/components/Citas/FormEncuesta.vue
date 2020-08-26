@@ -50,7 +50,14 @@
             </div>
         </div>
     </div>
-    <div v-else>
+
+        
+    <div v-if="tutor && alumno" class="row" style="width:100%">
+        <hr style="width: 100%; border: #757575 solid; height: 0.1px !important">
+    </div>
+
+
+    <div v-if="alumno==true">
         <div class="row" v-for="encuesta in encuestas" :key="encuesta.id_usuario">
             <div class="col-12 col-md-8" style="margin-bottom:15px">
                 <datosTutor
@@ -73,6 +80,12 @@
             <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
                 Ninguna Encuesta Pendiente
             </div>
+        </div>
+    </div>
+        
+    <div v-if="!tutor && !alumno" class="row" style="width:100%">
+        <div class="col-12" style="margin-top:1%;margin-bottom:5%;text-align:center;font-size:150%">
+            Su tipo de usuario no soporta esta funcionalidad comuníquese con Soporte
         </div>
     </div>
 
@@ -154,6 +167,7 @@ export default {
         return{
             periodo:null,
             tutor:false,
+            alumno:false,
             alumnos:null,
             encuestas:null,
             permisos:null,
@@ -220,13 +234,14 @@ export default {
                             });  
                         });
                     }
-                    else{
+                    if (this.permisos!=null && this.permisos.includes('Tutores')){
                         this.axios.post('/encuesta/mostrarListaEncuestasAlAlumno',{
                             idPrograma: this.$store.state.programaActual.id_programa,
                             idAlumno: this.$store.state.usuario.id_usuario
                         })
                         .then(response=>{
                             this.encuestas = response.data
+                            this.alumno = true
                             this.hideModal()
                         })
                         .catch(e => {
@@ -240,6 +255,9 @@ export default {
                             showConfirmButton: true,
                             });  
                         });
+                    }
+                    if (this.permisos!=null && !this.permisos.includes('Tutores') && !this.permisos.includes('Sesión de Tutoría')){
+                        this.hideModal()
                     }
                 })
                 .catch(e => {

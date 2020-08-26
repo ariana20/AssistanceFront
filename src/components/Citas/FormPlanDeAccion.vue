@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="col-12 col-md-5" v-if="completado!=true">
-          <b-button v-if="this.nuevo==false && editar==false" v-on:click="editar=true" style="background: #0097A7;border: 0px;margin-top:-0.9%">
+          <b-button v-if="this.nuevo==false && editar==false" v-on:click="editar=true;edito=false" style="background: #0097A7;border: 0px;margin-top:-0.9%">
             Editar
           </b-button>
           <b-button v-else v-on:click="Elegir()" style="background: #757575;border: 0px;margin-top:-0.9%">
@@ -58,6 +58,52 @@
       </div>
       <div class="row" style="margin-top:3%;text-align:left">
         <div class="col-12 col-md-2" style="margin-bottom:3%">
+          <strong>Fecha:</strong>
+        </div>
+        <div class="col-12 col-md-7">
+          <div v-if="nuevo!=true && this.planAccion && this.planAccion.fecha_inicio">
+            <div v-if="editar==false">
+              {{this.planAccion.fecha_inicio}}
+            </div>
+            <div v-else style="margin-left:-15px">
+              <date-picker v-on:change="edito=true;"
+                          class="col-12" 
+                          :lang="lang" 
+                          v-model="planAccion.fecha_inicio" 
+                          type="date" 
+                          format="DD-MM-YYYY"
+                          width="500" 
+                          placeholder="Selecciona Hora y Fecha"/>
+            </div>
+          </div>
+          <div v-else>
+            <div v-if="this.planAccion && nuevo!=true && editar==false && this.planAccion.fecha_inicio==null">
+              'No tiene fecha registrada'
+            </div>
+            <div v-else-if="nuevo!=true">
+              <date-picker v-on:change="edito=true;"
+                          class="col-12" 
+                          :lang="lang" 
+                          v-model="planAccion.fecha_inicio"
+                          type="date" 
+                          format="DD-MM-YYYY"
+                          width="500" 
+                          placeholder="Seleccionar Fecha"/>
+            </div>
+            <div v-else style="margin-left:-15px">
+              <date-picker class="col-12" 
+                          :lang="lang" 
+                          v-model="fecha_inicio"
+                          type="date" 
+                          format="DD-MM-YYYY"
+                          width="500" 
+                          placeholder="Seleccionar Fecha"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:3%;text-align:left">
+        <div class="col-12 col-md-2" style="margin-bottom:3%">
           <strong>Descripción:</strong>
         </div>
         <div class="col-12 col-md-7">
@@ -70,11 +116,14 @@
             </div>
           </div>
           <div v-else>
-            <div v-if="this.planAccion && nuevo!=true && this.planAccion.descripcion==null">
+            <div v-if="this.planAccion && nuevo!=true && editar==false && this.planAccion.descripcion==null">
               'No tiene descripción registrada'
             </div>
+            <div v-else-if="nuevo!=true">
+              <textarea v-on:change="edito=true;" v-model="planAccion.descripcion" class="perso inp" id="subject" name="subject" placeholder="Esriba la descripción del plan.." style="resize: none;padding-top:2%;height:100px;width:100%;margin-left:-2%"/>
+            </div>
             <div v-else>
-              <textarea v-on:change="edito=true;" v-model="descripcion" class="perso inp" id="subject" name="subject" placeholder="Esriba la descripción del plan.." style="resize: none;padding-top:2%;height:100px;width:100%"/>
+              <textarea v-model="descripcion" class="perso inp" id="subject" name="subject" placeholder="Esriba la descripción del plan.." style="resize: none;padding-top:2%;height:100px;width:100%"/>
             </div>
           </div>
         </div>
@@ -109,7 +158,7 @@
 
       <div class="row" v-if="this.completado!=true">
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Pendiente</h3>
             <draggable class="list-group kanban-column" :list="arrBacklog" group="tasks">
@@ -128,7 +177,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> En Proceso</h3>
             <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
@@ -147,26 +196,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%">
-          <div class="p-2 redondo">
-            <h3> Por Revisar</h3>
-            <draggable class="list-group kanban-column" :list="arrTested" group="tasks">
-              <div style="cursor: grab;" class="list-group-item" v-for="(element,index) in arrTested" :key="element.name">
-                <div class="row tooltipx">
-                  <div class="contenido col-8">
-                    {{element.name}} 
-                  </div>
-                  <div class="col-1">
-                    <a class="btn" v-on:click="Eliminar(index,3)" style="padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;margin-left:1%">X</a>
-                  </div>
-                  <span class="tooltiptext">{{element.name}} </span>
-                </div>
-              </div>
-            </draggable>
-          </div>
-        </div>
-
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Hecho</h3>
             <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
@@ -188,7 +218,7 @@
       </div>
       <div class="row" v-else style="pointer-events: none;opacity: 0.5;">
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Pendiente</h3>
             <draggable class="list-group kanban-column" :list="arrBacklog" group="tasks">
@@ -207,7 +237,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> En Proceso</h3>
             <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
@@ -226,26 +256,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" style="margin-top:5%">
-          <div class="p-2 redondo">
-            <h3> Por Revisar</h3>
-            <draggable class="list-group kanban-column" :list="arrTested" group="tasks">
-              <div style="cursor: grab;" class="list-group-item" v-for="(element,index) in arrTested" :key="element.name">
-                <div class="row tooltipx">
-                  <div class="contenido col-8">
-                    {{element.name}} 
-                  </div>
-                  <div class="col-1">
-                    <a class="btn" v-on:click="Eliminar(index,3)" style="padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;margin-left:1%">X</a>
-                  </div>
-                  <span class="tooltiptext">{{element.name}} </span>
-                </div>
-              </div>
-            </draggable>
-          </div>
-        </div>
-
-        <div class="col-md-3" style="margin-top:5%">
+        <div class="col-md-4" style="margin-top:5%">
           <div class="p-2 redondo">
             <h3> Hecho</h3>
             <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
@@ -276,6 +287,8 @@
 </template>
 
 <script>
+import DatePicker from 'vue2-datepicker'
+import 'vue2-datepicker/index.css'
 import draggable from 'vuedraggable'
 import Swal from 'sweetalert2'
 export default {
@@ -291,6 +304,7 @@ export default {
       completado:false,
       nombre:'',
       descripcion:'',
+      fecha_inicio:null,
       eliminados:[],
       compromisos: [],
       cambios:[],
@@ -299,12 +313,27 @@ export default {
       arrInProgress: [],
       arrTested: [],
       arrDone: [],
-
+      lang: {
+          formatLocale: {
+              months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+              // MMM
+              monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+              // dddd
+              weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+              // ddd
+              weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+              // dd
+              weekdaysMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+              firstDayOfWeek: 1,
+          },
+          monthBeforeYear: true,
+      },
     }
   },
   props: ['usr'],
   components:{
     draggable,
+    DatePicker,
   },
   mounted(){
     this.listarPlan()
@@ -329,6 +358,10 @@ export default {
               if(element.estado == 'rev') this.arrTested.push({name: element.nombre})
               if(element.estado == 'hec') this.arrDone.push({name: element.nombre})
             });
+            
+            if(this.arrBacklog.length == 0 && this.arrInProgress.length == 0 && this.arrTested.length == 0){
+              this.completado = true
+            }
           }
           this.hideModal();
         })
@@ -1013,6 +1046,7 @@ export default {
                 descripcion: this.descripcion,
                 compromisos: this.compromisos,
                 cambios: this.cambios,
+                fecha:this.fecha_inicio,
               }
               this.axios.post('/planAccion/insertar',obj)
                 .then(response=>{
@@ -1173,6 +1207,7 @@ export default {
           arr.forEach(element => {
             this.arrDone.push({name: element.nombre})
           });
+          this.completado = true
         }
       })
       

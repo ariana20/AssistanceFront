@@ -32,7 +32,7 @@
             <td>{{item.descripcion}}</td>
             <td v-if="item.usuarioRelacionado">{{item.usuarioRelacionado.nombre+" "+item.usuarioRelacionado.apellidos}}</td>
             <td v-else style="text-align:center">Ninguno</td>
-            <td>{{item.fecha_creacion}}</td>
+            <td>{{item.fecha_actualizacion}}</td>
             <td  v-if="item.tipo_solicitud!='Cita'">
               <button style="padding-left: 5px;padding-right: 5px;width:25px;margin-left:5px" v-on:click="Aceptar(item)" class="btn link">
                   <b-icon icon="check-circle-fill" style="color:#0097A7"/>
@@ -123,7 +123,7 @@ export default {
     },
     Aceptar(item){
       Swal.fire({
-          title: '¿Desea aceptar la solicitud?',
+          text: '¿Desea aceptar la solicitud?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#0097A7',
@@ -296,11 +296,11 @@ export default {
                         });
                         this.hideModal();
                         Swal.fire({
-                        text:"Cancelación de cita aceptada exitosamente",
-                        icon:"success",
-                        confirmButtonText: 'OK',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
+                          text:"Cancelación de cita aceptada exitosamente",
+                          icon:"success",
+                          confirmButtonText: 'OK',
+                          confirmButtonColor:'#0097A7',
+                          showConfirmButton: true,
                         })
                     })
                     .catch(e=>{
@@ -349,7 +349,8 @@ export default {
                 if(item.tipo_solicitud == 'Programa') mensaje = "Se rechazó tu solicitud para pertenecer al programa de "+this.$store.state.programaActual.nombre
                 if(item.tipo_solicitud == 'Tutor') mensaje = "Se rechazó tu solicitud para asignacion de Tutor en el programa de "+this.$store.state.programaActual.nombre
                 if(item.tipo_solicitud == 'Cita') mensaje = "Se rechazó tu solicitud para la cancelación de tu cita con "+this.$store.state.usuario.nombre+" "+this.$store.state.usuario.apellidos
-                emailjs.send(
+                if (item.tipo_solicitud== 'Programa' || item.tipo_solicitud == 'Tutor'){
+                  emailjs.send(
                   "gmail",
                   "template_bV7OIjEW",
                   {
@@ -362,14 +363,26 @@ export default {
                   }, (error) => {
                       console.log('FAILED...', error);
                   });
-                this.hideModal();
-                Swal.fire({
-                  text:"Rechazado exitosamente",
-                  icon:"success",
-                  confirmButtonText: 'OK',
-                  confirmButtonColor:'#0097A7',
-                  showConfirmButton: true,
-                })
+                
+                  this.hideModal();
+                  Swal.fire({
+                    text:"Rechazado exitosamente",
+                    icon:"success",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  })
+                }
+                else{
+                  this.hideModal();
+                  Swal.fire({
+                    text:"Revisado exitosamente",
+                    icon:"success",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                  })
+                }
               })
               .catch(e=>{
                 console.log(e)

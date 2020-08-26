@@ -60,28 +60,28 @@
                 <input disabled style="margin-top:2%" v-model="unidad.telefono_contacto" type="text" class="form-control" value="" maxlength="9" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
             </div>
         </div>
-        <div v-if="$store.state.tipoActual.nombre == 'Admin' &&  $store.state.visualizacion!=true" class="row" >
+        <div v-if="$store.state.permisosUsuario.includes('Usuarios') &&  $store.state.visualizacion!=true" class="row" >
             <div class="col-12 col-md-4 col-lg-2 form-inline">
                 Facultad a Asignar: *
             </div>
             <div class="col-12 col-md-6 col-lg-5">
                 <select @change="Programas(facultadEl)" class= "form-control" style="color:gray;margin-top:2%" v-model="facultadEl">
                     <option selected disabled hidden :value="null">Elige una Facultad</option>
-                    <option v-if="$store.state.tipoActual.nombre == 'Admin'" :value="0">General</option>
+                    <option v-if="$store.state.permisosUsuario.includes('Usuarios')" :value="0">General</option>
                     <option v-for="options in facultadesT" v-bind:key="options.id_facultad" :value="options">
                     {{ options.nombre}}
                     </option>
                 </select>
             </div>
         </div>
-        <div v-if="(($store.state.tipoActual.nombre == 'Admin' && (prog) )|| $store.state.tipoActual.nombre == 'Coordinador Facultad') &&  $store.state.visualizacion!=true" class="row">
+        <div v-if="(($store.state.permisosUsuario.includes('Usuarios') && (prog) )|| $store.state.permisosUsuario.includes('Datos Facultad')) &&  $store.state.visualizacion!=true" class="row">
             <div class="col-12 col-md-4 col-lg-2 form-inline">
                 Programa a Asignar: *
             </div>
             <div class="col-12 col-md-6 col-lg-5">
                 <select class= "form-control" style="color:gray;margin-top:2%" v-model="programaEl">
                     <option selected disabled hidden :value="null">Elige un Programa</option>
-                    <option v-if="$store.state.tipoActual.nombre == 'Admin' || $store.state.tipoActual.nombre == 'Coordinador Facultad'" :value="0">General Facultad</option>
+                    <option v-if="$store.state.permisosUsuario.includes('Usuarios') || $store.state.permisosUsuario.includes('Datos Facultad')" :value="0">General Facultad</option>
                     <option v-for="options in programasT" v-bind:key="options.id_programa" :value="options">
                     {{ options.nombre}}
                     </option>
@@ -142,7 +142,7 @@ export default {
   },
   created(){
     if(this.$store.state.usuario==null) this.$router.push('/login')
-    if(this.$store.state.tipoActual.nombre == 'Admin' || this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+    if(this.$store.state.permisosUsuario.includes('Usuarios') || this.$store.state.permisosUsuario.includes('Datos Facultad')){
         this.showModal()
         axios.post('/facultad/listarFacultades',{id_institucion: 1})
             .then(response=>{
@@ -175,7 +175,7 @@ export default {
                     });
 
                 }
-                else if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+                else if(this.$store.state.permisosUsuario.includes('Datos Facultad')){
                     let index2;
                     for (index2 = 0; index2 < this.facultadesT.length; index2++) {
                         if(this.facultadesT[index2].id_facultad == this.$store.state.programaActual.id_facultad) break;
@@ -199,7 +199,7 @@ export default {
                 this.$router.push('/unidadesApoyo');        
             })
     }
-    if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+    if(this.$store.state.permisosUsuario.includes('Datos Programa')){
         if(this.idUnidad){
             this.showModal();
             this.axios.post('/unidadesApoyo/listar/'+this.idUnidad)
@@ -250,7 +250,7 @@ export default {
             showConfirmButton: true,
             })   
         }
-        else if(this.$store.state.tipoActual.nombre == 'Admin'){
+        else if(this.$store.state.permisosUsuario.includes('Usuarios')){
             if(this.facultadEl==null){
                 Swal.fire({
                     text:"No ha escogido una Facultad",
@@ -366,7 +366,7 @@ export default {
                 }
             } 
         }
-        else if(this.$store.state.tipoActual.nombre == 'Coordinador Programa'){
+        else if(this.$store.state.permisosUsuario.includes('Datos Programa')){
             if(this.idUnidad==null){
                 Swal.fire({
                     title: '¿Desea guardar '+this.unidad.nombre+' como Unidad de Apoyo?',
@@ -450,7 +450,7 @@ export default {
                 })
             }
         }
-        else if(this.$store.state.tipoActual.nombre == 'Coordinador Facultad'){
+        else if(this.$store.state.permisosUsuario.includes('Datos Facultad')){
             if(this.programaEl==null){
                 Swal.fire({
                     text:"No ha escogido un Programa",

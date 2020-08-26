@@ -547,8 +547,8 @@ export default Vue.extend ({
           axios.post('disponibilidades/mostrarCita2', 
                                 {idDisponibilidad:this.$store.state.citaDatos.id_disponibilidad})
           .then((response) => {
-            this.idCita = response.data[0].id_cita;
-            this.ttselect=response.data[0].tipo_tutoria.id_tipo_tutoria;
+            this.idCita = response.data[0][0].id_cita;
+            this.ttselect=response.data[0][0].tipo_tutoria.id_tipo_tutoria;
           }).catch(e => {
             console.log('catch ',e.response);
           });
