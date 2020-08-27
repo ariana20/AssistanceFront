@@ -58,13 +58,13 @@
                             </svg>
                         </div>
                         <div id="botones" v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Documentos')">
-                            <button v-show="!this.asistencia" type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Histórico de Citas</button>
-                            <button v-show="!this.asistencia" v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Documentos')" type="button" class="btn btn-info" @click="Perfil(2)">Histórico del Alumno</button>
-                            <button v-show="!this.asistencia" type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
+                            <button id="adicional" type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Histórico de Citas</button>
+                            <button id="adicional" v-if="$store.state.permisosUsuario!= null && $store.state.permisosUsuario.includes('Visualizar Documentos')" type="button" class="btn btn-info" @click="Perfil(2)">Histórico del Alumno</button>
+                            <button id="adicional" type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
                         </div>
                         <div v-else>
-                            <button v-show="!this.asistencia"  type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Historico de Citas</button>
-                            <button v-show="!this.asistencia"  type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
+                            <button id="adicional" type="button" class="btn btn-info" height="20px" @click="Perfil(1)">Historico de Citas</button>
+                            <button id="adicional"  type="button" class="btn btn-info" @click="Perfil(3)">Plan de acción</button>
                         </div>
                     </div>
                     <!--<div style="margin-top:10%;float:left;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>-->
@@ -252,12 +252,17 @@ export default Vue.extend ({
         axios.post('motivosConsulta/listarTodo')
             .then( response => {
                 this.motivos = response.data;
+                console.log('motivos:',this.motivos)
                 this.fillFields()
                 this.hideModal()
             })
             .catch(e => {
             console.log(e.response);
         });    
+        console.log('motivos:',this.motivos)
+        if(this.asistencia) {
+            document.getElementById("adicional").style.display = "none" 
+        }
     },
     methods: {
         fillFields() {
@@ -297,7 +302,10 @@ export default Vue.extend ({
             }
             let elems3 = document.getElementsByTagName('textarea');
             elems3[0].disabled = true;
-            document.querySelector("#app > nav.navbar.navbar-dark.navbar-expand-lg > select").disabled = false
+            var aux = document.querySelector("#app > nav.navbar.navbar-dark.navbar-expand-lg > select")
+            if(aux) {
+                aux.disabled = false
+            }
         },
         cancelar: function(){
             Swal.fire({
@@ -467,12 +475,14 @@ export default Vue.extend ({
             let mensaje = "Se te ha derivado a "+unidad.nombre+":<br>"
                             +"Nombre Contacto: "+unidad.nombre_contacto+"<br>"
                             +"Correo Contacto: "+unidad.correo_contacto+"<br>"
+                            //"responder": this.$store.state.usuario.correo,
             emailjs.send(
                   "gmail",
                   "template_bV7OIjEW",
                   {
                   "nombre":this.event.extendedProps.alumno.nombre+" "+ this.event.extendedProps.alumno.apellidos,
                   "mensaje":mensaje,
+                  "responder": this.$store.state.usuario.correo,
                   "correo": this.event.extendedProps.alumno.correo
                   }, 'user_ySzIMrq3LRmXhtVkmpXAA')
                   .then((result) => {
