@@ -152,6 +152,7 @@ import Swal from 'sweetalert2'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import Vue from 'vue'
+import emailjs from 'emailjs-com'
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
 export default Vue.extend ({
@@ -187,6 +188,7 @@ export default Vue.extend ({
             listAlumnosNom: [],
             listAlumnosCod: [],
             listAlumnosId: [],
+            listAlumnosCorreo: [],
             unidadesApoyo: [],
             selectedUnidadApoyo: null,
             bloque:null,
@@ -276,6 +278,27 @@ export default Vue.extend ({
             });
     },
     methods: {
+        enviarCorreo(unidad){
+            let mensaje = "Se te ha derivado a "+unidad.nombre+":<br>"
+                            +"Nombre Contacto: "+unidad.nombre_contacto+"<br>"
+                            +"Correo Contacto: "+unidad.correo_contacto+"<br>"
+            for(var i in this.listAlumnosCorreo) {
+                emailjs.send(
+                  "gmail",
+                  "template_bV7OIjEW",
+                  {
+                  "nombre":this.listAlumnosNom[i],
+                  "mensaje":mensaje,
+                  "responder": this.$store.state.usuario.correo,
+                  "correo": this.listAlumnosCorreo[i]
+                  }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                  .then((result) => {
+                      console.log('SUCCESS!', result.status, result.text);
+                  }, (error) => {
+                      console.log('FAILED...', error);
+                  });
+            }
+        },
         guardar: function () {
             const sesion_params = {
                 id_usuario: this.$store.state.usuario.id_usuario,
@@ -296,6 +319,9 @@ export default Vue.extend ({
                         if(this.datetime != null) {
                             if(this.descripcion!=null) {
                                 this.showModal()
+                                if(this.selectedUnidadApoyo) {
+                                    this.enviarCorreo(this.selectedUnidadApoyo)
+                                }
                                 axios.post('/sesiones/asistencia',sesion_params)
                                     .then( response=>{
                                         if(response) {
@@ -430,6 +456,7 @@ export default Vue.extend ({
                 for(var j in this.codigos){
                     if(this.sel == this.codigos[j].codigo)
                         this.listAlumnosId.push(this.codigos[j].id_usuario);
+                        this.listAlumnosCorreo.push(this.codigos[j].correo);
                 }
                 this.alSeleccionado='Nombre Alumno';
                 this.sel= '';

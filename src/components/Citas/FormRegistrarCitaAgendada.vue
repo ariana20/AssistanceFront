@@ -115,7 +115,7 @@ import Swal from 'sweetalert2'
 import 'vue2-datepicker/index.css'
 import axios from 'axios';
 import Vue from 'vue'
-// import emailjs from 'emailjs-com';
+import emailjs from 'emailjs-com';
 import {AutoCompletePlugin} from '@syncfusion/ej2-vue-dropdowns'
 Vue.use(AutoCompletePlugin);
 
@@ -229,12 +229,12 @@ export default Vue.extend ({
                     idUsuario: this.listAlumnosId,
               
                 };
-           
+               
             //Registra cita
                 axios.post('citas/registrarCitaCoord' ,params).then(response => {
-
+                  
                  if(response.data.id_cita!=0){
-                   
+                        this.enviarCorreoNuevaCita();
                         Swal.fire({
                             text:"Registro Exitoso",
                             icon:"success",
@@ -451,7 +451,7 @@ export default Vue.extend ({
             .then( response => {
                 //    console.log(response.data);
                    
-                        // this.codigos.push(response.data[i].codigo); //tiene todo del alumno
+                         //tiene todos los datos de alumno
                         this.codigos=response.data
                     
                     this.hideModal();
@@ -547,8 +547,8 @@ export default Vue.extend ({
           axios.post('disponibilidades/mostrarCita2', 
                                 {idDisponibilidad:this.$store.state.citaDatos.id_disponibilidad})
           .then((response) => {
-            this.idCita = response.data[0].id_cita;
-            this.ttselect=response.data[0].tipo_tutoria.id_tipo_tutoria;
+            this.idCita = response.data[0][0].id_cita;
+            this.ttselect=response.data[0][0].tipo_tutoria.id_tipo_tutoria;
           }).catch(e => {
             console.log('catch ',e.response);
           });
@@ -571,7 +571,78 @@ export default Vue.extend ({
         },
         enviarCorreoAlumnosEli(){
             //Ahora sí envio correo a this.alumnosEli  (arreglo de objetos de alumnos)
+            // this.alumnosEli
 
+       /*
+             
+                    let mensaje = "Su cita ha sido cancelada. " + " <br>"
+                                    + "Detalle de la cita " + " <br>"
+                                    +"Fecha: "+this.$store.state.citaDatos.fechaIni   | formatDate+"<br>"
+                                    +"Hora de inicio: "+this.$store.state.citaDatos.fechaIni   | formatHour +"<br>"
+             emailjs.send(
+                   "gmail",
+                   "template_bV7OIjEW",
+                   {
+                   "nombre":this.$store.state.citaDatos.alumnos[0].nombre+" "+ this.$store.state.citaDatos.alumnos[0].apellidos,
+                   "mensaje":mensaje,
+                   "correo": this.$store.state.citaDatos.alumnos[0].correo
+                   }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                   .then((result) => {
+                       console.log('SUCCESS!', result.status, result.text);
+                   }, (error) => {
+                       console.log('FAILED...', error);
+                   });
+                */
+        },
+        enviarCorreoNuevaCita(){
+
+              /*  this.codigos[xd].correo <- al alumno
+
+             listAlumnosId[i]    Ids de los alumnos que tendrán la cita ahorita
+             listAlumnosNom[i]
+             listAlumnosCod[i]
+            {{ this.$store.state.citaDatos.fechaIni   | formatDate }}
+            {{ this.$store.state.citaDatos.fechaIni   | formatHour }}
+            {{ this.$store.state.citaDatos.fechaFin   | formatHour }}
+
+            ttselect ->id del tt Seleccionado
+            tt -> todos los tipos de tutorias
+*/
+
+        // console.log('Correo ' + this.listAlumnosId.length );
+            for(let i =0;i<this.listAlumnosId.length ; i++){
+                
+                   let alumnoCitado=this.codigos.find(alum => alum.id_usuario == this.listAlumnosId[i]); 
+                   let tutoriaCita = this.tt.find(ttC => ttC.id_tipo_tutoria == this.ttselect);
+                   console.log(alumnoCitado);
+                   if(alumnoCitado!= undefined){
+
+                          let mensaje = "Tienes una cita agendada. " + " <br>"
+                                    + "Detalle de la cita " + " <br>"
+                                    +"Fecha: "+this.$store.state.citaDatos.fechaIni  + " <br>"
+                                    +"Tema: "+tutoriaCita.nombre;
+                                    
+
+                        emailjs.send(
+                            "gmail",
+                            "template_bV7OIjEW",
+                            {
+                            "nombre":alumnoCitado.nombre+" "+alumnoCitado.apellidos,
+                            "mensaje":mensaje,
+                            //  "responder": "johana.diazp@pucp.edu.pe",
+                            // "correo": alumnoCitado.correo
+                            "correo": alumnoCitado.correo
+                            }, 'user_ySzIMrq3LRmXhtVkmpXAA')
+                            .then((result) => {
+                                console.log('SUCCESS!', result.status, result.text);
+                            }, (error) => {
+                                console.log('FAILED...', error);
+                            });
+                   }
+                   else{
+                       console.log('Problemas al enviar correo, no se encontró al alumno');
+                   }
+            }     
         },
          showModal() {
           this.$refs['my-modal'].show()

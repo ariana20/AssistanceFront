@@ -4,7 +4,8 @@
       <legend>Registrar Cita</legend>
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
-      <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
+      <b>Hora Inicio:</b>  {{ event.start  | formatHour }} <br/>
+      <b>Hora Fin:</b> {{ event.end | formatHour}} <br/>
       <div id="motivo"><b style="margin-top: 6px;">Motivo:</b><select class="form-control" style="width:40%" v-model="motivoSel">
         <option disabled selected :value="null" focusable="false">Selecciona un motivo</option>
         <option v-for="(item, index) in tipoTutorias" 
@@ -26,6 +27,7 @@
       <b>Nombre Alumno:</b>  {{ nombre_usuario }} <br/>
       <b>Fecha:</b>{{event.start | formatDate}} <br/>
       <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
+      <b>Hora Fin:</b> {{ event.end | formatHour}} <br/>
       <!--b>Tipo Tutoría:</!--b>  {{ event.descripcion }} <br/-->
       <div id="botones">
         <a type="button" class="btn btn-info" 
@@ -47,6 +49,7 @@
         <b>Alumno(s) :</b>  {{ nombre_usuario }} <br/>
         <b>Fecha:</b>{{event.start | formatDate}} <br/>
         <b>Hora:</b>  {{ event.start  | formatHour }} <br/>
+        <b>Hora Fin:</b> {{ event.end | formatHour}} <br/>
         <b>Motivo:</b>  {{ event.extendedProps.motivo }} <br/>
         <div id="botones">
           <a v-if="this.event.backgroundColor=='#FFC107'"  type="button" class="btn btn-info" 
@@ -182,10 +185,10 @@ export default {
         getIdCita () {
           axios.post('disponibilidades/mostrarCita2', {idDisponibilidad:this.event.id})
           .then((response) => {
-            this.idCita = response.data[0].id_cita;
-            this.$store.state.idCita = response.data[0].id_cita;
-            this.$store.state.curSesion = response.data
-            this.$store.state.cond = response.data[0].cond
+            this.idCita = response.data[0][0].id_cita;
+            this.$store.state.idCita = response.data[0][0].id_cita;
+            this.$store.state.curSesion = response.data[0];
+            this.$store.state.cond = response.data[0][0].cond
           }).catch(e => {
             console.log(e.response);
           });

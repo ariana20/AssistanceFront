@@ -214,7 +214,8 @@ export default {
                                         usuario_creacion: this.$store.state.usuario.id_usuario,
                                         usuario_actualizacion: this.$store.state.usuario.id_usuario,
                                         tipo_disponibilidad: 'fij',
-                                        hora_inicio:moment(slots[k]).format('HH:mm:ss')
+                                        hora_inicio:moment(slots[k]).format('HH:mm:ss'),
+                                        hora_fin: addTimes(moment(slots[k]).format('HH:mm:ss'), this.bloque)
                                     }).then((response) => {
                                         if(response && k == slots.length-1) {
                                             Swal.fire({
@@ -270,7 +271,8 @@ export default {
                                                 usuario_creacion: this.$store.state.usuario.id_usuario,
                                                 usuario_actualizacion: this.$store.state.usuario.id_usuario,
                                                 tipo_disponibilidad: 'fij',
-                                                hora_inicio:moment(arg.start).format('HH:mm:ss')
+                                                hora_inicio:moment(arg.start).format('HH:mm:ss'),
+                                                hora_fin: addTimes(moment(slots[k]).format('HH:mm:ss'), this.bloque)
                                             }).then((response) => {
                                                 if(response && i == listaFechas.length-1) {
                                                     Swal.fire({
@@ -352,7 +354,8 @@ export default {
                                                     usuario_creacion: this.$store.state.usuario.id_usuario,
                                                     usuario_actualizacion: this.$store.state.usuario.id_usuario,
                                                     tipo_disponibilidad: 'fij',
-                                                    hora_inicio:moment(arg.start).format('HH:mm:ss')
+                                                    hora_inicio:moment(arg.start).format('HH:mm:ss'),
+                                                    hora_fin: addTimes(moment(slots[k]).format('HH:mm:ss'), this.bloque)
                                                 }).then((response) => {
                                                     if(response && j == listaFechas.length-1) {
                                                         Swal.fire({
@@ -503,7 +506,8 @@ export default {
                                 if(response.data[3][i].length == 1) {
                                     //SI YA SE REGISTRO RESULTADO DE LA CITA
                                     // console.log('alumno:',rd4[i][0].nombre,'asiste:',rd4[i][0].pivot.asistencia)
-                                    if(rd4[i][0].pivot.asistencia!='noa' && rd4[i][0].pivot.asistencia!='pen' ) {
+                                    //if(rd4[i][0].pivot.asistencia!='noa' && rd4[i][0].pivot.asistencia!='pen' ) {
+                                    if( rd4[i][0].pivot.asistencia!='pen' ) {
                                         this.$store.commit("ADD_EVENT", {
                                             allow: rd[i].alumno,
                                             id: rd[i].id_disponibilidad,
@@ -564,7 +568,7 @@ export default {
                                 }
                                 //SI ES UNA CITA GRUPAL
                                 else  {                               
-                                    if(rd4[i][0].pivot.asistencia!='noa' && rd4[i][0].pivot.asistencia!='pen') {
+                                    if( rd4[i][0].pivot.asistencia!='pen') {
                                         this.$store.commit("ADD_EVENT", {
                                             allow: rd[i].alumno,
                                             id: rd[i].id_disponibilidad,
@@ -778,7 +782,7 @@ function addTimes (startTime, endTime) {
     .vm--modal {
         border-radius: 25px;
         margin: 30px;
-        height: 260px !important;
+        height: 280px !important;
     }
     @media screen and (max-width: 759px) {
         .form-control { 
