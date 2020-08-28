@@ -71,8 +71,8 @@
                         </div>
                     </div>
                     <!--<div style="margin-top:10%;float:left;font-size:23px;"><input type="checkbox" style="height:20px;width:30px;" v-model="asistencia" />Asistencia</div>-->
-                    <p><br><input type="radio" id="asistio" v-model="asistencia" value="asistio"><label for="asistio">Asistió</label><br>
-                    <input type="radio" id="noAsistio" v-model="asistencia" value="noasistio"><label for="noasistio">No asistió</label></p>  
+                    <!-- <p><br><input type="radio" id="asistio" v-model="asistencia" value="asistio"><label for="asistio">Asistió</label><br>
+                    <input type="radio" id="noAsistio" v-model="asistencia" value="noasistio"><label for="noasistio">No asistió</label></p>   -->
                 </div>
                 
                 
@@ -82,11 +82,14 @@
             </div>
             <div class="der col-lg-6 col-xm col-md-12">
                 <div class="font-weight-bolder text-left">Resultado</div>
-                 <p class="col-sm-12" style="text-align:left">
+                 <!-- <p class="col-sm-12" style="text-align:left">
+                    <nobr style="margin-right:30px"><input type="radio" class="col-sm-1" id="asistio" v-model="asistencia" value="asistio">Asistió</nobr>
+                    <input type="radio" class="col-sm-1" id="noasistio" v-model="asistencia" value="noasistio">No asistió
+                </p>  -->
+                <p class="col-sm-12" style="text-align:left">
                     <nobr style="margin-right:30px"><input type="radio" class="col-sm-1" id="asistio" v-model="asistencia" value="asistio">Asistió</nobr>
                     <input type="radio" class="col-sm-1" id="noasistio" v-model="asistencia" value="noasistio">No asistió
                 </p> 
-                
                  <div class="top-titulo" style="margin-bottom:20px;">
                     <div class="col-sm-3 motivo-dropdown-title">Motivo: </div>
                     <select class="col-sm-6 form-control" style="left:-40px;top:5px;" v-model="selectedMotivo">
@@ -261,10 +264,12 @@ export default Vue.extend ({
                     this.descripcion = this.cita[1].resultado; 
                     if(this.descripcion !=null || this.descripcion !="") this.lleno=true;  
                     if(this.$store.state.citaDatos.alumnos[0].pivot.asistencia == 'asi') {
-                        this.asistencia = true;
+                        // this.asistencia = true;
+                          document.getElementById('asistio').checked = true
                     }
                     else if(this.$store.state.citaDatos.alumnos[0].pivot.asistencia == 'noa' || this.$store.state.citaDatos.alumnos[0].pivot.asistencia == 'pen' ) {
-                            this.asistencia = false;
+                            // this.asistencia = false;
+                            document.getElementById('noasistio').checked = true
                     }  
                     for(var i in this.cita[1].motivo_consultas) {
                         this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
@@ -302,6 +307,11 @@ export default Vue.extend ({
         else if(this.condicion_alumno=="CAR") this.condicion_alumno="Carta";
         else if(this.condicion_alumno=="REG") this.condicion_alumno="Regular";
         else if(this.condicion_alumno=="PRI") this.condicion_alumno="Cachimbo";
+        
+        
+        if(this.asistencia) {
+            document.getElementById("adicional").style.display = "none" 
+        }
     },
     methods: {
         
@@ -323,10 +333,12 @@ export default Vue.extend ({
                             this.descripcion = this.cita[1].resultado;
                               if(this.descripcion !=null || this.descripcion !="") this.lleno=true; 
                             if(this.$store.state.citaDatos.alumnos[0].pivot.asistencia == 'asi') {
-                                this.asistencia = true;
+                                // this.asistencia = true;
+                                document.getElementById('asistio').checked = true
                             }
                             else if(this.$store.state.citaDatos.alumnos[0].pivot.asistencia == 'noa' || this.$store.state.citaDatos.alumnos[0].pivot.asistencia == 'pen' ) {
-                                    this.asistencia = false;
+                                    // this.asistencia = false;
+                                    document.getElementById('noasistio').checked = true
                                 }     
                             for(var i in this.cita[1].motivo_consultas) {
                                 this.selectedMotivo = this.cita[1].motivo_consultas[i].id_motivo_consulta;             
@@ -396,6 +408,10 @@ export default Vue.extend ({
              let elems3 = document.getElementsByTagName('textarea');
              elems3[0].disabled = true;
             // document.querySelector("#app > nav.navbar.navbar-dark.navbar-expand-lg > select").disabled = false
+            var aux = document.querySelector("#app > nav.navbar.navbar-dark.navbar-expand-lg > select")
+            if(aux) {
+                aux.disabled = false
+            }
         },
         cancelar: function(){
             Swal.fire({
@@ -441,7 +457,7 @@ export default Vue.extend ({
             array.push(this.$store.state.citaDatos.alumnos[0].id_usuario);
 
             let asistencia=[];
-            if(this.asistencia.value == 'asistio') asistencia[0]='asi';
+            if(this.asistencia == 'asistio') asistencia[0]='asi';
             else asistencia[0]='noa';
              
             if(asistencia[0]=='asi'){

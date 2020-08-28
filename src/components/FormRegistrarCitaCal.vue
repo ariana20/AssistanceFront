@@ -196,7 +196,7 @@ export default {
                         pantalla:"calendarioExterno",
 
                 };
-                 console.log('citaDatos: ',this.$store.state.citaDatos)
+                //  console.log('citaDatos: ',this.$store.state.citaDatos)
                 this.$router.push('/registrarCita/registrarCitaAgendada');
             }
        
@@ -209,7 +209,7 @@ export default {
                 idTutor: this.tutorSel.id_usuario,
                 id_programa: this.$store.state.programaActual.id_programa,
             }
-            console.log(params);
+            // console.log(params);
             axios.post('usuarios/tutoriaTutor', params)
             .then((response) => {
                 
@@ -237,7 +237,7 @@ export default {
                   this.tutores=res.data;  
                 
                 this.hideModal();  
-                console.log(this.tutores);
+                // console.log(this.tutores);
             
                       
             })

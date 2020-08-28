@@ -9,7 +9,7 @@
           <h5 style="margin-top:5%;margin-bottom:5%">Nombres o Código: </h5>
         </div>
         <div class="form-inline col-12 col-md-2"  style="padding:0px">
-          <input maxlength="100" class="form-control" v-model="criterio" @keyup.enter=" buscarUsuario" placeholder="Buscar" style="width:100%">
+          <input maxlength="100" class="form-control" v-model="criterio" @keyup.enter="buscarUsuario" placeholder="Buscar" style="width:100%">
         </div>
         <div class="form-inline col-12 col-md-4 col-xlg-2" style="padding:0px">
           <select v-model="tiposUsuariosselect" class="col sm-6 offset-md-1 form-control" style="cursor:pointer;margin-left:5px" @change=" buscarUsuario"  >
@@ -126,6 +126,7 @@ export default {
       banderaVacio:false,
       tiposUsuarios:"",
       tiposUsuariosselect:null,
+      esOtroTipoUsuario:false,
     }
   },
  
@@ -215,6 +216,7 @@ export default {
         //this.$store.state.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});
         this.usuarios=par.sort((a, b) => { return  a.nombre.localeCompare(b.nombre);});
         this.paginate=res.data.paginate;
+        this.OtroTipoUsuario();
         this.hideModal();
                   
       })
@@ -245,10 +247,13 @@ export default {
         criterio:this.criterio,
         tipo_usuario:this.tiposUsuariosselect,
       }
-      
+     
+      // console.log('page: ',page);
+      // console.log('params: ',paramsB);
+      page=undefined;
       var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
-      
-       if(this.$store.state.permisosUsuario.includes('Usuarios')){ //Para coordinador   
+      //  console.log('url: ',url);
+       if(this.$store.state.permisosUsuario.includes('Usuarios Programa')){ //Para coordinador   
        
         axios.post(url,paramsB) //Por ahora dsp será x program
         .then(res =>{  
@@ -282,6 +287,7 @@ export default {
               
               this.usuarios=par.sort((a, b) => { return a.nombre.localeCompare(b.nombre);});   
               this.paginate=res.data.paginate;
+                this.OtroTipoUsuario();
               // this.hideModal();
           }
                    
@@ -428,6 +434,9 @@ export default {
     hideModal() {
       this.$refs['my-modal'].hide()
     },
+    OtroTipoUsuario(){
+      
+    }
 
 
   }

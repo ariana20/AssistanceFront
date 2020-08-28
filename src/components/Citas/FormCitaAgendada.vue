@@ -210,7 +210,7 @@ export default Vue.extend ({
         }
     },
     mounted(){
-        console.log('datos', this.cita[0])
+        // console.log('datos', this.cita[0])
         if (this.$store.state.cond) 
             this.condicion_alumno=this.$store.state.cond.toUpperCase();
         else 
@@ -252,14 +252,14 @@ export default Vue.extend ({
         axios.post('motivosConsulta/listarTodo')
             .then( response => {
                 this.motivos = response.data;
-                console.log('motivos:',this.motivos)
+                // console.log('motivos:',this.motivos)
                 this.fillFields()
                 this.hideModal()
             })
             .catch(e => {
             console.log(e.response);
         });    
-        console.log('motivos:',this.motivos)
+        // console.log('motivos:',this.motivos)
         if(this.asistencia) {
             document.getElementById("adicional").style.display = "none" 
         }
@@ -357,7 +357,7 @@ export default Vue.extend ({
                 idAlumnos: array,
                 asistencia: arrayAsis,
                 idMotivos: this.listMotivosId,
-            }; console.log(sesion_params );
+            };// console.log(sesion_params );
                 if(this.listMotivos.length > 0) {
                         
                             if(this.descripcion!=null) {

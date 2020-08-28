@@ -247,7 +247,7 @@ export default Vue.extend ({
     },
     methods: {
         fillFields() {
-             console.log('cita: ',this.cita);
+           //  console.log('cita: ',this.cita);
             if(this.cita[0].cita_x_usuarios.length > 1) { //Solo muestro varios alumnos
                 for(let i in this.cita[0].cita_x_usuarios){
                      this.listAlumnosCod.push(this.cita[0].cita_x_usuarios[i].codigo);

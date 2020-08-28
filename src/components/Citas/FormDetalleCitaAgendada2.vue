@@ -272,7 +272,7 @@ export default Vue.extend ({
             
                 this.tutoriaTutor=response.data[0][0].tipo_tutoria;
                 //  console.log('TutoriaTutor: ',this.tutoriaTutor);
-                 this.cita=response.data;
+                 this.cita=response.data[0];
                  this.hora_fin=response.data[1][0].hora_fin;
                
                 // console.log('Cita:',this.cita);
@@ -389,9 +389,9 @@ export default Vue.extend ({
                 }
                 
             }
-            // console.log(faltaron);
+          
             //varios un alumno
-            console.log(this.$store.state.citaDatos);
+          
             const sesion_params = {
                 id_cita:this.$store.state.citaDatos.props,
                 resultado: this.descripcion,
@@ -401,7 +401,7 @@ export default Vue.extend ({
                 asistencia: this.asistencia,
                 idMotivos: this.listMotivosId,
             };
-                 console.log(sesion_params);
+
 
             if(faltaron==false){
                 if(this.listMotivos.length > 0) {
