@@ -279,6 +279,7 @@ export default Vue.extend ({
     },
     methods: {
         enviarCorreo(unidad){
+            
             let mensaje = "Se te ha derivado a "+unidad.nombre+":<br>"
                             +"Nombre Contacto: "+unidad.nombre_contacto+"<br>"
                             +"Correo Contacto: "+unidad.correo_contacto+"<br>"
@@ -304,7 +305,7 @@ export default Vue.extend ({
                 id_usuario: this.$store.state.usuario.id_usuario,
                 id_programa: this.$store.state.programaActual.id_programa,
                 fecha: moment(new Date(String(this.datetime))).format('YYYY-MM-DD'),
-                hora_inicio: moment(new Date(String(this.datetime))).format('HH:mm:ss'), 
+                hora_inicio: moment(new Date(String(this.datetime))).format('HH:mm:ss'),
                 usuario_creacion: this.$store.state.usuario.id_usuario,
                 usuario_actualizacion: this.$store.state.usuario.id_usuario,
                 id_tipo_tutoria: this.selectedTipoTutoria,
@@ -325,6 +326,7 @@ export default Vue.extend ({
                                 axios.post('/sesiones/asistencia',sesion_params)
                                     .then( response=>{
                                         if(response) {
+                                            console.log('se logro insertar')
                                             this.hideModal()
                                             Swal.fire({
                                                 text:"Se ha registrado la sesión con éxito",
@@ -455,8 +457,9 @@ export default Vue.extend ({
                 this.listAlumnosCod.push(this.sel);
                 for(var j in this.codigos){
                     if(this.sel == this.codigos[j].codigo)
-                        this.listAlumnosId.push(this.codigos[j].id_usuario);
-                        this.listAlumnosCorreo.push(this.codigos[j].correo);
+                        this.listAlumnosId.push(this.codigos[j].id_usuario)
+                        this.listAlumnosCorreo.push(this.codigos[j].correo)
+                        break
                 }
                 this.alSeleccionado='Nombre Alumno';
                 this.sel= '';
