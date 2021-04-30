@@ -173,7 +173,7 @@ export default {
                     response
                     this.hideModal();
                     Swal.fire({
-                        text: 'Tus programa ha sido actualizado',
+                        text: 'Tu programa ha sido actualizado',
                         icon: 'success',
                         confirmButtonColor: '#0097A7',
                         confirmButtonText: 'Ok',
