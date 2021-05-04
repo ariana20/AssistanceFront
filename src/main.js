@@ -34,7 +34,9 @@ Vue.use(modal, {dialog:true, dynamic: true});
 //axios.defaults.baseURL = 'http://18.232.253.212/Back-end-Software/public/api';
 //axios.defaults.baseURL = 'https://vizbackend.assisstance.cloudns.cl/api';
 // axios.defaults.baseURL = 'https://jorge-283917.uc.r.appspot.com/api';
-axios.defaults.baseURL = 'https://tutoriaback.inf.pucp.edu.pe/api';
+//axios.defaults.baseURL = 'https://tutoriaback.inf.pucp.edu.pe/api';
+axios.defaults.baseURL = 'https://mantenimientoassistanceback.vizcochitos.cloudns.cl/api';
+
 axios.defaults.withCredentials = false;
 
 new Vue({

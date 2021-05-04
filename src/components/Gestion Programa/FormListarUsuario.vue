@@ -142,7 +142,7 @@ export default {
           if(from<1){//debe ser un numero positivo
             from=1;
           }
-          var to=from+(2 * 2);//TO DO
+          var to=from+(3 * 3);//TO DO
           if(to >= this.paginate.last_page){
             to=this.paginate.last_page;
           }
@@ -248,11 +248,13 @@ export default {
         tipo_usuario:this.tiposUsuariosselect,
       }
      
-      // console.log('page: ',page);
-      // console.log('params: ',paramsB);
-      page=undefined;
+      console.log('Buscar Usuario 1page: ',page);
+        if (page==undefined){
+            page=1
+      }
+      console.log('Buscar Usuario 2page: ',page);
       var url='/programa/usuarioPrograma/'+this.$store.state.programaActual.id_programa+'?page='+page;
-      //  console.log('url: ',url);
+      
        if(this.$store.state.permisosUsuario.includes('Usuarios Programa')){ //Para coordinador   
        
         axios.post(url,paramsB) //Por ahora dsp será x program
@@ -402,7 +404,19 @@ export default {
             
           });
        }
-      if(this.$store.state.permisosUsuario.includes('Datos Programa')){
+         
+      var page=undefined;
+      console.log('Tipo Usuario page: ',page);
+   
+      if (page==undefined){
+            page=1
+      }
+       console.log('Tipo Usuario2 page: ',page);
+
+
+
+
+      if(this.$store.state.permisosUsuario.includes('Usuarios Programa')){
         let obj = {
           id_programa: this.$store.state.programaActual.id_programa,
           id_facultad: this.$store.state.programaActual.id_facultad
