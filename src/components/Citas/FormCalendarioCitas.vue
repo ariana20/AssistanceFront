@@ -225,9 +225,7 @@ export default {
                         await this.agregarFechasMensual(startDate, result.value);
                         
                         startDate = moment(startDate).add(this.$store.state.programaActual.hora_bloque, 'm').toDate();
-                        console.log('antes',startDate);
-                        startDate.setDate(startDate.getDate()-7*(result.value-1));    
-                        console.log('despues',startDate);                
+                        startDate.setDate(startDate.getDate()-7*(result.value-1)); 
                     }
                     //verificar disponibilidad
                     for (const fecha of this.listaFechas) {
@@ -245,20 +243,7 @@ export default {
                             return;
                         }
                     }
-                    for(const fecha of this.listaFechas) {
-                        await this.insertarDisponibilidad(fecha);
-                    }
-                    Swal.fire({
-                        text:"Se registró una nueva disponibilidad",
-                        icon:"success",
-                        confirmButtonText: 'Continuar',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                    }).then((result) => {
-                        this.hideModal();
-                        if(result)
-                            this.getReminders();
-                    })
+                    this.insertaryconfirmar(this.listaFechas);
                 });
             }
             catch (error) {
@@ -288,6 +273,7 @@ export default {
             var d;
             var monday;
             var self = this;
+            var listaFechas=[];
             return new Promise((resolve, reject) => {
                 for(const slot in slots) {
                     let i = 0;
@@ -297,16 +283,16 @@ export default {
                     while (i<5) {
                         if(i==0) {
                             d = new Date( monday.setDate(monday.getDate()))
-                            self.listaFechas.push(d)
+                            listaFechas.push(d)
                         }else {
                             d = new Date( monday.setDate(monday.getDate()+1))
-                            self.listaFechas.push(d)
+                            listaFechas.push(d)
                         }
                         i++; 
                     }
                     startDate = moment(startDate).add(self.$store.state.programaActual.hora_bloque, 'm').toDate();
                 }
-                resolve(true), 
+                resolve(listaFechas), 
                 error => reject(error);
             });
         },
@@ -314,45 +300,50 @@ export default {
             try {
                 this.showModal();
                 //obtener fechas de la semana
-                await this.agregarFechasDiaria(slots, startDate);
-                //verificar disponibilidad
-                for (const fecha of this.listaFechas) {
-                    await this.consultarDisponibilidad(fecha);
-                    if(this.esDisponible.data[0] != 'l'){
-                        this.hideModal();
-                        Swal.fire({
-                            title:"Horario reservado en otro programa",
-                            text: `La hora ${this.esDisponible.data[0].hora_inicio} tiene conflicto`,
-                            icon:"error",
-                            confirmButtonText: 'OK',
-                            confirmButtonColor:'#0097A7',
-                            showConfirmButton: true,
-                        })
-                        return;
-                    }
-                }
-                for(const fecha of this.listaFechas) {
-                    await this.insertarDisponibilidad(fecha);
-                }
-                Swal.fire({
-                    text:"Se registró una nueva disponibilidad",
-                    icon:"success",
-                    confirmButtonText: 'Continuar',
-                    confirmButtonColor:'#0097A7',
-                    showConfirmButton: true,
-                }).then((result) => {
-                    this.hideModal();
-                    if(result)
-                        this.getReminders();
-                })
+                this.listaFechas = await this.agregarFechasDiaria(slots, startDate);
+                //verificar disponibilidad  
+                this.insertarFechasDiarias(this.listaFechas);
+
             }
             catch (error) {
                 console.log(error);
             }
         },
+        async insertarFechasDiarias(fechas) {
+            for (const fecha of fechas) {
+                await this.consultarDisponibilidad(fecha);
+                if(this.esDisponible.data[0] != 'l'){
+                    this.hideModal();
+                    Swal.fire({
+                        title:"Horario reservado en otro programa",
+                        text: `La hora ${this.esDisponible.data[0].hora_inicio} tiene conflicto`,
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    })
+                    return;
+                }
+            }
+            this.insertaryconfirmar(fechas);
+        },
+        async insertaryconfirmar(fechas) {
+            for(const fecha of fechas) {
+                await this.insertarDisponibilidad(fecha);
+            }
+            Swal.fire({
+                text:"Se registró una nueva disponibilidad",
+                icon:"success",
+                confirmButtonText: 'Continuar',
+                confirmButtonColor:'#0097A7',
+                showConfirmButton: true,
+            }).then((result) => {
+                this.hideModal();
+                if(result)
+                    this.getReminders();
+            })  
+        },
         async disponibilidadUnaVez(slots) {
-            console.log('this are  the selected slots', slots);
-            //var dispo = [];
             try {
                 //consultar disponibilidad
                 this.showModal();
