@@ -234,7 +234,7 @@ export default {
                             this.hideModal();
                             Swal.fire({
                                 title:"Horario reservado en otro programa",
-                                text: `La hora ${this.esDisponible.data[0].hora_inicio} tiene conflicto`,
+                                text: `La hora ${this.esDisponible.data[0][0].hora_inicio} tiene conflicto`,
                                 icon:"error",
                                 confirmButtonText: 'OK',
                                 confirmButtonColor:'#0097A7',
@@ -314,9 +314,10 @@ export default {
                 await this.consultarDisponibilidad(fecha);
                 if(this.esDisponible.data[0] != 'l'){
                     this.hideModal();
+                    let date = moment(this.esDisponible.data[0][0].fecha).format('DD/MM/YYYY')
                     Swal.fire({
                         title:"Horario reservado en otro programa",
-                        text: `La hora ${this.esDisponible.data[0].hora_inicio} tiene conflicto`,
+                        text: `La hora ${this.esDisponible.data[0][0].hora_inicio} del día ${date} tiene conflicto`,
                         icon:"error",
                         confirmButtonText: 'OK',
                         confirmButtonColor:'#0097A7',
@@ -353,7 +354,7 @@ export default {
                         this.hideModal();
                         Swal.fire({
                             title:"Horario reservado en otro programa",
-                            text: `La hora ${this.esDisponible.data[0].hora_inicio} tiene conflicto`,
+                            text: `La hora ${this.esDisponible.data[0][0].hora_inicio} tiene conflicto`,
                             icon:"error",
                             confirmButtonText: 'OK',
                             confirmButtonColor:'#0097A7',
