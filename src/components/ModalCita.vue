@@ -29,7 +29,7 @@
                         <strong>Tipo de Tutoria:</strong>
                     </div>
                     <div class="col-12 col-md-7" style="text-align:left">
-                        {{cita.tipo_tutoria.nombre+" - "+cita.tipo_tutoria.descripcion}} 
+                        {{cita.tipo_tutoria.nombre}} 
                     </div>
                 </div>
                 <hr>
