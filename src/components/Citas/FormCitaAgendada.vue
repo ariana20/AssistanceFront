@@ -204,7 +204,7 @@ export default Vue.extend ({
             listAlumnosId: [],
             unidadesApoyo: [],
             selectedUnidadApoyo: null,
-            cita: this.$store.state.curSesion,
+            cita: null,
             editar: false,
             us:null,
         }
@@ -252,7 +252,6 @@ export default Vue.extend ({
         axios.post('motivosConsulta/listarTodo')
             .then( response => {
                 this.motivos = response.data;
-                // console.log('motivos:',this.motivos)
                 this.fillFields()
                 this.hideModal()
             })
@@ -263,6 +262,10 @@ export default Vue.extend ({
         if(this.asistencia) {
             document.getElementById("adicional").style.display = "none" 
         }
+    },
+    created () {
+        this.cita=this.$store.state.curSesion;
+        console.log(this.cita);
     },
     methods: {
         fillFields() {
@@ -344,7 +347,7 @@ export default Vue.extend ({
             let array = []
             let arrayAsis = []
             array.push(this.event.extendedProps.alumno.id_usuario);
-            if(this.asistencia.value == 'asistio') 
+            if(this.asistencia == 'asistio') 
                 arrayAsis[0] = 'asi'
             else
                 arrayAsis[0] = 'noa'
@@ -358,41 +361,32 @@ export default Vue.extend ({
                 asistencia: arrayAsis,
                 idMotivos: this.listMotivosId,
             };// console.log(sesion_params );
-                if(this.listMotivos.length > 0) {
-                        
-                            if(this.descripcion!=null) {
-                                if(this.selectedUnidadApoyo) {
-                                    this.enviarCorreo(this.selectedUnidadApoyo)
-                                }
-                                axios.post('/sesiones/regSesionFormal',sesion_params)
-                                    .then( response=>{
-                                        response
-                                        this.disableFields()
-                                        Swal.fire({
-                                            text:"Se ha registrado la sesión con éxito",
-                                            icon:"success",
-                                            confirmButtonText: 'OK',
-                                            confirmButtonColor:'#0097A7',
-                                            showConfirmButton: true,
-                                        }) 
-                                        this.$router.push('/calendariocitas')
-                                    })  
-                                    .catch(e => {
-                                        console.log(e.response);
-                                    });
-                                }
-                                else {
-                                    Swal.fire({
-                                        text:"Debe llenar el campo descripción",
-                                        icon:"error",
-                                        confirmButtonText: 'OK',
-                                        confirmButtonColor:'#0097A7',
-                                        showConfirmButton: true,
-                                    })
-                                }
-                                
+            if(this.listMotivos.length > 0) {
+                this.showModal();
+                if(this.descripcion!=null) {
+                    if(this.selectedUnidadApoyo) {
+                        this.enviarCorreo(this.selectedUnidadApoyo)
+                    }
+                    axios.post('/sesiones/regSesionFormal',sesion_params)
+                    .then( response=>{
+                        response
+                        this.disableFields()
+                        this.hideModal()
+                        Swal.fire({
+                            text:"Se ha registrado la sesión con éxito",
+                            icon:"success",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor:'#0097A7',
+                            showConfirmButton: true,
+                        }) 
+                        this.$router.push('/calendariocitas')
+                    })  
+                    .catch(e => {
+                        console.log(e.response);
+                    });
                 }
                 else if(arrayAsis[0]=='noa'){
+                    this.hideModal();
                     Swal.fire({
                         text:"¿Está seguro que sea desea guardar esta cita con No Asistió del alumno?",
                         icon:"warning",
@@ -404,38 +398,62 @@ export default Vue.extend ({
                         showConfirmButton: true,
                     })
                     .then((result) => {
-                            if (result.value) {
-                                let sesion_params = {
-                                    id_cita: this.$store.state.idCita,
-                                    resultado: "",
-                                    usuario_creacion: this.cita[1].usuario_creacion,
-                                    usuario_actualizacion: this.cita[1].usuario_actualizacion,
-                                    idAlumnos: array,
-                                    asistencia: arrayAsis,
-                                    idMotivos: [],
-                                }; 
-                                axios.post('/sesiones/regSesionFormal',sesion_params)
-                                        .then( response=>{
-                                            response
-                                            this.disableFields();
-                                            Swal.fire({
-                                                text:"Se ha registrado la sesión con éxito",
-                                                icon:"success",
-                                                confirmButtonText: 'OK',
-                                                confirmButtonColor:'#0097A7',
-                                                showConfirmButton: true,
-                                            }) 
-                                            this.$router.push('/listadocitas');
-                                        })  
-                                        .catch(e => {
-                                            console.log(e);
-                                        });
-                            }
-                            else  if( result.dismiss === Swal.DismissReason.cancel ) {
-                                //Nada que corrija
-                            }
+                        this.showModal()
+                        if (result.value) {
+                            let sesion_params = {
+                                id_cita: this.$store.state.idCita,
+                                resultado: "",
+                                usuario_creacion: this.cita[1].usuario_creacion,
+                                usuario_actualizacion: this.cita[1].usuario_actualizacion,
+                                idAlumnos: array,
+                                asistencia: arrayAsis,
+                                idMotivos: [],
+                            }; 
+                            axios.post('/sesiones/regSesionFormal',sesion_params)
+                                    .then( response=>{
+                                        this.hideModal();
+                                        response
+                                        this.disableFields();
+                                        Swal.fire({
+                                            text:"Se ha registrado la sesión con éxito",
+                                            icon:"success",
+                                            confirmButtonText: 'OK',
+                                            confirmButtonColor:'#0097A7',
+                                            showConfirmButton: true,
+                                        }) 
+                                        this.$router.push('/listadocitas');
+                                    })  
+                                    .catch(e => {
+                                        console.log(e);
+                                    });
+                        }
+                        else  if( result.dismiss === Swal.DismissReason.cancel ) {
+                            //Nada que corrija
+                        }
                     });
-                    }            
+                }
+                else {
+                    this.hideModal()
+                    Swal.fire({
+                        text:"Debe llenar el campo descripción",
+                        icon:"error",
+                        confirmButtonText: 'OK',
+                        confirmButtonColor:'#0097A7',
+                        showConfirmButton: true,
+                    });
+                } 
+
+            }
+            else if (this.listMotivos.length == 0) {
+                Swal.fire({
+                    text:"Debe seleccionar por lo menos un motivo",
+                    icon:"error",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                });
+            }            
+            this.hideModal()
         },
         onCodigoChange: function () {
             var i;

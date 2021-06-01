@@ -300,7 +300,7 @@ export default Vue.extend ({
                   });
             }
         },
-        guardar: function () {
+        async guardar() {
             const sesion_params = {
                 id_usuario: this.$store.state.usuario.id_usuario,
                 id_programa: this.$store.state.programaActual.id_programa,
@@ -314,38 +314,54 @@ export default Vue.extend ({
                 idAlumnos: this.listAlumnosId,
                 idMotivos: this.listMotivosId,
             };
-            if(this.selectedTipoTutoria != null) {
-                if(this.listMotivos.length > 0) {
-                    if(this.listAlumnosCod.length > 0) {
-                        if(this.datetime != null) {
-                            if(this.descripcion!=null) {
-                                this.showModal()
-                                if(this.selectedUnidadApoyo) {
-                                    this.enviarCorreo(this.selectedUnidadApoyo)
-                                }
-                                axios.post('/sesiones/asistencia',sesion_params)
-                                    .then( response=>{
-                                        if(response) {
-                                            console.log('se logro insertar')
+            this.showModal()
+            let available = await this.consultarDisponibilidad(sesion_params.fecha, sesion_params.hora_inicio);
+            console.log('availability', available);
+            if(available.data[0] == 'l'){
+                if(this.selectedTipoTutoria != null ) {
+                    if(this.listMotivos.length > 0) {
+                        if(this.listAlumnosCod.length > 0) {
+                            if(this.datetime != null) {
+                                if(this.descripcion!=null) {
+                                    this.showModal()
+                                    if(this.selectedUnidadApoyo) {
+                                        this.enviarCorreo(this.selectedUnidadApoyo)
+                                    }
+                                    axios.post('/sesiones/asistencia',sesion_params)
+                                        .then( response=>{
+                                            if(response) {
+                                                console.log('se logro insertar')
+                                                this.hideModal()
+                                                Swal.fire({
+                                                    text:"Se ha registrado la sesión con éxito",
+                                                    icon:"success",
+                                                    confirmButtonText: 'OK',
+                                                    confirmButtonColor:'#0097A7',
+                                                    showConfirmButton: true,
+                                                }) 
+                                                this.$router.push({name:'Calendario'});
+                                            }
+                                        })  
+                                        .catch(e => {
+                                            console.log(e.response);
                                             this.hideModal()
-                                            Swal.fire({
-                                                text:"Se ha registrado la sesión con éxito",
-                                                icon:"success",
-                                                confirmButtonText: 'OK',
-                                                confirmButtonColor:'#0097A7',
-                                                showConfirmButton: true,
-                                            }) 
-                                            this.$router.push({name:'Calendario'});
-                                        }
-                                    })  
-                                    .catch(e => {
-                                        console.log(e.response);
-                                        this.hideModal()
-                                    });
+                                        });
+                                    }
+                                else {
+                                    this.hideModal()
+                                    Swal.fire({
+                                        text:"Debe llenar el campo descripción",
+                                        icon:"error",
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor:'#0097A7',
+                                        showConfirmButton: true,
+                                    })
                                 }
+                            }
                             else {
+                                this.hideModal()
                                 Swal.fire({
-                                    text:"Debe llenar el campo descripción",
+                                    text:"Debe seleccionar una hora y fecha",
                                     icon:"error",
                                     confirmButtonText: 'OK',
                                     confirmButtonColor:'#0097A7',
@@ -354,8 +370,9 @@ export default Vue.extend ({
                             }
                         }
                         else {
+                            this.hideModal()
                             Swal.fire({
-                                text:"Debe seleccionar una hora y fecha",
+                                text:"Debe agregar por lo menos un alumno",
                                 icon:"error",
                                 confirmButtonText: 'OK',
                                 confirmButtonColor:'#0097A7',
@@ -364,8 +381,9 @@ export default Vue.extend ({
                         }
                     }
                     else {
+                        this.hideModal()
                         Swal.fire({
-                            text:"Debe agregar por lo menos un alumno",
+                            text:"Debe seleccionar por lo menos un motivo",
                             icon:"error",
                             confirmButtonText: 'OK',
                             confirmButtonColor:'#0097A7',
@@ -373,17 +391,19 @@ export default Vue.extend ({
                         })
                     }
                 }
-                else {
-                    Swal.fire({
-                        text:"Debe seleccionar por lo menos un motivo",
-                        icon:"error",
-                        confirmButtonText: 'OK',
-                        confirmButtonColor:'#0097A7',
-                        showConfirmButton: true,
-                    })
-                }
+            }
+            else if(available[0] != 'l'){
+                this.hideModal()
+                Swal.fire({
+                    text:"El horario seleccionado está ocupado",
+                    icon:"error",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor:'#0097A7',
+                    showConfirmButton: true,
+                })
             }
             else {
+                this.hideModal()
                 Swal.fire({
                     text:"Debe seleccionar el tipo de tutoría",
                     icon:"error",
@@ -392,6 +412,20 @@ export default Vue.extend ({
                     showConfirmButton: true,
                 })
             }
+            
+        },
+        consultarDisponibilidad(fecha, horaInicio) {
+            let self = this;
+            return new Promise ((resolve, reject) => {
+                axios.post('disponibilidades/consultarDisp',{
+                    idUsuario: self.$store.state.usuario.id_usuario,
+                    fecha: fecha,
+                    horaInicio: horaInicio
+                }).then(function(response){
+                    self.esDisponible = response; 
+                    resolve(response);
+                }, error => reject(error));
+            });
         },
         cancelar: function () {
             this.datetime= '';
@@ -456,15 +490,15 @@ export default Vue.extend ({
                 this.listAlumnosNom.push(this.alSeleccionado);
                 this.listAlumnosCod.push(this.sel);
                 for(var j in this.codigos){
-                    if(this.sel == this.codigos[j].codigo)
-                        this.listAlumnosId.push(this.codigos[j].id_usuario)
-                        this.listAlumnosCorreo.push(this.codigos[j].correo)
+                    if(this.sel == this.codigos[j].codigo) {
+                        this.listAlumnosId.push(this.codigos[j].id_usuario);
+                        this.listAlumnosCorreo.push(this.codigos[j].correo);
                         break
+                    }
                 }
                 this.alSeleccionado='Nombre Alumno';
                 this.sel= '';
-            }            
-            
+            }
         },
         showModal() {
             this.$refs['my-modal'].show()
