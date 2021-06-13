@@ -268,7 +268,7 @@ export default {
    
     }
     else if (parseInt((this.$route.path).substring(9,15),10) !=0) {
-   
+        //es usuario entrante
       
       //  this.showModal();
       
@@ -276,7 +276,7 @@ export default {
           this.id_usuario_entrante=this.$store.state.usuarioEscogido.id_usuario;
           this.usuario_entrante=this.$store.state.usuarioEscogido;     
           this.tiposUsuariosselect=this.usuario_entrante.id_tipo_usuario;
-          // document.getElementById("corr").disabled = true;
+           document.getElementById("corr").disabled = true;
         
               this.codigo=this.usuario_entrante.codigo;
               this.nombre= this.usuario_entrante.nombre;
@@ -953,12 +953,12 @@ export default {
         //pertenezco al método guardar usuario
         //Ya existe un id del usuario
           var esJP=false;
-            Axios.create()
+            Axios
             .post('/usuarios/modificar/'+this.id_usuario_entrante,parametros)
             .then( response=>{
-
+             // console.log('parametros: ',parametros)
               //Saltaba error si quiero modificar algo normal y la respuesta era un objeto
-             
+              //console.log('data Modificar: ',response.data);
               if(response.data.id_usuario!=null){ //Entonces pregunto primero si es un objeto con algún atributo al azar
                   
                   // this.hideModal();

@@ -1093,6 +1093,7 @@ export default {
       this.showModal();
       Axios.post('/usuarios/modificar/'+this.id_usuario_entrante,params2)
         .then( response=>{
+          console.log('data Modificar: ',response.data);
           if(response.data.id_usuario!=null){ //Entonces pregunto primero si es un objeto con algún atributo al azar
             // console.log('entro a data.id pq es true');
             // this.hideModal();
