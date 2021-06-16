@@ -26,6 +26,8 @@
         <div class="col-12 col-md-6 col-lg-1">
           Condiciones:*
         </div>
+        <!-- <button type="button" class="btn btn-secondary" style="border-radius: 0px" v-on:click="mostrarModalAyuda()">Ayuda</button> -->
+     
         <div class="col-sm-12 offset-sm-1" style="margin-top:2%">
           <div class="row">
             <div class="col-5 col-md-4 col-lg-3">
@@ -577,7 +579,40 @@ export default Vue.extend( {
 
 
 
-    }
+    },
+
+    mostrarModalAyuda(){
+/*
+      Swal.fire({
+            text:"Condiciones. \n"+ '\n'+ "Hi",
+            icon:'info',
+            confirmButtonText: 'Ok',
+            confirmButtonColor:'#0097A7',
+            showConfirmButton: true,
+            
+            html:
+              '<b>Bajo rendimiento:</b> '+
+              'Este tipo de tutoría es reconocido como bajo rendimiento y tiene un efecto en los reportes.  '+
+              '<b>No es de bajo rendimiento:</b> '+
+              'No es un tipo de tutoría para alumnos con bajo rendimiento.                 '+
+              '<b>Tutor fijo:</b> '+
+              'El alumno solo tendrá 1 tutor asignado o solicitado.  '+
+              '<b>Tutor variable:</b> '+
+              'El alumno tendrá uno o más tutores.  '+
+              '<b>Tutor asignado:</b> '+
+              'El coordinador con acceso a "Asignar Tutor" .   '+
+              '<b>Tutor solicitado:</b> '+
+              'El alumno solicita con qué tutor le gustaría tener citas.'+
+
+
+               '<b>Individual:</b> '+
+              'Solo se tendrá un tutor'+
+              '<b>Grupal:</b> '+
+              'Se pueden tener uno o más tutor'+
+              '<b>Obligatorio:</b> '+
+              'Para el alumno tener este tip'  ,
+      });*/
+    } 
   }
 })
 </script>
